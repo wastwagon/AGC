@@ -10,16 +10,41 @@ A modern, professional website for the Africa Governance Centre — an independe
 - **Icons:** Lucide React
 - **Fonts:** IBM Plex Sans (body), Fraunces (headings)
 
+**UX / accessibility (mobile nav, admin patterns, loading states):** see [`docs/UX-A11Y.md`](./docs/UX-A11Y.md).
+
 ## Local Development
 
 ### Option 1: Direct (Recommended for development)
 
-```bash
-npm install
-npm run dev
-```
+**PostgreSQL is required** for `/admin`, Prisma models, and most CMS features. If you see `Can't reach database server at localhost:5436`, nothing is listening at `DATABASE_URL` — start Postgres or fix the URL.
 
-Open [http://localhost:9200](http://localhost:9200) (port 9200 to avoid conflict with other services).
+1. **Start Postgres (Docker — from repo root, parent of `agc-site/`):**  
+   Start **Docker Desktop** (or your Docker daemon), then:
+   ```bash
+   docker compose up -d agc-db
+   ```
+   Default host port is **5436** (see root `docker-compose.yml`). Copy root `.env.cms.example` → `.env` if you don’t have one; default password is `agc_secret`.
+
+2. **Set `DATABASE_URL` in `agc-site/.env.local`** to match, for example:
+   ```bash
+   DATABASE_URL="postgresql://agc:agc_secret@localhost:5436/agc?schema=public"
+   ```
+
+3. **Apply schema** (first time or after pulling migrations):
+   ```bash
+   cd agc-site && npx prisma migrate deploy
+   ```
+
+4. **Run the app:**
+   ```bash
+   cd agc-site
+   npm install
+   npm run dev
+   ```
+
+**Verify the project (lint + tests + production build):** `npm run check`
+
+Open [http://localhost:9200](http://localhost:9200) (use port **9200** in the URL if your dev server uses it — set `PORT=9200` or pass `-p 9200` to match `NEXT_PUBLIC_SITE_URL` / auth callbacks).
 
 ### Option 2: Docker (Local)
 
@@ -35,6 +60,8 @@ docker compose up
 ## Content Management
 
 All content (events, news, team, publications, programs, projects, partners, page content) is managed via the **website admin** at `/admin`.
+
+**Feedback:** Successful saves, creates, and deletes show a **green banner** (URL query `?saved=…`); validation problems show an **amber banner** (`?error=…`). Details in [`docs/UX-A11Y.md`](./docs/UX-A11Y.md).
 
 **Homepage** hero, testimonial, fellow spotlight, reach/stats, hero slider images, and partner strip: **Admin → Page Content → edit `home`** (or open `/admin/pages/home/edit`). While status is **Draft**, the live site uses defaults from code; set **Published** to apply your edits. Sign in with `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env.local`.
 

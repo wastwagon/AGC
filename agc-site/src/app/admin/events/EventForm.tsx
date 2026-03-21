@@ -1,9 +1,18 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import Link from "next/link";
+import { useMemo, useState } from "react";
+import { Plus, Trash2 } from "lucide-react";
+import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { createEvent, updateEvent } from "./actions";
 
+export type EventTeamOption = { id: number; name: string };
+
+type AgendaRow = { time: string; title: string; description: string };
+
 type EventFormProps = {
+  teamOptions: EventTeamOption[];
   item?: {
     id: number;
     title: string;
@@ -21,8 +30,30 @@ type EventFormProps = {
     capacity: number | null;
     registrationDeadline: Date | null;
     status: string;
+    agenda?: unknown;
+    speakerIds?: unknown;
   };
 };
+
+function normalizeAgendaInitial(raw: unknown): AgendaRow[] {
+  if (!raw || !Array.isArray(raw)) return [];
+  return raw
+    .map((row) => {
+      if (!row || typeof row !== "object") return null;
+      const o = row as Record<string, unknown>;
+      return {
+        time: typeof o.time === "string" ? o.time : "",
+        title: typeof o.title === "string" ? o.title : "",
+        description: typeof o.description === "string" ? o.description : "",
+      };
+    })
+    .filter((r): r is AgendaRow => r !== null);
+}
+
+function parseSpeakerIdsInitial(raw: unknown): number[] {
+  if (!raw || !Array.isArray(raw)) return [];
+  return raw.filter((x): x is number => typeof x === "number" && x > 0);
+}
 
 function SubmitButton({ isEdit }: { isEdit: boolean }) {
   const { pending } = useFormStatus();
@@ -37,17 +68,57 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
   );
 }
 
-export function EventForm({ item }: EventFormProps) {
+export function EventForm({ item, teamOptions }: EventFormProps) {
   const isEdit = !!item;
   const action = isEdit ? updateEvent.bind(null, item.id) : createEvent;
 
   const formatDate = (d: Date) => d.toISOString().slice(0, 16);
   const formatDateOnly = (d: Date) => d.toISOString().slice(0, 10);
 
+  const initialAgenda = useMemo(() => normalizeAgendaInitial(item?.agenda), [item?.agenda]);
+  const [agendaRows, setAgendaRows] = useState<AgendaRow[]>(() =>
+    initialAgenda.length > 0 ? initialAgenda : []
+  );
+
+  const selectedSpeakerIds = useMemo(() => parseSpeakerIdsInitial(item?.speakerIds), [item?.speakerIds]);
+
+  const agendaJson = useMemo(() => {
+    const payload = agendaRows
+      .filter((r) => r.title.trim())
+      .map((r) => ({
+        time: r.time.trim() || undefined,
+        title: r.title.trim(),
+        description: r.description.trim() || undefined,
+      }));
+    return JSON.stringify(payload);
+  }, [agendaRows]);
+
+  const addAgendaRow = () => {
+    setAgendaRows((prev) => [...prev, { time: "", title: "", description: "" }]);
+  };
+
+  const removeAgendaRow = (index: number) => {
+    setAgendaRows((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateAgendaRow = (index: number, field: keyof AgendaRow, value: string) => {
+    setAgendaRows((prev) => {
+      const next = [...prev];
+      const row = next[index];
+      if (!row) return prev;
+      next[index] = { ...row, [field]: value };
+      return next;
+    });
+  };
+
   return (
     <form action={action} className="space-y-6">
+      <input type="hidden" name="agendaJson" value={agendaJson} aria-hidden />
+
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-slate-700">Title *</label>
+        <label htmlFor="title" className="block text-sm font-medium text-slate-700">
+          Title *
+        </label>
         <input
           id="title"
           name="title"
@@ -58,7 +129,9 @@ export function EventForm({ item }: EventFormProps) {
       </div>
 
       <div>
-        <label htmlFor="slug" className="block text-sm font-medium text-slate-700">Slug (optional, auto-generated)</label>
+        <label htmlFor="slug" className="block text-sm font-medium text-slate-700">
+          Slug (optional, auto-generated)
+        </label>
         <input
           id="slug"
           name="slug"
@@ -69,7 +142,9 @@ export function EventForm({ item }: EventFormProps) {
       </div>
 
       <div>
-        <label htmlFor="description" className="block text-sm font-medium text-slate-700">Description</label>
+        <label htmlFor="description" className="block text-sm font-medium text-slate-700">
+          Description
+        </label>
         <textarea
           id="description"
           name="description"
@@ -81,7 +156,9 @@ export function EventForm({ item }: EventFormProps) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="startDate" className="block text-sm font-medium text-slate-700">Start date *</label>
+          <label htmlFor="startDate" className="block text-sm font-medium text-slate-700">
+            Start date *
+          </label>
           <input
             id="startDate"
             name="startDate"
@@ -92,7 +169,9 @@ export function EventForm({ item }: EventFormProps) {
           />
         </div>
         <div>
-          <label htmlFor="endDate" className="block text-sm font-medium text-slate-700">End date</label>
+          <label htmlFor="endDate" className="block text-sm font-medium text-slate-700">
+            End date
+          </label>
           <input
             id="endDate"
             name="endDate"
@@ -105,7 +184,9 @@ export function EventForm({ item }: EventFormProps) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="location" className="block text-sm font-medium text-slate-700">Location</label>
+          <label htmlFor="location" className="block text-sm font-medium text-slate-700">
+            Location
+          </label>
           <input
             id="location"
             name="location"
@@ -114,7 +195,9 @@ export function EventForm({ item }: EventFormProps) {
           />
         </div>
         <div>
-          <label htmlFor="category" className="block text-sm font-medium text-slate-700">Category</label>
+          <label htmlFor="category" className="block text-sm font-medium text-slate-700">
+            Category
+          </label>
           <input
             id="category"
             name="category"
@@ -127,7 +210,26 @@ export function EventForm({ item }: EventFormProps) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="venueName" className="block text-sm font-medium text-slate-700">Venue name</label>
+          <label htmlFor="eventType" className="block text-sm font-medium text-slate-700">
+            Event type
+          </label>
+          <input
+            id="eventType"
+            name="eventType"
+            defaultValue={item?.eventType ?? ""}
+            placeholder="e.g. summit, workshop, webinar"
+            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          />
+          <p className="mt-1 text-xs text-slate-500">Shown on the public registration page.</p>
+        </div>
+        <div className="hidden sm:block" aria-hidden />
+      </div>
+
+      <div className="grid gap-4 sm:grid-cols-2">
+        <div>
+          <label htmlFor="venueName" className="block text-sm font-medium text-slate-700">
+            Venue name
+          </label>
           <input
             id="venueName"
             name="venueName"
@@ -136,7 +238,9 @@ export function EventForm({ item }: EventFormProps) {
           />
         </div>
         <div>
-          <label htmlFor="venueAddress" className="block text-sm font-medium text-slate-700">Venue address</label>
+          <label htmlFor="venueAddress" className="block text-sm font-medium text-slate-700">
+            Venue address
+          </label>
           <input
             id="venueAddress"
             name="venueAddress"
@@ -148,7 +252,9 @@ export function EventForm({ item }: EventFormProps) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="image" className="block text-sm font-medium text-slate-700">Image URL</label>
+          <label htmlFor="image" className="block text-sm font-medium text-slate-700">
+            Image URL
+          </label>
           <input
             id="image"
             name="image"
@@ -158,7 +264,9 @@ export function EventForm({ item }: EventFormProps) {
           />
         </div>
         <div>
-          <label htmlFor="link" className="block text-sm font-medium text-slate-700">External link</label>
+          <label htmlFor="link" className="block text-sm font-medium text-slate-700">
+            External link
+          </label>
           <input
             id="link"
             name="link"
@@ -171,7 +279,9 @@ export function EventForm({ item }: EventFormProps) {
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div>
-          <label htmlFor="capacity" className="block text-sm font-medium text-slate-700">Capacity</label>
+          <label htmlFor="capacity" className="block text-sm font-medium text-slate-700">
+            Capacity
+          </label>
           <input
             id="capacity"
             name="capacity"
@@ -182,7 +292,9 @@ export function EventForm({ item }: EventFormProps) {
           />
         </div>
         <div>
-          <label htmlFor="registrationDeadline" className="block text-sm font-medium text-slate-700">Registration deadline</label>
+          <label htmlFor="registrationDeadline" className="block text-sm font-medium text-slate-700">
+            Registration deadline
+          </label>
           <input
             id="registrationDeadline"
             name="registrationDeadline"
@@ -193,8 +305,102 @@ export function EventForm({ item }: EventFormProps) {
         </div>
       </div>
 
+      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-900">Agenda</h2>
+            <p className="text-xs text-slate-600">Optional schedule shown on the public registration page.</p>
+          </div>
+          <button
+            type="button"
+            onClick={addAgendaRow}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+          >
+            <Plus className="h-4 w-4" />
+            Add item
+          </button>
+        </div>
+
+        {agendaRows.length === 0 ? (
+          <p className="mt-3 text-sm text-slate-500">No agenda items. Add items to display a schedule to registrants.</p>
+        ) : (
+          <ul className="mt-4 space-y-4">
+            {agendaRows.map((row, index) => (
+              <li key={index} className="rounded-lg border border-slate-200 bg-white p-4">
+                <div className="mb-3 flex items-center justify-between gap-2">
+                  <span className="text-xs font-medium uppercase tracking-wide text-slate-500">Item {index + 1}</span>
+                  <button
+                    type="button"
+                    onClick={() => removeAgendaRow(index)}
+                    className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600"
+                    aria-label={`Remove agenda item ${index + 1}`}
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+                <div className="grid gap-3 sm:grid-cols-3">
+                  <div className="sm:col-span-1">
+                    <label className="block text-xs font-medium text-slate-600">Time (optional)</label>
+                    <input
+                      value={row.time}
+                      onChange={(e) => updateAgendaRow(index, "time", e.target.value)}
+                      placeholder="09:00"
+                      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                    />
+                  </div>
+                  <div className="sm:col-span-2">
+                    <label className="block text-xs font-medium text-slate-600">Title *</label>
+                    <input
+                      value={row.title}
+                      onChange={(e) => updateAgendaRow(index, "title", e.target.value)}
+                      placeholder="Session title"
+                      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                    />
+                  </div>
+                  <div className="sm:col-span-3">
+                    <label className="block text-xs font-medium text-slate-600">Description (optional)</label>
+                    <textarea
+                      value={row.description}
+                      onChange={(e) => updateAgendaRow(index, "description", e.target.value)}
+                      rows={2}
+                      placeholder="Optional details"
+                      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                    />
+                  </div>
+                </div>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
+      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+        <h2 className="text-sm font-semibold text-slate-900">Speakers</h2>
+        <p className="text-xs text-slate-600">Optional — select team members to highlight on the registration page.</p>
+        {teamOptions.length === 0 ? (
+          <p className="mt-3 text-sm text-slate-500">No team members yet. Add people under Admin → Team.</p>
+        ) : (
+          <div className="mt-3 max-h-48 space-y-2 overflow-y-auto rounded-lg border border-slate-200 bg-white p-3">
+            {teamOptions.map((m) => (
+              <label key={m.id} className="flex cursor-pointer items-center gap-2 text-sm text-slate-800">
+                <input
+                  type="checkbox"
+                  name="speakerIds"
+                  value={String(m.id)}
+                  defaultChecked={selectedSpeakerIds.includes(m.id)}
+                  className="rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+                />
+                <span>{m.name}</span>
+              </label>
+            ))}
+          </div>
+        )}
+      </div>
+
       <div>
-        <label htmlFor="status" className="block text-sm font-medium text-slate-700">Status</label>
+        <label htmlFor="status" className="block text-sm font-medium text-slate-700">
+          Status
+        </label>
         <select
           id="status"
           name="status"
@@ -206,15 +412,15 @@ export function EventForm({ item }: EventFormProps) {
         </select>
       </div>
 
-      <div className="flex gap-4">
+      <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
-        <a
+        <Link
           href="/admin/events"
-          className="min-h-[44px] rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
+          className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
-        </a>
-      </div>
+        </Link>
+      </AdminFormStickyActions>
     </form>
   );
 }

@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { publicationFormSchema } from "@/lib/validations";
+import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
 function slugify(s: string): string {
   return s
@@ -37,23 +38,29 @@ export async function createPublication(formData: FormData) {
   const { title, slug, excerpt, type, file, image, datePublished, author, status } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
 
-  await prisma.publication.create({
-    data: {
-      title,
-      slug: finalSlug,
-      excerpt: excerpt || null,
-      type: type || null,
-      file: file || null,
-      image: image || null,
-      datePublished: datePublished ? new Date(datePublished) : null,
-      author: author || null,
-      status,
-    },
-  });
+  let created;
+  try {
+    created = await prisma.publication.create({
+      data: {
+        title,
+        slug: finalSlug,
+        excerpt: excerpt || null,
+        type: type || null,
+        file: file || null,
+        image: image || null,
+        datePublished: datePublished ? new Date(datePublished) : null,
+        author: author || null,
+        status,
+      },
+    });
+  } catch (err) {
+    console.error("createPublication:", err);
+    redirect(`/admin/publications/new?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/publications");
   revalidatePath("/");
-  redirect("/admin/publications");
+  redirect(`/admin/publications/${created.id}/edit?saved=created`);
 }
 
 export async function updatePublication(id: number, formData: FormData) {
@@ -80,34 +87,44 @@ export async function updatePublication(id: number, formData: FormData) {
   const { title, slug, excerpt, type, file, image, datePublished, author, status } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
 
-  await prisma.publication.update({
-    where: { id },
-    data: {
-      title,
-      slug: finalSlug,
-      excerpt: excerpt || null,
-      type: type || null,
-      file: file || null,
-      image: image || null,
-      datePublished: datePublished ? new Date(datePublished) : null,
-      author: author || null,
-      status,
-    },
-  });
+  try {
+    await prisma.publication.update({
+      where: { id },
+      data: {
+        title,
+        slug: finalSlug,
+        excerpt: excerpt || null,
+        type: type || null,
+        file: file || null,
+        image: image || null,
+        datePublished: datePublished ? new Date(datePublished) : null,
+        author: author || null,
+        status,
+      },
+    });
+  } catch (err) {
+    console.error("updatePublication:", err);
+    redirect(`/admin/publications/${id}/edit?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/publications");
   revalidatePath(`/admin/publications/${id}/edit`);
   revalidatePath("/");
-  redirect("/admin/publications");
+  redirect(`/admin/publications/${id}/edit?saved=1`);
 }
 
 export async function deletePublication(id: number, _formData?: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
 
-  await prisma.publication.delete({ where: { id } });
+  try {
+    await prisma.publication.delete({ where: { id } });
+  } catch (err) {
+    console.error("deletePublication:", err);
+    redirect(`/admin/publications?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/publications");
   revalidatePath("/");
-  redirect("/admin/publications");
+  redirect("/admin/publications?saved=deleted");
 }

@@ -1,5 +1,8 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { AdminFormErrorSuspense } from "../../../_components/AdminFormErrorSuspense";
+import { AdminFormSuccessSuspense } from "../../../_components/AdminFormSuccessSuspense";
+import { AdminPageHeader } from "../../../_components/AdminPageHeader";
 import { PageContentForm } from "../../PageContentForm";
 import { HomePageContentForm } from "../../HomePageContentForm";
 import { getHomePageCmsForEdit } from "@/lib/home-page-data";
@@ -22,12 +25,18 @@ export default async function AdminPagesEditPage({ params }: Props) {
     const merged = await getHomePageCmsForEdit();
     return (
       <div>
-        <h1 className="font-serif text-2xl font-bold text-slate-900">Edit homepage</h1>
-        <p className="mt-2 text-sm text-slate-600">
-          Controls the hero, testimonial, fellow spotlight, reach/stats, and partner strip on{" "}
-          <strong>/</strong>. Set to <em>Draft</em> to show code defaults on the live site.
-        </p>
-        <div className="mt-8 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+        <AdminPageHeader
+          title="Edit homepage"
+          description={
+            <>
+              Controls the hero, testimonial, fellow spotlight, reach/stats, and partner strip on{" "}
+              <strong>/</strong>. Set to <em>Draft</em> to show code defaults on the live site.
+            </>
+          }
+        />
+        <AdminFormErrorSuspense />
+        <AdminFormSuccessSuspense />
+        <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
           <HomePageContentForm data={merged} status={item?.status ?? "published"} />
         </div>
       </div>
@@ -39,8 +48,13 @@ export default async function AdminPagesEditPage({ params }: Props) {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl font-bold text-slate-900">Edit Page: {item.title || item.slug}</h1>
-      <div className="mt-8 rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
+      <AdminPageHeader
+        title={`Edit page: ${item.title || item.slug}`}
+        description="Update hero text, intros, and status. Draft pages keep built-in defaults on the live site until you publish."
+      />
+      <AdminFormErrorSuspense />
+      <AdminFormSuccessSuspense />
+      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
         <PageContentForm item={item} />
       </div>
     </div>

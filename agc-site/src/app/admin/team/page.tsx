@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { Plus, Pencil } from "lucide-react";
+import { AdminMobileEntityCard, AdminStatusPill } from "../_components/AdminMobileEntityCard";
+import { AdminPageHeader } from "../_components/AdminPageHeader";
+import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
+import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 import { DeleteButton } from "../DeleteButton";
 import { deleteTeam } from "./actions";
 
@@ -13,8 +17,10 @@ export default async function AdminTeamPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="font-serif text-2xl font-bold text-slate-900">Team</h1>
+      <AdminPageHeader
+        title="Team"
+        description="Staff and leadership profiles on the public Team page. Set order and draft or published status."
+      >
         <Link
           href="/admin/team/new"
           className="flex min-h-[44px] items-center gap-2 rounded-lg bg-accent-500 px-4 py-3 font-medium text-white hover:bg-accent-600"
@@ -22,9 +28,39 @@ export default async function AdminTeamPage() {
           <Plus className="h-4 w-4" />
           Add Member
         </Link>
-      </div>
+      </AdminPageHeader>
+      <AdminFormErrorSuspense />
+      <AdminFormSuccessSuspense />
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+      {/* Mobile-first: stacked cards */}
+      <ul className="space-y-3 md:hidden">
+        {items.map((item) => (
+          <li key={item.id}>
+            <AdminMobileEntityCard
+              title={item.name}
+              rows={[
+                { label: "Role", value: item.role || "—" },
+                { label: "Order", value: item.order },
+                { label: "Status", value: <AdminStatusPill status={item.status} /> },
+              ]}
+              actions={
+                <>
+                  <Link
+                    href={`/admin/team/${item.id}/edit`}
+                    className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-900"
+                    aria-label={`Edit ${item.name}`}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Link>
+                  <DeleteButton action={deleteTeam.bind(null, item.id)} label="Delete team member" />
+                </>
+              }
+            />
+          </li>
+        ))}
+      </ul>
+
+      <div className="hidden overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm md:block">
         <table className="min-w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
             <tr>

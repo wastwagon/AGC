@@ -3,6 +3,7 @@
 import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { Copy, Trash2, Check, ImagePlus } from "lucide-react";
+import { AdminPageHeader } from "../_components/AdminPageHeader";
 
 type MediaItem = {
   id: string;
@@ -104,10 +105,10 @@ export default function AdminMediaPage() {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl font-bold text-slate-900">Media Library</h1>
-      <p className="mt-1 text-slate-600">
-        Upload images and reuse them across news, events, and pages. Select an image to copy its URL or media ID.
-      </p>
+      <AdminPageHeader
+        title="Media Library"
+        description="Upload images and reuse them across news, events, and pages. Select an image to copy its URL or media ID."
+      />
 
       {error && (
         <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">

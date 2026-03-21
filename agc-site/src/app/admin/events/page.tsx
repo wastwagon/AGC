@@ -1,6 +1,9 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { Calendar, Users, QrCode, Plus, Pencil } from "lucide-react";
+import { AdminPageHeader } from "../_components/AdminPageHeader";
+import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
+import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 import { DeleteButton } from "../DeleteButton";
 import { deleteEvent } from "./actions";
 
@@ -27,25 +30,27 @@ export default async function AdminEventsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex flex-wrap items-center justify-between gap-4">
-        <h1 className="font-serif text-2xl font-bold text-slate-900">Event Management</h1>
-        <div className="flex items-center gap-2">
-          <Link
-            href="/admin/events/new"
-            className="flex min-h-[44px] items-center gap-2 rounded-lg bg-accent-500 px-4 py-3 font-medium text-white hover:bg-accent-600"
-          >
-            <Plus className="h-4 w-4" />
-            Add Event
-          </Link>
-          <Link
-            href="/admin/events/scan"
-            className="flex min-h-[44px] items-center gap-2 rounded-lg bg-slate-100 px-4 py-3 font-medium text-slate-700 hover:bg-slate-200"
-          >
-            <QrCode className="h-4 w-4" />
-            Check-in Scanner
-          </Link>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Event Management"
+        description="Create events, manage registrations, and check in attendees. Open the scanner to verify badges at the door."
+      >
+        <Link
+          href="/admin/events/new"
+          className="flex min-h-[44px] items-center gap-2 rounded-lg bg-accent-500 px-4 py-3 font-medium text-white hover:bg-accent-600"
+        >
+          <Plus className="h-4 w-4" />
+          Add Event
+        </Link>
+        <Link
+          href="/admin/events/scan"
+          className="flex min-h-[44px] items-center gap-2 rounded-lg bg-slate-100 px-4 py-3 font-medium text-slate-700 hover:bg-slate-200"
+        >
+          <QrCode className="h-4 w-4" />
+          Check-in Scanner
+        </Link>
+      </AdminPageHeader>
+      <AdminFormErrorSuspense />
+      <AdminFormSuccessSuspense />
 
       <div className="space-y-4">
         {dbEvents.map((event) => {

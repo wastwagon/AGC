@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { newsFormSchema } from "@/lib/validations";
+import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
 function slugify(s: string): string {
   return s
@@ -38,25 +39,31 @@ export async function createNews(formData: FormData) {
   const { title, slug, image, excerpt, content, author, categories, tags, status, datePublished } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
 
-  await prisma.news.create({
-    data: {
-      title,
-      slug: finalSlug,
-      image: image || null,
-      excerpt: excerpt || null,
-      content: content || null,
-      author: author || null,
-      categories: categories?.length ? categories : [],
-      tags: tags?.length ? tags : [],
-      status,
-      datePublished: datePublished ? new Date(datePublished) : null,
-    },
-  });
+  let created;
+  try {
+    created = await prisma.news.create({
+      data: {
+        title,
+        slug: finalSlug,
+        image: image || null,
+        excerpt: excerpt || null,
+        content: content || null,
+        author: author || null,
+        categories: categories?.length ? categories : [],
+        tags: tags?.length ? tags : [],
+        status,
+        datePublished: datePublished ? new Date(datePublished) : null,
+      },
+    });
+  } catch (err) {
+    console.error("createNews:", err);
+    redirect(`/admin/news/new?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/news");
   revalidatePath("/news");
   revalidatePath("/");
-  redirect("/admin/news");
+  redirect(`/admin/news/${created.id}/edit?saved=created`);
 }
 
 export async function updateNews(id: number, formData: FormData) {
@@ -84,37 +91,47 @@ export async function updateNews(id: number, formData: FormData) {
   const { title, slug, image, excerpt, content, author, categories, tags, status, datePublished } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
 
-  await prisma.news.update({
-    where: { id },
-    data: {
-      title,
-      slug: finalSlug,
-      image: image || null,
-      excerpt: excerpt || null,
-      content: content || null,
-      author: author || null,
-      categories: categories?.length ? categories : [],
-      tags: tags?.length ? tags : [],
-      status,
-      datePublished: datePublished ? new Date(datePublished) : null,
-    },
-  });
+  try {
+    await prisma.news.update({
+      where: { id },
+      data: {
+        title,
+        slug: finalSlug,
+        image: image || null,
+        excerpt: excerpt || null,
+        content: content || null,
+        author: author || null,
+        categories: categories?.length ? categories : [],
+        tags: tags?.length ? tags : [],
+        status,
+        datePublished: datePublished ? new Date(datePublished) : null,
+      },
+    });
+  } catch (err) {
+    console.error("updateNews:", err);
+    redirect(`/admin/news/${id}/edit?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/news");
   revalidatePath(`/admin/news/${id}/edit`);
   revalidatePath("/news");
   revalidatePath("/");
-  redirect("/admin/news");
+  redirect(`/admin/news/${id}/edit?saved=1`);
 }
 
 export async function deleteNews(id: number, _formData?: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
 
-  await prisma.news.delete({ where: { id } });
+  try {
+    await prisma.news.delete({ where: { id } });
+  } catch (err) {
+    console.error("deleteNews:", err);
+    redirect(`/admin/news?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/news");
   revalidatePath("/news");
   revalidatePath("/");
-  redirect("/admin/news");
+  redirect("/admin/news?saved=deleted");
 }

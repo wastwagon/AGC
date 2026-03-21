@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { updateHomePageContent } from "./actions-home";
 import type { HomePageCms } from "@/lib/home-page-data";
 
@@ -232,7 +233,9 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
         </div>
       </fieldset>
 
-      <SubmitButton />
+      <AdminFormStickyActions>
+        <SubmitButton />
+      </AdminFormStickyActions>
     </form>
   );
 }

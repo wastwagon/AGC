@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
 
 type MobileNavContextValue = {
   mobileOpen: boolean;
@@ -9,6 +9,8 @@ type MobileNavContextValue = {
   setSearchOpen: (open: boolean) => void;
   openMenu: () => void;
   openSearch: () => void;
+  /** Hamburger / close button in Header — for returning focus when drawer closes */
+  menuTriggerRef: React.RefObject<HTMLButtonElement | null>;
 };
 
 const MobileNavContext = createContext<MobileNavContextValue | null>(null);
@@ -16,6 +18,7 @@ const MobileNavContext = createContext<MobileNavContextValue | null>(null);
 export function MobileNavProvider({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const menuTriggerRef = useRef<HTMLButtonElement>(null);
 
   const openMenu = useCallback(() => setMobileOpen(true), []);
   const openSearch = useCallback(() => setSearchOpen(true), []);
@@ -28,6 +31,7 @@ export function MobileNavProvider({ children }: { children: React.ReactNode }) {
       setSearchOpen,
       openMenu,
       openSearch,
+      menuTriggerRef,
     }),
     [mobileOpen, searchOpen, openMenu, openSearch]
   );

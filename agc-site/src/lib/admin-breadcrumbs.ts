@@ -16,7 +16,7 @@ const SECTION: Record<string, string> = {
 };
 
 const EXACT_TITLE: Record<string, string> = {
-  "/admin": "Dashboard",
+  "/admin": "Admin Dashboard",
   "/admin/login": "Sign in",
   "/admin/media": "Media Library",
   "/admin/events": "Events",
@@ -70,7 +70,8 @@ export type Crumb = { label: string; href?: string };
 
 export function getAdminBreadcrumbs(pathname: string): Crumb[] {
   const n = pathname.replace(/\/$/, "") || "/admin";
-  if (n === "/admin") return [{ label: "Dashboard" }];
+  // Root admin: no breadcrumb — header title already says "Admin Dashboard" (avoids "Dashboard" twice)
+  if (n === "/admin") return [];
   if (n === "/admin/login") return [{ label: "Admin", href: "/admin" }, { label: "Sign in" }];
 
   const crumbs: Crumb[] = [{ label: "Dashboard", href: "/admin" }];

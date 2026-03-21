@@ -1,6 +1,7 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { createTeam, updateTeam } from "./actions";
 
 type TeamFormProps = {
@@ -103,15 +104,15 @@ export function TeamForm({ item }: TeamFormProps) {
         </select>
       </div>
 
-      <div className="flex gap-4">
+      <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
         <a
           href="/admin/team"
-          className="rounded-lg border border-slate-300 px-6 py-2 font-medium text-slate-700 hover:bg-slate-50"
+          className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
         </a>
-      </div>
+      </AdminFormStickyActions>
     </form>
   );
 }

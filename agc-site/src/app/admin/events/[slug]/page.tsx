@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
-import Link from "next/link";
 import { getEventBySlugAdmin } from "@/lib/content";
 import { fallbackEvents } from "@/data/content";
 import type { CmsEvent } from "@/lib/content";
 import { prisma } from "@/lib/db";
 import type { EventRegistration } from "@prisma/client";
 import { Download, Printer } from "lucide-react";
+import { AdminPageHeader } from "../../_components/AdminPageHeader";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -30,12 +30,12 @@ export default async function AdminEventRegistrationsPage({ params }: Props) {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl font-bold text-slate-900">{event.title}</h1>
-      <p className="mt-2 text-slate-600">
-        {checkedInCount} / {registrations.length} checked in
-      </p>
+      <AdminPageHeader
+        title={event.title}
+        description={`Registrations for this event. ${checkedInCount} of ${registrations.length} checked in. Export CSV for spreadsheets or open a badge to print.`}
+      />
 
-      <div className="mt-8 overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
+      <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-slate-200">
             <thead className="bg-slate-50">

@@ -1,5 +1,8 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { AdminFormErrorSuspense } from "../../../_components/AdminFormErrorSuspense";
+import { AdminFormSuccessSuspense } from "../../../_components/AdminFormSuccessSuspense";
+import { AdminPageHeader } from "../../../_components/AdminPageHeader";
 import { PartnerForm } from "../../PartnerForm";
 
 export const dynamic = "force-dynamic";
@@ -16,8 +19,13 @@ export default async function AdminPartnersEditPage({ params }: Props) {
 
   return (
     <div>
-      <h1 className="font-serif text-2xl font-bold text-slate-900">Edit: {item.name}</h1>
-      <div className="mt-8 rounded-xl border border-slate-200 bg-white p-8 shadow-sm">
+      <AdminPageHeader
+        title={`Edit: ${item.name}`}
+        description="Update this partner’s logo URL and link. Order controls placement on the home partner strip."
+      />
+      <AdminFormErrorSuspense />
+      <AdminFormSuccessSuspense />
+      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
         <PartnerForm item={item} />
       </div>
     </div>

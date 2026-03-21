@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { Plus, Pencil } from "lucide-react";
+import { AdminMobileEntityCard, AdminStatusPill } from "../_components/AdminMobileEntityCard";
+import { AdminPageHeader } from "../_components/AdminPageHeader";
+import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
+import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 import { DeleteButton } from "../DeleteButton";
 import { deletePublication } from "./actions";
 
@@ -13,8 +17,10 @@ export default async function AdminPublicationsPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="font-serif text-2xl font-bold text-slate-900">Publications</h1>
+      <AdminPageHeader
+        title="Publications"
+        description="Reports, policy briefs, and publications on the public site. Use Media for cover images."
+      >
         <Link
           href="/admin/publications/new"
           className="flex min-h-[44px] items-center gap-2 rounded-lg bg-accent-500 px-4 py-3 font-medium text-white hover:bg-accent-600"
@@ -22,9 +28,43 @@ export default async function AdminPublicationsPage() {
           <Plus className="h-4 w-4" />
           Add Publication
         </Link>
-      </div>
+      </AdminPageHeader>
+      <AdminFormErrorSuspense />
+      <AdminFormSuccessSuspense />
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+      <ul className="space-y-3 md:hidden">
+        {items.map((item) => (
+          <li key={item.id}>
+            <AdminMobileEntityCard
+              title={item.title}
+              rows={[
+                { label: "Type", value: item.type || "—" },
+                {
+                  label: "Date",
+                  value: item.datePublished
+                    ? new Date(item.datePublished).toLocaleDateString("en-GB")
+                    : new Date(item.createdAt).toLocaleDateString("en-GB"),
+                },
+                { label: "Status", value: <AdminStatusPill status={item.status} /> },
+              ]}
+              actions={
+                <>
+                  <Link
+                    href={`/admin/publications/${item.id}/edit`}
+                    className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100"
+                    aria-label={`Edit ${item.title}`}
+                  >
+                    <Pencil className="h-4 w-4" />
+                  </Link>
+                  <DeleteButton action={deletePublication.bind(null, item.id)} label="Delete publication" />
+                </>
+              }
+            />
+          </li>
+        ))}
+      </ul>
+
+      <div className="hidden overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm md:block">
         <table className="min-w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
             <tr>

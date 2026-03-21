@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -34,7 +35,59 @@ const primaryNav: NavItem[] = [
 ];
 
 export function MobileDrawer() {
-  const { mobileOpen, setMobileOpen, setSearchOpen } = useMobileNav();
+  const { mobileOpen, setMobileOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+  // Escape closes; Tab cycles focus inside drawer (WCAG-friendly)
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const panel = document.getElementById("site-mobile-drawer");
+    if (!panel) return;
+
+    const selector =
+      'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const getFocusable = () =>
+      Array.from(panel.querySelectorAll<HTMLElement>(selector)).filter(
+        (el) => !el.hasAttribute("disabled") && el.offsetParent !== null
+      );
+
+    const onKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        e.preventDefault();
+        setMobileOpen(false);
+        requestAnimationFrame(() => menuTriggerRef.current?.focus());
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const focusables = getFocusable();
+      if (focusables.length === 0) return;
+      const first = focusables[0];
+      const last = focusables[focusables.length - 1];
+      const active = document.activeElement as HTMLElement | null;
+      if (e.shiftKey) {
+        if (active === first) {
+          e.preventDefault();
+          last.focus();
+        }
+      } else if (active === last) {
+        e.preventDefault();
+        first.focus();
+      }
+    };
+
+    document.addEventListener("keydown", onKeyDown);
+    return () => document.removeEventListener("keydown", onKeyDown);
+  }, [mobileOpen, setMobileOpen, menuTriggerRef]);
+
+  // Move focus into drawer when opened (mobile-first a11y)
+  useEffect(() => {
+    if (!mobileOpen) return;
+    const t = window.setTimeout(() => {
+      closeBtnRef.current?.focus();
+    }, 100);
+    return () => clearTimeout(t);
+  }, [mobileOpen]);
 
   return (
     <>
@@ -42,12 +95,19 @@ export function MobileDrawer() {
         <button
           type="button"
           className="fixed inset-0 z-[60] bg-stone-950/55 backdrop-blur-[2px] transition-opacity lg:hidden"
-          onClick={() => setMobileOpen(false)}
+          onClick={() => {
+            setMobileOpen(false);
+            requestAnimationFrame(() => menuTriggerRef.current?.focus());
+          }}
           aria-label="Close menu"
         />
       )}
       <aside
-        className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,20rem)] max-w-[22rem] flex-col bg-gradient-to-b from-accent-900 via-[#152a32] to-accent-950 shadow-[8px_0_40px_-12px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out lg:hidden ${
+        id="site-mobile-drawer"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Site navigation"
+        className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,20rem)] max-w-[22rem] flex-col bg-gradient-to-b from-accent-900 via-[#152a32] to-accent-950 shadow-[8px_0_40px_-12px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
         }`}
         aria-hidden={!mobileOpen}
@@ -64,9 +124,13 @@ export function MobileDrawer() {
             />
           </Link>
           <button
+            ref={closeBtnRef}
             type="button"
-            onClick={() => setMobileOpen(false)}
-            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            onClick={() => {
+              setMobileOpen(false);
+              requestAnimationFrame(() => menuTriggerRef.current?.focus());
+            }}
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
             aria-label="Close menu"
           >
             <X className="h-5 w-5" strokeWidth={2.25} />

@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { prisma } from "@/lib/db";
 import { Pencil } from "lucide-react";
+import { AdminMobileEntityCard, AdminStatusPill } from "../_components/AdminMobileEntityCard";
+import { AdminPageHeader } from "../_components/AdminPageHeader";
+import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
+import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 
 export const dynamic = "force-dynamic";
 
@@ -11,12 +15,37 @@ export default async function AdminPagesPage() {
 
   return (
     <div>
-      <div className="mb-8 flex items-center justify-between">
-        <h1 className="font-serif text-2xl font-bold text-slate-900">Page Content</h1>
-        <p className="text-sm text-slate-500">Edit hero text and content for each page.</p>
-      </div>
+      <AdminPageHeader
+        title="Page Content"
+        description="Edit hero text, blocks, and settings per page. Draft pages keep built-in defaults on the live site until you publish."
+      />
+      <AdminFormErrorSuspense />
+      <AdminFormSuccessSuspense />
 
-      <div className="overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm">
+      <ul className="space-y-3 md:hidden">
+        {items.map((item) => (
+          <li key={item.id}>
+            <AdminMobileEntityCard
+              title={item.title || item.slug}
+              rows={[
+                { label: "Slug", value: <span className="font-mono text-sm">{item.slug}</span> },
+                { label: "Status", value: <AdminStatusPill status={item.status} /> },
+              ]}
+              actions={
+                <Link
+                  href={`/admin/pages/${item.slug}/edit`}
+                  className="flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100"
+                  aria-label={`Edit ${item.slug}`}
+                >
+                  <Pencil className="h-4 w-4" />
+                </Link>
+              }
+            />
+          </li>
+        ))}
+      </ul>
+
+      <div className="hidden overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm md:block">
         <table className="min-w-full divide-y divide-slate-200">
           <thead className="bg-slate-50">
             <tr>

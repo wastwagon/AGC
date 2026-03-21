@@ -25,7 +25,7 @@ const navWithDropdowns: NavItem[] = [
 ];
 
 export function Header() {
-  const { mobileOpen, setMobileOpen, searchOpen, setSearchOpen } = useMobileNav();
+  const { mobileOpen, setMobileOpen, searchOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const [scrolled, setScrolled] = useState(false);
   const showTopbar = true;
 
@@ -106,11 +106,13 @@ export function Header() {
                 Contact
               </Link>
               <button
+                ref={menuTriggerRef}
                 type="button"
-                className="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
+                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
                 onClick={() => setMobileOpen(!mobileOpen)}
                 aria-label={mobileOpen ? "Close menu" : "Open menu"}
                 aria-expanded={mobileOpen}
+                aria-controls="site-mobile-drawer"
               >
                 {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>

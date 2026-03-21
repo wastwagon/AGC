@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import type { Prisma } from "@prisma/client";
 import { getDefaultHomePageCms, type HomePageCms } from "@/lib/home-page-data";
+import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
 export async function updateHomePageContent(formData: FormData) {
   const session = await auth();
@@ -84,21 +85,26 @@ export async function updateHomePageContent(formData: FormData) {
 
   const json = JSON.parse(JSON.stringify(contentJson)) as Prisma.InputJsonValue;
 
-  await prisma.pageContent.upsert({
-    where: { slug: "home" },
-    create: {
-      slug: "home",
-      title: "Homepage",
-      status,
-      contentJson: json,
-    },
-    update: {
-      status,
-      contentJson: json,
-    },
-  });
+  try {
+    await prisma.pageContent.upsert({
+      where: { slug: "home" },
+      create: {
+        slug: "home",
+        title: "Homepage",
+        status,
+        contentJson: json,
+      },
+      update: {
+        status,
+        contentJson: json,
+      },
+    });
+  } catch (err) {
+    console.error("updateHomePageContent:", err);
+    redirect(`/admin/pages/home/edit?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/");
   revalidatePath("/admin/pages");
-  redirect("/admin/pages");
+  redirect("/admin/pages/home/edit?saved=1");
 }

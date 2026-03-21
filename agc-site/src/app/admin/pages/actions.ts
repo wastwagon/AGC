@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { pageContentFormSchema } from "@/lib/validations";
+import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
 export async function updatePageContent(slug: string, formData: FormData) {
   const session = await auth();
@@ -32,26 +33,31 @@ export async function updatePageContent(slug: string, formData: FormData) {
 
   const data = parsed.data;
 
-  await prisma.pageContent.update({
-    where: { slug },
-    data: {
-      slug: data.slug,
-      title: data.title || null,
-      status: data.status,
-      heroSubtitle: data.heroSubtitle || null,
-      heroTitle: data.heroTitle || null,
-      intro: data.intro || null,
-      description: data.description || null,
-      mission: data.mission || null,
-      objectivesTitle: data.objectivesTitle || null,
-      objectivesContent: data.objectivesContent || null,
-      objectivesPrinciples: data.objectivesPrinciples || null,
-      objectivesAgenda2063: data.objectivesAgenda2063 || null,
-    },
-  });
+  try {
+    await prisma.pageContent.update({
+      where: { slug },
+      data: {
+        slug: data.slug,
+        title: data.title || null,
+        status: data.status,
+        heroSubtitle: data.heroSubtitle || null,
+        heroTitle: data.heroTitle || null,
+        intro: data.intro || null,
+        description: data.description || null,
+        mission: data.mission || null,
+        objectivesTitle: data.objectivesTitle || null,
+        objectivesContent: data.objectivesContent || null,
+        objectivesPrinciples: data.objectivesPrinciples || null,
+        objectivesAgenda2063: data.objectivesAgenda2063 || null,
+      },
+    });
+  } catch (err) {
+    console.error("updatePageContent:", err);
+    redirect(`/admin/pages/${encodeURIComponent(slug)}/edit?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/pages");
   revalidatePath(`/admin/pages/${slug}/edit`);
   revalidatePath("/");
-  redirect("/admin/pages");
+  redirect(`/admin/pages/${encodeURIComponent(slug)}/edit?saved=1`);
 }

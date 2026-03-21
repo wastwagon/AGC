@@ -4,7 +4,23 @@ import Link from "next/link";
 import type { HomePageCms } from "@/lib/home-page-data";
 import { heroContent as defaultHero } from "@/data/content";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
+
+const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
+
+function subscribePrefersReducedMotion(onStoreChange: () => void) {
+  const mq = window.matchMedia(REDUCED_MOTION_QUERY);
+  mq.addEventListener("change", onStoreChange);
+  return () => mq.removeEventListener("change", onStoreChange);
+}
+
+function getPrefersReducedMotionSnapshot() {
+  return window.matchMedia(REDUCED_MOTION_QUERY).matches;
+}
+
+function getPrefersReducedMotionServerSnapshot() {
+  return false;
+}
 
 /**
  * Editorial home hero: headline hierarchy, dual CTAs.
@@ -19,7 +35,11 @@ type HeroProps = {
 export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
   const heroContent = heroProp ?? defaultHero;
   const [current, setCurrent] = useState(0);
-  const [reducedMotion, setReducedMotion] = useState(false);
+  const reducedMotion = useSyncExternalStore(
+    subscribePrefersReducedMotion,
+    getPrefersReducedMotionSnapshot,
+    getPrefersReducedMotionServerSnapshot
+  );
   const slides = sliderImages.length > 0 ? sliderImages : ["/uploads/placeholder.svg"];
 
   const next = useCallback(() => {
@@ -29,14 +49,6 @@ export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
   const prev = useCallback(() => {
     setCurrent((c) => (c - 1 + slides.length) % slides.length);
   }, [slides.length]);
-
-  useEffect(() => {
-    const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setReducedMotion(mq.matches);
-    const onChange = () => setReducedMotion(mq.matches);
-    mq.addEventListener("change", onChange);
-    return () => mq.removeEventListener("change", onChange);
-  }, []);
 
   useEffect(() => {
     if (reducedMotion || slides.length <= 1) return;

@@ -1,5 +1,13 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
+vi.mock("@/lib/db", () => ({
+  prisma: {
+    contactSubmission: {
+      create: vi.fn().mockResolvedValue({ id: 1 }),
+    },
+  },
+}));
+
 vi.mock("resend", () => ({
   Resend: class MockResend {
     emails = {

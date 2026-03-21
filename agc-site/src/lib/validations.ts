@@ -61,6 +61,8 @@ export const eventFormSchema = z.object({
   }),
   registrationDeadline: z.string().optional(),
   status: z.enum(["draft", "published"]),
+  /** Client-serialized JSON array of { time?, title, description? } */
+  agendaJson: z.string().max(200000).optional(),
 });
 
 export const newsFormSchema = z.object({

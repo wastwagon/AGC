@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { partnerFormSchema } from "@/lib/validations";
+import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
 export async function createPartner(formData: FormData) {
   const session = await auth();
@@ -25,19 +26,25 @@ export async function createPartner(formData: FormData) {
 
   const { name, logo, url, order, status } = parsed.data;
 
-  await prisma.partner.create({
-    data: {
-      name,
-      logo: logo || null,
-      url: url || null,
-      order,
-      status,
-    },
-  });
+  let created;
+  try {
+    created = await prisma.partner.create({
+      data: {
+        name,
+        logo: logo || null,
+        url: url || null,
+        order,
+        status,
+      },
+    });
+  } catch (err) {
+    console.error("createPartner:", err);
+    redirect(`/admin/partners/new?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/partners");
   revalidatePath("/");
-  redirect("/admin/partners");
+  redirect(`/admin/partners/${created.id}/edit?saved=created`);
 }
 
 export async function updatePartner(id: number, formData: FormData) {
@@ -59,30 +66,40 @@ export async function updatePartner(id: number, formData: FormData) {
 
   const { name, logo, url, order, status } = parsed.data;
 
-  await prisma.partner.update({
-    where: { id },
-    data: {
-      name,
-      logo: logo || null,
-      url: url || null,
-      order,
-      status,
-    },
-  });
+  try {
+    await prisma.partner.update({
+      where: { id },
+      data: {
+        name,
+        logo: logo || null,
+        url: url || null,
+        order,
+        status,
+      },
+    });
+  } catch (err) {
+    console.error("updatePartner:", err);
+    redirect(`/admin/partners/${id}/edit?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/partners");
   revalidatePath(`/admin/partners/${id}/edit`);
   revalidatePath("/");
-  redirect("/admin/partners");
+  redirect(`/admin/partners/${id}/edit?saved=1`);
 }
 
 export async function deletePartner(id: number, _formData?: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
 
-  await prisma.partner.delete({ where: { id } });
+  try {
+    await prisma.partner.delete({ where: { id } });
+  } catch (err) {
+    console.error("deletePartner:", err);
+    redirect(`/admin/partners?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/partners");
   revalidatePath("/");
-  redirect("/admin/partners");
+  redirect("/admin/partners?saved=deleted");
 }

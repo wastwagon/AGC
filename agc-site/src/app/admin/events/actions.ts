@@ -2,9 +2,12 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { eventFormSchema } from "@/lib/validations";
+import { filterValidTeamIds, parseAgendaJsonField, parseSpeakerIdsFromForm } from "@/lib/event-admin-parse";
+import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
 function slugify(s: string): string {
   return s
@@ -33,6 +36,10 @@ export async function createEvent(formData: FormData) {
     capacity: formData.get("capacity") || undefined,
     registrationDeadline: formData.get("registrationDeadline") || undefined,
     status: formData.get("status") || "draft",
+    agendaJson: (() => {
+      const v = formData.get("agendaJson");
+      return typeof v === "string" ? v : undefined;
+    })(),
   };
 
   const parsed = eventFormSchema.safeParse(raw);
@@ -43,29 +50,41 @@ export async function createEvent(formData: FormData) {
   const data = parsed.data;
   const finalSlug = data.slug?.trim() || slugify(data.title);
 
-  await prisma.event.create({
-    data: {
-      title: data.title,
-      slug: finalSlug,
-      description: data.description || null,
-      location: data.location || null,
-      startDate: new Date(data.startDate),
-      endDate: data.endDate ? new Date(data.endDate) : null,
-      image: data.image || null,
-      link: data.link || null,
-      category: data.category || null,
-      eventType: data.eventType || null,
-      venueName: data.venueName || null,
-      venueAddress: data.venueAddress || null,
-      capacity: data.capacity ?? null,
-      registrationDeadline: data.registrationDeadline ? new Date(data.registrationDeadline) : null,
-      status: data.status,
-    },
-  });
+  let created;
+  try {
+    const agendaValue = parseAgendaJsonField(data.agendaJson);
+    const speakerIdsRaw = parseSpeakerIdsFromForm(formData);
+    const speakerIds = await filterValidTeamIds(prisma, speakerIdsRaw);
+    created = await prisma.event.create({
+      data: {
+        title: data.title,
+        slug: finalSlug,
+        description: data.description || null,
+        location: data.location || null,
+        startDate: new Date(data.startDate),
+        endDate: data.endDate ? new Date(data.endDate) : null,
+        image: data.image || null,
+        link: data.link || null,
+        category: data.category || null,
+        eventType: data.eventType || null,
+        venueName: data.venueName || null,
+        venueAddress: data.venueAddress || null,
+        capacity: data.capacity ?? null,
+        registrationDeadline: data.registrationDeadline ? new Date(data.registrationDeadline) : null,
+        status: data.status,
+        agenda: agendaValue === null ? Prisma.DbNull : (agendaValue as unknown as Prisma.InputJsonValue),
+        speakerIds: speakerIds.length > 0 ? (speakerIds as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
+      },
+    });
+  } catch (err) {
+    console.error("createEvent:", err);
+    redirect(`/admin/events/new?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/events");
   revalidatePath("/events");
-  redirect("/admin/events");
+  revalidatePath(`/events/register/${finalSlug}`);
+  redirect(`/admin/events/edit/${created.id}?saved=created`);
 }
 
 export async function updateEvent(id: number, formData: FormData) {
@@ -88,6 +107,10 @@ export async function updateEvent(id: number, formData: FormData) {
     capacity: formData.get("capacity") || undefined,
     registrationDeadline: formData.get("registrationDeadline") || undefined,
     status: formData.get("status") || "draft",
+    agendaJson: (() => {
+      const v = formData.get("agendaJson");
+      return typeof v === "string" ? v : undefined;
+    })(),
   };
 
   const parsed = eventFormSchema.safeParse(raw);
@@ -98,48 +121,64 @@ export async function updateEvent(id: number, formData: FormData) {
   const data = parsed.data;
   const finalSlug = data.slug?.trim() || slugify(data.title);
 
-  await prisma.event.update({
-    where: { id },
-    data: {
-      title: data.title,
-      slug: finalSlug,
-      description: data.description || null,
-      location: data.location || null,
-      startDate: new Date(data.startDate),
-      endDate: data.endDate ? new Date(data.endDate) : null,
-      image: data.image || null,
-      link: data.link || null,
-      category: data.category || null,
-      eventType: data.eventType || null,
-      venueName: data.venueName || null,
-      venueAddress: data.venueAddress || null,
-      capacity: data.capacity ?? null,
-      registrationDeadline: data.registrationDeadline ? new Date(data.registrationDeadline) : null,
-      status: data.status,
-    },
-  });
+  try {
+    const agendaValue = parseAgendaJsonField(data.agendaJson);
+    const speakerIdsRaw = parseSpeakerIdsFromForm(formData);
+    const speakerIds = await filterValidTeamIds(prisma, speakerIdsRaw);
+    await prisma.event.update({
+      where: { id },
+      data: {
+        title: data.title,
+        slug: finalSlug,
+        description: data.description || null,
+        location: data.location || null,
+        startDate: new Date(data.startDate),
+        endDate: data.endDate ? new Date(data.endDate) : null,
+        image: data.image || null,
+        link: data.link || null,
+        category: data.category || null,
+        eventType: data.eventType || null,
+        venueName: data.venueName || null,
+        venueAddress: data.venueAddress || null,
+        capacity: data.capacity ?? null,
+        registrationDeadline: data.registrationDeadline ? new Date(data.registrationDeadline) : null,
+        status: data.status,
+        agenda: agendaValue === null ? Prisma.DbNull : (agendaValue as unknown as Prisma.InputJsonValue),
+        speakerIds: speakerIds.length > 0 ? (speakerIds as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
+      },
+    });
+  } catch (err) {
+    console.error("updateEvent:", err);
+    redirect(`/admin/events/edit/${id}?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
+  }
 
   revalidatePath("/admin/events");
   revalidatePath(`/admin/events/edit/${id}`);
   revalidatePath("/events");
   revalidatePath("/");
-  redirect("/admin/events");
+  revalidatePath(`/events/register/${finalSlug}`);
+  redirect(`/admin/events/edit/${id}?saved=1`);
 }
 
 export async function deleteEvent(id: number, _formData?: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
 
-  const event = await prisma.event.findUnique({ where: { id } });
-  if (event?.slug) {
-    await prisma.eventRegistration.deleteMany({ where: { eventSlug: event.slug } });
-  } else {
-    await prisma.eventRegistration.deleteMany({ where: { eventId: id } });
+  try {
+    const event = await prisma.event.findUnique({ where: { id } });
+    if (event?.slug) {
+      await prisma.eventRegistration.deleteMany({ where: { eventSlug: event.slug } });
+    } else {
+      await prisma.eventRegistration.deleteMany({ where: { eventId: id } });
+    }
+    await prisma.event.delete({ where: { id } });
+  } catch (err) {
+    console.error("deleteEvent:", err);
+    redirect(`/admin/events?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
   }
-  await prisma.event.delete({ where: { id } });
 
   revalidatePath("/admin/events");
   revalidatePath("/events");
   revalidatePath("/");
-  redirect("/admin/events");
+  redirect("/admin/events?saved=deleted");
 }

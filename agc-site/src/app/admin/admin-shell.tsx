@@ -25,7 +25,7 @@ import {
   Inbox,
 } from "lucide-react";
 import { siteConfig } from "@/data/content";
-import { getAdminBreadcrumbs, getAdminTitle } from "@/lib/admin-breadcrumbs";
+import { getAdminBreadcrumbs } from "@/lib/admin-breadcrumbs";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -45,6 +45,7 @@ const navItems = [
 export function AdminShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/admin/login";
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   if (isLoginPage) {
     return (
@@ -64,9 +65,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const title = pathname ? getAdminTitle(pathname) : "Admin";
-  const crumbs = pathname ? getAdminBreadcrumbs(pathname) : [{ label: "Dashboard" }];
+  const crumbs = pathname ? getAdminBreadcrumbs(pathname) : [];
 
   return (
     <div className="flex min-h-screen bg-[#f0f2f5]">
@@ -164,21 +163,22 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           </button>
 
           <div className="min-w-0 flex-1">
-            <nav className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs text-slate-500 sm:text-sm" aria-label="Breadcrumb">
-              {crumbs.map((c, i) => (
-                <span key={`${c.label}-${i}`} className="flex items-center gap-1">
-                  {i > 0 && <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />}
-                  {c.href ? (
-                    <Link href={c.href} className="hover:text-accent-600">
-                      {c.label}
-                    </Link>
-                  ) : (
-                    <span className="font-medium text-slate-800">{c.label}</span>
-                  )}
-                </span>
-              ))}
-            </nav>
-            <p className="mt-0.5 truncate text-lg font-semibold tracking-tight text-slate-900 sm:text-xl">{title}</p>
+            {crumbs.length > 0 && (
+              <nav className="flex flex-wrap items-center gap-x-1 gap-y-0.5 text-xs text-slate-500 sm:text-sm" aria-label="Breadcrumb">
+                {crumbs.map((c, i) => (
+                  <span key={`${c.label}-${i}`} className="flex items-center gap-1">
+                    {i > 0 && <ChevronRight className="h-3.5 w-3.5 shrink-0 text-slate-400" aria-hidden />}
+                    {c.href ? (
+                      <Link href={c.href} className="hover:text-accent-600">
+                        {c.label}
+                      </Link>
+                    ) : (
+                      <span className="font-medium text-slate-800">{c.label}</span>
+                    )}
+                  </span>
+                ))}
+              </nav>
+            )}
           </div>
 
           <form action={async () => signOut({ callbackUrl: "/admin/login" })} className="shrink-0">
