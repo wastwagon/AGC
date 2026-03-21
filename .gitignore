@@ -2,6 +2,9 @@
 .DS_Store
 Thumbs.db
 
+# Local Docker Compose overrides (merge with docker-compose.yml; never commit)
+docker-compose.override.yml
+
 # Secrets — never commit (use .env.docker.example / agc-site/.env.example)
 .env
 .env.local

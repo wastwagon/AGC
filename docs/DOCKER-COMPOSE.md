@@ -50,6 +50,14 @@ See [`.env.docker.example`](../.env.docker.example) at the repo root. Required f
 
 Optional: `WEB_PORT`, `POSTGRES_HOST_PORT` to change host port mapping.
 
+## Local overrides
+
+Docker Compose automatically merges **`docker-compose.override.yml`** (if present) with `docker-compose.yml`. That file is **gitignored** so accidental services (e.g. experiments) are not committed. The repo’s merged config only defines **`web`**, **`agc-db`**, **`redis`**, and **`migrate`** — verify with:
+
+```bash
+docker compose config --services
+```
+
 ## Removing leftover Directus containers (local only)
 
 Directus was **never** part of this repository. If you experimented with `directus/directus` and still see containers like **`agc-cms`** / **`agc-cms-db`** in Docker Desktop, they are safe to remove:
