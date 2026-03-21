@@ -2,13 +2,14 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X, Search } from "lucide-react";
 import { siteConfig, ourWorkSubLinks, getInvolvedSubLinks } from "@/data/content";
 import { NavDropdown } from "./NavDropdown";
 import { LanguageSelector } from "./LanguageSelector";
 import { HeaderTopbar } from "./HeaderTopbar";
 import { SearchModal } from "./SearchModal";
+import { useMobileNav } from "./mobile/MobileNavContext";
 
 type NavItem = { href: string; label: string; subLinks?: { href: string; label: string }[] };
 
@@ -24,16 +25,22 @@ const navWithDropdowns: NavItem[] = [
 ];
 
 export function Header() {
-  const [mobileOpen, setMobileOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
+  const { mobileOpen, setMobileOpen, searchOpen, setSearchOpen } = useMobileNav();
   const [scrolled, setScrolled] = useState(false);
-  const showTopbar = true; // Consultar Home 3 shows topbar on all pages
+  const showTopbar = true;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 80);
     window.addEventListener("scroll", onScroll);
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = mobileOpen ? "hidden" : "";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [mobileOpen]);
 
   return (
     <header
@@ -80,7 +87,9 @@ export function Header() {
             </nav>
 
             <div className="flex items-center gap-3">
-              <LanguageSelector />
+              <div className="hidden sm:block">
+                <LanguageSelector />
+              </div>
               <button
                 type="button"
                 onClick={() => setSearchOpen(true)}
@@ -100,79 +109,13 @@ export function Header() {
                 type="button"
                 className="inline-flex items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
                 onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label="Toggle menu"
+                aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                aria-expanded={mobileOpen}
               >
                 {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
               </button>
             </div>
           </div>
-        </nav>
-      </div>
-
-      {mobileOpen && (
-        <div className="fixed inset-0 z-40 bg-black/60 lg:hidden" onClick={() => setMobileOpen(false)} aria-hidden />
-      )}
-      <div
-        className={`fixed left-0 top-0 z-50 h-full w-72 max-w-[85vw] bg-[#232f4b] shadow-xl transition-transform duration-300 lg:hidden ${
-          mobileOpen ? "translate-x-0" : "-translate-x-full"
-        }`}
-      >
-        <div className="flex h-20 items-center justify-between border-b border-white/10 px-4">
-          <span className="text-lg font-semibold text-white">{siteConfig.name}</span>
-          <button
-            type="button"
-            onClick={() => setMobileOpen(false)}
-            className="rounded p-2 text-white hover:bg-white/10"
-            aria-label="Close menu"
-          >
-            <X className="h-6 w-6" />
-          </button>
-        </div>
-        <nav className="overflow-y-auto p-4">
-          {navWithDropdowns.map((item) => (
-            <div key={item.href} className="border-b border-white/10 py-2">
-              <Link
-                href={item.href}
-                className="block py-3 text-base font-medium text-white hover:text-accent-300"
-                onClick={() => setMobileOpen(false)}
-              >
-                {item.label}
-              </Link>
-              {item.subLinks && (
-                <ul className="ml-4 space-y-1 pb-2">
-                  {item.subLinks.map((sub) => (
-                    <li key={sub.href}>
-                      <Link
-                        href={sub.href}
-                        className="block py-2 text-sm text-slate-300 hover:text-accent-300"
-                        onClick={() => setMobileOpen(false)}
-                      >
-                        {sub.label}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          ))}
-          <button
-            type="button"
-            onClick={() => { setMobileOpen(false); setSearchOpen(true); }}
-            className="mt-4 flex w-full items-center gap-3 rounded-lg border border-white/20 px-4 py-3 text-left text-white hover:bg-white/10"
-          >
-            <Search className="h-5 w-5" />
-            Search
-          </button>
-          <div className="mt-4 pt-4 border-t border-white/10">
-            <LanguageSelector />
-          </div>
-          <Link
-            href="/contact"
-            className="mt-4 block rounded-lg bg-accent-500 px-4 py-3 text-center font-medium text-white"
-            onClick={() => setMobileOpen(false)}
-          >
-            Contact
-          </Link>
         </nav>
       </div>
     </header>

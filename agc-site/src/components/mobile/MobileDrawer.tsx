@@ -1,0 +1,153 @@
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
+import {
+  Home,
+  Building2,
+  Layers,
+  Landmark,
+  Calendar,
+  Newspaper,
+  HeartHandshake,
+  Mail,
+  Search,
+  X,
+  ChevronRight,
+  BookOpen,
+} from "lucide-react";
+import { ourWorkSubLinks, getInvolvedSubLinks } from "@/data/content";
+import { LanguageSelector } from "@/components/LanguageSelector";
+import { useMobileNav } from "./MobileNavContext";
+
+type NavItem = { href: string; label: string; icon: typeof Home; subLinks?: { href: string; label: string }[] };
+
+const primaryNav: NavItem[] = [
+  { href: "/", label: "Home", icon: Home },
+  { href: "/about", label: "About Us", icon: Building2 },
+  { href: "/our-work", label: "Our Work", icon: Layers, subLinks: ourWorkSubLinks },
+  { href: "/app-summit", label: "APP Summit", icon: Landmark },
+  { href: "/events", label: "Events", icon: Calendar },
+  { href: "/news", label: "News", icon: Newspaper },
+  { href: "/get-involved", label: "Get Involved", icon: HeartHandshake, subLinks: getInvolvedSubLinks },
+  { href: "/contact", label: "Contact", icon: Mail },
+];
+
+export function MobileDrawer() {
+  const { mobileOpen, setMobileOpen, setSearchOpen } = useMobileNav();
+
+  return (
+    <>
+      {mobileOpen && (
+        <button
+          type="button"
+          className="fixed inset-0 z-[60] bg-stone-950/55 backdrop-blur-[2px] transition-opacity lg:hidden"
+          onClick={() => setMobileOpen(false)}
+          aria-label="Close menu"
+        />
+      )}
+      <aside
+        className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,20rem)] max-w-[22rem] flex-col bg-gradient-to-b from-accent-900 via-[#152a32] to-accent-950 shadow-[8px_0_40px_-12px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out lg:hidden ${
+          mobileOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
+        }`}
+        aria-hidden={!mobileOpen}
+      >
+        {/* Header — fixed strip */}
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-4 py-3.5">
+          <Link href="/" className="flex min-w-0 items-center gap-2.5" onClick={() => setMobileOpen(false)}>
+            <Image
+              src="/agc-logo.png"
+              alt=""
+              width={120}
+              height={36}
+              className="h-8 w-auto object-contain brightness-0 invert opacity-95"
+            />
+          </Link>
+          <button
+            type="button"
+            onClick={() => setMobileOpen(false)}
+            className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
+            aria-label="Close menu"
+          >
+            <X className="h-5 w-5" strokeWidth={2.25} />
+          </button>
+        </div>
+
+        {/* Scrollable nav — all items visible */}
+        <nav
+          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.25)_transparent]"
+          aria-label="Primary navigation"
+        >
+          <ul className="space-y-0.5">
+            {primaryNav.map((item) => {
+              const Icon = item.icon;
+              return (
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className="group flex items-center gap-3 rounded-xl px-3 py-3 text-[0.9375rem] font-medium text-white transition-colors hover:bg-white/10 active:bg-white/15"
+                  >
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-accent-100 ring-1 ring-white/10">
+                      <Icon className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
+                    </span>
+                    <span className="min-w-0 flex-1 font-[family-name:var(--font-fraunces)] text-base tracking-tight">
+                      {item.label}
+                    </span>
+                    <ChevronRight className="h-4 w-4 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5 group-hover:text-white/60" aria-hidden />
+                  </Link>
+                  {item.subLinks && item.subLinks.length > 0 && (
+                    <ul className="ml-[3.25rem] mt-1 space-y-0.5 border-l border-white/15 pl-3 pb-2">
+                      {item.subLinks.map((sub) => (
+                        <li key={sub.href}>
+                          <Link
+                            href={sub.href}
+                            onClick={() => setMobileOpen(false)}
+                            className="flex items-center gap-2 rounded-lg py-2.5 pl-1 text-sm text-white/80 transition-colors hover:text-white"
+                          >
+                            <BookOpen className="h-3.5 w-3.5 shrink-0 text-accent-200/80" aria-hidden />
+                            {sub.label}
+                          </Link>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+
+          <button
+            type="button"
+            onClick={() => {
+              setMobileOpen(false);
+              setSearchOpen(true);
+            }}
+            className="mt-4 flex w-full items-center gap-3 rounded-xl border border-white/15 bg-white/5 px-3 py-3.5 text-left text-white transition-colors hover:bg-white/10"
+          >
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-500/30 text-accent-100">
+              <Search className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
+            </span>
+            <span className="font-[family-name:var(--font-fraunces)] text-base">Search the site</span>
+          </button>
+        </nav>
+
+        {/* Footer strip — language + CTA */}
+        <div className="shrink-0 space-y-3 border-t border-white/10 bg-accent-950/80 px-3 py-4 backdrop-blur-sm">
+          <div className="rounded-xl bg-white/5 px-2 py-2 ring-1 ring-white/10">
+            <p className="mb-2 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">Language</p>
+            <LanguageSelector variant="dark" />
+          </div>
+          <Link
+            href="/contact"
+            onClick={() => setMobileOpen(false)}
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 text-center font-semibold text-accent-900 shadow-md transition hover:bg-accent-50"
+          >
+            <Mail className="h-4 w-4" aria-hidden />
+            Contact us
+          </Link>
+        </div>
+      </aside>
+    </>
+  );
+}

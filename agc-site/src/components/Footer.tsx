@@ -30,7 +30,7 @@ const footerWorkItems = [
  */
 export function Footer() {
   return (
-    <footer className="relative overflow-hidden border-t border-accent-500/30 bg-accent-900 text-white">
+    <footer className="relative overflow-hidden border-t border-accent-500/30 bg-accent-900 pb-[calc(4.25rem+env(safe-area-inset-bottom,0px))] text-white xl:pb-0">
       {/* Upper footer - 4 columns */}
       <div className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-[60px] xl:py-[90px]">
         <div className="mx-auto w-full max-w-6xl">

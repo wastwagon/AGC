@@ -1,33 +1,57 @@
 # Deploy AGC to Coolify (VPS)
 
-Use **`docker-compose.yml`** for the **full stack** (PostgreSQL, Redis, migrations, Next.js), or **`docker-compose.web-only.yml`** if DB/Redis are managed separately in Coolify.
+## Choose your stack
+
+| You want | Compose file | Notes |
+|----------|----------------|------|
+| **Everything in Compose** (Postgres, Redis, migrations, Next.js on one VPS) | **`docker-compose.yml`** | **Recommended** default — see §2 below. |
+| DB/Redis managed separately in Coolify | **`docker-compose.web-only.yml`** | Set `DATABASE_URL` / `REDIS_URL` yourself. |
+
+---
 
 ## 1. Repository layout
 
 Coolify build context should be the **repo root** where `agc-site/` and `docker-compose.yml` live (or mirror this layout).
 
-## 2. Docker Compose in Coolify
+## 2. Coolify form — **everything in Compose** (`docker-compose.yml`)
 
-- Create a **Docker Compose** resource.
-- **All-in-one on the VPS:** point Compose file to **`docker-compose.yml`** (services: `agc-db`, `redis`, `migrate`, `web`).
-- **Web only (hosted DB/Redis):** use **`docker-compose.web-only.yml`** and set `DATABASE_URL` / `REDIS_URL` in Coolify.
-- **Do not** commit secrets; set variables in Coolify’s environment UI.
+Use these values when creating the application:
 
-## 3. Required environment variables
+| Field | Value |
+|-------|--------|
+| **Base Directory** | `/` (repo root) |
+| **Docker Compose Location** | **`/docker-compose.yml`** — note **`.yml`**, not `.yaml` |
+| **Branch** | `main` (or your default branch) |
+| **Build Pack** | Docker Compose |
 
-| Variable | Purpose |
-|----------|---------|
-| `NEXT_PUBLIC_SITE_URL` | Public site URL, e.g. `https://yourdomain.com` |
-| `AUTH_URL` | Same origin as the site (e.g. `https://yourdomain.com`) for NextAuth cookies |
-| `AUTH_SECRET` | `openssl rand -base64 32` |
-| `ADMIN_EMAIL` / `ADMIN_PASSWORD` | Admin login at `/admin` |
-| `AGC_DB_PASSWORD` | Postgres password for user `agc` (must match `DATABASE_URL`) |
-| `DATABASE_URL` | On Coolify, often injected by a linked Postgres service; must be `postgresql://agc:PASSWORD@HOST:5432/agc?schema=public` |
-| `REDIS_URL` | `redis://redis:6379` when using the compose `redis` service |
-| `RESEND_API_KEY` | Optional; forms still save to DB without it |
-| `RESEND_FROM_EMAIL` | Optional verified sender |
+**Services started:** `agc-db` (Postgres), `redis`, `migrate` (Prisma, runs once then exits), `web` (Next.js on port 3000 inside the container).
 
-The **web** service in `docker-compose.yml` wires `DATABASE_URL` and `REDIS_URL` for you when using the bundled DB/Redis. Override `NEXT_PUBLIC_SITE_URL`, auth, and Resend in Coolify.
+In Coolify, attach your **public domain** to the **`web`** service (port **3000**). The DB and Redis ports are for internal Docker networking; you usually do **not** need to publish Postgres/Redis to the public internet.
+
+**Do not** commit secrets; set variables in Coolify’s environment UI.
+
+## 3. Environment variables
+
+### When using **`docker-compose.yml`** (bundled DB + Redis)
+
+`DATABASE_URL` and `REDIS_URL` are **set inside the compose file** for `web` / `migrate`. You **do not** paste full `DATABASE_URL` in Coolify unless you override — set **`AGC_DB_PASSWORD`** and the URLs in compose stay consistent.
+
+| Variable | Required | Purpose |
+|----------|----------|---------|
+| `NEXT_PUBLIC_SITE_URL` | Yes | `https://yourdomain.com` |
+| `AUTH_URL` | Yes | Same as public URL (NextAuth cookies) |
+| `AUTH_SECRET` | Yes | `openssl rand -base64 32` |
+| `ADMIN_EMAIL` | Yes | Admin login at `/admin` |
+| `ADMIN_PASSWORD` | Yes | Strong password for `/admin` |
+| `AGC_DB_PASSWORD` | Yes | Postgres password for user `agc` (used by compose for `agc-db` + app) |
+| `RESEND_API_KEY` | Optional | Email delivery |
+| `RESEND_FROM_EMAIL` | Optional | Verified sender |
+| `WEB_PORT` | Optional | Host port mapped to web (default `9200`); Coolify may map its proxy instead — follow Coolify’s port UI |
+| `POSTGRES_HOST_PORT` | Optional | Default `5436`; restrict or omit exposing DB on the host in production |
+
+### When using **`docker-compose.web-only.yml`**
+
+Set `DATABASE_URL` and `REDIS_URL` in Coolify to your managed services; see compose file comments.
 
 ## 4. Migrations
 
