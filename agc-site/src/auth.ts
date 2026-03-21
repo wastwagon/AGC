@@ -1,6 +1,13 @@
 import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 
+const isProd = process.env.NODE_ENV === "production";
+if (isProd && !process.env.AUTH_SECRET) {
+  console.error(
+    "[auth] AUTH_SECRET is missing in production — set it in your deployment env (e.g. Coolify). Admin login will not work reliably."
+  );
+}
+
 export const { handlers, signIn, signOut, auth } = NextAuth({
   providers: [
     Credentials({
@@ -14,7 +21,9 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         const password = process.env.ADMIN_PASSWORD?.trim();
 
         if (!email || !password) {
-          console.warn("ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env.local");
+          console.warn(
+            "[auth] ADMIN_EMAIL and/or ADMIN_PASSWORD missing — set both in deployment environment (not only .env.local)."
+          );
           return null;
         }
 
