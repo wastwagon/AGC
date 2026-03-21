@@ -3,12 +3,12 @@
 # =============================================================================
 # Services:
 #   web      — Next.js (public site + API routes + admin) — this is your “frontend + backend”
-#   agc-db   — PostgreSQL (Prisma / CMS content, forms, events)
+#   agc-db   — PostgreSQL (Prisma: site content, forms, events)
 #   redis    — Redis (rate limiting, etc.)
 #   migrate  — one-off Prisma migrations before web starts
 #
 # Usage (from repo root):
-#   cp .env.cms.example .env
+#   cp .env.docker.example .env
 #   docker compose up -d --build
 #
 # Site: http://localhost:9200  |  Postgres on host: localhost:5436

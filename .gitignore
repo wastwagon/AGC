@@ -2,12 +2,12 @@
 .DS_Store
 Thumbs.db
 
-# Secrets — never commit (use .env.cms.example / agc-site/.env.example)
+# Secrets — never commit (use .env.docker.example / agc-site/.env.example)
 .env
 .env.local
 .env.*.local
 !.env.example
-!.env.cms.example
+!.env.docker.example
 
 # Dependencies & build outputs
 **/node_modules/

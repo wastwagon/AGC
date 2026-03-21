@@ -1,6 +1,6 @@
 # Africa Governance Centre (AGC)
 
-Next.js website and Docker tooling for **Africa Governance Centre** — public site, admin CMS, PostgreSQL content, and Redis.
+Next.js website and Docker tooling for **Africa Governance Centre** — public site, built-in `/admin` content tools, PostgreSQL (Prisma), and Redis. **No Directus or external headless CMS** — content lives in the app and database.
 
 **Repository:** [github.com/wastwagon/AGC](https://github.com/wastwagon/AGC)
 
@@ -36,7 +36,7 @@ App (default): [http://localhost:9200](http://localhost:9200) · Admin: `/admin`
 ## Full stack with Docker
 
 ```bash
-cp .env.cms.example .env
+cp .env.docker.example .env
 # Set AGC_DB_PASSWORD, NEXT_PUBLIC_SITE_URL, AUTH_*, ADMIN_*, optional RESEND_*
 
 docker compose up -d --build
@@ -80,7 +80,7 @@ If the remote already has a README (empty repo): `git push -u origin main` is en
 ## Security
 
 - **Do not commit** `.env`, `.env.local`, or real `ADMIN_PASSWORD` / `AUTH_SECRET`.
-- Use `.env.cms.example` and `agc-site/.env.example` as templates only.
+- Use `.env.docker.example` (repo root) and `agc-site/.env.example` as templates only.
 
 ## License
 

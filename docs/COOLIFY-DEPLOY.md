@@ -85,7 +85,7 @@ That usually means the proxy has **no healthy backend** for the **`web`** servic
 From repo root:
 
 ```bash
-cp .env.cms.example .env   # if needed; edit passwords and URLs
+cp .env.docker.example .env   # if needed; edit passwords and URLs
 docker compose up -d --build
 ```
 

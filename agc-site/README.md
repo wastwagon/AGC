@@ -16,14 +16,14 @@ A modern, professional website for the Africa Governance Centre — an independe
 
 ### Option 1: Direct (Recommended for development)
 
-**PostgreSQL is required** for `/admin`, Prisma models, and most CMS features. If you see `Can't reach database server at localhost:5436`, nothing is listening at `DATABASE_URL` — start Postgres or fix the URL.
+**PostgreSQL is required** for `/admin`, Prisma models, and editable site content. If you see `Can't reach database server at localhost:5436`, nothing is listening at `DATABASE_URL` — start Postgres or fix the URL.
 
 1. **Start Postgres (Docker — from repo root, parent of `agc-site/`):**  
    Start **Docker Desktop** (or your Docker daemon), then:
    ```bash
    docker compose up -d agc-db
    ```
-   Default host port is **5436** (see root `docker-compose.yml`). Copy root `.env.cms.example` → `.env` if you don’t have one; default password is `agc_secret`.
+   Default host port is **5436** (see root `docker-compose.yml`). Copy root `.env.docker.example` → `.env` if you don’t have one; default password is `agc_secret`.
 
 2. **Set `DATABASE_URL` in `agc-site/.env.local`** to match, for example:
    ```bash
@@ -75,7 +75,7 @@ All content (events, news, team, publications, programs, projects, partners, pag
 
 ```bash
 # From AGC root
-cp .env.cms.example .env
+cp .env.docker.example .env
 # Edit .env (set AGC_DB_PASSWORD, etc.)
 
 docker compose up -d
@@ -98,7 +98,7 @@ Migrations run automatically on first start. Seed initial content: `cd agc-site 
 
 4. **Build context** stays **`./agc-site`** for the `web` service (as defined in those compose files).
 
-5. **Environment variables** — see root **`docs/COOLIFY-DEPLOY.md`** and **`.env.cms.example`** (auth, `NEXT_PUBLIC_SITE_URL`, Resend, etc.).
+5. **Environment variables** — see root **`docs/COOLIFY-DEPLOY.md`** and **`.env.docker.example`** (auth, `NEXT_PUBLIC_SITE_URL`, Resend, etc.).
 
 6. **Deploy** — Coolify builds and runs the stack.
 
