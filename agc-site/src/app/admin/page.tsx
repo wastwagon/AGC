@@ -1,0 +1,58 @@
+import Link from "next/link";
+import {
+  Image as ImageIcon,
+  Calendar,
+  Newspaper,
+  Users,
+  BookOpen,
+  FolderKanban,
+  Briefcase,
+  Handshake,
+  FileText,
+  QrCode,
+} from "lucide-react";
+
+export const dynamic = "force-dynamic";
+
+const sections = [
+  { href: "/admin/media", label: "Media", icon: ImageIcon, desc: "Upload and manage images" },
+  { href: "/admin/events", label: "Events", icon: Calendar, desc: "Manage events and registrations" },
+  { href: "/admin/events/scan", label: "Check-in Scanner", icon: QrCode, desc: "Scan QR codes at events" },
+  { href: "/admin/news", label: "News", icon: Newspaper, desc: "News articles and updates" },
+  { href: "/admin/team", label: "Team", icon: Users, desc: "Team members and bios" },
+  { href: "/admin/publications", label: "Publications", icon: BookOpen, desc: "Reports and policy briefs" },
+  { href: "/admin/programs", label: "Programs", icon: FolderKanban, desc: "Program descriptions" },
+  { href: "/admin/projects", label: "Projects", icon: Briefcase, desc: "Project descriptions" },
+  { href: "/admin/partners", label: "Partners", icon: Handshake, desc: "Partner logos and links" },
+  { href: "/admin/pages", label: "Page Content", icon: FileText, desc: "Hero text and page content" },
+];
+
+export default function AdminDashboardPage() {
+  return (
+    <div>
+      <h1 className="font-serif text-2xl font-bold text-slate-900">Admin Dashboard</h1>
+      <p className="mt-2 text-slate-600">Manage all site content from one place.</p>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {sections.map((item) => {
+          const Icon = item.icon;
+          return (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-accent-200 hover:shadow-md"
+            >
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600 transition-colors group-hover:bg-accent-100">
+                <Icon className="h-6 w-6" />
+              </div>
+              <div>
+                <h2 className="font-semibold text-slate-900 group-hover:text-accent-600">{item.label}</h2>
+                <p className="mt-1 text-sm text-slate-500">{item.desc}</p>
+              </div>
+            </Link>
+          );
+        })}
+      </div>
+    </div>
+  );
+}

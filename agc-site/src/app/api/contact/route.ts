@@ -1,0 +1,70 @@
+import { NextResponse } from "next/server";
+import { Resend } from "resend";
+import { prisma } from "@/lib/db";
+import { siteConfig } from "@/data/content";
+import { nl2br, escapeHtml } from "@/lib/sanitize";
+import { rateLimit } from "@/lib/rate-limit";
+import { contactSchema } from "@/lib/validations";
+
+const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
+
+function getClientIp(request: Request): string {
+  return request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || request.headers.get("x-real-ip") || "unknown";
+}
+
+export async function POST(request: Request) {
+  try {
+    const ip = getClientIp(request);
+    const { success, retryAfter } = await rateLimit(`contact:${ip}`);
+    if (!success) {
+      return NextResponse.json(
+        { error: "Too many requests. Please try again later." },
+        { status: 429, headers: { "Retry-After": String(retryAfter ?? 60) } }
+      );
+    }
+
+    const body = await request.json();
+    const parsed = contactSchema.safeParse(body);
+
+    if (!parsed.success) {
+      const msg = parsed.error.issues[0]?.message || "Invalid input";
+      return NextResponse.json({ error: msg }, { status: 400 });
+    }
+
+    const { name, email, subject, message } = parsed.data;
+
+    // Store in DB
+    await prisma.contactSubmission.create({
+      data: { name, email, subject: subject ?? null, message },
+    });
+
+    if (!resend) {
+      return NextResponse.json({ success: true });
+    }
+
+    const { error } = await resend.emails.send({
+      from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
+      to: siteConfig.email.programs,
+      replyTo: email,
+      subject: subject ? `[AGC Contact] ${escapeHtml(subject)}` : `[AGC Contact] From ${escapeHtml(name)}`,
+      html: `
+        <h2>New contact form submission</h2>
+        <p><strong>Name:</strong> ${escapeHtml(name)}</p>
+        <p><strong>Email:</strong> ${escapeHtml(email)}</p>
+        ${subject ? `<p><strong>Subject:</strong> ${escapeHtml(subject)}</p>` : ""}
+        <p><strong>Message:</strong></p>
+        <p>${nl2br(message)}</p>
+      `,
+    });
+
+    if (error) {
+      console.error("Resend error:", error);
+      return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+    }
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("Contact API error:", err);
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+  }
+}

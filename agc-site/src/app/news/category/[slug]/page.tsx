@@ -1,0 +1,98 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+import { newsContent, newsCategories, fallbackNews } from "@/data/content";
+import { placeholderImages } from "@/data/images";
+import { getNews } from "@/lib/content";
+import type { CmsNews } from "@/lib/content";
+import { PageHero } from "@/components/PageHero";
+import { NewsCard } from "@/components/NewsCard";
+import { NewsFilters } from "@/components/NewsFilters";
+import { Button } from "@/components/Button";
+import { filterNewsByCategory, getActiveCategorySlugs, getCategoryLabel } from "@/lib/news";
+import { resolveImageUrl } from "@/lib/media";
+
+type Props = { params: Promise<{ slug: string }> };
+
+export function generateStaticParams() {
+  return newsCategories.map((c) => ({ slug: c.slug }));
+}
+
+export async function generateMetadata({ params }: Props) {
+  const { slug } = await params;
+  const label = getCategoryLabel(slug);
+  return {
+    title: `${label} | News`,
+    description: `Latest news in ${label} from Africa Governance Centre.`,
+  };
+}
+
+export const revalidate = 60;
+
+export default async function NewsCategoryPage({ params }: Props) {
+  const { slug } = await params;
+  const category = newsCategories.find((c) => c.slug === slug);
+  if (!category) notFound();
+
+  const cmsNews = await getNews(50);
+  const allNews: CmsNews[] = cmsNews.length > 0 ? cmsNews : (fallbackNews as CmsNews[]);
+  const newsItems = filterNewsByCategory(allNews, slug);
+  const activeCategories = getActiveCategorySlugs(allNews);
+  const itemsWithImages = await Promise.all(
+    newsItems.map(async (item) => ({
+      item,
+      imageUrl: (await resolveImageUrl(item.image)) || placeholderImages.news,
+    }))
+  );
+
+  return (
+    <>
+      <PageHero
+        title={category.label}
+        subtitle={category.description || newsContent.subtitle}
+        image={placeholderImages.news}
+        imageAlt={category.label}
+        breadcrumbs={[
+          { label: "Home", href: "/" },
+          { label: "News", href: "/news" },
+          { label: category.label },
+        ]}
+      />
+
+      <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4">
+            <div>
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Category</p>
+              <p className="mt-1 page-prose max-w-xl text-sm">
+                {newsItems.length} {newsItems.length === 1 ? "story" : "stories"} in this topic. Browse others below.
+              </p>
+            </div>
+            <Link
+              href="/news"
+              className="text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-4 hover:text-accent-950"
+            >
+              All news
+            </Link>
+          </div>
+
+          <NewsFilters activeCategorySlugs={activeCategories} currentCategory={slug} />
+
+          {newsItems.length > 0 ? (
+            <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
+              {itemsWithImages.map(({ item, imageUrl }) => (
+                <NewsCard key={item.id} item={item} imageUrl={imageUrl} href="/news" />
+              ))}
+            </div>
+          ) : (
+            <div className="page-card max-w-lg border-l-[4px] border-l-accent-600 p-8 sm:p-10">
+              <p className="page-prose">{newsContent.filters.noResults}</p>
+              <Button asChild href="/news" variant="primary" className="mt-6">
+                View all news
+              </Button>
+            </div>
+          )}
+        </div>
+      </section>
+    </>
+  );
+}

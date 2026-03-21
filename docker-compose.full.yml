@@ -1,0 +1,85 @@
+# Africa Governance Centre - Full Stack
+# Web app + Redis (content managed via website admin)
+# Run: docker compose -f docker-compose.full.yml up -d
+
+services:
+  # Run Prisma migrations (content + event registrations)
+  migrate:
+    build:
+      context: ./agc-site
+      dockerfile: Dockerfile.migrate
+    container_name: agc-migrate
+    environment:
+      - DATABASE_URL=postgresql://agc:${AGC_DB_PASSWORD:-agc_secret}@agc-db:5432/agc?schema=public
+    depends_on:
+      agc-db:
+        condition: service_healthy
+    restart: "no"
+
+  # Next.js website (admin manages all content)
+  web:
+    build:
+      context: ./agc-site
+      dockerfile: Dockerfile
+    container_name: agc-web
+    restart: unless-stopped
+    ports:
+      - "9200:3000"
+    environment:
+      - NODE_ENV=production
+      - NEXT_PUBLIC_SITE_URL=${NEXT_PUBLIC_SITE_URL:-http://localhost:9200}
+      - AUTH_URL=${AUTH_URL:-http://localhost:9200}
+      - AUTH_SECRET=${AUTH_SECRET}
+      - ADMIN_EMAIL=${ADMIN_EMAIL}
+      - ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      - DATABASE_URL=postgresql://agc:${AGC_DB_PASSWORD:-agc_secret}@agc-db:5432/agc?schema=public
+      - REDIS_URL=redis://redis:6379
+      - RESEND_API_KEY=${RESEND_API_KEY}
+      - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL}
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis (rate limiting)
+  redis:
+    image: redis:7-alpine
+    container_name: agc-redis
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # PostgreSQL (content + event registrations via Prisma)
+  agc-db:
+    image: postgres:16-alpine
+    container_name: agc-db
+    restart: unless-stopped
+    ports:
+      - "5436:5432"  # Expose for local dev (npm run dev)
+    environment:
+      POSTGRES_USER: agc
+      POSTGRES_PASSWORD: ${AGC_DB_PASSWORD:-agc_secret}
+      POSTGRES_DB: agc
+    volumes:
+      - agc-db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U agc"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  agc-db-data:
+  redis-data:

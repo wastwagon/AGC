@@ -1,0 +1,164 @@
+import Link from "next/link";
+import { User, Mail, Briefcase, MapPin, Phone, ArrowUpRight } from "lucide-react";
+import { getInvolvedContent, siteConfig } from "@/data/content";
+import { placeholderImages } from "@/data/images";
+import { PageHero } from "@/components/PageHero";
+import { getMergedPageContent } from "@/lib/page-content";
+
+const icons = [User, Mail, Briefcase] as const;
+
+export const metadata = {
+  title: "Get Involved",
+  description: "Volunteer, partner, or work with Africa Governance Centre to advance governance excellence.",
+};
+
+export default async function GetInvolvedPage() {
+  const content = await getMergedPageContent("get-involved", {
+    title: getInvolvedContent.title,
+    subtitle: getInvolvedContent.subtitle,
+  } as Record<string, unknown>);
+  const { bottomSection } = getInvolvedContent;
+
+  return (
+    <>
+      <PageHero
+        title={(content.title as string) ?? getInvolvedContent.title}
+        subtitle={(content.subtitle as string) ?? getInvolvedContent.subtitle}
+        image={placeholderImages.getInvolved}
+        imageAlt="Get Involved"
+        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Get Involved" }]}
+      />
+
+      <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-24">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="max-w-2xl">
+            <p className="text-sm font-medium text-accent-800">Ways to connect</p>
+            <h2 className="page-heading mt-2 text-2xl sm:text-3xl lg:text-4xl">Join the work</h2>
+            <p className="page-prose mt-4 text-lg">{getInvolvedContent.intro}</p>
+          </div>
+
+          <div className="mt-14 grid gap-6 lg:grid-cols-3 lg:gap-8">
+            <Link
+              href={getInvolvedContent.opportunities[0].pageHref}
+              className="group relative overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] p-8 shadow-sm transition-all duration-300 hover:border-accent-300/60 hover:shadow-lg sm:p-10 lg:col-span-2 lg:flex lg:flex-col lg:justify-between"
+            >
+              <div className="absolute right-0 top-0 h-40 w-40 translate-x-10 -translate-y-10 rounded-full bg-accent-100/60 opacity-80 transition-opacity group-hover:opacity-100" />
+              <div className="relative">
+                <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-700 text-white transition-transform duration-300 group-hover:scale-[1.02]">
+                  <User className="h-7 w-7" />
+                </div>
+                <h3 className="mt-6 font-serif text-2xl font-semibold text-stone-900 sm:text-3xl">
+                  {getInvolvedContent.opportunities[0].title}
+                </h3>
+                <p className="page-prose mt-3">{getInvolvedContent.opportunities[0].description}</p>
+                <ul className="mt-6 grid gap-2 sm:grid-cols-2">
+                  {getInvolvedContent.opportunities[0].items.map((item) => (
+                    <li key={item} className="flex items-center gap-2 text-stone-600">
+                      <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-600" />
+                      {item}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <span className="relative mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent-800 transition-all group-hover:gap-3">
+                {getInvolvedContent.opportunities[0].cta}
+                <ArrowUpRight className="h-4 w-4" />
+              </span>
+            </Link>
+
+            <div className="flex flex-col gap-6 lg:gap-8">
+              {getInvolvedContent.opportunities.slice(1).map((opp, i) => {
+                const Icon = icons[i + 1] ?? Briefcase;
+                return (
+                  <Link
+                    key={opp.id}
+                    href={opp.pageHref}
+                    className="group page-card flex flex-1 flex-col p-7 transition-all duration-300 hover:border-accent-200/50 hover:shadow-md sm:p-8"
+                  >
+                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700 transition-colors group-hover:bg-accent-200/80">
+                      <Icon className="h-6 w-6" strokeWidth={1.75} />
+                    </div>
+                    <h3 className="mt-4 font-serif text-xl font-semibold text-stone-900">{opp.title}</h3>
+                    <p className="page-prose-tight mt-2 text-sm">{opp.description}</p>
+                    <ul className="mt-4 space-y-1.5">
+                      {opp.items.map((item) => (
+                        <li key={item} className="flex items-center gap-2 text-sm text-stone-600">
+                          <span className="h-1 w-1 shrink-0 rounded-full bg-accent-600" />
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                    <span className="mt-6 inline-flex items-center gap-2 text-sm font-semibold text-accent-800 transition-all group-hover:gap-3">
+                      {opp.cta}
+                      <ArrowUpRight className="h-4 w-4" />
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Bottom section: bento-style two columns */}
+          <section className="mt-20 rounded-2xl border border-stone-200/80 bg-[#f2ebe3]/40 p-8 sm:p-10 lg:p-12">
+            <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
+              <div>
+                <h2 className="page-heading text-xl sm:text-2xl">{bottomSection.getInTouch.title}</h2>
+                <p className="page-prose mt-3">{bottomSection.getInTouch.text}</p>
+                <ul className="mt-6 space-y-4">
+                  <li className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffcf7] shadow-sm ring-1 ring-stone-200/60">
+                      <Mail className="h-5 w-5 text-accent-700" />
+                    </div>
+                    <a
+                      href={`mailto:${siteConfig.email.programs}`}
+                      className="text-stone-600 transition-colors hover:text-accent-700"
+                    >
+                      {siteConfig.email.programs}
+                    </a>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffcf7] shadow-sm ring-1 ring-stone-200/60">
+                      <Phone className="h-5 w-5 text-accent-700" />
+                    </div>
+                    <a
+                      href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+                      className="text-stone-600 transition-colors hover:text-accent-700"
+                    >
+                      {siteConfig.phone}
+                    </a>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffcf7] shadow-sm ring-1 ring-stone-200/60">
+                      <MapPin className="h-5 w-5 text-accent-700" />
+                    </div>
+                    <span className="text-stone-600">{siteConfig.address}</span>
+                  </li>
+                </ul>
+              </div>
+              <div>
+                <h2 className="page-heading text-xl sm:text-2xl">{bottomSection.upcomingEvents.title}</h2>
+                <p className="page-prose mt-3">{bottomSection.upcomingEvents.description}</p>
+                <ul className="mt-6 space-y-4">
+                  {bottomSection.upcomingEvents.events.map((evt) => (
+                    <li key={evt.label}>
+                      <Link
+                        href={evt.registerHref}
+                        className="group flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffcf7] p-4 transition-all hover:border-accent-300/60 hover:shadow-sm"
+                      >
+                        <span className="text-stone-700">{evt.label}</span>
+                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-accent-700 px-4 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-accent-800">
+                          Register
+                          <ArrowUpRight className="h-3.5 w-3.5" />
+                        </span>
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+    </>
+  );
+}

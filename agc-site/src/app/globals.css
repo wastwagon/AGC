@@ -1,0 +1,173 @@
+@import "tailwindcss";
+
+/* Warm canvas + teal (human dev / institutional, not cold SaaS) */
+:root {
+  --background: #f7f4ef;
+  --foreground: #1c1917;
+  --muted: #64748b;
+  --muted-foreground: #94a3b8;
+  --primary: #0f172a;
+  --primary-foreground: #f8fafc;
+  --accent: #2e728c;
+  --accent-light: #3d8ba8;
+  --accent-muted: #e8f4f8;
+  --border: #e7e0d5;
+  --card: #fffcf7;
+  --card-foreground: #1c1917;
+  /* Warm paper only — highlights follow logo teal (accent), not orange */
+  --warm-highlight: #2e728c;
+  --warm-muted: #e8f4f8;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-accent: var(--accent);
+  --color-accent-light: var(--accent-light);
+  --color-accent-muted: var(--accent-muted);
+  --color-primary: var(--primary);
+  --color-muted: var(--muted);
+  --color-border: var(--border);
+  --color-card: var(--card);
+  --font-sans: var(--font-ibm-plex);
+  --font-serif: var(--font-fraunces);
+  /* Logo teal-blue palette */
+  --color-accent-50: #eef7fa;
+  --color-accent-100: #d6edf3;
+  --color-accent-200: #b3dce8;
+  --color-accent-300: #80c5d9;
+  --color-accent-400: #4da9c5;
+  --color-accent-500: #2e728c;
+  --color-accent-600: #265d73;
+  --color-accent-700: #1e4859;
+  --color-accent-800: #163440;
+  --color-accent-900: #0e1f26;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+body {
+  background-color: var(--background);
+  background-image: radial-gradient(ellipse 120% 80% at 50% -20%, rgba(46, 114, 140, 0.08), transparent 52%),
+    radial-gradient(ellipse 70% 45% at 100% 40%, rgba(61, 139, 168, 0.05), transparent 50%);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+}
+
+/* Premium scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted);
+}
+
+/* Consultar-style animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-fade-in {
+  animation: fade-in 0.5s ease-out forwards;
+}
+
+/* Stagger children for sequential reveal */
+.animate-stagger > * {
+  opacity: 0;
+  animation: fade-in-up 0.5s ease-out forwards;
+}
+.animate-stagger > *:nth-child(1) { animation-delay: 0.1s; }
+.animate-stagger > *:nth-child(2) { animation-delay: 0.2s; }
+.animate-stagger > *:nth-child(3) { animation-delay: 0.3s; }
+.animate-stagger > *:nth-child(4) { animation-delay: 0.4s; }
+.animate-stagger > *:nth-child(5) { animation-delay: 0.5s; }
+.animate-stagger > *:nth-child(6) { animation-delay: 0.6s; }
+
+/* Inner pages — warm paper + logo teal accents */
+.page-section-paper {
+  background-color: #fffcf7;
+}
+.page-section-warm {
+  /* Logo teal tint on warm canvas */
+  background-color: color-mix(in srgb, #eef7fa 38%, #f7f4ef);
+  border-color: rgba(179, 220, 232, 0.4);
+}
+.page-prose {
+  font-size: 1.0625rem;
+  line-height: 1.68;
+  color: rgb(87 83 78);
+}
+.page-prose-tight {
+  line-height: 1.65;
+  color: rgb(87 83 78);
+}
+.page-heading {
+  font-family: var(--font-serif), ui-serif, Georgia, serif;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: rgb(28 25 23);
+}
+.page-card {
+  border-radius: 1rem;
+  border: 1px solid color-mix(in srgb, #b3dce8 42%, #e7e0d5);
+  background-color: #fffcf7;
+  box-shadow: 0 1px 2px rgba(14, 31, 38, 0.04);
+}
+
+/* Dark bands & hero overlays — logo deep teal (accent-900), not forest green */
+.bg-brand-deep {
+  background-color: var(--color-accent-900);
+}
+.border-l-brand {
+  border-left: 3px solid var(--color-accent-600);
+}

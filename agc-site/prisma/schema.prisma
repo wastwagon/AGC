@@ -1,0 +1,218 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+// ============ Content models (managed via /admin) ============
+
+model Event {
+  id                    Int       @id @default(autoincrement())
+  title                 String    @db.VarChar(255)
+  slug                  String?   @db.VarChar(255)
+  description           String?   @db.Text
+  location              String?   @db.VarChar(255)
+  startDate             DateTime  @map("start_date")
+  endDate               DateTime? @map("end_date")
+  image                 String?   @db.VarChar(500)
+  link                  String?   @db.VarChar(255)
+  category              String?   @db.VarChar(255)
+  status                String    @default("draft") @db.VarChar(50)
+  eventType             String?   @map("event_type") @db.VarChar(100)
+  venueName             String?   @map("venue_name") @db.VarChar(255)
+  venueAddress          String?   @map("venue_address") @db.Text
+  capacity              Int?
+  registrationDeadline  DateTime? @map("registration_deadline")
+  agenda                Json?
+  speakerIds            Json?     @map("speaker_ids")
+  createdAt             DateTime  @default(now()) @map("created_at")
+
+  @@index([status])
+  @@index([startDate])
+  @@map("events")
+}
+
+model News {
+  id            Int       @id @default(autoincrement())
+  title         String    @db.VarChar(255)
+  slug          String?   @db.VarChar(255)
+  excerpt       String?   @db.Text
+  content       String?   @db.Text
+  image         String?   @db.VarChar(500)
+  datePublished DateTime? @map("date_published")
+  author        String?   @db.VarChar(255)
+  categories    Json?
+  tags          Json?
+  status        String    @default("draft") @db.VarChar(50)
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@index([status])
+  @@index([datePublished])
+  @@map("news")
+}
+
+model Team {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  role      String? @db.VarChar(255)
+  bio       String? @db.Text
+  image     String? @db.VarChar(500)
+  order     Int     @default(0)
+  status    String  @default("draft") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("team")
+}
+
+model Publication {
+  id            Int       @id @default(autoincrement())
+  title         String    @db.VarChar(255)
+  slug          String?   @db.VarChar(255)
+  excerpt       String?   @db.Text
+  type          String?   @db.VarChar(100)
+  file          String?   @db.VarChar(500)
+  image         String?   @db.VarChar(500)
+  datePublished DateTime? @map("date_published")
+  author        String?   @db.VarChar(255)
+  status        String    @default("draft") @db.VarChar(50)
+  createdAt     DateTime  @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("publications")
+}
+
+model Program {
+  id          Int     @id @default(autoincrement())
+  title       String  @db.VarChar(255)
+  description String? @db.Text
+  image       String? @db.VarChar(500)
+  order       Int     @default(0)
+  status      String  @default("draft") @db.VarChar(50)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("programs")
+}
+
+model Project {
+  id          Int     @id @default(autoincrement())
+  title       String  @db.VarChar(255)
+  description String? @db.Text
+  image       String? @db.VarChar(500)
+  order       Int     @default(0)
+  status      String  @default("draft") @db.VarChar(50)
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("projects")
+}
+
+model Partner {
+  id        Int     @id @default(autoincrement())
+  name      String  @db.VarChar(255)
+  logo      String? @db.VarChar(500)
+  url       String? @db.VarChar(500)
+  order     Int     @default(0)
+  status    String  @default("draft") @db.VarChar(50)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([status])
+  @@map("partners")
+}
+
+model PageContent {
+  id                   Int      @id @default(autoincrement())
+  slug                 String   @unique @db.VarChar(100)
+  title                String?  @db.VarChar(255)
+  status               String   @default("published") @db.VarChar(50)
+  heroSubtitle         String?  @map("hero_subtitle") @db.Text
+  heroTitle            String?  @map("hero_title") @db.VarChar(255)
+  intro                String?  @db.Text
+  description          String?  @db.Text
+  mission              String?  @db.Text
+  objectivesTitle      String?  @map("objectives_title") @db.VarChar(255)
+  objectivesContent    String?  @map("objectives_content") @db.Text
+  objectivesPrinciples  String?  @map("objectives_principles") @db.Text
+  objectivesAgenda2063 String?  @map("objectives_agenda2063") @db.Text
+  contentJson          Json?    @map("content_json")
+  createdAt            DateTime @default(now()) @map("created_at")
+
+  @@index([slug])
+  @@map("page_content")
+}
+
+// ============ Event registrations ============
+
+model EventRegistration {
+  id               String    @id @default(cuid())
+  eventSlug        String    @map("event_slug")
+  eventId          Int?      @map("event_id")
+  eventTitle       String    @map("event_title")
+  eventStartDate   DateTime  @map("event_start_date")
+  eventEndDate     DateTime? @map("event_end_date")
+  eventLocation    String?   @map("event_location")
+  registrationId   String    @unique @map("registration_id")
+  qrToken          String    @unique @map("qr_token")
+  fullName         String    @map("full_name")
+  email            String
+  phone            String?
+  organization     String?
+  dietaryReqs      String?   @map("dietary_reqs")
+  checkedInAt      DateTime? @map("checked_in_at")
+  createdAt        DateTime  @default(now()) @map("created_at")
+
+  @@index([eventSlug])
+  @@index([qrToken])
+  @@index([registrationId])
+  @@map("event_registrations")
+}
+
+// ============ Submissions (newsletter, volunteer, contact) ============
+
+model NewsletterSignup {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique @db.VarChar(255)
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("newsletter_signups")
+}
+
+model VolunteerApplication {
+  id           Int      @id @default(autoincrement())
+  fullName     String   @map("full_name") @db.VarChar(255)
+  email        String   @db.VarChar(255)
+  phone        String?  @db.VarChar(50)
+  position     String?  @db.VarChar(255)
+  organization String?  @db.VarChar(255)
+  country      String?  @db.VarChar(100)
+  city         String?  @db.VarChar(100)
+  experience   String?  @db.Text
+  skills       String?  @db.Text
+  motivation   String?  @db.Text
+  availability String?  @db.VarChar(100)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("volunteer_applications")
+}
+
+model ContactSubmission {
+  id        Int      @id @default(autoincrement())
+  name      String   @db.VarChar(255)
+  email     String   @db.VarChar(255)
+  subject   String?  @db.VarChar(500)
+  message   String   @db.Text
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("contact_submissions")
+}

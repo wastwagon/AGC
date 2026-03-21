@@ -1,0 +1,19 @@
+# Africa Governance Centre - Local Development
+# Run: docker compose -f docker-compose.dev.yml up
+
+services:
+  web:
+    image: node:20-alpine
+    container_name: agc-web-dev
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules  # Prevent overwriting node_modules
+    ports:
+      - "9200:3000"
+    command: sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=development
+      - WATCHPACK_POLLING=true
+    stdin_open: true
+    tty: true

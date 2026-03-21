@@ -1,0 +1,66 @@
+/*---------------------------
+	Fonts
+----------------------------*/
+
+
+@font-face {
+    font-family: 'Futura PT Demi';
+    src: url('../../../fonts/FuturaPT-Demi.woff2') format('woff2'),
+        url('../../../fonts/FuturaPT-Demi.woff') format('woff');
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura PT';
+    src: url('../../../fonts/FuturaPT-Heavy.woff2') format('woff2'),
+        url('../../../fonts/FuturaPT-Heavy.woff') format('woff');
+    font-weight: 900;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura PT';
+    src: url('../../../fonts/FuturaPT-Light.woff2') format('woff2'),
+        url('../../../fonts/FuturaPT-Light.woff') format('woff');
+    font-weight: 300;
+    font-style: normal;
+    font-display: swap;
+}
+
+@font-face {
+    font-family: 'Futura PT';
+    src: url('../../../fonts/FuturaPT-Medium.woff2') format('woff2'),
+        url('../../../fonts/FuturaPT-Medium.woff') format('woff');
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+}
+
+// fonts
+$base-font-size: 15;
+$base-font: 'Nunito Sans', sans-serif;
+$heading-font: 'Futura PT';
+$heading-font-sub: 'Futura PT Demi';
+
+
+
+// color
+$dark-gray: #232f4b;
+$body-color: #4f555a;
+$white: #fff;
+$light: #8188a9;
+$black: #000;
+$cyan: #848892;
+
+$theme-primary-color: #3757f7;
+$theme-primary-color-s2: #071e93;
+$body-bg-color: #fff;
+$section-bg-color: #f4f8fc;
+$text-color: #6e6e6e;
+$text-light-color: #676767;
+$heading-color: $dark-gray;
+$border-color: #e1e1e1;
+$border-color-s2: #d8e0f1;

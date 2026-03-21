@@ -1,0 +1,38 @@
+# CI for agc-site — lint + build (no DB required for build; BUILD_WITHOUT_DB set in Dockerfile)
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+defaults:
+  run:
+    working-directory: agc-site
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: agc-site/package-lock.json
+
+      - name: Install
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      # Lint is not enforced until existing warnings/errors in the codebase are cleared
+      # - run: npm run lint
+
+      - name: Build
+        env:
+          BUILD_WITHOUT_DB: "1"
+        run: npm run build

@@ -1,0 +1,20 @@
+# Africa Governance Centre - Root level for Coolify
+# Use when AGC is the git repo root; build context is agc-site
+
+services:
+  web:
+    build:
+      context: ./agc-site
+      dockerfile: Dockerfile
+    container_name: agc-web
+    restart: unless-stopped
+    ports:
+      - "9200:3000"
+    environment:
+      - NODE_ENV=production
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

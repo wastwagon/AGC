@@ -1,0 +1,48 @@
+"use client";
+
+import { useEffect } from "react";
+import { Button } from "@/components/Button";
+import Link from "next/link";
+
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
+  useEffect(() => {
+    console.error(error);
+  }, [error]);
+
+  return (
+    <div className="relative min-h-[65vh] overflow-hidden bg-[#f7f4ef] px-4 py-20">
+      <div className="pointer-events-none absolute right-1/4 top-20 h-48 w-48 rounded-full bg-stone-300/30 blur-3xl" aria-hidden />
+
+      <div className="relative mx-auto max-w-lg text-center">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Something slipped</p>
+        <h1 className="page-heading mt-4 text-3xl tracking-tight text-stone-900 sm:text-4xl">
+          We couldn&apos;t load this
+        </h1>
+        <p className="mt-6 page-prose text-[1.02rem]">
+          A temporary glitch on our side. Your work isn&apos;t lost — try again, or head home and come back in a
+          moment.
+        </p>
+        <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
+          <Button onClick={reset} variant="primary">
+            Try again
+          </Button>
+          <Button asChild href="/" variant="outline">
+            Home
+          </Button>
+        </div>
+        <p className="mt-12 text-xs text-stone-500">
+          Still stuck?{" "}
+          <Link href="/contact" className="text-accent-800 underline underline-offset-2 hover:text-accent-950">
+            Contact us
+          </Link>
+        </p>
+      </div>
+    </div>
+  );
+}
