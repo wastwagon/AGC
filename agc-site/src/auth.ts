@@ -10,18 +10,19 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
-        const email = process.env.ADMIN_EMAIL;
-        const password = process.env.ADMIN_PASSWORD;
+        const email = process.env.ADMIN_EMAIL?.trim();
+        const password = process.env.ADMIN_PASSWORD?.trim();
 
         if (!email || !password) {
           console.warn("ADMIN_EMAIL and ADMIN_PASSWORD must be set in .env.local");
           return null;
         }
 
-        if (
-          credentials?.email === email &&
-          credentials?.password === password
-        ) {
+        const inputEmail = typeof credentials?.email === "string" ? credentials.email.trim() : "";
+        const inputPassword =
+          typeof credentials?.password === "string" ? credentials.password.trim() : "";
+
+        if (inputEmail === email && inputPassword === password) {
           return { id: "admin", email, name: "Admin" };
         }
         return null;
