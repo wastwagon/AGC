@@ -3,28 +3,35 @@ import { prisma } from "@/lib/db";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernancecentre.org";
 
+/** Skip DB during `docker build` — matches src/lib/content.ts */
+function buildSkipsDb(): boolean {
+  return process.env.BUILD_WITHOUT_DB === "1";
+}
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let news: { slug: string | null; datePublished: Date | null }[] = [];
   let publications: { slug: string | null; datePublished: Date | null }[] = [];
   let events: { slug: string | null; startDate: Date }[] = [];
 
-  try {
-    [news, publications, events] = await Promise.all([
-      prisma.news.findMany({
-        where: { status: "published" },
-        select: { slug: true, datePublished: true },
-      }),
-      prisma.publication.findMany({
-        where: { status: "published" },
-        select: { slug: true, datePublished: true },
-      }),
-      prisma.event.findMany({
-        where: { status: "published" },
-        select: { slug: true, startDate: true },
-      }),
-    ]);
-  } catch {
-    // DB unavailable (e.g. static export or no connection): use static entries only
+  if (!buildSkipsDb()) {
+    try {
+      [news, publications, events] = await Promise.all([
+        prisma.news.findMany({
+          where: { status: "published" },
+          select: { slug: true, datePublished: true },
+        }),
+        prisma.publication.findMany({
+          where: { status: "published" },
+          select: { slug: true, datePublished: true },
+        }),
+        prisma.event.findMany({
+          where: { status: "published" },
+          select: { slug: true, startDate: true },
+        }),
+      ]);
+    } catch {
+      // DB unavailable at runtime: use static entries only
+    }
   }
 
   const staticEntries: MetadataRoute.Sitemap = [
