@@ -49,7 +49,7 @@ All content (events, news, team, publications, programs, projects, partners, pag
 cp .env.cms.example .env
 # Edit .env (set AGC_DB_PASSWORD, etc.)
 
-docker compose -f docker-compose.full.yml up -d
+docker compose up -d
 ```
 
 Migrations run automatically on first start. Seed initial content: `cd agc-site && npm run db:seed` (or `npx prisma db seed`). The seed creates homepage content (with hero slider placeholder), sample news, events, publications, programs, and projects. Run after migrations so the DB has the required tables.
@@ -63,31 +63,15 @@ Migrations run automatically on first start. Seed initial content: `cd agc-site 
 
 2. **Create a new application** and select **Docker Compose**.
 
-3. **Use this `docker-compose.yml`** — Coolify will detect it automatically, or paste:
+3. **Compose file** — at the **repository root** (parent of `agc-site/`):
+   - **Full stack (Postgres + Redis + web):** use **`docker-compose.yml`**  
+   - **Web only** (managed DB in Coolify): use **`docker-compose.web-only.yml`** and set `DATABASE_URL` / `REDIS_URL`
 
-```yaml
-services:
-  web:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: agc-web
-    restart: unless-stopped
-    ports:
-      - "3000:3000"
-    environment:
-      - NODE_ENV=production
-```
+4. **Build context** stays **`./agc-site`** for the `web` service (as defined in those compose files).
 
-4. **Set the build context** to the repository root (or `agc-site` if the project is in a subdirectory).
+5. **Environment variables** — see root **`docs/COOLIFY-DEPLOY.md`** and **`.env.cms.example`** (auth, `NEXT_PUBLIC_SITE_URL`, Resend, etc.).
 
-5. **Add environment variables** in Coolify (Application → Environment):
-   - `NODE_ENV=production`
-   - `NEXT_PUBLIC_SITE_URL=https://yourdomain.com`
-   - `RESEND_API_KEY=re_xxxx` (from [resend.com](https://resend.com))
-   - `RESEND_FROM_EMAIL=contact@yourdomain.com` (optional, must be verified in Resend)
-
-6. **Deploy** — Coolify will build the Docker image and run the container.
+6. **Deploy** — Coolify builds and runs the stack.
 
 ### Environment Variables
 

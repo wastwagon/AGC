@@ -8,10 +8,11 @@ Next.js website and Docker tooling for **Africa Governance Centre** — public s
 
 | Path | Description |
 |------|-------------|
-| [`agc-site/`](./agc-site/) | Next.js 16 app (App Router), Prisma, Tailwind |
-| [`docker-compose.full.yml`](./docker-compose.full.yml) | Web + Postgres + Redis + migrations (local / VPS-style) |
-| [`docker-compose.yml`](./docker-compose.yml) | Minimal web-only compose (e.g. Coolify) |
-| [`docs/`](./docs/) | Deployment notes (e.g. [Coolify](./docs/COOLIFY-DEPLOY.md)) |
+| [`agc-site/`](./agc-site/) | Next.js 16 app (App Router), Prisma, Tailwind — **site + API + admin** |
+| [`docker-compose.yml`](./docker-compose.yml) | **Default:** `web` + PostgreSQL + Redis + Prisma **migrate** (all-in-one) |
+| [`docker-compose.full.yml`](./docker-compose.full.yml) | Same as above (includes `docker-compose.yml`; for old scripts) |
+| [`docker-compose.web-only.yml`](./docker-compose.web-only.yml) | **Web only** — use on Coolify when DB/Redis are separate services |
+| [`docs/`](./docs/) | Deployment notes (e.g. [Coolify](./docs/COOLIFY-DEPLOY.md), [Docker Compose](./docs/DOCKER-COMPOSE.md)) |
 | `consultar/` | Legacy/reference assets (optional; safe to remove if unused) |
 
 ## Quick start (local)
@@ -38,11 +39,20 @@ App (default): [http://localhost:9200](http://localhost:9200) · Admin: `/admin`
 cp .env.cms.example .env
 # Set AGC_DB_PASSWORD, NEXT_PUBLIC_SITE_URL, AUTH_*, ADMIN_*, optional RESEND_*
 
-docker compose -f docker-compose.full.yml up -d --build
+docker compose up -d --build
 ```
 
 - Site: [http://localhost:9200](http://localhost:9200)  
-- Postgres on host: port **5436** (see compose file)
+- Postgres on host: port **5436** (override with `POSTGRES_HOST_PORT` in `.env`)
+
+**After you change site code**, rebuild the web image or you’ll still see the old UI:
+
+```bash
+docker compose up -d --build web
+```
+
+Shortcuts: [`scripts/rebuild-web.sh`](./scripts/rebuild-web.sh) (Mac/Linux) or [`scripts/rebuild-web.bat`](./scripts/rebuild-web.bat) (Windows).  
+**Why?** Docker runs a *built* app, not your live files — see [docs/DOCKER-WHY-REBUILD.md](./docs/DOCKER-WHY-REBUILD.md). For daily dev with hot reload, use `cd agc-site && npm run dev` instead.
 
 Seed (optional):
 

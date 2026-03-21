@@ -1,15 +1,16 @@
 # Deploy AGC to Coolify (VPS)
 
-Use the **full stack** (`docker-compose.full.yml` pattern): PostgreSQL, Redis, migrations, Next.js.
+Use **`docker-compose.yml`** for the **full stack** (PostgreSQL, Redis, migrations, Next.js), or **`docker-compose.web-only.yml`** if DB/Redis are managed separately in Coolify.
 
 ## 1. Repository layout
 
-Coolify build context should be the **repo root** where `agc-site/` and `docker-compose.full.yml` live (or mirror this layout).
+Coolify build context should be the **repo root** where `agc-site/` and `docker-compose.yml` live (or mirror this layout).
 
 ## 2. Docker Compose in Coolify
 
 - Create a **Docker Compose** resource.
-- Point Compose file to `docker-compose.full.yml` (or paste equivalent services: `agc-db`, `redis`, `migrate`, `web`).
+- **All-in-one on the VPS:** point Compose file to **`docker-compose.yml`** (services: `agc-db`, `redis`, `migrate`, `web`).
+- **Web only (hosted DB/Redis):** use **`docker-compose.web-only.yml`** and set `DATABASE_URL` / `REDIS_URL` in Coolify.
 - **Do not** commit secrets; set variables in Coolify’s environment UI.
 
 ## 3. Required environment variables
@@ -26,7 +27,7 @@ Coolify build context should be the **repo root** where `agc-site/` and `docker-
 | `RESEND_API_KEY` | Optional; forms still save to DB without it |
 | `RESEND_FROM_EMAIL` | Optional verified sender |
 
-The **web** service in `docker-compose.full.yml` wires `DATABASE_URL` and `REDIS_URL` for you when using the bundled DB/Redis. Override `NEXT_PUBLIC_SITE_URL`, auth, and Resend in Coolify.
+The **web** service in `docker-compose.yml` wires `DATABASE_URL` and `REDIS_URL` for you when using the bundled DB/Redis. Override `NEXT_PUBLIC_SITE_URL`, auth, and Resend in Coolify.
 
 ## 4. Migrations
 
@@ -42,7 +43,7 @@ cd agc-site && npx prisma db seed
 
 ## 6. Health check
 
-`GET /api/health` should return **200**. Coolify can use this for the web service healthcheck (see `docker-compose.full.yml`).
+`GET /api/health` should return **200**. Coolify can use this for the web service healthcheck (see `docker-compose.yml`).
 
 ## 7. Local full stack (Docker Desktop)
 
@@ -50,7 +51,7 @@ From repo root:
 
 ```bash
 cp .env.cms.example .env   # if needed; edit passwords and URLs
-docker compose -f docker-compose.full.yml up -d --build
+docker compose up -d --build
 ```
 
 - Site: `http://localhost:9200`
@@ -59,5 +60,5 @@ docker compose -f docker-compose.full.yml up -d --build
 To remove old one-off containers from a previous compose file:
 
 ```bash
-docker compose -f docker-compose.full.yml up -d --remove-orphans
+docker compose up -d --remove-orphans
 ```

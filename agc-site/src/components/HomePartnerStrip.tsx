@@ -16,9 +16,9 @@ export function HomePartnerStrip({
   return (
     <section className="border-y border-stone-200 bg-stone-800 px-4 py-6 sm:px-6 lg:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
-        <p className="max-w-xs text-sm leading-snug text-stone-300">{blurb}</p>
+        <p className="max-w-xs text-sm leading-snug text-white">{blurb}</p>
         <div className="flex flex-1 flex-col gap-2 sm:items-end">
-          <p className="text-xs font-medium uppercase tracking-wide text-stone-500">Alongside</p>
+          <p className="text-xs font-medium uppercase tracking-wide text-white">Alongside</p>
           <ul className="flex flex-wrap items-center gap-x-8 gap-y-3 sm:justify-end">
             {items.map((p) => (
               <li key={p.name} className="flex items-center">
@@ -38,9 +38,14 @@ export function HomePartnerStrip({
                     </span>
                   )
                 ) : (
-                  <span className="text-sm text-stone-100">
+                  <span className="text-sm text-white">
                     {p.url ? (
-                      <Link href={p.url} target="_blank" rel="noopener noreferrer" className="underline decoration-stone-500 underline-offset-2 hover:text-white">
+                      <Link
+                        href={p.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-white underline decoration-white/50 underline-offset-2 hover:decoration-white"
+                      >
                         {p.name}
                       </Link>
                     ) : (
