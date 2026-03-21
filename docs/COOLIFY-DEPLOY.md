@@ -70,7 +70,17 @@ cd agc-site && npx prisma db seed
 - **`GET /api/health/live`** — **liveness** (no DB). Docker Compose uses this for the **`web`** healthcheck so Traefik/Coolify keep routing even if the DB check fails briefly.
 - **`GET /api/health`** — **full check** (includes DB); returns **503** if Postgres is unreachable — use for monitoring, not as the sole proxy health probe.
 
-## 7. Local full stack (Docker Desktop)
+## 7. Traefik shows **“no available server”** (Coolify)
+
+That usually means the proxy has **no healthy backend** for the **`web`** service.
+
+1. **Domain** must be attached to the **`web`** service (not `migrate`), **port `3000`** (container port).
+2. In Coolify, if there is a **custom health check path**, set it to **`/api/health/live`** (not `/api/health`, which can return 503 when the DB check fails).
+3. **Redeploy** after changing `docker-compose.yml` healthchecks.
+4. In **Logs** for **`web`**, confirm the process is up and there is no crash loop.
+5. Try **`http://`** for the same host (port 80) if HTTPS/cert issues block testing; **production** should use a valid **HTTPS** URL and matching **`NEXT_PUBLIC_SITE_URL`** / **`AUTH_URL`**.
+
+## 8. Local full stack (Docker Desktop)
 
 From repo root:
 

@@ -14,7 +14,6 @@ services:
     build:
       context: ./agc-site
       dockerfile: Dockerfile
-    container_name: agc-web
     restart: unless-stopped
     ports:
       - "${WEB_PORT:-9200}:3000"
@@ -30,8 +29,8 @@ services:
       - RESEND_API_KEY=${RESEND_API_KEY}
       - RESEND_FROM_EMAIL=${RESEND_FROM_EMAIL}
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health/live"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 40s
+      test: ["CMD", "wget", "-q", "-O", "/dev/null", "http://127.0.0.1:3000/api/health/live"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 90s
