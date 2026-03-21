@@ -54,7 +54,8 @@ services:
       redis:
         condition: service_healthy
     healthcheck:
-      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health"]
+      # Liveness only — do not use /api/health here (it returns 503 if DB is down)
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/api/health/live"]
       interval: 30s
       timeout: 10s
       retries: 3

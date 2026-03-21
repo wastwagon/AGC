@@ -65,9 +65,10 @@ After the stack is up, run once (from your machine or a one-off Coolify exec) wi
 cd agc-site && npx prisma db seed
 ```
 
-## 6. Health check
+## 6. Health checks
 
-`GET /api/health` should return **200**. Coolify can use this for the web service healthcheck (see `docker-compose.yml`).
+- **`GET /api/health/live`** — **liveness** (no DB). Docker Compose uses this for the **`web`** healthcheck so Traefik/Coolify keep routing even if the DB check fails briefly.
+- **`GET /api/health`** — **full check** (includes DB); returns **503** if Postgres is unreachable — use for monitoring, not as the sole proxy health probe.
 
 ## 7. Local full stack (Docker Desktop)
 
