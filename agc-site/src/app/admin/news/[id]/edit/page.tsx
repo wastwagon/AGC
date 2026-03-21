@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { AdminFormErrorSuspense } from "../../../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../../../_components/AdminFormSuccessSuspense";
 import { AdminPageHeader } from "../../../_components/AdminPageHeader";
@@ -14,7 +15,10 @@ export default async function AdminNewsEditPage({ params }: Props) {
   const numId = parseInt(id, 10);
   if (isNaN(numId)) notFound();
 
-  const item = await prisma.news.findUnique({ where: { id: numId } });
+  const [item, taxonomy] = await Promise.all([
+    prisma.news.findUnique({ where: { id: numId } }),
+    getSiteTaxonomy(),
+  ]);
   if (!item) notFound();
 
   return (
@@ -26,7 +30,7 @@ export default async function AdminNewsEditPage({ params }: Props) {
       <AdminFormErrorSuspense />
       <AdminFormSuccessSuspense />
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
-        <NewsForm item={item} />
+        <NewsForm categoryOptions={taxonomy.newsCategories} item={item} />
       </div>
     </div>
   );

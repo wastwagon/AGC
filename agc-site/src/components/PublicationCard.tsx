@@ -3,25 +3,34 @@ import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
 import { placeholderImages } from "@/data/images";
 import type { CmsPublication } from "@/lib/content";
-
-const typeLabels: Record<string, string> = {
-  report: "Report",
-  policy_brief: "Policy Brief",
-  research: "Research",
-};
+import { labelForPublicationTypeSlug } from "@/lib/site-taxonomy";
+import type { TaxonomyOption } from "@/data/taxonomy-defaults";
 
 type PublicationCardProps = {
   item: CmsPublication;
   imageUrl?: string;
   href?: string;
+  /** From `getSiteTaxonomy().publicationTypes` for badge labels */
+  publicationTypes?: TaxonomyOption[];
 };
 
-export function PublicationCard({ item, imageUrl = placeholderImages.publications, href = "/publications" }: PublicationCardProps) {
+export function PublicationCard({
+  item,
+  imageUrl = placeholderImages.publications,
+  href = "/publications",
+  publicationTypes = [],
+}: PublicationCardProps) {
   const date = item.date_published || item.date_created;
   const dateStr = date ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" }) : "";
   const excerpt = (item.excerpt || "").replace(/<[^>]*>/g, "").slice(0, 120);
   const linkHref = item.slug ? `${href.replace(/\/$/, "")}/${item.slug}` : href;
-  const typeLabel = item.type ? (typeLabels[item.type] || item.type) : "Publication";
+
+  const slugs =
+    item.types?.length ? item.types : item.type ? [item.type] : [];
+  const typeLabel =
+    slugs.length > 0
+      ? slugs.map((s) => labelForPublicationTypeSlug(s, publicationTypes)).join(" · ")
+      : "Publication";
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md">

@@ -23,6 +23,7 @@ import {
   ExternalLink,
   QrCode,
   Inbox,
+  Tags,
 } from "lucide-react";
 import { siteConfig } from "@/data/content";
 import { getAdminBreadcrumbs } from "@/lib/admin-breadcrumbs";
@@ -39,6 +40,7 @@ const navItems = [
   { href: "/admin/projects", label: "Projects", icon: Briefcase },
   { href: "/admin/partners", label: "Partners", icon: Handshake },
   { href: "/admin/pages", label: "Page Content", icon: FileText },
+  { href: "/admin/taxonomy", label: "Taxonomy", icon: Tags },
   { href: "/admin/submissions", label: "Submissions", icon: Inbox },
 ];
 
@@ -117,6 +119,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
               else if (item.href === "/admin/events")
                 active =
                   pathname.startsWith("/admin/events") && !pathname.startsWith("/admin/events/scan");
+              else if (item.href === "/admin/taxonomy") active = pathname.startsWith("/admin/taxonomy");
               else active = pathname === item.href || pathname.startsWith(item.href + "/");
 
               return (

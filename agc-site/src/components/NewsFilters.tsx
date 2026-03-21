@@ -1,20 +1,23 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { newsContent, newsCategories } from "@/data/content";
+import { newsContent } from "@/data/content";
+import type { TaxonomyOption } from "@/data/taxonomy-defaults";
 import { ChevronDown, Filter } from "lucide-react";
 
 type NewsFiltersProps = {
+  /** Category definitions (from Admin → Taxonomy / site defaults) */
+  categoryOptions: TaxonomyOption[];
   activeCategorySlugs: string[];
   /** Current category slug from URL (e.g. /news/category/appi) */
   currentCategory?: string;
 };
 
-export function NewsFilters({ activeCategorySlugs, currentCategory }: NewsFiltersProps) {
+export function NewsFilters({ categoryOptions, activeCategorySlugs, currentCategory }: NewsFiltersProps) {
   const router = useRouter();
   const filters = newsContent.filters;
 
-  const categoriesToShow = newsCategories.filter((c) => activeCategorySlugs.includes(c.slug));
+  const categoriesToShow = categoryOptions.filter((c) => activeCategorySlugs.includes(c.slug));
 
   if (categoriesToShow.length === 0) return null;
 

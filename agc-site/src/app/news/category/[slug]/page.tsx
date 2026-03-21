@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { newsContent, newsCategories, fallbackNews } from "@/data/content";
+import { newsContent, fallbackNews } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getNews } from "@/lib/content";
 import type { CmsNews } from "@/lib/content";
@@ -10,16 +10,19 @@ import { NewsFilters } from "@/components/NewsFilters";
 import { Button } from "@/components/Button";
 import { filterNewsByCategory, getActiveCategorySlugs, getCategoryLabel } from "@/lib/news";
 import { resolveImageUrl } from "@/lib/media";
+import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const { newsCategories } = await getSiteTaxonomy();
   return newsCategories.map((c) => ({ slug: c.slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const label = getCategoryLabel(slug);
+  const taxonomy = await getSiteTaxonomy();
+  const label = getCategoryLabel(slug, taxonomy.newsCategories);
   return {
     title: `${label} | News`,
     description: `Latest news in ${label} from Africa Governance Centre.`,
@@ -30,13 +33,14 @@ export const revalidate = 60;
 
 export default async function NewsCategoryPage({ params }: Props) {
   const { slug } = await params;
-  const category = newsCategories.find((c) => c.slug === slug);
+  const taxonomy = await getSiteTaxonomy();
+  const category = taxonomy.newsCategories.find((c) => c.slug === slug);
   if (!category) notFound();
 
   const cmsNews = await getNews(50);
   const allNews: CmsNews[] = cmsNews.length > 0 ? cmsNews : (fallbackNews as CmsNews[]);
   const newsItems = filterNewsByCategory(allNews, slug);
-  const activeCategories = getActiveCategorySlugs(allNews);
+  const activeCategories = getActiveCategorySlugs(allNews, taxonomy.newsCategories);
   const itemsWithImages = await Promise.all(
     newsItems.map(async (item) => ({
       item,
@@ -75,7 +79,11 @@ export default async function NewsCategoryPage({ params }: Props) {
             </Link>
           </div>
 
-          <NewsFilters activeCategorySlugs={activeCategories} currentCategory={slug} />
+          <NewsFilters
+            categoryOptions={taxonomy.newsCategories}
+            activeCategorySlugs={activeCategories}
+            currentCategory={slug}
+          />
 
           {newsItems.length > 0 ? (
             <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">

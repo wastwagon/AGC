@@ -437,15 +437,8 @@ export const newsContent = {
   },
 };
 
-/** News categories - WordPress-style taxonomy */
-export const newsCategories = [
-  { slug: "appi", label: "African Political Parties Initiative", description: "APPI-related news and engagements" },
-  { slug: "reports", label: "Reports & Publications", description: "Summary reports and publications" },
-  { slug: "announcements", label: "Announcements", description: "Official announcements and calls" },
-  { slug: "elections", label: "Elections & Democracy", description: "Electoral processes and democratic governance" },
-  { slug: "fellowships", label: "Fellowships & Opportunities", description: "Calls for applications and opportunities" },
-  { slug: "events", label: "Events", description: "Summits, conferences, and events" },
-];
+/** @deprecated Prefer `getSiteTaxonomy()` / `defaultNewsCategoryOptions` — kept for backwards-compatible imports */
+export { defaultNewsCategoryOptions as newsCategories } from "./taxonomy-defaults";
 
 /** News tags - WordPress-style flat taxonomy */
 export const newsTags = [
@@ -543,7 +536,7 @@ export const fallbackPublications = [
     title: "African Political Parties Summit 2025 – Summary Report",
     slug: "apps-summary-report-2025",
     excerpt: "The Summary Report of the 2025 African Political Parties Summit, held in Accra, Ghana. The summit convened over 700 delegates from 30 countries and 48 political parties.",
-    type: "report",
+    types: ["report"],
     date_published: "2025-09-09T00:00:00Z",
     author: "Africa Governance Centre",
   },
@@ -553,7 +546,7 @@ export const fallbackPublications = [
     title: "Governance and Economic Transformation in Africa",
     slug: "governance-economic-transformation-africa",
     excerpt: "A policy brief examining the linkages between governance reforms and sustainable economic development across the continent.",
-    type: "policy_brief",
+    types: ["policy_brief"],
     date_published: "2025-08-15T00:00:00Z",
     author: "AGC Research Team",
   },
@@ -563,7 +556,7 @@ export const fallbackPublications = [
     title: "Political Party Institutional Capacity – Research Findings",
     slug: "political-party-institutional-capacity",
     excerpt: "Research findings on institutional capacity building for political parties in Africa, based on APPI stakeholder consultations.",
-    type: "research",
+    types: ["research"],
     date_published: "2025-07-20T00:00:00Z",
     author: "Africa Governance Centre",
   },

@@ -10,6 +10,7 @@ import { NewsFilters } from "@/components/NewsFilters";
 import { Button } from "@/components/Button";
 import { filterNewsByTag, getActiveCategorySlugs, getTagLabel } from "@/lib/news";
 import { resolveImageUrl } from "@/lib/media";
+import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -33,10 +34,10 @@ export default async function NewsTagPage({ params }: Props) {
   const tag = newsTags.find((t) => t.slug === slug);
   if (!tag) notFound();
 
-  const cmsNews = await getNews(50);
+  const [cmsNews, taxonomy] = await Promise.all([getNews(50), getSiteTaxonomy()]);
   const allNews: CmsNews[] = cmsNews.length > 0 ? cmsNews : (fallbackNews as CmsNews[]);
   const newsItems = filterNewsByTag(allNews, slug);
-  const activeCategories = getActiveCategorySlugs(allNews);
+  const activeCategories = getActiveCategorySlugs(allNews, taxonomy.newsCategories);
   const itemsWithImages = await Promise.all(
     newsItems.map(async (item) => ({
       item,
@@ -74,7 +75,11 @@ export default async function NewsTagPage({ params }: Props) {
           </div>
 
           {activeCategories.length > 0 && (
-            <NewsFilters activeCategorySlugs={activeCategories} currentCategory={undefined} />
+            <NewsFilters
+              categoryOptions={taxonomy.newsCategories}
+              activeCategorySlugs={activeCategories}
+              currentCategory={undefined}
+            />
           )}
 
           {newsItems.length > 0 ? (

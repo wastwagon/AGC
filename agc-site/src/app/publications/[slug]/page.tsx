@@ -8,12 +8,7 @@ import { getPublicationBySlug, getContentFileUrl } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
 import { fallbackPublications } from "@/data/content";
 import type { CmsPublication } from "@/lib/content";
-
-const typeLabels: Record<string, string> = {
-  report: "Report",
-  policy_brief: "Policy Brief",
-  research: "Research",
-};
+import { getSiteTaxonomy, labelForPublicationTypeSlug } from "@/lib/site-taxonomy";
 
 export const revalidate = 60;
 
@@ -51,7 +46,7 @@ async function getPublicationItem(slug: string): Promise<CmsPublication | null> 
 
 export default async function PublicationDetailPage({ params }: Props) {
   const { slug } = await params;
-  const item = await getPublicationItem(slug);
+  const [item, taxonomy] = await Promise.all([getPublicationItem(slug), getSiteTaxonomy()]);
   if (!item) notFound();
 
   const imageUrl = (await resolveImageUrl(item.image)) || placeholderImages.publications;
@@ -60,7 +55,12 @@ export default async function PublicationDetailPage({ params }: Props) {
     ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })
     : "";
   const fileUrl = getContentFileUrl(item.file ?? undefined);
-  const typeLabel = item.type ? typeLabels[item.type] || item.type : "Publication";
+  const typeSlugs =
+    item.types?.length ? item.types : item.type ? [item.type] : [];
+  const typeLabel =
+    typeSlugs.length > 0
+      ? typeSlugs.map((s) => labelForPublicationTypeSlug(s, taxonomy.publicationTypes)).join(" · ")
+      : "Publication";
 
   return (
     <article className="min-h-screen bg-[#f7f4ef]">

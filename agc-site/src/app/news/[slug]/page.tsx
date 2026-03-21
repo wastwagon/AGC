@@ -10,6 +10,7 @@ import { fallbackNews } from "@/data/content";
 import { getNewsCategorySlugs, getCategoryLabel } from "@/lib/news";
 import type { CmsNews } from "@/lib/content";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 
 export const revalidate = 60;
 
@@ -47,7 +48,7 @@ async function getNewsItem(slug: string): Promise<CmsNews | null> {
 
 export default async function NewsDetailPage({ params }: Props) {
   const { slug } = await params;
-  const item = await getNewsItem(slug);
+  const [item, taxonomy] = await Promise.all([getNewsItem(slug), getSiteTaxonomy()]);
   if (!item) notFound();
 
   const imageUrl = (await resolveImageUrl(item.image)) || placeholderImages.news;
@@ -113,7 +114,7 @@ export default async function NewsDetailPage({ params }: Props) {
                         href={`/news/category/${catSlug}`}
                         className="text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-4 transition-colors hover:text-accent-950 hover:decoration-accent-600"
                       >
-                        {getCategoryLabel(catSlug)}
+                        {getCategoryLabel(catSlug, taxonomy.newsCategories)}
                       </Link>
                     ))}
                   </span>

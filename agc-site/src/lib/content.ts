@@ -10,6 +10,16 @@ function buildSkipsDb(): boolean {
   return process.env.BUILD_WITHOUT_DB === "1";
 }
 
+/** DB missing a column/table vs current Prisma schema (run `npx prisma migrate deploy`). */
+function isPrismaSchemaMismatch(e: unknown): boolean {
+  return (
+    typeof e === "object" &&
+    e !== null &&
+    "code" in e &&
+    (e as { code: string }).code === "P2022"
+  );
+}
+
 // ============ Shared types (compatible with former Cms* interfaces) ============
 
 export interface CmsEventAgendaItem {
@@ -55,6 +65,9 @@ export interface CmsPublication {
   title: string;
   slug?: string;
   excerpt?: string;
+  /** Publication type slugs (multi-select) */
+  types?: string[];
+  /** @deprecated legacy single type (fallback content only) */
   type?: string;
   file?: string;
   image?: string;
@@ -262,45 +275,73 @@ export async function getTeam(): Promise<CmsTeamMember[]> {
 
 export async function getPublications(limit = 20) {
   if (buildSkipsDb()) return [];
-  const rows = await prisma.publication.findMany({
-    where: { status: "published" },
-    orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],
-    take: limit,
-  });
-  return rows.map((p) => ({
-    id: p.id,
-    status: p.status,
-    title: p.title,
-    slug: p.slug ?? undefined,
-    excerpt: p.excerpt ?? undefined,
-    type: p.type ?? undefined,
-    file: p.file ?? undefined,
-    image: p.image ?? undefined,
-    date_published: p.datePublished?.toISOString(),
-    date_created: p.createdAt.toISOString(),
-    author: p.author ?? undefined,
-  }));
+  try {
+    const rows = await prisma.publication.findMany({
+      where: { status: "published" },
+      orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],
+      take: limit,
+    });
+    return rows.map((p) => {
+      const typesRaw = p.types as string[] | null | undefined;
+      return {
+        id: p.id,
+        status: p.status,
+        title: p.title,
+        slug: p.slug ?? undefined,
+        excerpt: p.excerpt ?? undefined,
+        types: Array.isArray(typesRaw) ? typesRaw : undefined,
+        file: p.file ?? undefined,
+        image: p.image ?? undefined,
+        date_published: p.datePublished?.toISOString(),
+        date_created: p.createdAt.toISOString(),
+        author: p.author ?? undefined,
+      };
+    });
+  } catch (e) {
+    if (isPrismaSchemaMismatch(e)) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          "[getPublications] DB schema out of date — run `npx prisma migrate deploy`. Using empty list."
+        );
+      }
+      return [];
+    }
+    throw e;
+  }
 }
 
 export async function getPublicationBySlug(slug: string) {
   if (buildSkipsDb()) return null;
-  const p = await prisma.publication.findFirst({
-    where: { slug, status: "published" },
-  });
-  if (!p) return null;
-  return {
-    id: p.id,
-    status: p.status,
-    title: p.title,
-    slug: p.slug ?? undefined,
-    excerpt: p.excerpt ?? undefined,
-    type: p.type ?? undefined,
-    file: p.file ?? undefined,
-    image: p.image ?? undefined,
-    date_published: p.datePublished?.toISOString(),
-    date_created: p.createdAt.toISOString(),
-    author: p.author ?? undefined,
-  };
+  try {
+    const p = await prisma.publication.findFirst({
+      where: { slug, status: "published" },
+    });
+    if (!p) return null;
+    const typesRaw = p.types as string[] | null | undefined;
+    return {
+      id: p.id,
+      status: p.status,
+      title: p.title,
+      slug: p.slug ?? undefined,
+      excerpt: p.excerpt ?? undefined,
+      types: Array.isArray(typesRaw) ? typesRaw : undefined,
+      file: p.file ?? undefined,
+      image: p.image ?? undefined,
+      date_published: p.datePublished?.toISOString(),
+      date_created: p.createdAt.toISOString(),
+      author: p.author ?? undefined,
+    };
+  } catch (e) {
+    if (isPrismaSchemaMismatch(e)) {
+      if (process.env.NODE_ENV === "development") {
+        console.warn(
+          "[getPublicationBySlug] DB schema out of date — run `npx prisma migrate deploy`. Skipping CMS row."
+        );
+      }
+      return null;
+    }
+    throw e;
+  }
 }
 
 // ============ Programs, Projects, Partners ============

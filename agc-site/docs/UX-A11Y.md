@@ -14,6 +14,7 @@
 - **`AdminFormSuccessSuspense`**: Reads **`?saved=`** (`1` = saved, `created` = new record, `deleted` = removed) after successful server actions. Shown on admin **list** and **new/edit** routes; **Dismiss** strips the query param via **`router.replace`**. Pair with redirects like **`/admin/events/edit/[id]?saved=1`** or **`/admin/news?saved=deleted`**.
 - **DB / network errors**: Shared copy **`ADMIN_DB_ERROR_MESSAGE`** (`lib/admin-flash-messages.ts`). Prisma **create/update/delete** in admin server actions are wrapped in **`try/catch`**; failures redirect with **`?error=`** (same banner as validation). **List** pages include **`AdminFormErrorSuspense`** so failed deletes surface the message.
 - **`admin/loading.tsx`**: Lightweight skeleton for navigations under **`/admin/**`** while RSC loads.
+- **Taxonomy (`/admin/taxonomy`)**: Edit **news category** and **publication type** lists (one line per entry: `slug | label` or `slug | label | description`). News and publication forms use **checkboxes** for multi-select; values are validated against these lists on save.
 
 ## Loading UI
 

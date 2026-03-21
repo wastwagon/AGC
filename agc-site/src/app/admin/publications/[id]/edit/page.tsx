@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { AdminFormErrorSuspense } from "../../../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../../../_components/AdminFormSuccessSuspense";
 import { AdminPageHeader } from "../../../_components/AdminPageHeader";
@@ -14,19 +15,22 @@ export default async function AdminPublicationsEditPage({ params }: Props) {
   const numId = parseInt(id, 10);
   if (isNaN(numId)) notFound();
 
-  const item = await prisma.publication.findUnique({ where: { id: numId } });
+  const [item, taxonomy] = await Promise.all([
+    prisma.publication.findUnique({ where: { id: numId } }),
+    getSiteTaxonomy(),
+  ]);
   if (!item) notFound();
 
   return (
     <div>
       <AdminPageHeader
         title={`Edit: ${item.title}`}
-        description="Update the publication, cover, file, and type. Published items appear on the public site."
+        description="Update the publication, cover, file, and types. Published items appear on the public site."
       />
       <AdminFormErrorSuspense />
       <AdminFormSuccessSuspense />
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
-        <PublicationForm item={item} />
+        <PublicationForm typeOptions={taxonomy.publicationTypes} item={item} />
       </div>
     </div>
   );

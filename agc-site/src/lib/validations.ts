@@ -95,7 +95,7 @@ export const publicationFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(255),
   slug: z.string().max(255).optional(),
   excerpt: z.string().max(2000).optional(),
-  type: z.string().max(100).optional(),
+  types: z.array(z.string()).optional(),
   file: z.string().max(500).optional(),
   image: z.string().max(500).optional(),
   datePublished: z.string().optional(),

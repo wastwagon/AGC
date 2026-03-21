@@ -8,6 +8,7 @@ import { NewsFilters } from "@/components/NewsFilters";
 import { Button } from "@/components/Button";
 import { getActiveCategorySlugs } from "@/lib/news";
 import { resolveImageUrl } from "@/lib/media";
+import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 
 export const metadata = {
   title: "News",
@@ -17,9 +18,9 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function NewsPage() {
-  const cmsNews = await getNews(50);
+  const [cmsNews, taxonomy] = await Promise.all([getNews(50), getSiteTaxonomy()]);
   const newsItems: CmsNews[] = cmsNews.length > 0 ? cmsNews : (fallbackNews as CmsNews[]);
-  const activeCategories = getActiveCategorySlugs(newsItems);
+  const activeCategories = getActiveCategorySlugs(newsItems, taxonomy.newsCategories);
   const itemsWithImages = await Promise.all(
     newsItems.map(async (item) => ({
       item,
@@ -45,6 +46,7 @@ export default async function NewsPage() {
           </div>
           {activeCategories.length > 0 && (
             <NewsFilters
+              categoryOptions={taxonomy.newsCategories}
               activeCategorySlugs={activeCategories}
               currentCategory={undefined}
             />

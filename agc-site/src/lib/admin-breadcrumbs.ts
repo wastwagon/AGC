@@ -12,6 +12,7 @@ const SECTION: Record<string, string> = {
   projects: "Projects",
   partners: "Partners",
   pages: "Page content",
+  taxonomy: "Taxonomy",
   submissions: "Submissions",
 };
 
@@ -35,6 +36,7 @@ const EXACT_TITLE: Record<string, string> = {
   "/admin/partners": "Partners",
   "/admin/partners/new": "New partner",
   "/admin/pages": "Page content",
+  "/admin/taxonomy": "Taxonomy",
   "/admin/submissions": "Submissions",
 };
 

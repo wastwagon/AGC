@@ -6,6 +6,24 @@ import { PrismaClient } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
+const defaultTaxonomyJson = {
+  newsCategories: [
+    { slug: "appi", label: "African Political Parties Initiative", description: "APPI-related news and engagements" },
+    { slug: "reports", label: "Reports & Publications", description: "Summary reports and publications" },
+    { slug: "announcements", label: "Announcements", description: "Official announcements and calls" },
+    { slug: "elections", label: "Elections & Democracy", description: "Electoral processes and democratic governance" },
+    { slug: "fellowships", label: "Fellowships & Opportunities", description: "Calls for applications and opportunities" },
+    { slug: "events", label: "Events", description: "Summits, conferences, and events" },
+  ],
+  publicationTypes: [
+    { slug: "report", label: "Report", description: "Summary and thematic reports" },
+    { slug: "policy_brief", label: "Policy brief", description: "Short policy-oriented briefs" },
+    { slug: "research", label: "Research", description: "Research papers and findings" },
+    { slug: "working_paper", label: "Working paper", description: "Draft or discussion papers" },
+    { slug: "toolkit", label: "Toolkit / guide", description: "Practical guides and toolkits" },
+  ],
+};
+
 async function main() {
   // Page content (about, contact, get-involved)
   const pages = [
@@ -205,7 +223,7 @@ async function main() {
           title: "Africa Governance Review 2024",
           slug: "africa-governance-review-2024",
           excerpt: "Annual assessment of governance trends across the continent.",
-          type: "report",
+          types: ["report"],
           image: "/uploads/placeholder.svg",
           datePublished: now,
           author: "Africa Governance Centre",
@@ -214,6 +232,19 @@ async function main() {
       ],
     });
     console.log("  Publications: 1 sample item");
+  }
+
+  const hasTaxonomy = await prisma.pageContent.findUnique({ where: { slug: "site-taxonomy" } });
+  if (!hasTaxonomy) {
+    await prisma.pageContent.create({
+      data: {
+        slug: "site-taxonomy",
+        title: "Site taxonomy",
+        status: "published",
+        contentJson: defaultTaxonomyJson,
+      },
+    });
+    console.log("  Taxonomy: site defaults (news categories + publication types) — edit in Admin → Taxonomy");
   }
 
   console.log("\nSeed complete. Replace images and edit content via Admin (Media, News, Events, Publications, Partners, Page Content → home).");

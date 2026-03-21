@@ -6,6 +6,13 @@ import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { newsFormSchema } from "@/lib/validations";
 import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
+import { getSiteTaxonomy } from "@/lib/site-taxonomy";
+
+async function filterNewsCategories(slugs: string[]): Promise<string[]> {
+  const t = await getSiteTaxonomy();
+  const allow = new Set(t.newsCategories.map((c) => c.slug));
+  return slugs.filter((s) => allow.has(s));
+}
 
 function slugify(s: string): string {
   return s
@@ -25,7 +32,7 @@ export async function createNews(formData: FormData) {
     excerpt: formData.get("excerpt") || undefined,
     content: formData.get("content") || undefined,
     author: formData.get("author") || undefined,
-    categories: formData.get("categories") ? (formData.get("categories") as string).split(",").map((s) => s.trim()).filter(Boolean) : [],
+    categories: formData.getAll("categories").filter((x): x is string => typeof x === "string"),
     tags: formData.get("tags") ? (formData.get("tags") as string).split(",").map((s) => s.trim()).filter(Boolean) : [],
     status: formData.get("status") || "draft",
     datePublished: formData.get("datePublished") || undefined,
@@ -36,8 +43,9 @@ export async function createNews(formData: FormData) {
     redirect(`/admin/news/new?error=${encodeURIComponent(parsed.error.issues[0]?.message ?? "Invalid input")}`);
   }
 
-  const { title, slug, image, excerpt, content, author, categories, tags, status, datePublished } = parsed.data;
+  const { title, slug, image, excerpt, content, author, categories: rawCats, tags, status, datePublished } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
+  const categories = await filterNewsCategories(rawCats ?? []);
 
   let created;
   try {
@@ -77,7 +85,7 @@ export async function updateNews(id: number, formData: FormData) {
     excerpt: formData.get("excerpt") || undefined,
     content: formData.get("content") || undefined,
     author: formData.get("author") || undefined,
-    categories: formData.get("categories") ? (formData.get("categories") as string).split(",").map((s) => s.trim()).filter(Boolean) : [],
+    categories: formData.getAll("categories").filter((x): x is string => typeof x === "string"),
     tags: formData.get("tags") ? (formData.get("tags") as string).split(",").map((s) => s.trim()).filter(Boolean) : [],
     status: formData.get("status") || "draft",
     datePublished: formData.get("datePublished") || undefined,
@@ -88,8 +96,9 @@ export async function updateNews(id: number, formData: FormData) {
     redirect(`/admin/news/${id}/edit?error=${encodeURIComponent(parsed.error.issues[0]?.message ?? "Invalid input")}`);
   }
 
-  const { title, slug, image, excerpt, content, author, categories, tags, status, datePublished } = parsed.data;
+  const { title, slug, image, excerpt, content, author, categories: rawCats, tags, status, datePublished } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
+  const categories = await filterNewsCategories(rawCats ?? []);
 
   try {
     await prisma.news.update({

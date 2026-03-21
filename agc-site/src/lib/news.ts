@@ -2,16 +2,17 @@
  * News filtering and taxonomy helpers - WordPress-style management
  */
 import type { CmsNews } from "./content";
-import { newsCategories, newsTags } from "@/data/content";
+import { newsTags } from "@/data/content";
+import { defaultNewsCategoryOptions, type TaxonomyOption } from "@/data/taxonomy-defaults";
 
 /** Resolve taxonomy item to slug */
 function toSlug(item: string | { slug: string; name?: string }): string {
   return typeof item === "string" ? item : item.slug;
 }
 
-/** Get category label by slug */
-export function getCategoryLabel(slug: string): string {
-  return newsCategories.find((c) => c.slug === slug)?.label ?? slug;
+/** Get category label by slug (pass taxonomy from `getSiteTaxonomy()` when available) */
+export function getCategoryLabel(slug: string, categories: TaxonomyOption[] = defaultNewsCategoryOptions): string {
+  return categories.find((c) => c.slug === slug)?.label ?? slug;
 }
 
 /** Get tag label by slug */
@@ -46,10 +47,13 @@ export function filterNewsByTag(items: CmsNews[], tagSlug: string): CmsNews[] {
 }
 
 /** Get all category slugs that have at least one news item */
-export function getActiveCategorySlugs(items: CmsNews[]): string[] {
+export function getActiveCategorySlugs(
+  items: CmsNews[],
+  categories: TaxonomyOption[] = defaultNewsCategoryOptions
+): string[] {
   const slugs = new Set<string>();
   items.forEach((item) => getNewsCategorySlugs(item).forEach((s) => slugs.add(s)));
-  return newsCategories.filter((c) => slugs.has(c.slug)).map((c) => c.slug);
+  return categories.filter((c) => slugs.has(c.slug)).map((c) => c.slug);
 }
 
 /** Get all tag slugs that have at least one news item */

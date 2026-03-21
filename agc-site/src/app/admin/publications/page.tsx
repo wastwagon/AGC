@@ -7,13 +7,23 @@ import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 import { DeleteButton } from "../DeleteButton";
 import { deletePublication } from "./actions";
+import { getSiteTaxonomy, labelForPublicationTypeSlug } from "@/lib/site-taxonomy";
 
 export const dynamic = "force-dynamic";
 
+function formatPublicationTypesCell(types: unknown, taxonomy: { slug: string; label: string }[]): string {
+  const arr = Array.isArray(types) ? (types as string[]) : [];
+  if (arr.length === 0) return "—";
+  return arr.map((s) => labelForPublicationTypeSlug(s, taxonomy)).join(", ");
+}
+
 export default async function AdminPublicationsPage() {
-  const items = await prisma.publication.findMany({
-    orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],
-  });
+  const [items, taxonomy] = await Promise.all([
+    prisma.publication.findMany({
+      orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],
+    }),
+    getSiteTaxonomy(),
+  ]);
 
   return (
     <div>
@@ -38,7 +48,7 @@ export default async function AdminPublicationsPage() {
             <AdminMobileEntityCard
               title={item.title}
               rows={[
-                { label: "Type", value: item.type || "—" },
+                { label: "Types", value: formatPublicationTypesCell(item.types, taxonomy.publicationTypes) },
                 {
                   label: "Date",
                   value: item.datePublished
@@ -69,7 +79,7 @@ export default async function AdminPublicationsPage() {
           <thead className="bg-slate-50">
             <tr>
               <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Title</th>
-              <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Type</th>
+              <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Types</th>
               <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Date</th>
               <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Status</th>
               <th className="px-6 py-4 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Actions</th>
@@ -79,7 +89,9 @@ export default async function AdminPublicationsPage() {
             {items.map((item) => (
               <tr key={item.id} className="hover:bg-slate-50">
                 <td className="px-6 py-4 font-medium text-slate-900">{item.title}</td>
-                <td className="px-6 py-4 text-sm text-slate-600">{item.type || "—"}</td>
+                <td className="px-6 py-4 text-sm text-slate-600">
+                  {formatPublicationTypesCell(item.types, taxonomy.publicationTypes)}
+                </td>
                 <td className="px-6 py-4 text-sm text-slate-600">
                   {item.datePublished
                     ? new Date(item.datePublished).toLocaleDateString("en-GB")

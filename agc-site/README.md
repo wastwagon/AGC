@@ -63,6 +63,8 @@ All content (events, news, team, publications, programs, projects, partners, pag
 
 **Feedback:** Successful saves, creates, and deletes show a **green banner** (URL query `?saved=…`); validation problems show an **amber banner** (`?error=…`). Details in [`docs/UX-A11Y.md`](./docs/UX-A11Y.md).
 
+**News categories & publication types:** Configure lists under **Admin → Taxonomy** (`/admin/taxonomy`). Options are stored in the database; when editing **news** or **publications**, you can **select multiple** categories/types. After pulling code that changes the Prisma schema, run **`npx prisma migrate deploy`** (or `migrate dev` locally) so `publications.types` exists.
+
 **Homepage** hero, testimonial, fellow spotlight, reach/stats, hero slider images, and partner strip: **Admin → Page Content → edit `home`** (or open `/admin/pages/home/edit`). While status is **Draft**, the live site uses defaults from code; set **Published** to apply your edits. Sign in with `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env.local`.
 
 **Submissions** (newsletter signups, volunteer applications, contact form): **Admin → Submissions**. Entries are stored in the database; email notifications are still sent when `RESEND_API_KEY` is set.

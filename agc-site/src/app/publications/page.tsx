@@ -6,6 +6,7 @@ import { PageHero } from "@/components/PageHero";
 import { PublicationCard } from "@/components/PublicationCard";
 import { Button } from "@/components/Button";
 import { resolveImageUrl } from "@/lib/media";
+import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 
 export const metadata = {
   title: "Publications",
@@ -15,7 +16,7 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function PublicationsPage() {
-  const cmsPublications = await getPublications(50);
+  const [cmsPublications, taxonomy] = await Promise.all([getPublications(50), getSiteTaxonomy()]);
   const items: CmsPublication[] = cmsPublications.length > 0 ? cmsPublications : (fallbackPublications as CmsPublication[]);
   const itemsWithImages = await Promise.all(
     items.map(async (item) => ({
@@ -43,7 +44,13 @@ export default async function PublicationsPage() {
           {items.length > 0 ? (
             <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
               {itemsWithImages.map(({ item, imageUrl }) => (
-                <PublicationCard key={item.id} item={item} imageUrl={imageUrl} href="/publications" />
+                <PublicationCard
+                  key={item.id}
+                  item={item}
+                  imageUrl={imageUrl}
+                  href="/publications"
+                  publicationTypes={taxonomy.publicationTypes}
+                />
               ))}
             </div>
           ) : (

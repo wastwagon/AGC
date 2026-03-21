@@ -78,7 +78,7 @@ model Publication {
   title         String    @db.VarChar(255)
   slug          String?   @db.VarChar(255)
   excerpt       String?   @db.Text
-  type          String?   @db.VarChar(100)
+  types         Json?
   file          String?   @db.VarChar(500)
   image         String?   @db.VarChar(500)
   datePublished DateTime? @map("date_published")

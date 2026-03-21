@@ -1,16 +1,19 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import Link from "next/link";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { createPublication, updatePublication } from "./actions";
+import type { TaxonomyOption } from "@/data/taxonomy-defaults";
 
 type PublicationFormProps = {
+  typeOptions: TaxonomyOption[];
   item?: {
     id: number;
     title: string;
     slug: string | null;
     excerpt: string | null;
-    type: string | null;
+    types: unknown;
     file: string | null;
     image: string | null;
     datePublished: Date | null;
@@ -32,14 +35,19 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
   );
 }
 
-export function PublicationForm({ item }: PublicationFormProps) {
+export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
   const isEdit = !!item;
   const action = isEdit ? updatePublication.bind(null, item.id) : createPublication;
+
+  const rawTypes = item?.types as string[] | null | undefined;
+  const selectedTypes = new Set(Array.isArray(rawTypes) ? rawTypes : []);
 
   return (
     <form action={action} className="space-y-6">
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-slate-700">Title *</label>
+        <label htmlFor="title" className="block text-sm font-medium text-slate-700">
+          Title *
+        </label>
         <input
           id="title"
           name="title"
@@ -50,7 +58,9 @@ export function PublicationForm({ item }: PublicationFormProps) {
       </div>
 
       <div>
-        <label htmlFor="slug" className="block text-sm font-medium text-slate-700">Slug (optional)</label>
+        <label htmlFor="slug" className="block text-sm font-medium text-slate-700">
+          Slug (optional)
+        </label>
         <input
           id="slug"
           name="slug"
@@ -61,7 +71,9 @@ export function PublicationForm({ item }: PublicationFormProps) {
       </div>
 
       <div>
-        <label htmlFor="excerpt" className="block text-sm font-medium text-slate-700">Excerpt</label>
+        <label htmlFor="excerpt" className="block text-sm font-medium text-slate-700">
+          Excerpt
+        </label>
         <textarea
           id="excerpt"
           name="excerpt"
@@ -71,19 +83,35 @@ export function PublicationForm({ item }: PublicationFormProps) {
         />
       </div>
 
-      <div>
-        <label htmlFor="type" className="block text-sm font-medium text-slate-700">Type</label>
-        <input
-          id="type"
-          name="type"
-          defaultValue={item?.type ?? ""}
-          placeholder="e.g. Report, Policy Brief"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
-        />
-      </div>
+      <fieldset className="rounded-lg border border-slate-200 p-4">
+        <legend className="px-1 text-sm font-medium text-slate-700">Types (select any that apply)</legend>
+        <p className="mb-3 text-xs text-slate-500">
+          Options are defined in <strong>Admin → Taxonomy</strong>. Multiple types are allowed (e.g. Report + Research).
+        </p>
+        <ul className="space-y-2">
+          {typeOptions.map((t) => (
+            <li key={t.slug} className="flex items-start gap-3">
+              <input
+                id={`pub-type-${t.slug}`}
+                name="types"
+                type="checkbox"
+                value={t.slug}
+                defaultChecked={selectedTypes.has(t.slug)}
+                className="mt-1 h-4 w-4 rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+              />
+              <label htmlFor={`pub-type-${t.slug}`} className="text-sm text-slate-800">
+                <span className="font-medium">{t.label}</span>
+                {t.description && <span className="block text-xs text-slate-500">{t.description}</span>}
+              </label>
+            </li>
+          ))}
+        </ul>
+      </fieldset>
 
       <div>
-        <label htmlFor="file" className="block text-sm font-medium text-slate-700">File URL</label>
+        <label htmlFor="file" className="block text-sm font-medium text-slate-700">
+          File URL
+        </label>
         <input
           id="file"
           name="file"
@@ -94,7 +122,9 @@ export function PublicationForm({ item }: PublicationFormProps) {
       </div>
 
       <div>
-        <label htmlFor="image" className="block text-sm font-medium text-slate-700">Image URL</label>
+        <label htmlFor="image" className="block text-sm font-medium text-slate-700">
+          Image URL
+        </label>
         <input
           id="image"
           name="image"
@@ -105,7 +135,9 @@ export function PublicationForm({ item }: PublicationFormProps) {
       </div>
 
       <div>
-        <label htmlFor="datePublished" className="block text-sm font-medium text-slate-700">Date Published</label>
+        <label htmlFor="datePublished" className="block text-sm font-medium text-slate-700">
+          Date Published
+        </label>
         <input
           id="datePublished"
           name="datePublished"
@@ -120,7 +152,9 @@ export function PublicationForm({ item }: PublicationFormProps) {
       </div>
 
       <div>
-        <label htmlFor="author" className="block text-sm font-medium text-slate-700">Author</label>
+        <label htmlFor="author" className="block text-sm font-medium text-slate-700">
+          Author
+        </label>
         <input
           id="author"
           name="author"
@@ -130,7 +164,9 @@ export function PublicationForm({ item }: PublicationFormProps) {
       </div>
 
       <div>
-        <label htmlFor="status" className="block text-sm font-medium text-slate-700">Status</label>
+        <label htmlFor="status" className="block text-sm font-medium text-slate-700">
+          Status
+        </label>
         <select
           id="status"
           name="status"
@@ -144,12 +180,12 @@ export function PublicationForm({ item }: PublicationFormProps) {
 
       <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
-        <a
+        <Link
           href="/admin/publications"
           className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
-        </a>
+        </Link>
       </AdminFormStickyActions>
     </form>
   );
