@@ -87,7 +87,7 @@ cp .env.docker.example .env
 docker compose up -d
 ```
 
-Migrations run automatically on first start. Seed initial content: `cd agc-site && npm run db:seed` (or `npx prisma db seed`). The seed creates homepage/page content and baseline admin-editable records for news, events, publications, programs, projects, partners, team, and taxonomy. Run after migrations so the DB has the required tables.
+On deploy, the **`migrate`** Docker service runs **`prisma migrate deploy`** then **`prisma db seed`** (baseline CMS content; idempotent). To skip seed and only migrate, set **`SKIP_DB_SEED_ON_DEPLOY=1`** in your environment. You can still run `cd agc-site && npm run db:seed` manually or use **Admin → Operations** as a fallback.
 
 - Website: http://localhost:9200
 - Admin: http://localhost:9200/admin

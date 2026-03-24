@@ -23,6 +23,8 @@ services:
       dockerfile: Dockerfile.migrate
     environment:
       - DATABASE_URL=postgresql://agc:${AGC_DB_PASSWORD:-agc_secret}@agc-db:5432/agc?schema=public
+      # Set to 1 only if you want migrations without seed on deploy (rare).
+      - SKIP_DB_SEED_ON_DEPLOY=${SKIP_DB_SEED_ON_DEPLOY:-0}
     depends_on:
       agc-db:
         condition: service_healthy

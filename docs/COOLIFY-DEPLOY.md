@@ -24,7 +24,7 @@ Use these values when creating the application:
 | **Branch** | `main` (or your default branch) |
 | **Build Pack** | Docker Compose |
 
-**Services started:** `agc-db` (Postgres), `redis`, `migrate` (Prisma, runs once then exits), `web` (Next.js on port 3000 inside the container).
+**Services started:** `agc-db` (Postgres), `redis`, `migrate` (runs `prisma migrate deploy` + baseline `db seed`, then exits), `web` (Next.js on port 3000 inside the container).
 
 In Coolify, attach your **public domain** to the **`web`** service (port **3000**). The DB and Redis ports are for internal Docker networking; you usually do **not** need to publish Postgres/Redis to the public internet.
 
@@ -53,16 +53,29 @@ In Coolify, attach your **public domain** to the **`web`** service (port **3000*
 
 Set `DATABASE_URL` and `REDIS_URL` in Coolify to your managed services; see compose file comments.
 
-## 4. Migrations
+## 4. Migrations + seed on every deploy
 
-The `migrate` service runs `prisma migrate deploy` before `web` starts. Ensure migration files in `agc-site/prisma/migrations/` are deployed with the repo.
+The **`migrate`** service runs **before** `web` starts:
 
-## 5. Seed (first deploy)
+1. `npx prisma migrate deploy`
+2. `npx prisma db seed` (baseline CMS content; **idempotent** — skips rows that already exist)
 
-After the stack is up, run once (from your machine or a one-off Coolify exec) with `DATABASE_URL` pointing at production:
+This applies to **`docker-compose.yml`** (bundled Postgres) and **`docker-compose.web-only.yml`** (external `DATABASE_URL`), as long as the migrate service is included.
+
+To **disable seed** on deploy (migrations only), set in Coolify / `.env`:
 
 ```bash
-cd agc-site && npx prisma db seed
+SKIP_DB_SEED_ON_DEPLOY=1
+```
+
+Ensure migration files in `agc-site/prisma/migrations/` ship with the repo.
+
+## 5. Manual seed / migrate (fallback)
+
+If a deploy failed before the migrate job finished, use **Admin → Operations** (“Run Prisma migrate deploy” / “Run database seed”), or from a shell with production `DATABASE_URL`:
+
+```bash
+cd agc-site && npx prisma migrate deploy && npx prisma db seed
 ```
 
 ## 6. Health checks

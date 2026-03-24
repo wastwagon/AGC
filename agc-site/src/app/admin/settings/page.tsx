@@ -39,13 +39,13 @@ export default async function AdminSettingsPage() {
     <div>
       <AdminPageHeader
         title="Operations"
-        description="Operational controls for deployment health. Run DB migration/seed manually if startup jobs fail in Coolify."
+        description="Deploy runs migrations and baseline seed automatically (Docker “migrate” service). Use the buttons below if a deploy failed partway or you need to re-run safely."
       />
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Deployment maintenance</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Use these actions when your VPS deploy is up but migration/seed did not run automatically.
+          Fallback if Coolify or Docker did not finish the migrate/seed job, or after changing environment variables.
         </p>
         <div className="mt-4">
           <AdminMaintenancePanel />

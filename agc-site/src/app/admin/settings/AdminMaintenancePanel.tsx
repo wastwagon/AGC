@@ -76,8 +76,9 @@ export function AdminMaintenancePanel() {
       </div>
 
       <p className="text-xs text-slate-500">
-        These commands run inside the deployed web runtime. If `DATABASE_URL` is missing or uses a Prisma local proxy
-        URL, the runner auto-falls back to local Docker Postgres (`localhost:5436`).
+        Runs in the web container. Normal deploys already run migrate + seed via the separate migrate job; use this if
+        that job failed. If `DATABASE_URL` is missing or is a Prisma dev proxy URL, the runner falls back to Docker
+        Postgres on `localhost:5436` when appropriate.
       </p>
 
       {error ? (
