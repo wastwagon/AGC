@@ -6,6 +6,7 @@ import { Copy, Trash2, Check, ImagePlus } from "lucide-react";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { MAX_MEDIA_UPLOAD_BYTES, formatMaxUploadBytes } from "@/lib/media-limits";
 import { rasterDimensionsFromFile } from "@/lib/media-upload-client";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 type MediaItem = {
   id: string;
@@ -195,7 +196,7 @@ export default function AdminMediaPage() {
                     fill
                     className="object-cover"
                     sizes="(max-width: 640px) 100vw, 25vw"
-                    unoptimized={item.url.endsWith(".svg")}
+                    unoptimized={preferUnoptimizedImage(item.url)}
                   />
                 </div>
                 <div className="p-3">

@@ -6,6 +6,7 @@ import Link from "next/link";
 import { X, Check, Upload, Loader2 } from "lucide-react";
 import { MAX_MEDIA_UPLOAD_BYTES, formatMaxUploadBytes } from "@/lib/media-limits";
 import { rasterDimensionsFromFile } from "@/lib/media-upload-client";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 export type MediaItem = {
   id: string;
@@ -159,7 +160,7 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
                     fill
                     className="object-cover"
                     sizes="200px"
-                    unoptimized={item.url.endsWith(".svg")}
+                    unoptimized={preferUnoptimizedImage(item.url)}
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/20 group-hover:opacity-100">
                     <span className="rounded-full bg-white p-2 text-accent-600">

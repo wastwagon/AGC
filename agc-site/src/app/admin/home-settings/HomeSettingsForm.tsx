@@ -6,6 +6,7 @@ import { ArrowDown, ArrowUp, ImagePlus, Trash2 } from "lucide-react";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 import type { HomePageCms } from "@/lib/home-page-data";
 import { updateHomeSettings } from "./actions";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 function textAreaLines(arr: string[]) {
   return arr.join("\n");
@@ -196,7 +197,13 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
                     }`}
                   >
                     <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-slate-200 bg-slate-100">
-                      <Image src={item.url} alt={item.raw} fill className="object-cover" unoptimized={item.url.endsWith(".svg")} />
+                      <Image
+                        src={item.url}
+                        alt={item.raw}
+                        fill
+                        className="object-cover"
+                        unoptimized={preferUnoptimizedImage(item.url)}
+                      />
                     </div>
                     <p className="mt-2 truncate text-xs text-slate-600">{item.raw}</p>
                     <div className="mt-2 flex items-center gap-1">

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { ImagePlus } from "lucide-react";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 import { updateAboutSettings } from "./actions";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 type AboutSettings = {
   title: string;
@@ -153,7 +154,13 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
             </div>
             {heroPreview ? (
               <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-                <Image src={heroPreview} alt="Hero preview" fill className="object-cover" unoptimized={heroPreview.endsWith(".svg")} />
+                <Image
+                  src={heroPreview}
+                  alt="Hero preview"
+                  fill
+                  className="object-cover"
+                  unoptimized={preferUnoptimizedImage(heroPreview)}
+                />
               </div>
             ) : null}
           </div>
@@ -166,7 +173,13 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
             </div>
             {sectionPreview ? (
               <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
-                <Image src={sectionPreview} alt="Section preview" fill className="object-cover" unoptimized={sectionPreview.endsWith(".svg")} />
+                <Image
+                  src={sectionPreview}
+                  alt="Section preview"
+                  fill
+                  className="object-cover"
+                  unoptimized={preferUnoptimizedImage(sectionPreview)}
+                />
               </div>
             ) : null}
           </div>

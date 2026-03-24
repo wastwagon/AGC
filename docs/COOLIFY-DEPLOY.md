@@ -38,7 +38,7 @@ In Coolify, attach your **public domain** to the **`web`** service (port **3000*
 
 | Variable | Required | Purpose |
 |----------|----------|---------|
-| `NEXT_PUBLIC_SITE_URL` | Yes | `https://yourdomain.com` |
+| `NEXT_PUBLIC_SITE_URL` | Yes | `https://yourdomain.com` — must match the URL users open (including sslip.io previews). Used for SEO and **`next/image`** allowlist; wrong values can break Media Library thumbnails (400 on `/_next/image`). |
 | `AUTH_URL` | Yes | Same as public URL (NextAuth cookies) |
 | `AUTH_SECRET` | Yes | `openssl rand -base64 32` |
 | `ADMIN_EMAIL` | Yes | Admin login at `/admin` |
