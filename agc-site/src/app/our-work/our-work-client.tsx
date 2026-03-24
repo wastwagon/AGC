@@ -22,15 +22,16 @@ type CardItem = { title: string; description: string };
 type OurWorkClientProps = {
   cmsPrograms: CmsProgram[];
   cmsProjects: CmsProject[];
+  content?: typeof workContent;
 };
 
-export function OurWorkClient({ cmsPrograms, cmsProjects }: OurWorkClientProps) {
+export function OurWorkClient({ cmsPrograms, cmsProjects, content = workContent }: OurWorkClientProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("programs");
 
   const tabs: { key: TabKey; label: string }[] = [
-    { key: "programs", label: workContent.tabs.programs },
-    { key: "projects", label: workContent.tabs.projects },
-    { key: "advisory", label: workContent.tabs.advisory },
+    { key: "programs", label: content.tabs.programs },
+    { key: "projects", label: content.tabs.projects },
+    { key: "advisory", label: content.tabs.advisory },
   ];
 
   const programsCards: CardItem[] =
@@ -39,7 +40,7 @@ export function OurWorkClient({ cmsPrograms, cmsProjects }: OurWorkClientProps) 
           title: p.title,
           description: (p.description || "").replace(/<[^>]*>/g, "").slice(0, 300),
         }))
-      : workContent.programs.cards;
+      : content.programs.cards;
 
   const projectsCards: CardItem[] =
     cmsProjects.length > 0
@@ -47,22 +48,22 @@ export function OurWorkClient({ cmsPrograms, cmsProjects }: OurWorkClientProps) 
           title: p.title,
           description: (p.description || "").replace(/<[^>]*>/g, "").slice(0, 300),
         }))
-      : workContent.projects.cards;
+      : content.projects.cards;
 
   const cardsByTab: Record<TabKey, CardItem[]> = {
     programs: programsCards,
     projects: projectsCards,
-    advisory: workContent.advisory.cards,
+    advisory: content.advisory.cards,
   };
 
-  const activeContent = workContent[activeTab];
+  const activeContent = content[activeTab];
   const cards = cardsByTab[activeTab];
 
   return (
     <>
       <PageHero
-        title={workContent.hero.title}
-        subtitle={workContent.hero.subtitle}
+        title={content.hero.title}
+        subtitle={content.hero.subtitle}
         image={placeholderImages.programs}
         imageAlt="Our Work"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Our Work" }]}
@@ -71,13 +72,13 @@ export function OurWorkClient({ cmsPrograms, cmsProjects }: OurWorkClientProps) 
       <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
           <p className="text-sm font-medium text-accent-800">How we work</p>
-          <h2 className="page-heading mt-2 text-2xl sm:text-3xl lg:text-4xl">{workContent.approach.title}</h2>
-          <p className="page-prose mt-6">{workContent.approach.intro}</p>
+          <h2 className="page-heading mt-2 text-2xl sm:text-3xl lg:text-4xl">{content.approach.title}</h2>
+          <p className="page-prose mt-6">{content.approach.intro}</p>
           <p className="mt-8 text-sm font-semibold uppercase tracking-wide text-stone-500">
-            {workContent.approach.objectivesLead}
+            {content.approach.objectivesLead}
           </p>
           <ul className="mt-6 space-y-5">
-            {workContent.approach.objectives.map((obj, i) => (
+            {content.approach.objectives.map((obj, i) => (
               <li key={i} className="page-card flex gap-4 p-5 sm:gap-5">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-100 font-serif text-sm font-bold text-accent-800">
                   {i + 1}

@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { siteConfig } from "@/data/content";
+import { getSiteSettings } from "@/lib/site-settings";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernancecentre.org";
 
 export async function GET() {
   try {
+    const siteSettings = await getSiteSettings();
     const items = await prisma.news.findMany({
       where: { status: "published" },
       orderBy: { datePublished: "desc" },
@@ -16,9 +17,9 @@ export async function GET() {
     const rss = `<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>${escapeXml(siteConfig.name)} – News</title>
+    <title>${escapeXml(siteSettings.name)} – News</title>
     <link>${baseUrl}/news</link>
-    <description>${escapeXml(siteConfig.tagline)} Latest news and updates.</description>
+    <description>${escapeXml(siteSettings.tagline)} Latest news and updates.</description>
     <language>en</language>
     <lastBuildDate>${new Date().toUTCString()}</lastBuildDate>
     <atom:link href="${baseUrl}/news/feed.xml" rel="self" type="application/rss+xml"/>

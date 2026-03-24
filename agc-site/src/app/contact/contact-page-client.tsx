@@ -2,9 +2,8 @@
 
 import { useState } from "react";
 import { Mail, MapPin, Phone, Clock, Send } from "lucide-react";
-import { siteConfig } from "@/data/content";
-import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
+import type { SiteSettings } from "@/lib/site-settings";
 
 type ContactContent = {
   title: string;
@@ -17,9 +16,9 @@ type ContactContent = {
   divisions: { name: string; email: string }[];
 };
 
-type ContactPageClientProps = { contactContent: ContactContent };
+type ContactPageClientProps = { contactContent: ContactContent; heroImage: string; siteSettings: SiteSettings };
 
-export function ContactPageClient({ contactContent }: ContactPageClientProps) {
+export function ContactPageClient({ contactContent, heroImage, siteSettings }: ContactPageClientProps) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -56,7 +55,7 @@ export function ContactPageClient({ contactContent }: ContactPageClientProps) {
       <PageHero
         title={contactContent.title}
         subtitle={contactContent.subtitle}
-        image={placeholderImages.contact}
+        image={heroImage}
         imageAlt="Get In Touch"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
       />
@@ -92,10 +91,10 @@ export function ContactPageClient({ contactContent }: ContactPageClientProps) {
                   <div>
                     <p className="font-medium text-stone-900">Phone</p>
                     <a
-                      href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+                      href={`tel:${siteSettings.phone.replace(/\s/g, "")}`}
                       className="text-stone-600 hover:text-accent-700"
                     >
-                      {siteConfig.phone}
+                      {siteSettings.phone}
                     </a>
                   </div>
                 </li>
@@ -106,7 +105,7 @@ export function ContactPageClient({ contactContent }: ContactPageClientProps) {
                   <div>
                     <p className="font-medium text-stone-900">Address</p>
                     <address className="not-italic text-stone-600">
-                      {siteConfig.address}
+                      {siteSettings.address}
                     </address>
                   </div>
                 </li>
@@ -116,7 +115,7 @@ export function ContactPageClient({ contactContent }: ContactPageClientProps) {
                   </div>
                   <div>
                     <p className="font-medium text-stone-900">Office hours</p>
-                    <p className="text-stone-600">{siteConfig.officeHours}</p>
+                    <p className="text-stone-600">{siteSettings.officeHours}</p>
                   </div>
                 </li>
               </ul>

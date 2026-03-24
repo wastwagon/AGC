@@ -1,7 +1,10 @@
-import { getInvolvedContent, siteConfig } from "@/data/content";
+import { getInvolvedContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
+import { getMergedPageContent } from "@/lib/page-content";
+import { resolveImageUrl } from "@/lib/media";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = {
   title: "Volunteer",
@@ -9,15 +12,20 @@ export const metadata = {
     "Contribute your time and skills to support Africa Governance Centre's research and advocacy efforts.",
 };
 
-export default function VolunteerPage() {
-  const c = getInvolvedContent.volunteer;
+export default async function VolunteerPage() {
+  const [merged, siteSettings] = await Promise.all([
+    getMergedPageContent("get-involved", getInvolvedContent as unknown as Record<string, unknown>),
+    getSiteSettings(),
+  ]);
+  const c = (merged as unknown as typeof getInvolvedContent).volunteer;
+  const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.getInvolved;
   return (
     <>
       <PageHero
         variant="compact"
         title={c.title}
         subtitle={c.subtitle}
-        image={placeholderImages.getInvolved}
+        image={heroImage}
         imageAlt="Volunteer"
         breadcrumbs={[
           { label: "Home", href: "/" },
@@ -67,8 +75,8 @@ export default function VolunteerPage() {
             </div>
             <p className="mt-8 text-sm text-stone-600">
               Questions?{" "}
-              <a href={`mailto:${siteConfig.email.programs}`} className="font-medium text-accent-800 hover:underline">
-                {siteConfig.email.programs}
+              <a href={`mailto:${siteSettings.email.programs}`} className="font-medium text-accent-800 hover:underline">
+                {siteSettings.email.programs}
               </a>
             </p>
           </div>

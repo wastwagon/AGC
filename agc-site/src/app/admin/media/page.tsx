@@ -4,6 +4,8 @@ import { useState, useCallback, useEffect } from "react";
 import Image from "next/image";
 import { Copy, Trash2, Check, ImagePlus } from "lucide-react";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
+import { MAX_MEDIA_UPLOAD_BYTES, formatMaxUploadBytes } from "@/lib/media-limits";
+import { rasterDimensionsFromFile } from "@/lib/media-upload-client";
 
 type MediaItem = {
   id: string;
@@ -12,6 +14,8 @@ type MediaItem = {
   alt?: string;
   title?: string;
   size?: number;
+  width?: number;
+  height?: number;
   uploadedAt: string;
 };
 
@@ -61,8 +65,15 @@ export default function AdminMediaPage() {
     setUploading(true);
     setError(null);
     for (const file of imageFiles) {
+      if (file.size > MAX_MEDIA_UPLOAD_BYTES) {
+        setError(`"${file.name}" is too large. Maximum size is ${formatMaxUploadBytes()}.`);
+        continue;
+      }
       const formData = new FormData();
       formData.append("file", file);
+      const dims = await rasterDimensionsFromFile(file);
+      if (dims.width) formData.append("width", dims.width);
+      if (dims.height) formData.append("height", dims.height);
       try {
         const res = await fetch("/api/media", { method: "POST", body: formData });
         const data = await res.json();
@@ -85,10 +96,17 @@ export default function AdminMediaPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Delete this image?")) return;
+    if (!confirm("Delete this image? It must not be used on any page or content item.")) return;
     try {
       const res = await fetch(`/api/media/${id}`, { method: "DELETE" });
+      const data = await res.json().catch(() => ({}));
       if (res.ok) setItems((prev) => prev.filter((m) => m.id !== id));
+      else if (res.status === 409 && Array.isArray(data.references)) {
+        const lines = data.references.map((r: { kind: string; label: string; href: string }) => `• ${r.kind}: ${r.label}`);
+        setError(`${data.error || "Cannot delete — in use."}\n${lines.join("\n")}`);
+      } else {
+        setError(data.error || "Delete failed");
+      }
     } catch {
       setError("Delete failed");
     }
@@ -111,7 +129,7 @@ export default function AdminMediaPage() {
       />
 
       {error && (
-        <div className="mt-4 rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
+        <div className="mt-4 whitespace-pre-wrap rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">
           {error}
         </div>
       )}
@@ -184,6 +202,11 @@ export default function AdminMediaPage() {
                   <p className="truncate text-sm font-medium text-slate-900" title={item.filename}>
                     {item.title || item.filename}
                   </p>
+                  {item.width && item.height ? (
+                    <p className="mt-0.5 text-xs text-slate-500">
+                      {item.width} × {item.height}px
+                    </p>
+                  ) : null}
                   <div className="mt-2 flex flex-wrap gap-1">
                     <button
                       type="button"

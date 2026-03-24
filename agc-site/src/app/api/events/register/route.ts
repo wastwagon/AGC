@@ -1,11 +1,11 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { siteConfig } from "@/data/content";
 import { escapeHtml } from "@/lib/sanitize";
 import { rateLimit } from "@/lib/rate-limit";
 import { eventRegistrationSchema } from "@/lib/validations";
 import { prisma } from "@/lib/db";
 import { generateRegistrationId, generateQrToken } from "@/lib/event-registration";
+import { getSiteSettings } from "@/lib/site-settings";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:9200";
@@ -16,6 +16,7 @@ function getClientIp(request: Request): string {
 
 export async function POST(request: Request) {
   try {
+    const siteSettings = await getSiteSettings();
     const ip = getClientIp(request);
     const { success, retryAfter } = await rateLimit(`event-register:${ip}`);
     if (!success) {
@@ -94,7 +95,7 @@ export async function POST(request: Request) {
           <p>Download and print your accreditation badge here:</p>
           <p><a href="${badgeUrl}" style="display:inline-block;background:#0d9488;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:600;">Download Badge</a></p>
           <p>Present your badge (or Registration ID) at the event for check-in. The badge contains a QR code that will be scanned to confirm your attendance.</p>
-          <p>If you have any questions, contact us at ${siteConfig.email.programs}.</p>
+          <p>If you have any questions, contact us at ${siteSettings.email.programs}.</p>
           <p>Best regards,<br>Africa Governance Centre</p>
         `,
       });

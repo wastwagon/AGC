@@ -1,8 +1,11 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import { useState } from "react";
+import { ImagePlus } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { createProgram, updateProgram } from "./actions";
+import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 
 type ProgramFormProps = {
   item?: {
@@ -31,6 +34,8 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
 export function ProgramForm({ item }: ProgramFormProps) {
   const isEdit = !!item;
   const action = isEdit ? updateProgram.bind(null, item.id) : createProgram;
+  const [image, setImage] = useState(item?.image ?? "");
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   return (
     <form action={action} className="space-y-6">
@@ -58,13 +63,24 @@ export function ProgramForm({ item }: ProgramFormProps) {
 
       <div>
         <label htmlFor="image" className="block text-sm font-medium text-slate-700">Image URL</label>
-        <input
-          id="image"
-          name="image"
-          defaultValue={item?.image ?? ""}
-          placeholder="/uploads/program.jpg"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
-        />
+        <div className="mt-1 flex gap-2">
+          <input
+            id="image"
+            name="image"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            placeholder="media-... or /uploads/program.jpg"
+            className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          />
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            title="Pick from Media Library"
+          >
+            <ImagePlus className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       <div>
@@ -101,6 +117,11 @@ export function ProgramForm({ item }: ProgramFormProps) {
           Cancel
         </a>
       </AdminFormStickyActions>
+      <ImagePicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(m: MediaItem) => setImage(m.id)}
+      />
     </form>
   );
 }

@@ -69,7 +69,13 @@ All content (events, news, team, publications, programs, projects, partners, pag
 
 **Submissions** (newsletter signups, volunteer applications, contact form): **Admin → Submissions**. Entries are stored in the database; email notifications are still sent when `RESEND_API_KEY` is set.
 
-**Replacing images:** Upload images via **Admin → Media**. Then set image URLs in the relevant content: homepage hero slider (Page Content → home → Hero slider images, one URL per line), news/publications/events (edit each item and set Image URL), partners (edit partner and set Logo URL). Seed data uses placeholder paths (e.g. `/uploads/placeholder.svg`); replace these with your uploaded asset URLs.
+**Replacing images:** Upload images via **Admin → Media** or directly inside each form’s **Image Picker** (Upload from computer). Then select the uploaded image to save its media ID in the field. Seed data uses placeholder paths (e.g. `/uploads/placeholder.svg`); replace these with your uploaded assets.
+
+**Upload limits:** Each file may be up to **5 MB** (JPEG, PNG, GIF, WebP, SVG). Raster uploads record dimensions when possible (browser + server probe).
+
+**Deleting media:** You cannot delete an image that is still referenced in the database (news, events, page content, etc.). Replace those references first — the API returns a list of where it is used.
+
+**Media persistence in Docker:** Uploaded files and media metadata are stored in Docker named volumes (`agc-media-uploads`, `agc-media-metadata`) so images survive container rebuild/restart.
 
 **Full stack (web + DB + Redis):**
 
@@ -81,7 +87,7 @@ cp .env.docker.example .env
 docker compose up -d
 ```
 
-Migrations run automatically on first start. Seed initial content: `cd agc-site && npm run db:seed` (or `npx prisma db seed`). The seed creates homepage content (with hero slider placeholder), sample news, events, publications, programs, and projects. Run after migrations so the DB has the required tables.
+Migrations run automatically on first start. Seed initial content: `cd agc-site && npm run db:seed` (or `npx prisma db seed`). The seed creates homepage/page content and baseline admin-editable records for news, events, publications, programs, projects, partners, team, and taxonomy. Run after migrations so the DB has the required tables.
 
 - Website: http://localhost:9200
 - Admin: http://localhost:9200/admin

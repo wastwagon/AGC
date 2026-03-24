@@ -1,4 +1,4 @@
-import { newsContent, siteConfig, fallbackNews } from "@/data/content";
+import { newsContent, fallbackNews } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getNews } from "@/lib/content";
 import type { CmsNews } from "@/lib/content";
@@ -9,6 +9,8 @@ import { Button } from "@/components/Button";
 import { getActiveCategorySlugs } from "@/lib/news";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
+import { getMergedPageContent } from "@/lib/page-content";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = {
   title: "News",
@@ -18,7 +20,14 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function NewsPage() {
-  const [cmsNews, taxonomy] = await Promise.all([getNews(50), getSiteTaxonomy()]);
+  const [cmsNews, taxonomy, merged, siteSettings] = await Promise.all([
+    getNews(50),
+    getSiteTaxonomy(),
+    getMergedPageContent("news", newsContent as unknown as Record<string, unknown>),
+    getSiteSettings(),
+  ]);
+  const content = merged as unknown as typeof newsContent & { heroImage?: string };
+  const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.news;
   const newsItems: CmsNews[] = cmsNews.length > 0 ? cmsNews : (fallbackNews as CmsNews[]);
   const activeCategories = getActiveCategorySlugs(newsItems, taxonomy.newsCategories);
   const itemsWithImages = await Promise.all(
@@ -31,9 +40,9 @@ export default async function NewsPage() {
   return (
     <>
       <PageHero
-        title={newsContent.title}
-        subtitle={newsContent.subtitle}
-        image={placeholderImages.news}
+        title={content.title}
+        subtitle={content.subtitle}
+        image={heroImage}
         imageAlt="Latest News"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "News" }]}
       />
@@ -42,7 +51,7 @@ export default async function NewsPage() {
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 max-w-2xl">
             <p className="text-sm font-medium text-accent-800">Updates</p>
-            <p className="page-prose mt-2">{newsContent.intro}</p>
+            <p className="page-prose mt-2">{content.intro}</p>
           </div>
           {activeCategories.length > 0 && (
             <NewsFilters
@@ -59,11 +68,11 @@ export default async function NewsPage() {
                 </div>
             ) : (
               <div className="page-card p-8">
-                <p className="page-prose">{newsContent.intro}</p>
+                <p className="page-prose">{content.intro}</p>
                 <p className="page-prose mt-6">
                   Stay up-to-date with our latest news and initiatives. Subscribe to our newsletter or contact{" "}
-                  <a href={`mailto:${siteConfig.email.programs}`} className="font-medium text-accent-600 hover:underline">
-                    {siteConfig.email.programs}
+                  <a href={`mailto:${siteSettings.email.programs}`} className="font-medium text-accent-600 hover:underline">
+                    {siteSettings.email.programs}
                   </a>{" "}
                   to receive updates.
                 </p>

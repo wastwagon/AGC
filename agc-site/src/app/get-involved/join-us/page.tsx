@@ -1,22 +1,30 @@
-import { getInvolvedContent, siteConfig } from "@/data/content";
+import { getInvolvedContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
+import { getMergedPageContent } from "@/lib/page-content";
+import { resolveImageUrl } from "@/lib/media";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = {
   title: "Work with us",
   description: "Join the Africa Governance Centre team and advance governance excellence across Africa.",
 };
 
-export default function JoinUsPage() {
-  const c = getInvolvedContent.joinUs;
+export default async function JoinUsPage() {
+  const [merged, siteSettings] = await Promise.all([
+    getMergedPageContent("get-involved", getInvolvedContent as unknown as Record<string, unknown>),
+    getSiteSettings(),
+  ]);
+  const c = (merged as unknown as typeof getInvolvedContent).joinUs;
+  const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.applications;
   return (
     <>
       <PageHero
         variant="compact"
         title={c.title}
         subtitle={c.subtitle}
-        image={placeholderImages.applications}
+        image={heroImage}
         imageAlt="Work with us"
         breadcrumbs={[
           { label: "Home", href: "/" },
@@ -64,12 +72,12 @@ export default function JoinUsPage() {
             </Button>
           </div>
           <p className="mt-10 text-sm text-stone-300/90">
-            <a href={`mailto:${siteConfig.email.programs}`} className="underline decoration-accent-400/50 underline-offset-4 hover:decoration-accent-300">
-              {siteConfig.email.programs}
+            <a href={`mailto:${siteSettings.email.programs}`} className="underline decoration-accent-400/50 underline-offset-4 hover:decoration-accent-300">
+              {siteSettings.email.programs}
             </a>
             {" · "}
-            <a href={`tel:${siteConfig.phone.replace(/\s/g, "")}`} className="underline decoration-accent-400/50 underline-offset-4 hover:decoration-accent-300">
-              {siteConfig.phone}
+            <a href={`tel:${siteSettings.phone.replace(/\s/g, "")}`} className="underline decoration-accent-400/50 underline-offset-4 hover:decoration-accent-300">
+              {siteSettings.phone}
             </a>
           </p>
         </div>

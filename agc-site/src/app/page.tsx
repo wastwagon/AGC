@@ -10,6 +10,7 @@ import { HomePartnerStrip } from "@/components/HomePartnerStrip";
 import { HomeSpotlightStory } from "@/components/HomeSpotlightStory";
 import { NewsCard } from "@/components/NewsCard";
 import { HomeEventsSection } from "@/components/HomeEventsSection";
+import { resolveImageUrl } from "@/lib/media";
 
 export const revalidate = 60;
 
@@ -20,18 +21,36 @@ export default async function HomePage() {
     getHomePageCms(),
     getPartners(),
   ]);
-  const allEvents: CmsEvent[] = events.length > 0 ? events : (fallbackEvents as CmsEvent[]);
+  const allEventsRaw: CmsEvent[] = events.length > 0 ? events : (fallbackEvents as CmsEvent[]);
+  const allEvents: CmsEvent[] = await Promise.all(
+    allEventsRaw.map(async (e) => ({
+      ...e,
+      image: (await resolveImageUrl(e.image)) || e.image,
+    }))
+  );
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const pastEvents = allEvents.filter((e) => new Date(e.end_date || e.start_date) < today).slice(0, 3);
   const upcomingEvents = allEvents.filter((e) => new Date(e.end_date || e.start_date) >= today).slice(0, 3);
-  const latestNews: CmsNews[] = news.length > 0 ? news.slice(0, 3) : (fallbackNews as CmsNews[]).slice(0, 3);
+  const latestNewsRaw: CmsNews[] = news.length > 0 ? news.slice(0, 3) : (fallbackNews as CmsNews[]).slice(0, 3);
+  const latestNews = await Promise.all(
+    latestNewsRaw.map(async (n) => ({
+      item: n,
+      imageUrl: (await resolveImageUrl(n.image)) || undefined,
+    }))
+  );
 
   const heroSlides =
     home.heroSliderImages?.length > 0 ? home.heroSliderImages : defaultHeroSliderImages;
   const stripPartners =
     partnersFromDb.length > 0
-      ? partnersFromDb.map((p) => ({ name: p.name, logo: p.logo, url: p.url }))
+      ? await Promise.all(
+          partnersFromDb.map(async (p) => ({
+            name: p.name,
+            logo: (await resolveImageUrl(p.logo)) || undefined,
+            url: p.url,
+          }))
+        )
       : home.heroPartnerStrip.map((name) => ({ name }));
 
   return (
@@ -166,8 +185,8 @@ export default async function HomePage() {
           </div>
           {latestNews.length > 0 ? (
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {latestNews.map((item) => (
-                <NewsCard key={item.id} item={item} href="/news" />
+              {latestNews.map(({ item, imageUrl }) => (
+                <NewsCard key={item.id} item={item} imageUrl={imageUrl} href="/news" />
               ))}
             </div>
           ) : (

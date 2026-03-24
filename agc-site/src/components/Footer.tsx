@@ -3,16 +3,10 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone, Mail, Twitter, Linkedin, Instagram, Facebook } from "lucide-react";
-import { siteConfig, footerLinks } from "@/data/content";
+import { footerLinks } from "@/data/content";
 import { placeholderImages } from "@/data/images";
+import type { SiteSettings } from "@/lib/site-settings";
 import { NewsletterSignup } from "./NewsletterSignup";
-
-const socialLinks = [
-  { href: siteConfig.social.twitter, icon: Twitter, label: "Twitter" },
-  { href: siteConfig.social.linkedin, icon: Linkedin, label: "LinkedIn" },
-  { href: siteConfig.social.instagram, icon: Instagram, label: "Instagram" },
-  { href: siteConfig.social.facebook, icon: Facebook, label: "Facebook" },
-].filter((s) => s.href && s.href !== "#");
 
 /** Footer project thumbnails - Our Work items with images */
 const footerWorkItems = [
@@ -28,7 +22,13 @@ const footerWorkItems = [
  * Consultar-style footer: dark navy upper (4 cols), darker lower (copyright)
  * Mobile-first: columns stack, enhanced spacing and accent highlights
  */
-export function Footer() {
+export function Footer({ siteSettings }: { siteSettings: SiteSettings }) {
+  const socialLinks = [
+    { href: siteSettings.social.twitter, icon: Twitter, label: "Twitter" },
+    { href: siteSettings.social.linkedin, icon: Linkedin, label: "LinkedIn" },
+    { href: siteSettings.social.instagram, icon: Instagram, label: "Instagram" },
+    { href: siteSettings.social.facebook, icon: Facebook, label: "Facebook" },
+  ].filter((s) => s.href && s.href !== "#");
   return (
     <footer className="relative overflow-hidden border-t border-accent-500/30 bg-accent-900 pb-[calc(4.25rem+env(safe-area-inset-bottom,0px))] text-white xl:pb-0">
       {/* Upper footer - 4 columns */}
@@ -40,14 +40,14 @@ export function Footer() {
               <Link href="/" className="inline-block max-w-[180px]">
                 <Image
                   src="/agc-logo.png"
-                  alt={siteConfig.name}
+                  alt={siteSettings.name}
                   width={160}
                   height={48}
                   className="h-10 w-auto object-contain brightness-0 invert"
                 />
               </Link>
               <p className="mt-4 text-[15px] leading-[1.9] text-white/90">
-                {siteConfig.tagline}
+                {siteSettings.tagline}
               </p>
               <ul className="mt-5 flex flex-wrap gap-3">
                 {socialLinks.map(({ href, icon: Icon, label }) => (
@@ -77,28 +77,28 @@ export function Footer() {
                   <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-accent-300">
                     <MapPin className="h-4 w-4" />
                   </span>
-                  <span className="leading-relaxed">{siteConfig.address}</span>
+                  <span className="leading-relaxed">{siteSettings.address}</span>
                 </li>
                 <li>
                   <a
-                    href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+                    href={`tel:${siteSettings.phone.replace(/\s/g, "")}`}
                     className="flex items-center gap-3 text-[15px] text-white/90 transition-colors hover:text-accent-300"
                   >
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-accent-300">
                       <Phone className="h-4 w-4" />
                     </span>
-                    {siteConfig.phone}
+                    {siteSettings.phone}
                   </a>
                 </li>
                 <li>
                   <a
-                    href={`mailto:${siteConfig.email.programs}`}
+                    href={`mailto:${siteSettings.email.programs}`}
                     className="flex items-start gap-3 text-[15px] text-white/90 transition-colors hover:text-accent-300"
                   >
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-accent-300">
                       <Mail className="h-4 w-4" />
                     </span>
-                    <span className="break-all leading-relaxed">{siteConfig.email.programs}</span>
+                    <span className="break-all leading-relaxed">{siteSettings.email.programs}</span>
                   </a>
                 </li>
               </ul>
@@ -165,7 +165,7 @@ export function Footer() {
           <p className="text-[14px] text-white/80">
             © {new Date().getFullYear()}{" "}
             <Link href="/" className="text-white transition-colors hover:text-accent-300">
-              {siteConfig.name}
+              {siteSettings.name}
             </Link>
             . All rights reserved.
             <span className="mx-2">|</span>

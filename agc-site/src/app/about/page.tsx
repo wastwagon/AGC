@@ -6,6 +6,7 @@ import { getMergedPageContent } from "@/lib/page-content";
 import { PageHero } from "@/components/PageHero";
 import { TeamSectionTabs } from "@/components/TeamSectionTabs";
 import { Button } from "@/components/Button";
+import { resolveImageUrl } from "@/lib/media";
 
 export const metadata = {
   title: "About Us",
@@ -19,6 +20,8 @@ export default async function AboutPage() {
     getTeam(),
     getMergedPageContent("about", aboutContent),
   ]);
+  const heroImage = (await resolveImageUrl((content as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.about;
+  const sectionImage = (await resolveImageUrl((content as Record<string, unknown>).sectionImage as string | undefined)) || placeholderImages.about;
   const teamForTabs = cmsTeam.map((m) => ({
     id: m.id,
     name: m.name,
@@ -32,7 +35,7 @@ export default async function AboutPage() {
       <PageHero
         title={content.title}
         subtitle={content.hero.subtitle}
-        image={placeholderImages.about}
+        image={heroImage}
         imageAlt="About Africa Governance Centre"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "About Us" }]}
       />
@@ -72,7 +75,7 @@ export default async function AboutPage() {
             </div>
             <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg ring-1 ring-stone-200/60 lg:aspect-auto lg:min-h-[420px]">
               <Image
-                src={placeholderImages.about}
+                src={sectionImage}
                 alt="Governance conference and summit"
                 fill
                 className="object-cover"

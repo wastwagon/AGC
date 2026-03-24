@@ -24,8 +24,11 @@ import {
   QrCode,
   Inbox,
   Tags,
+  Settings,
+  House,
+  CircleUserRound,
 } from "lucide-react";
-import { siteConfig } from "@/data/content";
+import type { SiteSettings } from "@/lib/site-settings";
 import { getAdminBreadcrumbs } from "@/lib/admin-breadcrumbs";
 
 const navItems = [
@@ -40,11 +43,15 @@ const navItems = [
   { href: "/admin/projects", label: "Projects", icon: Briefcase },
   { href: "/admin/partners", label: "Partners", icon: Handshake },
   { href: "/admin/pages", label: "Page Content", icon: FileText },
+  { href: "/admin/home-settings", label: "Home Settings", icon: House },
+  { href: "/admin/about-settings", label: "About Settings", icon: CircleUserRound },
+  { href: "/admin/site-settings", label: "Site Settings", icon: Settings },
   { href: "/admin/taxonomy", label: "Taxonomy", icon: Tags },
   { href: "/admin/submissions", label: "Submissions", icon: Inbox },
+  { href: "/admin/settings", label: "Operations", icon: Settings },
 ];
 
-export function AdminShell({ children }: { children: React.ReactNode }) {
+export function AdminShell({ children, siteSettings }: { children: React.ReactNode; siteSettings: SiteSettings }) {
   const pathname = usePathname();
   const isLoginPage = pathname === "/admin/login";
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -91,7 +98,7 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
           <Link href="/" className="flex items-center gap-2 rounded-lg pr-2 hover:opacity-90">
             <Image
               src="/agc-logo.png"
-              alt={siteConfig.name}
+              alt={siteSettings.name}
               width={120}
               height={36}
               className="h-8 w-auto object-contain"
@@ -120,6 +127,10 @@ export function AdminShell({ children }: { children: React.ReactNode }) {
                 active =
                   pathname.startsWith("/admin/events") && !pathname.startsWith("/admin/events/scan");
               else if (item.href === "/admin/taxonomy") active = pathname.startsWith("/admin/taxonomy");
+              else if (item.href === "/admin/home-settings") active = pathname.startsWith("/admin/home-settings");
+              else if (item.href === "/admin/about-settings") active = pathname.startsWith("/admin/about-settings");
+              else if (item.href === "/admin/site-settings") active = pathname.startsWith("/admin/site-settings");
+              else if (item.href === "/admin/settings") active = pathname.startsWith("/admin/settings");
               else active = pathname === item.href || pathname.startsWith(item.href + "/");
 
               return (

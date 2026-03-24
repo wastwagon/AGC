@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { prisma } from "@/lib/db";
-import { siteConfig } from "@/data/content";
 import { nl2br, escapeHtml } from "@/lib/sanitize";
 import { rateLimit } from "@/lib/rate-limit";
+import { getSiteSettings } from "@/lib/site-settings";
 import { contactSchema } from "@/lib/validations";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
@@ -14,6 +14,7 @@ function getClientIp(request: Request): string {
 
 export async function POST(request: Request) {
   try {
+    const siteSettings = await getSiteSettings();
     const ip = getClientIp(request);
     const { success, retryAfter } = await rateLimit(`contact:${ip}`);
     if (!success) {
@@ -44,7 +45,7 @@ export async function POST(request: Request) {
 
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
-      to: siteConfig.email.programs,
+      to: siteSettings.email.programs,
       replyTo: email,
       subject: subject ? `[AGC Contact] ${escapeHtml(subject)}` : `[AGC Contact] From ${escapeHtml(name)}`,
       html: `

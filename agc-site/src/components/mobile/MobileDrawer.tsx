@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { ourWorkSubLinks, getInvolvedSubLinks } from "@/data/content";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import type { SiteSettings } from "@/lib/site-settings";
 import { useMobileNav } from "./MobileNavContext";
 
 type NavItem = { href: string; label: string; icon: typeof Home; subLinks?: { href: string; label: string }[] };
@@ -34,7 +35,7 @@ const primaryNav: NavItem[] = [
   { href: "/contact", label: "Contact", icon: Mail },
 ];
 
-export function MobileDrawer() {
+export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
   const { mobileOpen, setMobileOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -200,7 +201,7 @@ export function MobileDrawer() {
         <div className="shrink-0 space-y-3 border-t border-white/10 bg-accent-950/80 px-3 py-4 backdrop-blur-sm">
           <div className="rounded-xl bg-white/5 px-2 py-2 ring-1 ring-white/10">
             <p className="mb-2 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">Language</p>
-            <LanguageSelector variant="dark" />
+            <LanguageSelector variant="dark" languages={siteSettings.languages} />
           </div>
           <Link
             href="/contact"

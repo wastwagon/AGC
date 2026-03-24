@@ -3,6 +3,19 @@
  * Run: npx prisma db seed
  */
 import { PrismaClient } from "@prisma/client";
+import { appSummitContent } from "../src/data/app-summit";
+import {
+  getInvolvedContent,
+  workContent,
+  eventsContent,
+  newsContent,
+  publicationsContent,
+  siteConfig,
+  fallbackEvents,
+  fallbackNews,
+  fallbackPublications,
+} from "../src/data/content";
+import { privacyPolicy, termsOfService } from "../src/data/legal";
 
 const prisma = new PrismaClient();
 
@@ -25,6 +38,17 @@ const defaultTaxonomyJson = {
 };
 
 async function main() {
+  const publicationsTypesColumn = await prisma.$queryRaw<Array<{ exists: boolean }>>`
+    SELECT EXISTS (
+      SELECT 1
+      FROM information_schema.columns
+      WHERE table_schema = 'public'
+        AND table_name = 'publications'
+        AND column_name = 'types'
+    ) AS "exists"
+  `;
+  const canWritePublicationTypes = Boolean(publicationsTypesColumn[0]?.exists);
+
   // Page content (about, contact, get-involved)
   const pages = [
     {
@@ -54,16 +78,95 @@ async function main() {
       status: "published",
     },
     {
+      slug: "home",
+      title: "Homepage",
+      status: "published",
+    },
+    {
+      slug: "site-settings",
+      title: "Site Settings",
+      status: "published",
+      contentJson: siteConfig,
+    },
+    {
+      slug: "app-summit",
+      title: "APP Summit",
+      status: "published",
+      contentJson: { ...appSummitContent, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
+      slug: "applications",
+      title: "Applications",
+      status: "published",
+      contentJson: {
+        heroTitle: "Volunteer application",
+        heroSubtitle:
+          "Your skills and time strengthen research, events, and policy dialogue across the continent. Tell us how you’d like to contribute — we read every submission.",
+        applyIntro: "A few minutes now helps us match you to the right team. Fields marked * are required.",
+        heroImage: "/uploads/placeholder.svg",
+      },
+    },
+    {
+      slug: "privacy-policy",
+      title: "Privacy Policy",
+      status: "published",
+      contentJson: privacyPolicy,
+    },
+    {
+      slug: "terms-of-service",
+      title: "Terms of Service",
+      status: "published",
+      contentJson: termsOfService,
+    },
+    {
+      slug: "our-work-programs",
+      title: "Our Work — Programs",
+      status: "published",
+      contentJson: { ...workContent.programs, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
+      slug: "our-work",
+      title: "Our Work",
+      status: "published",
+      contentJson: { ...workContent, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
+      slug: "our-work-projects",
+      title: "Our Work — Projects",
+      status: "published",
+      contentJson: { ...workContent.projects, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
+      slug: "our-work-advisory",
+      title: "Our Work — Advisory",
+      status: "published",
+      contentJson: { ...workContent.advisory, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
+      slug: "events",
+      title: "Events",
+      status: "published",
+      contentJson: { ...eventsContent, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
+      slug: "news",
+      title: "News",
+      status: "published",
+      contentJson: { ...newsContent, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
+      slug: "publications",
+      title: "Publications",
+      status: "published",
+      contentJson: { ...publicationsContent, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
       slug: "get-involved",
       title: "Get Involved",
       heroTitle: "Get Involved",
       heroSubtitle: "Join us in advancing governance excellence across Africa",
       status: "published",
-    },
-    {
-      slug: "home",
-      title: "Homepage",
-      status: "published",
+      contentJson: { ...getInvolvedContent, heroImage: "/uploads/placeholder.svg" },
     },
   ];
 
@@ -71,7 +174,14 @@ async function main() {
     await prisma.pageContent.upsert({
       where: { slug: p.slug },
       create: p,
-      update: { title: p.title, heroSubtitle: p.heroSubtitle, intro: p.intro },
+      update: {
+        title: p.title,
+        heroTitle: p.heroTitle,
+        heroSubtitle: p.heroSubtitle,
+        intro: p.intro,
+        status: p.status,
+        contentJson: p.contentJson,
+      },
     });
   }
   // Home: set heroSliderImages in CMS so admin can edit/replace images (Admin → Page Content → home)
@@ -154,84 +264,67 @@ async function main() {
   }
   console.log(`  Team: ${team.length} members`);
 
-  // News (replace images in Admin → News; image paths point to /uploads/)
+  // News (seed full existing fallback set so local admin matches public content inventory)
   const existingNews = await prisma.news.count();
   if (existingNews === 0) {
-    const now = new Date();
+    const newsRows = fallbackNews.map((item) => ({
+      title: item.title,
+      slug: item.slug,
+      excerpt: item.excerpt,
+      content: item.content,
+      image: "/uploads/placeholder.svg",
+      datePublished: item.date_published ? new Date(item.date_published) : null,
+      author: item.author ?? "Africa Governance Centre",
+      categories: item.categories ?? [],
+      tags: item.tags ?? [],
+      status: "published" as const,
+    }));
     await prisma.news.createMany({
-      data: [
-        {
-          title: "Summary Report of the African Political Parties Summit (APPS) 2025",
-          slug: "summary-report-apps-2025",
-          excerpt: "Key outcomes and reflections from the 2025 African Political Parties Summit in Accra.",
-          content: "<p>Full report content. Edit in Admin → News. Replace the cover image via the image field (e.g. /uploads/report-cover.jpg).</p>",
-          image: "/uploads/placeholder.svg",
-          datePublished: now,
-          author: "AGC Research Team",
-          categories: ["reports", "events"],
-          tags: ["political parties", "summit", "Accra Declaration"],
-          status: "published",
-        },
-        {
-          title: "Governance and Economic Transformation in Africa",
-          slug: "governance-economic-transformation-2025",
-          excerpt: "Exploring the links between strong institutions and inclusive growth.",
-          content: "<p>Article content. Edit and add images via Admin.</p>",
-          image: "/uploads/placeholder.svg",
-          datePublished: now,
-          categories: ["announcements"],
-          tags: ["governance", "economic transformation"],
-          status: "published",
-        },
-      ],
+      data: newsRows,
     });
-    console.log("  News: 2 sample items");
+    console.log(`  News: ${newsRows.length} items`);
   }
 
-  // Events (replace image in Admin → Events)
+  // Events (seed full existing fallback set so local admin matches public content inventory)
   const existingEvents = await prisma.event.count();
   if (existingEvents === 0) {
-    const start = new Date();
-    const end = new Date(start);
-    end.setDate(end.getDate() + 2);
+    const eventRows = fallbackEvents.map((item) => ({
+      title: item.title,
+      slug: item.slug,
+      description: item.description ?? "",
+      location: item.location ?? "",
+      startDate: new Date(item.start_date),
+      endDate: item.end_date ? new Date(item.end_date) : null,
+      image: item.image ?? "/uploads/placeholder.svg",
+      category: item.category ?? null,
+      eventType: item.category ?? "event",
+      status: "published" as const,
+    }));
     await prisma.event.createMany({
-      data: [
-        {
-          title: "African Political Parties Summit 2025",
-          slug: "african-political-parties-summit-2025",
-          description: "Continental convening on democratic governance. Edit in Admin → Events.",
-          location: "Accra, Ghana",
-          startDate: start,
-          endDate: end,
-          image: "/uploads/placeholder.svg",
-          eventType: "summit",
-          venueName: "Accra International Conference Centre",
-          status: "published",
-        },
-      ],
+      data: eventRows,
     });
-    console.log("  Events: 1 sample item");
+    console.log(`  Events: ${eventRows.length} items`);
   }
 
-  // Publications (replace image and file in Admin → Publications)
+  // Publications (seed full existing fallback set so local admin matches public content inventory)
   const existingPubs = await prisma.publication.count();
   if (existingPubs === 0) {
-    const now = new Date();
+    const publicationRows = fallbackPublications.map((item) => ({
+      title: item.title,
+      slug: item.slug,
+      excerpt: item.excerpt ?? null,
+      ...(canWritePublicationTypes
+        ? { types: Array.isArray(item.types) && item.types.length > 0 ? item.types : ["report"] }
+        : {}),
+      image: "/uploads/placeholder.svg",
+      datePublished: item.date_published ? new Date(item.date_published) : null,
+      author: item.author ?? "Africa Governance Centre",
+      status: "published" as const,
+    }));
     await prisma.publication.createMany({
-      data: [
-        {
-          title: "Africa Governance Review 2024",
-          slug: "africa-governance-review-2024",
-          excerpt: "Annual assessment of governance trends across the continent.",
-          types: ["report"],
-          image: "/uploads/placeholder.svg",
-          datePublished: now,
-          author: "Africa Governance Centre",
-          status: "published",
-        },
-      ],
+      data: publicationRows,
     });
-    console.log("  Publications: 1 sample item");
+    console.log(`  Publications: ${publicationRows.length} items`);
   }
 
   const hasTaxonomy = await prisma.pageContent.findUnique({ where: { slug: "site-taxonomy" } });

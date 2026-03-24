@@ -1,4 +1,4 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { AdminFormErrorSuspense } from "../../../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../../../_components/AdminFormSuccessSuspense";
@@ -14,6 +14,10 @@ type Props = { params: Promise<{ slug: string }> };
 export default async function AdminPagesEditPage({ params }: Props) {
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
+
+  if (decodedSlug === "site-settings") {
+    redirect("/admin/site-settings");
+  }
 
   if (decodedSlug === "home") {
     await prisma.pageContent.upsert({

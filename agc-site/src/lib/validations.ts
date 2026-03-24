@@ -152,6 +152,67 @@ export const pageContentFormSchema = z.object({
   objectivesContent: z.string().max(10000).optional(),
   objectivesPrinciples: z.string().max(10000).optional(),
   objectivesAgenda2063: z.string().max(10000).optional(),
+  contentJson: z.string().max(500000).optional(),
+});
+
+export const siteSettingsFormSchema = z.object({
+  name: z.string().min(1, "Site name is required").max(255),
+  tagline: z.string().min(1, "Tagline is required").max(1000),
+  phone: z.string().min(1, "Phone is required").max(100),
+  address: z.string().min(1, "Address is required").max(500),
+  officeHours: z.string().min(1, "Office hours are required").max(255),
+  emailPrograms: z.string().email("Programs email must be valid"),
+  emailMedia: z.string().email("Media email must be valid"),
+  emailInfo: z.string().email("Info email must be valid"),
+  socialTwitter: z.string().max(500).optional(),
+  socialLinkedin: z.string().max(500).optional(),
+  socialInstagram: z.string().max(500).optional(),
+  socialFacebook: z.string().max(500).optional(),
+  languages: z.string().max(5000).optional(),
+});
+
+export const homeSettingsFormSchema = z.object({
+  heroEyebrow: z.string().min(1).max(255),
+  heroTitle: z.string().min(1).max(255),
+  heroSubtitle: z.string().min(1).max(3000),
+  heroCta: z.string().min(1).max(120),
+  heroCtaHref: z.string().min(1).max(255),
+  heroCtaSecondary: z.string().min(1).max(120),
+  heroCtaSecondaryHref: z.string().min(1).max(255),
+  heroSliderImages: z.string().max(10000).optional(),
+  homeReachTitle: z.string().min(1).max(255),
+  homeReachIntro: z.string().min(1).max(2000),
+  homeImpactMethodology: z.string().min(1).max(2000),
+  homePartnerBlurb: z.string().min(1).max(1000),
+  heroPartnerStrip: z.string().max(4000).optional(),
+  impactStats: z.string().max(20000).optional(),
+  testimonialQuote: z.string().min(1).max(4000),
+  testimonialName: z.string().min(1).max(255),
+  testimonialTitle: z.string().min(1).max(255),
+  testimonialOrganization: z.string().min(1).max(255),
+  testimonialInitials: z.string().min(1).max(10),
+  spotlightLabel: z.string().min(1).max(120),
+  spotlightHeadline: z.string().min(1).max(255),
+  spotlightParagraphs: z.string().min(1).max(8000),
+  spotlightName: z.string().min(1).max(255),
+  spotlightRole: z.string().min(1).max(255),
+  spotlightInitials: z.string().min(1).max(10),
+  spotlightCtaLabel: z.string().min(1).max(120),
+  spotlightCtaHref: z.string().min(1).max(255),
+});
+
+export const aboutSettingsFormSchema = z.object({
+  title: z.string().min(1).max(255),
+  heroSubtitle: z.string().min(1).max(1000),
+  intro: z.string().min(1).max(5000),
+  description: z.string().min(1).max(10000),
+  mission: z.string().min(1).max(5000),
+  strategicTitle: z.string().min(1).max(255),
+  strategicContent: z.string().min(1).max(10000),
+  strategicPrinciples: z.string().min(1).max(10000),
+  strategicAgenda2063: z.string().min(1).max(10000),
+  heroImage: z.string().max(500).optional(),
+  sectionImage: z.string().max(500).optional(),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;

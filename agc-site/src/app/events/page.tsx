@@ -1,9 +1,11 @@
 import { eventsContent, fallbackEvents } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getEvents } from "@/lib/content";
+import { getMergedPageContent } from "@/lib/page-content";
 import { PageHero } from "@/components/PageHero";
 import { EventsListingTabs } from "@/components/events/EventsListingTabs";
 import type { CmsEvent } from "@/lib/content";
+import { resolveImageUrl } from "@/lib/media";
 
 export const metadata = {
   title: "Events",
@@ -13,7 +15,12 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function EventsPage() {
-  const cmsEvents = await getEvents();
+  const [cmsEvents, merged] = await Promise.all([
+    getEvents(),
+    getMergedPageContent("events", eventsContent as unknown as Record<string, unknown>),
+  ]);
+  const content = merged as unknown as typeof eventsContent & { heroImage?: string };
+  const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.events;
   const events: CmsEvent[] = cmsEvents.length > 0 ? cmsEvents : (fallbackEvents as CmsEvent[]);
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -24,9 +31,9 @@ export default async function EventsPage() {
   return (
     <>
       <PageHero
-        title={eventsContent.title}
-        subtitle={eventsContent.subtitle}
-        image={placeholderImages.events}
+        title={content.title}
+        subtitle={content.subtitle}
+        image={heroImage}
         imageAlt="Events"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Events" }]}
       />
@@ -35,15 +42,15 @@ export default async function EventsPage() {
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-accent-800">Convenings</p>
-            <p className="page-prose mt-2 text-lg">{eventsContent.intro}</p>
+            <p className="page-prose mt-2 text-lg">{content.intro}</p>
           </div>
 
           {events.length > 0 && <EventsListingTabs upcoming={upcoming} past={past} />}
 
           {events.length === 0 && (
             <div className="mt-16 page-card p-12 text-center">
-              <p className="page-prose">{eventsContent.intro}</p>
-              <p className="page-prose mt-6">{eventsContent.emptyContact}</p>
+              <p className="page-prose">{content.intro}</p>
+              <p className="page-prose mt-6">{content.emptyContact}</p>
               <a
                 href="mailto:programs@africagovernancecentre.org"
                 className="mt-6 inline-block font-medium text-accent-600 transition-colors hover:text-accent-700"

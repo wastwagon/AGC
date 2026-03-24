@@ -1,20 +1,26 @@
 import Link from "next/link";
 import { termsOfService } from "@/data/legal";
-import { siteConfig } from "@/data/content";
 import { PageHero } from "@/components/PageHero";
+import { getMergedPageContent } from "@/lib/page-content";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = {
   title: "Terms of Service",
   description: "Rules and guidelines for using the Africa Governance Centre website and services.",
 };
 
-export default function TermsOfServicePage() {
+export default async function TermsOfServicePage() {
+  const [merged, siteSettings] = await Promise.all([
+    getMergedPageContent("terms-of-service", termsOfService as unknown as Record<string, unknown>),
+    getSiteSettings(),
+  ]);
+  const content = merged as unknown as typeof termsOfService;
   return (
     <>
       <PageHero
         variant="minimal"
-        title={termsOfService.title}
-        subtitle={`Last updated · ${termsOfService.lastUpdated}`}
+        title={content.title}
+        subtitle={`Last updated · ${content.lastUpdated}`}
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Terms of Service" }]}
       />
 
@@ -26,7 +32,7 @@ export default function TermsOfServicePage() {
           </p>
 
           <div className="mt-14 space-y-12">
-            {termsOfService.sections.map((section) => (
+            {content.sections.map((section) => (
               <article key={section.title} className="page-card p-6 sm:p-8">
                 <h2 className="page-heading text-xl text-stone-900 sm:text-2xl">{section.title}</h2>
                 <p className="mt-4 page-prose text-[0.98rem]">{section.content}</p>
@@ -53,14 +59,14 @@ export default function TermsOfServicePage() {
           <ul className="mt-6 space-y-2 text-sm text-stone-200/90">
             <li>
               <a
-                href={`mailto:${siteConfig.email.info}`}
+                href={`mailto:${siteSettings.email.info}`}
                 className="font-medium underline decoration-accent-400/50 underline-offset-4 hover:decoration-accent-300"
               >
-                {siteConfig.email.info}
+                {siteSettings.email.info}
               </a>
             </li>
-            <li>{siteConfig.address}</li>
-            <li>{siteConfig.phone}</li>
+            <li>{siteSettings.address}</li>
+            <li>{siteSettings.phone}</li>
           </ul>
           <p className="mt-10 text-xs text-stone-400">
             <Link href="/privacy-policy" className="text-accent-300/90 hover:text-accent-100">

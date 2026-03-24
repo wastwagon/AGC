@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { User, Mail, Briefcase, MapPin, Phone, ArrowUpRight } from "lucide-react";
-import { getInvolvedContent, siteConfig } from "@/data/content";
+import { getInvolvedContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { getMergedPageContent } from "@/lib/page-content";
+import { resolveImageUrl } from "@/lib/media";
+import { getSiteSettings } from "@/lib/site-settings";
 
 const icons = [User, Mail, Briefcase] as const;
 
@@ -13,18 +15,20 @@ export const metadata = {
 };
 
 export default async function GetInvolvedPage() {
-  const content = await getMergedPageContent("get-involved", {
-    title: getInvolvedContent.title,
-    subtitle: getInvolvedContent.subtitle,
-  } as Record<string, unknown>);
-  const { bottomSection } = getInvolvedContent;
+  const [merged, siteSettings] = await Promise.all([
+    getMergedPageContent("get-involved", getInvolvedContent as unknown as Record<string, unknown>),
+    getSiteSettings(),
+  ]);
+  const content = merged as unknown as typeof getInvolvedContent & { heroImage?: string };
+  const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.getInvolved;
+  const { bottomSection } = content;
 
   return (
     <>
       <PageHero
         title={(content.title as string) ?? getInvolvedContent.title}
         subtitle={(content.subtitle as string) ?? getInvolvedContent.subtitle}
-        image={placeholderImages.getInvolved}
+        image={heroImage}
         imageAlt="Get Involved"
         breadcrumbs={[{ label: "Home", href: "/" }, { label: "Get Involved" }]}
       />
@@ -34,12 +38,12 @@ export default async function GetInvolvedPage() {
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-accent-800">Ways to connect</p>
             <h2 className="page-heading mt-2 text-2xl sm:text-3xl lg:text-4xl">Join the work</h2>
-            <p className="page-prose mt-4 text-lg">{getInvolvedContent.intro}</p>
+            <p className="page-prose mt-4 text-lg">{content.intro}</p>
           </div>
 
           <div className="mt-14 grid gap-6 lg:grid-cols-3 lg:gap-8">
             <Link
-              href={getInvolvedContent.opportunities[0].pageHref}
+              href={content.opportunities[0].pageHref}
               className="group relative overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] p-8 shadow-sm transition-all duration-300 hover:border-accent-300/60 hover:shadow-lg sm:p-10 lg:col-span-2 lg:flex lg:flex-col lg:justify-between"
             >
               <div className="absolute right-0 top-0 h-40 w-40 translate-x-10 -translate-y-10 rounded-full bg-accent-100/60 opacity-80 transition-opacity group-hover:opacity-100" />
@@ -48,11 +52,11 @@ export default async function GetInvolvedPage() {
                   <User className="h-7 w-7" />
                 </div>
                 <h3 className="mt-6 font-serif text-2xl font-semibold text-stone-900 sm:text-3xl">
-                  {getInvolvedContent.opportunities[0].title}
+                  {content.opportunities[0].title}
                 </h3>
-                <p className="page-prose mt-3">{getInvolvedContent.opportunities[0].description}</p>
+                <p className="page-prose mt-3">{content.opportunities[0].description}</p>
                 <ul className="mt-6 grid gap-2 sm:grid-cols-2">
-                  {getInvolvedContent.opportunities[0].items.map((item) => (
+                  {content.opportunities[0].items.map((item) => (
                     <li key={item} className="flex items-center gap-2 text-stone-600">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-600" />
                       {item}
@@ -61,13 +65,13 @@ export default async function GetInvolvedPage() {
                 </ul>
               </div>
               <span className="relative mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent-800 transition-all group-hover:gap-3">
-                {getInvolvedContent.opportunities[0].cta}
+                {content.opportunities[0].cta}
                 <ArrowUpRight className="h-4 w-4" />
               </span>
             </Link>
 
             <div className="flex flex-col gap-6 lg:gap-8">
-              {getInvolvedContent.opportunities.slice(1).map((opp, i) => {
+              {content.opportunities.slice(1).map((opp, i) => {
                 const Icon = icons[i + 1] ?? Briefcase;
                 return (
                   <Link
@@ -110,10 +114,10 @@ export default async function GetInvolvedPage() {
                       <Mail className="h-5 w-5 text-accent-700" />
                     </div>
                     <a
-                      href={`mailto:${siteConfig.email.programs}`}
+                      href={`mailto:${siteSettings.email.programs}`}
                       className="text-stone-600 transition-colors hover:text-accent-700"
                     >
-                      {siteConfig.email.programs}
+                      {siteSettings.email.programs}
                     </a>
                   </li>
                   <li className="flex items-start gap-3">
@@ -121,17 +125,17 @@ export default async function GetInvolvedPage() {
                       <Phone className="h-5 w-5 text-accent-700" />
                     </div>
                     <a
-                      href={`tel:${siteConfig.phone.replace(/\s/g, "")}`}
+                      href={`tel:${siteSettings.phone.replace(/\s/g, "")}`}
                       className="text-stone-600 transition-colors hover:text-accent-700"
                     >
-                      {siteConfig.phone}
+                      {siteSettings.phone}
                     </a>
                   </li>
                   <li className="flex items-start gap-3">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffcf7] shadow-sm ring-1 ring-stone-200/60">
                       <MapPin className="h-5 w-5 text-accent-700" />
                     </div>
-                    <span className="text-stone-600">{siteConfig.address}</span>
+                    <span className="text-stone-600">{siteSettings.address}</span>
                   </li>
                 </ul>
               </div>

@@ -14,6 +14,10 @@ const SECTION: Record<string, string> = {
   pages: "Page content",
   taxonomy: "Taxonomy",
   submissions: "Submissions",
+  settings: "Operations",
+  "site-settings": "Site settings",
+  "home-settings": "Home settings",
+  "about-settings": "About settings",
 };
 
 const EXACT_TITLE: Record<string, string> = {
@@ -38,6 +42,10 @@ const EXACT_TITLE: Record<string, string> = {
   "/admin/pages": "Page content",
   "/admin/taxonomy": "Taxonomy",
   "/admin/submissions": "Submissions",
+  "/admin/settings": "Operations",
+  "/admin/site-settings": "Site settings",
+  "/admin/home-settings": "Home settings",
+  "/admin/about-settings": "About settings",
 };
 
 export function getAdminTitle(pathname: string): string {

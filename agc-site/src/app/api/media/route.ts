@@ -7,9 +7,12 @@ import {
   addMediaItem,
   getUploadsDir,
   isAllowedMimeType,
+  assertUploadWithinLimit,
   type MediaItem,
 } from "@/lib/media";
 import { requireAdmin } from "@/lib/auth-api";
+import { parseOptionalDimensionsFromForm, probeRasterDimensions } from "@/lib/image-dimensions";
+import { formatMaxUploadBytes } from "@/lib/media-limits";
 
 export async function GET() {
   const { error } = await requireAdmin();
@@ -33,9 +36,18 @@ export async function POST(request: NextRequest) {
     const file = formData.get("file") as File | null;
     const alt = (formData.get("alt") as string) || undefined;
     const title = (formData.get("title") as string) || undefined;
+    const widthForm = formData.get("width");
+    const heightForm = formData.get("height");
 
     if (!file || !(file instanceof Blob) || file.size === 0) {
       return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    }
+
+    try {
+      assertUploadWithinLimit(file.size);
+    } catch (e) {
+      const msg = e instanceof Error ? e.message : "File too large.";
+      return NextResponse.json({ error: `${msg} Limit: ${formatMaxUploadBytes()}.` }, { status: 400 });
     }
 
     const mime = file.type || "application/octet-stream";
@@ -57,6 +69,14 @@ export async function POST(request: NextRequest) {
     const buffer = Buffer.from(await file.arrayBuffer());
     await writeFile(filePath, buffer);
 
+    const fromForm = parseOptionalDimensionsFromForm(
+      typeof widthForm === "string" ? widthForm : undefined,
+      typeof heightForm === "string" ? heightForm : undefined
+    );
+    const probed = mime !== "image/svg+xml" ? probeRasterDimensions(buffer, mime) : {};
+    const width = fromForm.width ?? probed.width;
+    const height = fromForm.height ?? probed.height;
+
     const url = `/uploads/${filename}`;
     const item: MediaItem = {
       id,
@@ -67,6 +87,7 @@ export async function POST(request: NextRequest) {
       size: file.size,
       mimeType: mime,
       uploadedAt: new Date().toISOString(),
+      ...(width && height ? { width, height } : {}),
     };
 
     await addMediaItem(item);

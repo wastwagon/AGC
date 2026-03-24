@@ -10,6 +10,10 @@ import {
   Handshake,
   FileText,
   QrCode,
+  Settings,
+  SlidersHorizontal,
+  House,
+  CircleUserRound,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -25,6 +29,10 @@ const sections = [
   { href: "/admin/projects", label: "Projects", icon: Briefcase, desc: "Project descriptions" },
   { href: "/admin/partners", label: "Partners", icon: Handshake, desc: "Partner logos and links" },
   { href: "/admin/pages", label: "Page Content", icon: FileText, desc: "Hero text and page content" },
+  { href: "/admin/home-settings", label: "Home Settings", icon: House, desc: "Homepage hero, stats, stories" },
+  { href: "/admin/about-settings", label: "About Settings", icon: CircleUserRound, desc: "About page narrative and objectives" },
+  { href: "/admin/site-settings", label: "Site Settings", icon: SlidersHorizontal, desc: "Global name, contact, social links" },
+  { href: "/admin/settings", label: "Website Settings", icon: Settings, desc: "Run migrations and seed manually" },
 ];
 
 export default function AdminDashboardPage() {

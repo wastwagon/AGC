@@ -1,25 +1,25 @@
-import { siteConfig } from "@/data/content";
+import type { SiteSettings } from "@/lib/site-settings";
 
-export function JsonLd() {
+export function JsonLd({ siteSettings }: { siteSettings: SiteSettings }) {
   const structuredData = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: siteConfig.name,
-    description: siteConfig.tagline,
+    name: siteSettings.name,
+    description: siteSettings.tagline,
     url: "https://www.africagovernancecentre.org",
-    email: siteConfig.email.programs,
-    telephone: siteConfig.phone,
+    email: siteSettings.email.programs,
+    telephone: siteSettings.phone,
     address: {
       "@type": "PostalAddress",
-      streetAddress: siteConfig.address,
+      streetAddress: siteSettings.address,
       addressLocality: "Accra",
       addressCountry: "GH",
     },
     sameAs: [
-      siteConfig.social.twitter,
-      siteConfig.social.linkedin,
-      siteConfig.social.instagram,
-      siteConfig.social.facebook,
+      siteSettings.social.twitter,
+      siteSettings.social.linkedin,
+      siteSettings.social.instagram,
+      siteSettings.social.facebook,
     ].filter((url) => url !== "#"),
   };
 

@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { pageContentFormSchema } from "@/lib/validations";
@@ -24,6 +25,7 @@ export async function updatePageContent(slug: string, formData: FormData) {
     objectivesContent: formData.get("objectivesContent") || undefined,
     objectivesPrinciples: formData.get("objectivesPrinciples") || undefined,
     objectivesAgenda2063: formData.get("objectivesAgenda2063") || undefined,
+    contentJson: formData.get("contentJson") || undefined,
   };
 
   const parsed = pageContentFormSchema.safeParse(raw);
@@ -32,6 +34,26 @@ export async function updatePageContent(slug: string, formData: FormData) {
   }
 
   const data = parsed.data;
+  let parsedContentJson: Record<string, unknown> | null = null;
+  if (data.contentJson && data.contentJson.trim().length > 0) {
+    try {
+      const json = JSON.parse(data.contentJson);
+      if (typeof json !== "object" || json === null || Array.isArray(json)) {
+        redirect(
+          `/admin/pages/${encodeURIComponent(slug)}/edit?error=${encodeURIComponent(
+            "Use one `{ … }` block for all fields here—not a list that starts with `[`."
+          )}`
+        );
+      }
+      parsedContentJson = json as Record<string, unknown>;
+    } catch {
+      redirect(
+        `/admin/pages/${encodeURIComponent(slug)}/edit?error=${encodeURIComponent(
+          "We couldn’t read that text. Check brackets, commas, and quotes—or use the fields above instead."
+        )}`
+      );
+    }
+  }
 
   try {
     await prisma.pageContent.update({
@@ -49,6 +71,9 @@ export async function updatePageContent(slug: string, formData: FormData) {
         objectivesContent: data.objectivesContent || null,
         objectivesPrinciples: data.objectivesPrinciples || null,
         objectivesAgenda2063: data.objectivesAgenda2063 || null,
+        contentJson: parsedContentJson
+          ? (parsedContentJson as unknown as Prisma.InputJsonValue)
+          : Prisma.DbNull,
       },
     });
   } catch (err) {

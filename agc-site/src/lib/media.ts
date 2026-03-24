@@ -5,9 +5,12 @@
 import { readFile, writeFile, mkdir } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
+import { MAX_MEDIA_UPLOAD_BYTES } from "@/lib/media-limits";
 
 const UPLOADS_DIR = path.join(process.cwd(), "public", "uploads");
 const METADATA_PATH = path.join(process.cwd(), "data", "media-library.json");
+
+export { MAX_MEDIA_UPLOAD_BYTES } from "@/lib/media-limits";
 
 export interface MediaItem {
   id: string;
@@ -96,4 +99,10 @@ export function isAllowedMimeType(mime: string): boolean {
 
 export function getUploadsDir(): string {
   return UPLOADS_DIR;
+}
+
+export function assertUploadWithinLimit(size: number): void {
+  if (size > MAX_MEDIA_UPLOAD_BYTES) {
+    throw new Error(`File too large. Maximum size is ${Math.round(MAX_MEDIA_UPLOAD_BYTES / (1024 * 1024))} MB.`);
+  }
 }

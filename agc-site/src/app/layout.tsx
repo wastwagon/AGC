@@ -4,7 +4,7 @@ import "./globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
 import { JsonLd } from "@/components/JsonLd";
 import { Analytics } from "@/components/Analytics";
-import { siteConfig } from "@/data/content";
+import { getSiteSettings } from "@/lib/site-settings";
 
 /** Body: highly legible, institutional (not generic Inter/DM stack) */
 const ibmPlex = IBM_Plex_Sans({
@@ -22,29 +22,33 @@ const fraunces = Fraunces({
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernancecentre.org";
 
-export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
-  title: {
-    default: `${siteConfig.name} | Governance Excellence Across Africa`,
-    template: `%s | ${siteConfig.name}`,
-  },
-  description: siteConfig.tagline,
-  keywords: ["Africa", "governance", "think tank", "policy", "economic transformation", "capacity building"],
-  openGraph: {
-    type: "website",
-    siteName: siteConfig.name,
-    locale: "en",
-  },
-  twitter: {
-    card: "summary_large_image",
-  },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const siteSettings = await getSiteSettings();
+  return {
+    metadataBase: new URL(baseUrl),
+    title: {
+      default: `${siteSettings.name} | Governance Excellence Across Africa`,
+      template: `%s | ${siteSettings.name}`,
+    },
+    description: siteSettings.tagline,
+    keywords: ["Africa", "governance", "think tank", "policy", "economic transformation", "capacity building"],
+    openGraph: {
+      type: "website",
+      siteName: siteSettings.name,
+      locale: "en",
+    },
+    twitter: {
+      card: "summary_large_image",
+    },
+  };
+}
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const siteSettings = await getSiteSettings();
   return (
     <html lang="en" className={`${ibmPlex.variable} ${fraunces.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
@@ -54,9 +58,9 @@ export default function RootLayout({
         >
           Skip to content
         </a>
-        <JsonLd />
+        <JsonLd siteSettings={siteSettings} />
         <Analytics />
-        <SiteChrome>
+        <SiteChrome siteSettings={siteSettings}>
           <main id="main-content" className="flex-1">{children}</main>
         </SiteChrome>
       </body>

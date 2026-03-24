@@ -4,7 +4,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X, Search } from "lucide-react";
-import { siteConfig, ourWorkSubLinks, getInvolvedSubLinks } from "@/data/content";
+import { ourWorkSubLinks, getInvolvedSubLinks } from "@/data/content";
+import type { SiteSettings } from "@/lib/site-settings";
 import { NavDropdown } from "./NavDropdown";
 import { LanguageSelector } from "./LanguageSelector";
 import { HeaderTopbar } from "./HeaderTopbar";
@@ -24,7 +25,7 @@ const navWithDropdowns: NavItem[] = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function Header() {
+export function Header({ siteSettings }: { siteSettings: SiteSettings }) {
   const { mobileOpen, setMobileOpen, searchOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const [scrolled, setScrolled] = useState(false);
   const showTopbar = true;
@@ -48,7 +49,7 @@ export function Header() {
         scrolled ? "shadow-[0_4px_24px_-8px_rgba(28,25,23,0.08)]" : "border-b border-stone-200/90"
       }`}
     >
-      {showTopbar && <HeaderTopbar />}
+      {showTopbar && <HeaderTopbar siteSettings={siteSettings} />}
 
       <div className="wpo-site-header">
         <nav className="w-full px-4 py-0 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
@@ -56,7 +57,7 @@ export function Header() {
             <Link href="/" className="shrink-0">
               <Image
                 src="/agc-logo.png"
-                alt={siteConfig.name}
+                alt={siteSettings.name}
                 width={160}
                 height={48}
                 className="h-10 w-auto object-contain lg:h-11"
@@ -88,7 +89,7 @@ export function Header() {
 
             <div className="flex items-center gap-3">
               <div className="hidden sm:block">
-                <LanguageSelector />
+                <LanguageSelector languages={siteSettings.languages} />
               </div>
               <button
                 type="button"

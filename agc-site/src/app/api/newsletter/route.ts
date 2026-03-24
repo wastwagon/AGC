@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
 import { prisma } from "@/lib/db";
-import { siteConfig } from "@/data/content";
 import { rateLimit } from "@/lib/rate-limit";
+import { getSiteSettings } from "@/lib/site-settings";
 import { newsletterSchema } from "@/lib/validations";
 import { escapeHtml } from "@/lib/sanitize";
 
@@ -14,6 +14,7 @@ function getClientIp(request: Request): string {
 
 export async function POST(request: Request) {
   try {
+    const siteSettings = await getSiteSettings();
     const ip = getClientIp(request);
     const { success, retryAfter } = await rateLimit(`newsletter:${ip}`);
     if (!success) {
@@ -48,7 +49,7 @@ export async function POST(request: Request) {
     // For full newsletter: integrate Resend Audiences, Mailchimp, etc.
     await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
-      to: siteConfig.email.programs,
+      to: siteSettings.email.programs,
       subject: `[AGC Newsletter] New subscriber: ${email}`,
       html: `<p><strong>New newsletter signup:</strong> ${escapeHtml(email)}</p><p>Add this contact to your newsletter platform.</p>`,
     });

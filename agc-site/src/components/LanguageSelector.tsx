@@ -2,14 +2,14 @@
 
 import { useState } from "react";
 import { Globe } from "lucide-react";
-import { siteConfig } from "@/data/content";
+import type { SiteSettings } from "@/lib/site-settings";
 
-type LanguageSelectorProps = { variant?: "light" | "dark" };
+type LanguageSelectorProps = { variant?: "light" | "dark"; languages?: SiteSettings["languages"] };
 
-export function LanguageSelector({ variant = "light" }: LanguageSelectorProps) {
+export function LanguageSelector({ variant = "light", languages }: LanguageSelectorProps) {
   const [open, setOpen] = useState(false);
-  const languages = siteConfig.languages ?? [{ code: "en", label: "English" }];
-  const current = languages[0];
+  const languageList = languages ?? [{ code: "en", label: "English" }];
+  const current = languageList[0];
 
   const btn =
     variant === "dark"
@@ -40,7 +40,7 @@ export function LanguageSelector({ variant = "light" }: LanguageSelectorProps) {
                 : "border-slate-200 bg-white"
             }`}
           >
-            {languages.map((lang) => (
+            {languageList.map((lang) => (
               <li
                 key={lang.code}
                 role="option"

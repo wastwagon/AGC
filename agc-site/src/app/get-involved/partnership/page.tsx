@@ -1,22 +1,30 @@
-import { getInvolvedContent, siteConfig } from "@/data/content";
+import { getInvolvedContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
+import { getMergedPageContent } from "@/lib/page-content";
+import { resolveImageUrl } from "@/lib/media";
+import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = {
   title: "Partnership",
   description: "Collaborate with Africa Governance Centre on research, events, and policy initiatives.",
 };
 
-export default function PartnershipPage() {
-  const c = getInvolvedContent.partnership;
+export default async function PartnershipPage() {
+  const [merged, siteSettings] = await Promise.all([
+    getMergedPageContent("get-involved", getInvolvedContent as unknown as Record<string, unknown>),
+    getSiteSettings(),
+  ]);
+  const c = (merged as unknown as typeof getInvolvedContent).partnership;
+  const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.getInvolved;
   return (
     <>
       <PageHero
         variant="compact"
         title={c.title}
         subtitle={c.subtitle}
-        image={placeholderImages.getInvolved}
+        image={heroImage}
         imageAlt="Partnership"
         breadcrumbs={[
           { label: "Home", href: "/" },
@@ -66,10 +74,10 @@ export default function PartnershipPage() {
           <p className="mt-10 text-sm text-stone-300/90">
             Programs:{" "}
             <a
-              href={`mailto:${siteConfig.email.programs}`}
+              href={`mailto:${siteSettings.email.programs}`}
               className="underline decoration-accent-400/50 underline-offset-4 hover:decoration-accent-300"
             >
-              {siteConfig.email.programs}
+              {siteSettings.email.programs}
             </a>
           </p>
         </div>

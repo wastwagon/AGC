@@ -3,6 +3,7 @@ import { unlink } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
 import { removeMediaItem, getMediaById, getUploadsDir } from "@/lib/media";
+import { findMediaReferences } from "@/lib/media-references";
 import { requireAdmin } from "@/lib/auth-api";
 
 export async function DELETE(
@@ -17,6 +18,17 @@ export async function DELETE(
     const item = await getMediaById(id);
     if (!item) {
       return NextResponse.json({ error: "Media not found" }, { status: 404 });
+    }
+
+    const references = await findMediaReferences(item);
+    if (references.length > 0) {
+      return NextResponse.json(
+        {
+          error: "This image is still referenced by site content. Remove or replace it there first.",
+          references,
+        },
+        { status: 409 }
+      );
     }
 
     const filePath = path.join(getUploadsDir(), item.filename);

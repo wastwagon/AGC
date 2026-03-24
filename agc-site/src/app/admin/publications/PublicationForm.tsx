@@ -2,9 +2,12 @@
 
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
+import { useState } from "react";
+import { ImagePlus } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { createPublication, updatePublication } from "./actions";
 import type { TaxonomyOption } from "@/data/taxonomy-defaults";
+import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 
 type PublicationFormProps = {
   typeOptions: TaxonomyOption[];
@@ -38,6 +41,8 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
 export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
   const isEdit = !!item;
   const action = isEdit ? updatePublication.bind(null, item.id) : createPublication;
+  const [image, setImage] = useState(item?.image ?? "");
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   const rawTypes = item?.types as string[] | null | undefined;
   const selectedTypes = new Set(Array.isArray(rawTypes) ? rawTypes : []);
@@ -125,13 +130,25 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
         <label htmlFor="image" className="block text-sm font-medium text-slate-700">
           Image URL
         </label>
-        <input
-          id="image"
-          name="image"
-          defaultValue={item?.image ?? ""}
-          placeholder="/uploads/cover.jpg"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
-        />
+        <div className="mt-1 flex gap-2">
+          <input
+            id="image"
+            name="image"
+            value={image}
+            onChange={(e) => setImage(e.target.value)}
+            placeholder="media-... or /uploads/cover.jpg"
+            className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          />
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            title="Pick from Media Library"
+          >
+            <ImagePlus className="h-4 w-4" />
+          </button>
+        </div>
+        <p className="mt-1 text-xs text-slate-500">Use Media ID (`media-...`) or a `/uploads/...` path.</p>
       </div>
 
       <div>
@@ -187,6 +204,11 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
           Cancel
         </Link>
       </AdminFormStickyActions>
+      <ImagePicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(m: MediaItem) => setImage(m.id)}
+      />
     </form>
   );
 }

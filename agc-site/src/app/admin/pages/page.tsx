@@ -9,9 +9,9 @@ import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspens
 export const dynamic = "force-dynamic";
 
 export default async function AdminPagesPage() {
-  const items = await prisma.pageContent.findMany({
+  const items = (await prisma.pageContent.findMany({
     orderBy: { slug: "asc" },
-  });
+  })).filter((x) => x.slug !== "site-settings");
 
   return (
     <div>

@@ -6,16 +6,17 @@ import { Footer } from "./Footer";
 import { MobileNavProvider, useMobileNav } from "./mobile/MobileNavContext";
 import { MobileDrawer } from "./mobile/MobileDrawer";
 import { MobileBottomNav } from "./mobile/MobileBottomNav";
+import type { SiteSettings } from "@/lib/site-settings";
 
 /**
  * When the drawer is open, main/footer/nav below the header are inert.
  * Header stays interactive so the menu toggle can close the drawer.
  */
-function PublicLayoutWithInert({ children }: { children: React.ReactNode }) {
+function PublicLayoutWithInert({ children, siteSettings }: { children: React.ReactNode; siteSettings: SiteSettings }) {
   const { mobileOpen } = useMobileNav();
   return (
     <div className="flex min-h-screen flex-1 flex-col">
-      <Header />
+      <Header siteSettings={siteSettings} />
       <div
         className="flex min-h-0 flex-1 flex-col"
         {...(mobileOpen ? { inert: true as boolean } : {})}
@@ -25,16 +26,16 @@ function PublicLayoutWithInert({ children }: { children: React.ReactNode }) {
         <div className="flex min-h-0 flex-1 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] xl:pb-0">
           {children}
         </div>
-        <Footer />
+        <Footer siteSettings={siteSettings} />
         <MobileBottomNav />
       </div>
-      <MobileDrawer />
+      <MobileDrawer siteSettings={siteSettings} />
     </div>
   );
 }
 
 /** Renders public site Header and Footer only on non-admin routes */
-export function SiteChrome({ children }: { children: React.ReactNode }) {
+export function SiteChrome({ children, siteSettings }: { children: React.ReactNode; siteSettings: SiteSettings }) {
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
 
@@ -44,7 +45,7 @@ export function SiteChrome({ children }: { children: React.ReactNode }) {
 
   return (
     <MobileNavProvider>
-      <PublicLayoutWithInert>{children}</PublicLayoutWithInert>
+      <PublicLayoutWithInert siteSettings={siteSettings}>{children}</PublicLayoutWithInert>
     </MobileNavProvider>
   );
 }

@@ -1,8 +1,11 @@
 "use client";
 
 import { useFormStatus } from "react-dom";
+import { useState } from "react";
+import { ImagePlus } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { createPartner, updatePartner } from "./actions";
+import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 
 type PartnerFormProps = {
   item?: {
@@ -31,6 +34,8 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
 export function PartnerForm({ item }: PartnerFormProps) {
   const isEdit = !!item;
   const action = isEdit ? updatePartner.bind(null, item.id) : createPartner;
+  const [logo, setLogo] = useState(item?.logo ?? "");
+  const [pickerOpen, setPickerOpen] = useState(false);
 
   return (
     <form action={action} className="space-y-6">
@@ -47,13 +52,24 @@ export function PartnerForm({ item }: PartnerFormProps) {
 
       <div>
         <label htmlFor="logo" className="block text-sm font-medium text-slate-700">Logo URL</label>
-        <input
-          id="logo"
-          name="logo"
-          defaultValue={item?.logo ?? ""}
-          placeholder="/uploads/partner-logo.png"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
-        />
+        <div className="mt-1 flex gap-2">
+          <input
+            id="logo"
+            name="logo"
+            value={logo}
+            onChange={(e) => setLogo(e.target.value)}
+            placeholder="media-... or /uploads/partner-logo.png"
+            className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          />
+          <button
+            type="button"
+            onClick={() => setPickerOpen(true)}
+            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            title="Pick from Media Library"
+          >
+            <ImagePlus className="h-4 w-4" />
+          </button>
+        </div>
       </div>
 
       <div>
@@ -102,6 +118,11 @@ export function PartnerForm({ item }: PartnerFormProps) {
           Cancel
         </a>
       </AdminFormStickyActions>
+      <ImagePicker
+        open={pickerOpen}
+        onClose={() => setPickerOpen(false)}
+        onSelect={(m: MediaItem) => setLogo(m.id)}
+      />
     </form>
   );
 }
