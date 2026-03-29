@@ -5,11 +5,12 @@ import { fallbackEvents } from "@/data/content";
 import type { CmsEvent } from "@/lib/content";
 import { prisma } from "@/lib/db";
 import type { EventRegistration } from "@prisma/client";
-import { Download, Mail, Printer, RotateCcw, UserPlus } from "lucide-react";
+import { Download, ListOrdered, Mail, Printer, RotateCcw, UserPlus } from "lucide-react";
 import { AdminPageHeader } from "../../_components/AdminPageHeader";
 import { AdminFormErrorSuspense } from "../../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../../_components/AdminFormSuccessSuspense";
 import {
+  promoteNextWaitlistedGuest,
   promoteWaitlistRegistration,
   resendEventRegistrationEmail,
   undoEventRegistrationCheckIn,
@@ -33,6 +34,11 @@ export default async function AdminEventRegistrationsPage({ params }: Props) {
   });
 
   const checkedInCount = registrations.filter((r: EventRegistration) => r.checkedInAt).length;
+  const waitlistedCount = registrations.filter((r: EventRegistration) => r.waitlisted).length;
+  const confirmedCount = registrations.filter((r: EventRegistration) => !r.waitlisted).length;
+  const capacity = event.capacity;
+  const canFifoPromote =
+    waitlistedCount > 0 && (capacity == null || confirmedCount < capacity);
 
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:9200";
 
@@ -59,6 +65,37 @@ export default async function AdminEventRegistrationsPage({ params }: Props) {
           </>
         }
       />
+
+      {waitlistedCount > 0 ? (
+        <div className="mb-6 rounded-xl border border-amber-200 bg-amber-50 px-4 py-4 text-sm text-amber-950">
+          <p className="font-medium">
+            Waitlist: {waitlistedCount}
+            {capacity != null
+              ? ` · Confirmed guests: ${confirmedCount} of ${capacity} capacity`
+              : null}
+          </p>
+          <p className="mt-1 text-amber-900/90">
+            FIFO promotes the earliest waitlist signup. A promotion only applies when there is a free confirmed slot (below
+            capacity, if the event has one). If email is configured, the guest gets a &quot;spot confirmed&quot; message.
+          </p>
+          {canFifoPromote ? (
+            <form action={promoteNextWaitlistedGuest} className="mt-3">
+              <input type="hidden" name="eventSlug" value={slug} />
+              <button
+                type="submit"
+                className="inline-flex items-center gap-2 rounded-lg bg-amber-800 px-4 py-2 text-sm font-medium text-white hover:bg-amber-900"
+              >
+                <ListOrdered className="h-4 w-4" aria-hidden />
+                Promote next in waitlist (FIFO)
+              </button>
+            </form>
+          ) : capacity != null ? (
+            <p className="mt-3 text-amber-900">
+              At capacity — increase capacity or remove a confirmed guest before promoting from the waitlist.
+            </p>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">
         <div className="overflow-x-auto">

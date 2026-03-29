@@ -9,6 +9,8 @@ export function buildRegistrationConfirmationEmailHtml(opts: {
   badgeUrl: string;
   programsEmail: string;
   waitlisted: boolean;
+  /** Email sent after staff promotes from waitlist — same badge, now eligible for check-in. */
+  promotedFromWaitlist?: boolean;
 }): string {
   const loc = opts.eventLocation ? `<p><strong>Location:</strong> ${escapeHtml(opts.eventLocation)}</p>` : "";
   if (opts.waitlisted) {
@@ -25,10 +27,15 @@ export function buildRegistrationConfirmationEmailHtml(opts: {
           <p>Best regards,<br>Africa Governance Centre</p>
         `;
   }
+  const intro = opts.promotedFromWaitlist
+    ? `<p>Good news — a place has opened up. Your registration for <strong>${escapeHtml(opts.eventTitle)}</strong> is now <strong>confirmed</strong> (no longer on the waitlist). You may check in at the venue with your badge or registration ID.</p>`
+    : `<p>Your registration for <strong>${escapeHtml(opts.eventTitle)}</strong> has been confirmed.</p>`;
+  const heading = opts.promotedFromWaitlist ? "Your spot is confirmed" : "Registration Confirmed";
+
   return `
-          <h2>Registration Confirmed</h2>
+          <h2>${heading}</h2>
           <p>Dear ${escapeHtml(opts.fullName)},</p>
-          <p>Your registration for <strong>${escapeHtml(opts.eventTitle)}</strong> has been confirmed.</p>
+          ${intro}
           <p><strong>Registration ID:</strong> ${escapeHtml(opts.registrationId)}</p>
           <p><strong>Date:</strong> ${escapeHtml(opts.eventDate)}</p>
           ${loc}
