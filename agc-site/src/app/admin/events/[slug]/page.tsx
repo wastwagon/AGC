@@ -5,8 +5,15 @@ import { fallbackEvents } from "@/data/content";
 import type { CmsEvent } from "@/lib/content";
 import { prisma } from "@/lib/db";
 import type { EventRegistration } from "@prisma/client";
-import { Download, Printer } from "lucide-react";
+import { Download, Mail, Printer, RotateCcw, UserPlus } from "lucide-react";
 import { AdminPageHeader } from "../../_components/AdminPageHeader";
+import { AdminFormErrorSuspense } from "../../_components/AdminFormErrorSuspense";
+import { AdminFormSuccessSuspense } from "../../_components/AdminFormSuccessSuspense";
+import {
+  promoteWaitlistRegistration,
+  resendEventRegistrationEmail,
+  undoEventRegistrationCheckIn,
+} from "../registration-actions";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,6 +38,8 @@ export default async function AdminEventRegistrationsPage({ params }: Props) {
 
   return (
     <div>
+      <AdminFormErrorSuspense />
+      <AdminFormSuccessSuspense />
       <AdminPageHeader
         title={event.title}
         description={
@@ -84,26 +93,69 @@ export default async function AdminEventRegistrationsPage({ params }: Props) {
                   <td className="px-6 py-4 text-sm text-slate-600">{r.organization || "—"}</td>
                   <td className="px-6 py-4 font-mono text-sm text-slate-600">{r.registrationId}</td>
                   <td className="px-6 py-4">
-                    {r.checkedInAt ? (
-                      <span className="rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
-                        Checked in
-                      </span>
-                    ) : (
-                      <span className="rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
-                        Pending
-                      </span>
-                    )}
+                    <div className="flex flex-col gap-1">
+                      {r.waitlisted ? (
+                        <span className="inline-flex w-fit rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-medium text-amber-900">
+                          Waitlist
+                        </span>
+                      ) : null}
+                      {r.checkedInAt ? (
+                        <span className="inline-flex w-fit rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-800">
+                          Checked in
+                        </span>
+                      ) : (
+                        <span className="inline-flex w-fit rounded-full bg-slate-100 px-2.5 py-0.5 text-xs font-medium text-slate-600">
+                          {r.waitlisted ? "Not confirmed" : "Pending"}
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td className="px-6 py-4">
-                    <a
-                      href={`${baseUrl}/events/badge/${r.id}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-medium text-accent-600 hover:text-accent-700"
-                    >
-                      <Printer className="h-4 w-4" />
-                      Print Badge
-                    </a>
+                    <div className="flex flex-col gap-2">
+                      <a
+                        href={`${baseUrl}/events/badge/${r.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1.5 text-sm font-medium text-accent-600 hover:text-accent-700"
+                      >
+                        <Printer className="h-4 w-4" />
+                        Print badge
+                      </a>
+                      <form action={resendEventRegistrationEmail}>
+                        <input type="hidden" name="id" value={r.id} />
+                        <button
+                          type="submit"
+                          className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-slate-900"
+                        >
+                          <Mail className="h-4 w-4" aria-hidden />
+                          Resend email
+                        </button>
+                      </form>
+                      {r.checkedInAt ? (
+                        <form action={undoEventRegistrationCheckIn}>
+                          <input type="hidden" name="id" value={r.id} />
+                          <button
+                            type="submit"
+                            className="inline-flex items-center gap-1.5 text-sm font-medium text-slate-600 hover:text-orange-800"
+                          >
+                            <RotateCcw className="h-4 w-4" aria-hidden />
+                            Undo check-in
+                          </button>
+                        </form>
+                      ) : null}
+                      {r.waitlisted ? (
+                        <form action={promoteWaitlistRegistration}>
+                          <input type="hidden" name="id" value={r.id} />
+                          <button
+                            type="submit"
+                            className="inline-flex items-center gap-1.5 text-sm font-medium text-accent-600 hover:text-accent-800"
+                          >
+                            <UserPlus className="h-4 w-4" aria-hidden />
+                            Promote from waitlist
+                          </button>
+                        </form>
+                      ) : null}
+                    </div>
                   </td>
                 </tr>
               ))}

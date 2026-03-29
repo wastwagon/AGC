@@ -9,6 +9,7 @@ import { placeholderImages } from "@/data/images";
 import { EventRegistrationForm } from "@/components/EventRegistrationForm";
 import { prisma } from "@/lib/db";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
+import { DEFAULT_SITE_CHROME } from "@/data/site-chrome";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,11 +36,21 @@ export default async function EventRegisterPage({ params }: Props) {
 
   if (!event) notFound();
 
-  const [team, registrationCount, bc] = await Promise.all([
-    getTeam(),
-    prisma.eventRegistration.count({ where: { eventSlug: slug } }),
-    getBreadcrumbLabels(),
-  ]);
+  const team = await getTeam().catch(() => [] as Awaited<ReturnType<typeof getTeam>>);
+  const bc = await getBreadcrumbLabels().catch(() => DEFAULT_SITE_CHROME.breadcrumbs);
+
+  let confirmedCount = 0;
+  let waitlistCount = 0;
+  try {
+    const [c, w] = await Promise.all([
+      prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: false } }),
+      prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: true } }),
+    ]);
+    confirmedCount = c;
+    waitlistCount = w;
+  } catch {
+    /* DB unavailable (e.g. dev / CI without Postgres) — treat as zero registrations */
+  }
 
   const speakerIds = Array.isArray(event.speaker_ids) ? event.speaker_ids : [];
   const speakers = speakerIds.length > 0 ? team.filter((t) => speakerIds.includes(t.id)) : [];
@@ -47,8 +58,10 @@ export default async function EventRegisterPage({ params }: Props) {
   const venue = event.venue_name || event.location;
   const venueFull = event.venue_address || event.location;
   const isPastDeadline = event.registration_deadline && new Date(event.registration_deadline) < new Date();
-  const isFull = typeof event.capacity === "number" && registrationCount >= event.capacity;
-  const canRegister = !isPastDeadline && !isFull;
+  const isFull = typeof event.capacity === "number" && confirmedCount >= event.capacity;
+  const allowWaitlist = Boolean(event.allow_waitlist);
+  const canRegister = !isPastDeadline && (!isFull || allowWaitlist);
+  const registeringWaitlist = isFull && allowWaitlist && !isPastDeadline;
 
   return (
     <>
@@ -98,7 +111,10 @@ export default async function EventRegisterPage({ params }: Props) {
                           Capacity
                         </dt>
                         <dd className="mt-1 text-stone-800">
-                          {registrationCount} / {event.capacity} registered
+                          {confirmedCount} / {event.capacity} confirmed
+                          {waitlistCount > 0 ? (
+                            <span className="text-stone-500"> · {waitlistCount} waitlist</span>
+                          ) : null}
                         </dd>
                       </div>
                     )}
@@ -156,14 +172,33 @@ export default async function EventRegisterPage({ params }: Props) {
               )}
 
               {canRegister ? (
-                <EventRegistrationForm event={event} />
+                <div className="space-y-6">
+                  {registeringWaitlist ? (
+                    <div className="rounded-xl border border-amber-200 bg-amber-50/90 px-4 py-3 text-sm text-amber-950">
+                      <p className="font-medium">Capacity is full — you’re joining the waitlist</p>
+                      <p className="mt-1 text-amber-900/90">
+                        You’ll receive a badge for reference; check-in stays blocked until organisers confirm a spot.
+                      </p>
+                    </div>
+                  ) : null}
+                  <div className="flex flex-wrap gap-3">
+                    <a
+                      href={`/api/events/ics?slug=${encodeURIComponent(slug)}`}
+                      download
+                      className="inline-flex items-center text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-2 hover:text-accent-950"
+                    >
+                      Add to calendar (.ics)
+                    </a>
+                  </div>
+                  <EventRegistrationForm event={event} />
+                </div>
               ) : (
                 <div className="page-card border-l-[4px] border-l-accent-600 p-8">
                   <h2 className="page-heading text-xl text-stone-900">{event.title}</h2>
                   <p className="mt-3 page-prose">
                     {isPastDeadline
                       ? "Registration for this event has closed. Thank you for your interest."
-                      : "This event has reached maximum capacity. We hope to see you at a future gathering."}
+                      : "This event has reached maximum capacity and the waitlist is not open for this event."}
                   </p>
                   <Link
                     href="/events"

@@ -45,6 +45,8 @@ export interface CmsEvent {
   venue_address?: string;
   capacity?: number;
   registration_deadline?: string;
+  /** When capacity is full, visitors may still join the waitlist (CMS Events). */
+  allow_waitlist?: boolean;
   agenda?: CmsEventAgendaItem[];
   speaker_ids?: number[];
 }
@@ -143,6 +145,7 @@ export async function getEvents() {
     venue_address: e.venueAddress ?? undefined,
     capacity: e.capacity ?? undefined,
     registration_deadline: e.registrationDeadline?.toISOString(),
+    allow_waitlist: e.allowWaitlist,
     agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
     speaker_ids: e.speakerIds as number[] | undefined,
   }));
@@ -172,6 +175,7 @@ export async function getEventBySlugAdmin(slug: string) {
     venue_address: e.venueAddress ?? undefined,
     capacity: e.capacity ?? undefined,
     registration_deadline: e.registrationDeadline?.toISOString(),
+    allow_waitlist: e.allowWaitlist,
     agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
     speaker_ids: e.speakerIds as number[] | undefined,
   };
@@ -200,6 +204,7 @@ export async function getEventBySlug(slug: string) {
     venue_address: e.venueAddress ?? undefined,
     capacity: e.capacity ?? undefined,
     registration_deadline: e.registrationDeadline?.toISOString(),
+    allow_waitlist: e.allowWaitlist,
     agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
     speaker_ids: e.speakerIds as number[] | undefined,
   };

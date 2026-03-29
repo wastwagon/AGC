@@ -8,6 +8,9 @@ const MESSAGES: Record<string, string> = {
   "1": "Changes saved successfully.",
   created: "Created successfully.",
   deleted: "Deleted successfully.",
+  resent: "Badge email resent.",
+  checkin_cleared: "Check-in cleared for that registration.",
+  promoted: "Guest promoted from waitlist — they can check in with their badge.",
 };
 
 /** Shows `?saved=` from server action redirects after create/update/delete. Dismiss clears the query param. */

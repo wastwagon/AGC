@@ -43,6 +43,11 @@ export default async function EventBadgePage({ params }: Props) {
             Africa Governance Centre
           </h1>
           <h2 className="mt-2 font-serif text-lg font-semibold tracking-tight text-accent-900">Event accreditation</h2>
+          {registration.waitlisted ? (
+            <p className="mt-3 rounded-lg border border-amber-300 bg-amber-50 px-2 py-1.5 text-[0.65rem] font-bold uppercase tracking-wide text-amber-900">
+              Waitlist — not confirmed for entry
+            </p>
+          ) : null}
         </div>
 
         <div className="mt-5 pt-2">

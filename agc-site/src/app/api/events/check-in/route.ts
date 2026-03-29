@@ -55,6 +55,16 @@ export async function POST(request: Request) {
       });
     }
 
+    if (registration.waitlisted) {
+      logApi(ROUTE, "info", "waitlisted_blocked");
+      return NextResponse.json({
+        valid: false,
+        error: "Waitlist",
+        message:
+          "This guest is on the waitlist. Confirm a spot with the registration desk before check-in, or promote them in admin.",
+      });
+    }
+
     if (
       typeof expectedEventSlug === "string" &&
       expectedEventSlug.trim() &&

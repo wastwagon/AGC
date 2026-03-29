@@ -11,6 +11,7 @@ export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
   const [message, setMessage] = useState("");
   const [badgeUrl, setBadgeUrl] = useState("");
   const [publicRegistrationId, setPublicRegistrationId] = useState("");
+  const [registeredAsWaitlist, setRegisteredAsWaitlist] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -54,6 +55,7 @@ export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
       setStatus("success");
       setBadgeUrl(data.registration.badgeUrl);
       setPublicRegistrationId(data.registration.registrationId || "");
+      setRegisteredAsWaitlist(Boolean(data.registration.waitlisted));
       form.reset();
     } catch {
       setStatus("error");
@@ -70,10 +72,13 @@ export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="page-heading text-2xl text-stone-900">You&apos;re registered</h2>
+          <h2 className="page-heading text-2xl text-stone-900">
+            {registeredAsWaitlist ? "You’re on the waitlist" : "You’re registered"}
+          </h2>
           <p className="mt-3 page-prose mx-auto max-w-md text-[0.98rem]">
-            A confirmation email has been sent to you. Open your badge in a new tab to print or save. Present the QR code
-            or your registration ID at the door.
+            {registeredAsWaitlist
+              ? "We’ve saved your details. Open your reference badge below; check-in stays blocked until organisers confirm a spot. Watch your email for updates."
+              : "A confirmation email has been sent to you. Open your badge in a new tab to print or save. Present the QR code or your registration ID at the door."}
           </p>
           {publicRegistrationId ? (
             <p className="mt-4 font-mono text-sm font-medium text-stone-800">

@@ -55,6 +55,7 @@ export async function createEvent(formData: FormData) {
     const agendaValue = parseAgendaJsonField(data.agendaJson);
     const speakerIdsRaw = parseSpeakerIdsFromForm(formData);
     const speakerIds = await filterValidTeamIds(prisma, speakerIdsRaw);
+    const allowWaitlist = formData.get("allowWaitlist") === "on";
     created = await prisma.event.create({
       data: {
         title: data.title,
@@ -71,6 +72,7 @@ export async function createEvent(formData: FormData) {
         venueAddress: data.venueAddress || null,
         capacity: data.capacity ?? null,
         registrationDeadline: data.registrationDeadline ? new Date(data.registrationDeadline) : null,
+        allowWaitlist,
         status: data.status,
         agenda: agendaValue === null ? Prisma.DbNull : (agendaValue as unknown as Prisma.InputJsonValue),
         speakerIds: speakerIds.length > 0 ? (speakerIds as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
@@ -125,6 +127,7 @@ export async function updateEvent(id: number, formData: FormData) {
     const agendaValue = parseAgendaJsonField(data.agendaJson);
     const speakerIdsRaw = parseSpeakerIdsFromForm(formData);
     const speakerIds = await filterValidTeamIds(prisma, speakerIdsRaw);
+    const allowWaitlist = formData.get("allowWaitlist") === "on";
     await prisma.event.update({
       where: { id },
       data: {
@@ -142,6 +145,7 @@ export async function updateEvent(id: number, formData: FormData) {
         venueAddress: data.venueAddress || null,
         capacity: data.capacity ?? null,
         registrationDeadline: data.registrationDeadline ? new Date(data.registrationDeadline) : null,
+        allowWaitlist,
         status: data.status,
         agenda: agendaValue === null ? Prisma.DbNull : (agendaValue as unknown as Prisma.InputJsonValue),
         speakerIds: speakerIds.length > 0 ? (speakerIds as unknown as Prisma.InputJsonValue) : Prisma.DbNull,

@@ -31,6 +31,8 @@ model Event {
   venueAddress          String?   @map("venue_address") @db.Text
   capacity              Int?
   registrationDeadline  DateTime? @map("registration_deadline")
+  /// When capacity is full, public form may still accept waitlist registrations.
+  allowWaitlist         Boolean   @default(false) @map("allow_waitlist")
   agenda                Json?
   speakerIds            Json?     @map("speaker_ids")
   createdAt             DateTime  @default(now()) @map("created_at")
@@ -167,9 +169,11 @@ model EventRegistration {
   phone            String?
   organization     String?
   dietaryReqs      String?   @map("dietary_reqs")
+  waitlisted       Boolean   @default(false) @map("waitlisted")
   checkedInAt      DateTime? @map("checked_in_at")
   createdAt        DateTime  @default(now()) @map("created_at")
 
+  @@unique([eventSlug, email])
   @@index([eventSlug])
   @@index([qrToken])
   @@index([registrationId])

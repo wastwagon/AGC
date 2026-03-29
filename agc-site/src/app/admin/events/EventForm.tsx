@@ -30,6 +30,7 @@ type EventFormProps = {
     venueAddress: string | null;
     capacity: number | null;
     registrationDeadline: Date | null;
+    allowWaitlist?: boolean;
     status: string;
     agenda?: unknown;
     speakerIds?: unknown;
@@ -317,6 +318,25 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
           />
         </div>
+      </div>
+
+      <div className="rounded-lg border border-slate-200 bg-slate-50/80 px-4 py-3">
+        <label className="flex cursor-pointer items-start gap-3">
+          <input
+            type="checkbox"
+            name="allowWaitlist"
+            value="on"
+            defaultChecked={Boolean(item?.allowWaitlist)}
+            className="mt-1 h-4 w-4 rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+          />
+          <span>
+            <span className="block text-sm font-medium text-slate-800">Allow waitlist when capacity is full</span>
+            <span className="mt-0.5 block text-xs text-slate-600">
+              Waitlisted guests receive a badge but cannot check in until staff promotes them from the registrations
+              table.
+            </span>
+          </span>
+        </label>
       </div>
 
       <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">

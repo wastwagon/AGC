@@ -1,12 +1,13 @@
 import { NextResponse } from "next/server";
 import { Resend } from "resend";
-import { escapeHtml } from "@/lib/sanitize";
+import { Prisma } from "@prisma/client";
 import { rateLimit } from "@/lib/rate-limit";
 import { eventRegistrationSchema } from "@/lib/validations";
 import { prisma } from "@/lib/db";
 import { generateRegistrationId, generateQrToken } from "@/lib/event-registration";
 import { getSiteSettings } from "@/lib/site-settings";
 import { logApi } from "@/lib/api-log";
+import { buildRegistrationConfirmationEmailHtml } from "@/lib/event-registration-email";
 
 const resend = process.env.RESEND_API_KEY ? new Resend(process.env.RESEND_API_KEY) : null;
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:9200";
@@ -39,59 +40,88 @@ export async function POST(request: Request) {
     }
 
     const data = parsed.data;
+    const emailNorm = data.email.trim().toLowerCase();
 
-    const existing = await prisma.eventRegistration.findFirst({
-      where: {
-        eventSlug: data.eventSlug,
-        email: { equals: data.email, mode: "insensitive" },
+    const dbEvent = await prisma.event.findFirst({
+      where: { slug: data.eventSlug, status: "published" },
+      select: {
+        capacity: true,
+        registrationDeadline: true,
+        allowWaitlist: true,
       },
-      select: { id: true },
     });
-    if (existing) {
-      logApi(ROUTE, "info", "duplicate_registration");
-      return NextResponse.json(
-        { error: "You are already registered for this event. Check your email for your badge link, or contact the organiser." },
-        { status: 409 }
-      );
+
+    let registrationDeadline: Date | null = null;
+    let capacity: number | undefined;
+    let allowWaitlist = false;
+
+    if (dbEvent) {
+      registrationDeadline = dbEvent.registrationDeadline;
+      capacity = dbEvent.capacity ?? undefined;
+      allowWaitlist = dbEvent.allowWaitlist;
+    } else {
+      const d = (data as { registrationDeadline?: string }).registrationDeadline;
+      if (d) registrationDeadline = new Date(d);
+      capacity = (data as { capacity?: number }).capacity;
     }
 
-    // Check registration deadline (if provided in payload)
-    const deadline = (data as { registrationDeadline?: string }).registrationDeadline;
-    if (deadline && new Date(deadline) < new Date()) {
+    if (registrationDeadline && registrationDeadline < new Date()) {
       logApi(ROUTE, "info", "deadline_passed");
       return NextResponse.json({ error: "Registration for this event has closed." }, { status: 400 });
     }
 
-    // Check capacity (count existing registrations)
-    const capacity = (data as { capacity?: number }).capacity;
-    if (typeof capacity === "number") {
-      const currentCount = await prisma.eventRegistration.count({ where: { eventSlug: data.eventSlug } });
-      if (currentCount >= capacity) {
-        logApi(ROUTE, "info", "capacity_full");
-        return NextResponse.json({ error: "This event has reached maximum capacity." }, { status: 400 });
+    const confirmedCount = await prisma.eventRegistration.count({
+      where: { eventSlug: data.eventSlug, waitlisted: false },
+    });
+
+    let waitlisted = false;
+    if (typeof capacity === "number" && capacity >= 0) {
+      if (confirmedCount >= capacity) {
+        if (allowWaitlist) {
+          waitlisted = true;
+        } else {
+          logApi(ROUTE, "info", "capacity_full");
+          return NextResponse.json({ error: "This event has reached maximum capacity." }, { status: 400 });
+        }
       }
     }
 
     const registrationId = generateRegistrationId();
     const qrToken = generateQrToken();
 
-    const registration = await prisma.eventRegistration.create({
-      data: {
-        eventSlug: data.eventSlug,
-        eventId: data.eventId,
-        eventTitle: data.eventTitle,
-        eventStartDate: new Date(data.eventStartDate),
-        eventEndDate: data.eventEndDate ? new Date(data.eventEndDate) : null,
-        eventLocation: data.eventLocation,
-        registrationId,
-        qrToken,
-        fullName: data.fullName,
-        email: data.email,
-        phone: data.phone,
-        organization: data.organization,
-        dietaryReqs: data.dietaryReqs,
-      },
-    });
+    let registration;
+    try {
+      registration = await prisma.eventRegistration.create({
+        data: {
+          eventSlug: data.eventSlug,
+          eventId: data.eventId,
+          eventTitle: data.eventTitle,
+          eventStartDate: new Date(data.eventStartDate),
+          eventEndDate: data.eventEndDate ? new Date(data.eventEndDate) : null,
+          eventLocation: data.eventLocation,
+          registrationId,
+          qrToken,
+          fullName: data.fullName,
+          email: emailNorm,
+          phone: data.phone,
+          organization: data.organization,
+          dietaryReqs: data.dietaryReqs,
+          waitlisted,
+        },
+      });
+    } catch (err) {
+      if (err instanceof Prisma.PrismaClientKnownRequestError && err.code === "P2002") {
+        logApi(ROUTE, "info", "duplicate_registration");
+        return NextResponse.json(
+          {
+            error:
+              "You are already registered for this event. Check your email for your badge link, or contact the organiser.",
+          },
+          { status: 409 }
+        );
+      }
+      throw err;
+    }
 
     const badgeUrl = `${baseUrl}/events/badge/${registration.id}`;
     const eventDate = new Date(data.eventStartDate).toLocaleDateString("en-GB", {
@@ -101,34 +131,36 @@ export async function POST(request: Request) {
       day: "numeric",
     });
 
+    const emailHtml = buildRegistrationConfirmationEmailHtml({
+      fullName: data.fullName,
+      eventTitle: data.eventTitle,
+      registrationId,
+      eventDate,
+      eventLocation: data.eventLocation,
+      badgeUrl,
+      programsEmail: siteSettings.email.programs,
+      waitlisted,
+    });
+
     if (resend) {
       await resend.emails.send({
         from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
-        to: data.email,
-        subject: `Event Registration Confirmed – ${data.eventTitle}`,
-        html: `
-          <h2>Registration Confirmed</h2>
-          <p>Dear ${escapeHtml(data.fullName)},</p>
-          <p>Your registration for <strong>${escapeHtml(data.eventTitle)}</strong> has been confirmed.</p>
-          <p><strong>Registration ID:</strong> ${registrationId}</p>
-          <p><strong>Date:</strong> ${eventDate}</p>
-          ${data.eventLocation ? `<p><strong>Location:</strong> ${escapeHtml(data.eventLocation)}</p>` : ""}
-          <p>Download and print your accreditation badge here:</p>
-          <p><a href="${badgeUrl}" style="display:inline-block;background:#0d9488;color:white;padding:12px 24px;text-decoration:none;border-radius:8px;font-weight:600;">Download Badge</a></p>
-          <p>Present your badge (or Registration ID) at the event for check-in. The badge contains a QR code that will be scanned to confirm your attendance.</p>
-          <p>If you have any questions, contact us at ${siteSettings.email.programs}.</p>
-          <p>Best regards,<br>Africa Governance Centre</p>
-        `,
+        to: emailNorm,
+        subject: waitlisted
+          ? `Waitlist – ${data.eventTitle}`
+          : `Event Registration Confirmed – ${data.eventTitle}`,
+        html: emailHtml,
       });
     }
 
-    logApi(ROUTE, "info", "registered");
+    logApi(ROUTE, "info", waitlisted ? "waitlisted" : "registered");
     return NextResponse.json({
       success: true,
       registration: {
         id: registration.id,
         registrationId: registration.registrationId,
         badgeUrl,
+        waitlisted,
       },
     });
   } catch (err) {

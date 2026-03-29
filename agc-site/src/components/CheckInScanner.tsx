@@ -3,6 +3,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import Link from "next/link";
 import { Html5Qrcode } from "html5-qrcode";
+import { playCheckInTone, vibrateCheckIn } from "@/lib/check-in-feedback";
 
 type CheckInResult = {
   valid: boolean;
@@ -25,10 +26,13 @@ type CheckInScannerProps = {
   expectedEventTitle?: string;
 };
 
+type RecentScan = { at: string; summary: string; outcome: "success" | "duplicate" | "error" };
+
 export function CheckInScanner({ expectedEventSlug, expectedEventTitle }: CheckInScannerProps) {
   const [mode, setMode] = useState<"manual" | "camera">("manual");
   const [manualId, setManualId] = useState("");
   const [result, setResult] = useState<CheckInResult | null>(null);
+  const [recentScans, setRecentScans] = useState<RecentScan[]>([]);
   const [loading, setLoading] = useState(false);
   const [scanning, setScanning] = useState(false);
   const scannerRef = useRef<Html5Qrcode | null>(null);
@@ -48,11 +52,43 @@ export function CheckInScanner({ expectedEventSlug, expectedEventTitle }: CheckI
           }),
           credentials: "include",
         });
-        const data = await res.json();
+        const data = (await res.json()) as CheckInResult;
         setResult(data);
+
+        let outcome: RecentScan["outcome"] = "error";
+        if (data.valid && !data.alreadyCheckedIn) outcome = "success";
+        else if (data.valid && data.alreadyCheckedIn) outcome = "duplicate";
+
+        playCheckInTone(outcome);
+        vibrateCheckIn(outcome);
+
+        const summary =
+          data.registration?.fullName ||
+          (typeof data.message === "string" ? data.message : "") ||
+          data.error ||
+          "Scan";
+        setRecentScans((prev) =>
+          [{ at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }), summary, outcome }, ...prev].slice(
+            0,
+            10
+          )
+        );
+
         if (data.valid && !data.alreadyCheckedIn) setManualId("");
       } catch {
         setResult({ valid: false, error: "Check-in failed" });
+        playCheckInTone("error");
+        vibrateCheckIn("error");
+        setRecentScans((prev) =>
+          [
+            {
+              at: new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" }),
+              summary: "Network or server error",
+              outcome: "error" as const,
+            },
+            ...prev,
+          ].slice(0, 10)
+        );
       } finally {
         setLoading(false);
       }
@@ -159,6 +195,30 @@ export function CheckInScanner({ expectedEventSlug, expectedEventTitle }: CheckI
           {!scanning && !result && (
             <p className="mt-2 text-sm text-slate-500">Camera will start. Point at the QR code on the badge.</p>
           )}
+        </div>
+      )}
+
+      {recentScans.length > 0 && (
+        <div className="rounded-xl border border-slate-200 bg-slate-50/90 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Recent scans</p>
+          <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
+            {recentScans.map((r, i) => (
+              <li key={`${r.at}-${i}`} className="flex flex-wrap items-baseline gap-x-2 gap-y-0.5">
+                <span className="font-mono text-xs text-slate-500">{r.at}</span>
+                <span
+                  className={
+                    r.outcome === "success"
+                      ? "font-medium text-green-800"
+                      : r.outcome === "duplicate"
+                        ? "font-medium text-amber-800"
+                        : "font-medium text-red-800"
+                  }
+                >
+                  {r.summary}
+                </span>
+              </li>
+            ))}
+          </ul>
         </div>
       )}
 
