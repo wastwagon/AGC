@@ -46,7 +46,7 @@ export default async function HomePage() {
   const allEvents: CmsEvent[] = await Promise.all(
     allEventsRaw.map(async (e) => ({
       ...e,
-      image: (await resolveImageUrl(e.image)) || e.image,
+      image: (await resolveImageUrl(e.image)) || undefined,
     }))
   );
   const today = new Date();

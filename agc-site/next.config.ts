@@ -36,6 +36,13 @@ const nextConfig: NextConfig = {
   output: "standalone",
   images: {
     remotePatterns: buildImageRemotePatterns(),
+    /** Media library files live under /uploads/*; be explicit for the image optimizer. */
+    localPatterns: [{ pathname: "/uploads/**", search: "" }],
+    /**
+     * In dev, the optimizer sometimes follows absolute `http://localhost:…/uploads/…`; Node then
+     * treats 127.0.0.1 as a private IP and returns 400 without this flag.
+     */
+    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
   },
 };
 

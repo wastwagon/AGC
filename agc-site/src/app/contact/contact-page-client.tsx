@@ -13,12 +13,14 @@ type ContactContent = {
   formDescription: string;
   formPlaceholders: { name: string; email: string; subject: string; message: string };
   submitLabel: string;
-  divisions: { name: string; email: string }[];
+  /** Optional when CMS JSON omits the field (build/prerender safe). */
+  divisions?: { name: string; email: string }[];
 };
 
 type ContactPageClientProps = { contactContent: ContactContent; heroImage: string; siteSettings: SiteSettings };
 
 export function ContactPageClient({ contactContent, heroImage, siteSettings }: ContactPageClientProps) {
+  const divisions = Array.isArray(contactContent.divisions) ? contactContent.divisions : [];
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [emailNotifyWarning, setEmailNotifyWarning] = useState(false);
@@ -73,7 +75,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
               <h2 className="page-heading mt-2 text-2xl sm:text-3xl">Get in touch</h2>
               <p className="page-prose mt-4">{contactContent.intro}</p>
               <ul className="mt-10 space-y-6">
-                {contactContent.divisions.map((div) => (
+                {divisions.map((div) => (
                   <li key={div.name} className="flex gap-4">
                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
                       <Mail className="h-5 w-5" />

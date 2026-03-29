@@ -210,6 +210,9 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Social links</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Full URLs for each platform. Icons appear in the <strong>header top bar</strong> (right) and in the footer when set.
+        </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
             <label htmlFor="socialLinkedin" className="block text-sm font-medium text-slate-700">LinkedIn</label>

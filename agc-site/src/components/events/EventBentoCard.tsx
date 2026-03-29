@@ -6,6 +6,7 @@ import { Calendar, MapPin, ArrowUpRight } from "lucide-react";
 import { eventsContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { resolveImageUrlSync } from "@/lib/content";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import type { CmsEvent } from "@/lib/content";
 
 function getEventImageUrl(event: { image?: string }): string | null {
@@ -48,6 +49,7 @@ export function EventBentoCard({
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 768px) 100vw, 33vw"
+          unoptimized={preferUnoptimizedImage(imageUrl)}
         />
         <div className="absolute left-3 top-3">
           <span className="rounded-lg bg-white/95 px-2.5 py-1 text-xs font-semibold capitalize text-stone-800 shadow-sm ring-1 ring-stone-200/80">

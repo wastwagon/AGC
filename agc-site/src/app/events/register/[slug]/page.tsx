@@ -6,6 +6,7 @@ import { fallbackEvents } from "@/data/content";
 import type { CmsEvent, CmsEventAgendaItem } from "@/lib/content";
 import { PageHero } from "@/components/PageHero";
 import { placeholderImages } from "@/data/images";
+import { resolveImageUrl } from "@/lib/media";
 import { EventRegistrationForm } from "@/components/EventRegistrationForm";
 import { prisma } from "@/lib/db";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
@@ -63,12 +64,14 @@ export default async function EventRegisterPage({ params }: Props) {
   const canRegister = !isPastDeadline && (!isFull || allowWaitlist);
   const registeringWaitlist = isFull && allowWaitlist && !isPastDeadline;
 
+  const heroImage = (await resolveImageUrl(event.image)) || placeholderImages.events;
+
   return (
     <>
       <PageHero
         title={`Register for ${event.title}`}
         subtitle={venue || "Event registration"}
-        image={placeholderImages.events}
+        image={heroImage}
         imageAlt={event.title}
         breadcrumbs={[
           { label: bc.home, href: "/" },
@@ -83,10 +86,10 @@ export default async function EventRegisterPage({ params }: Props) {
           <p className="mb-8 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">
             Registration
           </p>
-          <div className="grid gap-10 lg:grid-cols-[1fr_300px]">
+          <div className="grid gap-8 lg:grid-cols-[1fr_minmax(280px,320px)] lg:gap-10">
             <div className="space-y-8">
               {(event.event_type || venueFull || speakers.length > 0 || agenda.length > 0) && (
-                <div className="page-card p-6 sm:p-8">
+                <div className="rounded-2xl border border-stone-200/90 bg-white p-6 shadow-md shadow-stone-900/5 sm:p-8">
                   <h3 className="page-heading text-lg text-stone-900">Event details</h3>
                   <dl className="mt-5 space-y-4">
                     {event.event_type && (
@@ -210,31 +213,41 @@ export default async function EventRegisterPage({ params }: Props) {
               )}
             </div>
             <aside className="lg:sticky lg:top-24 lg:self-start">
-              <div className="page-card bg-accent-900 p-6 text-[#fffcf7] shadow-md">
-                <h3 className="font-serif text-lg font-semibold tracking-tight">At a glance</h3>
-                <p className="mt-4 flex items-start gap-2 text-sm text-accent-100/95">
-                  <Calendar className="mt-0.5 h-4 w-4 shrink-0 text-accent-300" aria-hidden />
-                  <span>
-                    {new Date(event.start_date).toLocaleDateString("en-GB", {
-                      weekday: "long",
-                      year: "numeric",
-                      month: "long",
-                      day: "numeric",
-                    })}
-                    {event.end_date && event.end_date !== event.start_date && (
-                      <>
-                        {" "}
-                        – {new Date(event.end_date).toLocaleDateString("en-GB", { month: "long", day: "numeric", year: "numeric" })}
-                      </>
-                    )}
-                  </span>
-                </p>
-                {venue && (
-                  <p className="mt-3 flex items-start gap-2 text-sm text-accent-100/90">
-                    <MapPin className="mt-0.5 h-4 w-4 shrink-0 text-accent-300" aria-hidden />
-                    {venue}
+              {/* Do not combine with .page-card — globals force a cream bg and wipe bg-accent-900. */}
+              <div className="rounded-2xl border border-accent-800/40 bg-gradient-to-b from-accent-950 to-accent-900 p-6 text-white shadow-lg shadow-stone-900/20 ring-1 ring-white/10 sm:p-7">
+                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-teal-200/90">At a glance</p>
+                <h3 className="mt-2 font-serif text-xl font-semibold leading-snug tracking-tight text-white">
+                  {event.title}
+                </h3>
+                <div className="mt-6 space-y-4 border-t border-white/15 pt-5">
+                  <p className="flex items-start gap-3 text-sm leading-relaxed text-white">
+                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-teal-200">
+                      <Calendar className="h-4 w-4" strokeWidth={2} aria-hidden />
+                    </span>
+                    <span>
+                      {new Date(event.start_date).toLocaleDateString("en-GB", {
+                        weekday: "long",
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                      {event.end_date && event.end_date !== event.start_date && (
+                        <>
+                          {" "}
+                          – {new Date(event.end_date).toLocaleDateString("en-GB", { month: "long", day: "numeric", year: "numeric" })}
+                        </>
+                      )}
+                    </span>
                   </p>
-                )}
+                  {venue ? (
+                    <p className="flex items-start gap-3 text-sm leading-relaxed text-white">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-teal-200">
+                        <MapPin className="h-4 w-4" strokeWidth={2} aria-hidden />
+                      </span>
+                      <span>{venue}</span>
+                    </p>
+                  ) : null}
+                </div>
               </div>
             </aside>
           </div>

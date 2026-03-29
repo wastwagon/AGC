@@ -29,11 +29,18 @@ export default async function EventsPage() {
     cmsEvents,
     fallbackEvents as CmsEvent[]
   );
+  /** Client cards use sync URL helpers; resolve media- IDs and paths here (same pattern as the home page). */
+  const eventsWithDisplayImages: CmsEvent[] = await Promise.all(
+    events.map(async (e) => ({
+      ...e,
+      image: (await resolveImageUrl(e.image)) || undefined,
+    }))
+  );
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const upcoming = events.filter((e) => new Date(e.end_date || e.start_date) >= today);
-  const past = events.filter((e) => new Date(e.end_date || e.start_date) < today);
+  const upcoming = eventsWithDisplayImages.filter((e) => new Date(e.end_date || e.start_date) >= today);
+  const past = eventsWithDisplayImages.filter((e) => new Date(e.end_date || e.start_date) < today);
 
   return (
     <>

@@ -1,13 +1,10 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { X, Check, Upload, Loader2 } from "lucide-react";
 import { MAX_MEDIA_UPLOAD_BYTES, formatMaxUploadBytes } from "@/lib/media-limits";
 import { rasterDimensionsFromFile } from "@/lib/media-upload-client";
-import { preferUnoptimizedImage } from "@/lib/image-delivery";
-
 export type MediaItem = {
   id: string;
   filename: string;
@@ -154,13 +151,13 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
                   }}
                   className="group relative aspect-square overflow-hidden rounded-xl border-2 border-transparent bg-slate-100 transition-all hover:border-accent-500 hover:shadow-md"
                 >
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element -- Picker thumbs: bypass optimizer (dev 400 on /uploads). */}
+                  <img
                     src={item.url}
                     alt={item.alt || item.title || item.filename}
-                    fill
-                    className="object-cover"
-                    sizes="200px"
-                    unoptimized={preferUnoptimizedImage(item.url)}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                   <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/20 group-hover:opacity-100">
                     <span className="rounded-full bg-white p-2 text-accent-600">

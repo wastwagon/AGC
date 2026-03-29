@@ -2,7 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ImagePlus, Plus, Trash2 } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { createEvent, updateEvent } from "./actions";
@@ -75,6 +75,50 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
   const action = isEdit ? updateEvent.bind(null, item.id) : createEvent;
   const [image, setImage] = useState(item?.image ?? "");
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
+  const [imagePreviewLoading, setImagePreviewLoading] = useState(false);
+
+  useEffect(() => {
+    const v = image.trim();
+    if (!v) {
+      setImagePreviewUrl(null);
+      setImagePreviewLoading(false);
+      return;
+    }
+    if (v.startsWith("http://") || v.startsWith("https://")) {
+      setImagePreviewUrl(v);
+      setImagePreviewLoading(false);
+      return;
+    }
+    if (v.startsWith("/")) {
+      setImagePreviewUrl(v);
+      setImagePreviewLoading(false);
+      return;
+    }
+    if (!v.startsWith("media-")) {
+      setImagePreviewUrl(null);
+      setImagePreviewLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setImagePreviewLoading(true);
+    setImagePreviewUrl(null);
+    (async () => {
+      try {
+        const res = await fetch("/api/media");
+        const data = (await res.json()) as { items?: MediaItem[] };
+        const found = data.items?.find((m) => m.id === v);
+        if (!cancelled) setImagePreviewUrl(found?.url ?? null);
+      } catch {
+        if (!cancelled) setImagePreviewUrl(null);
+      } finally {
+        if (!cancelled) setImagePreviewLoading(false);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [image]);
 
   const formatDate = (d: Date) => d.toISOString().slice(0, 16);
   const formatDateOnly = (d: Date) => d.toISOString().slice(0, 10);
@@ -277,6 +321,27 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
               <ImagePlus className="h-4 w-4" />
             </button>
           </div>
+          {imagePreviewLoading ? (
+            <p className="mt-2 text-xs text-slate-500">Loading preview…</p>
+          ) : imagePreviewUrl ? (
+            <div className="mt-3">
+              <p className="text-xs font-medium text-slate-600">Preview</p>
+              {/* eslint-disable-next-line @next/next/no-img-element -- Admin preview; bypass optimizer for /uploads */}
+              <img
+                src={imagePreviewUrl}
+                alt=""
+                className="mt-1 max-h-44 max-w-full rounded-lg border border-slate-200 bg-slate-50 object-contain object-left"
+              />
+            </div>
+          ) : image.trim() ? (
+            <p className="mt-2 text-xs text-amber-800">
+              No preview — for <code className="rounded bg-amber-100 px-1">media-…</code> IDs the file must exist in{" "}
+              <Link href="/admin/media" className="font-medium underline">
+                Media Library
+              </Link>
+              . You can also paste a <code className="rounded bg-amber-100 px-1">/uploads/…</code> URL.
+            </p>
+          ) : null}
         </div>
         <div>
           <label htmlFor="link" className="block text-sm font-medium text-slate-700">

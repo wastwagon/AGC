@@ -1,14 +1,11 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
-import Image from "next/image";
 import { Copy, Trash2, Check, ImagePlus } from "lucide-react";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { OrphanMediaPanel } from "../_components/OrphanMediaPanel";
 import { MAX_MEDIA_UPLOAD_BYTES, formatMaxUploadBytes } from "@/lib/media-limits";
 import { rasterDimensionsFromFile } from "@/lib/media-upload-client";
-import { preferUnoptimizedImage } from "@/lib/image-delivery";
-
 type MediaItem = {
   id: string;
   filename: string;
@@ -192,13 +189,13 @@ export default function AdminMediaPage() {
                 className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md"
               >
                 <div className="relative aspect-square overflow-hidden bg-slate-100">
-                  <Image
+                  {/* eslint-disable-next-line @next/next/no-img-element -- Admin thumbs: bypass optimizer (dev 400 on /uploads). */}
+                  <img
                     src={item.url}
                     alt={item.alt || item.title || item.filename}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 100vw, 25vw"
-                    unoptimized={preferUnoptimizedImage(item.url)}
+                    className="absolute inset-0 h-full w-full object-cover"
+                    loading="lazy"
+                    decoding="async"
                   />
                 </div>
                 <div className="p-3">

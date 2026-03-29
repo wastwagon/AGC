@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Calendar, MapPin, ArrowUpRight } from "lucide-react";
 import { placeholderImages } from "@/data/images";
 import { resolveImageUrlSync } from "@/lib/content";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 type EventCardProps = {
   event: {
@@ -48,7 +49,7 @@ export function EventCard({ event }: EventCardProps) {
           fill
           className="object-cover transition-transform duration-500 group-hover:scale-105"
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          unoptimized={false}
+          unoptimized={preferUnoptimizedImage(imageUrl)}
         />
         <div className="absolute left-3 top-3">
           <span className="rounded-lg bg-white/90 px-2.5 py-1 text-xs font-medium text-slate-700 backdrop-blur-sm">
