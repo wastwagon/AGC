@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   if (error) return error;
 
   const type = request.nextUrl.searchParams.get("type");
-  const allowed = ["contact", "application", "newsletter", "partnership"] as const;
+  const allowed = ["contact", "application", "newsletter", "partnership", "joinus"] as const;
   if (!type || !allowed.includes(type as (typeof allowed)[number])) {
     return NextResponse.json({ error: "Invalid type" }, { status: 400 });
   }
@@ -79,7 +79,7 @@ export async function GET(request: NextRequest) {
       const lines = [toCsvRow(["id", "email", "created_at"]), ...rows.map((r) => toCsvRow([String(r.id), r.email, r.createdAt.toISOString()]))];
       body = lines.join("");
       filename = "newsletter-signups.csv";
-    } else {
+    } else if (type === "partnership") {
       const rows = await prisma.partnershipInquiry.findMany({ orderBy: { createdAt: "desc" } });
       const lines = [
         toCsvRow(["id", "name", "email", "organization", "focus_area", "message", "created_at"]),
@@ -97,6 +97,25 @@ export async function GET(request: NextRequest) {
       ];
       body = lines.join("");
       filename = "partnership-inquiries.csv";
+    } else {
+      const rows = await prisma.joinUsInquiry.findMany({ orderBy: { createdAt: "desc" } });
+      const lines = [
+        toCsvRow(["id", "name", "email", "phone", "organization", "interest_area", "message", "created_at"]),
+        ...rows.map((r) =>
+          toCsvRow([
+            String(r.id),
+            r.name,
+            r.email,
+            r.phone ?? "",
+            r.organization ?? "",
+            r.interestArea ?? "",
+            r.message,
+            r.createdAt.toISOString(),
+          ])
+        ),
+      ];
+      body = lines.join("");
+      filename = "join-us-inquiries.csv";
     }
 
     return new NextResponse("\uFEFF" + body, {

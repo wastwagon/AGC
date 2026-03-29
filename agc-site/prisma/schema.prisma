@@ -220,6 +220,20 @@ model PartnershipInquiry {
   @@map("partnership_inquiries")
 }
 
+model JoinUsInquiry {
+  id           Int      @id @default(autoincrement())
+  name         String   @db.VarChar(255)
+  email        String   @db.VarChar(255)
+  phone        String?  @db.VarChar(50)
+  organization String?  @db.VarChar(255)
+  interestArea String?  @map("interest_area") @db.VarChar(255)
+  message      String   @db.Text
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@map("join_us_inquiries")
+}
+
 model ContactSubmission {
   id        Int      @id @default(autoincrement())
   name      String   @db.VarChar(255)

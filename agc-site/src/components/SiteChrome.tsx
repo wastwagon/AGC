@@ -16,10 +16,12 @@ function PublicLayoutWithInert({
   children,
   siteSettings,
   brandLogoSrc,
+  footerLogoSrc,
 }: {
   children: React.ReactNode;
   siteSettings: SiteSettings;
   brandLogoSrc: string;
+  footerLogoSrc: string;
 }) {
   const { mobileOpen } = useMobileNav();
   return (
@@ -34,10 +36,10 @@ function PublicLayoutWithInert({
         <div className="flex min-h-0 flex-1 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] xl:pb-0">
           {children}
         </div>
-        <Footer siteSettings={siteSettings} brandLogoSrc={brandLogoSrc} />
+        <Footer siteSettings={siteSettings} brandLogoSrc={footerLogoSrc} />
         <MobileBottomNav />
       </div>
-      <MobileDrawer siteSettings={siteSettings} brandLogoSrc={brandLogoSrc} />
+      <MobileDrawer siteSettings={siteSettings} brandLogoSrc={footerLogoSrc} />
     </div>
   );
 }
@@ -47,11 +49,14 @@ export function SiteChrome({
   children,
   siteSettings,
   brandLogoSrc = "/agc-logo.png",
+  footerLogoSrc: footerLogoSrcProp,
 }: {
   children: React.ReactNode;
   siteSettings: SiteSettings;
   brandLogoSrc?: string;
+  footerLogoSrc?: string;
 }) {
+  const footerLogoSrc = footerLogoSrcProp ?? brandLogoSrc;
   const pathname = usePathname();
   const isAdmin = pathname?.startsWith("/admin");
 
@@ -61,7 +66,7 @@ export function SiteChrome({
 
   return (
     <MobileNavProvider>
-      <PublicLayoutWithInert siteSettings={siteSettings} brandLogoSrc={brandLogoSrc}>
+      <PublicLayoutWithInert siteSettings={siteSettings} brandLogoSrc={brandLogoSrc} footerLogoSrc={footerLogoSrc}>
         {children}
       </PublicLayoutWithInert>
     </MobileNavProvider>

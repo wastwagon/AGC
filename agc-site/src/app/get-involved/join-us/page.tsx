@@ -5,6 +5,7 @@ import { Button } from "@/components/Button";
 import { getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
+import { JoinUsInquiryForm } from "@/components/JoinUsInquiryForm";
 
 export const metadata = {
   title: "Work with us",
@@ -51,6 +52,19 @@ export default async function JoinUsPage() {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-stone-200/80 bg-[#faf6ef] py-16 sm:py-20">
+        <div className="container mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Enquiry</p>
+          <h2 className="page-heading mt-3 text-2xl text-stone-900">Tell us you&apos;re interested</h2>
+          <p className="mt-2 text-stone-600">
+            Use the form for a structured inquiry — or use the buttons below to email or call.
+          </p>
+          <div className="mt-10">
+            <JoinUsInquiryForm programsEmail={siteSettings.email.programs} />
           </div>
         </div>
       </section>

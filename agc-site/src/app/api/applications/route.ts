@@ -37,6 +37,13 @@ export async function POST(request: Request) {
     const typeLabel =
       data.applicationType === "staff" ? "Staff interest" : data.applicationType === "fellow" ? "Fellowship" : "Volunteer";
 
+    const motivationHeading =
+      data.applicationType === "volunteer"
+        ? "Why volunteer with AGC?"
+        : data.applicationType === "staff"
+          ? "Why work with AGC?"
+          : "Motivation & fit";
+
     await prisma.volunteerApplication.create({
       data: {
         fullName: data.fullName,
@@ -79,7 +86,7 @@ export async function POST(request: Request) {
         <p>${data.experience ? nl2br(data.experience) : "—"}</p>
         <h3>Skills & Expertise</h3>
         <p>${data.skills ? nl2br(data.skills) : "—"}</p>
-        <h3>Why volunteer with AGC?</h3>
+        <h3>${escapeHtml(motivationHeading)}</h3>
         <p>${nl2br(data.motivation)}</p>
       `,
     });

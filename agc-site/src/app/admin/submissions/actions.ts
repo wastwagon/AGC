@@ -37,3 +37,10 @@ export async function deletePartnershipInquiry(id: number) {
   revalidatePath("/admin/submissions");
   redirect("/admin/submissions?deleted=partnership");
 }
+
+export async function deleteJoinUsInquiry(id: number) {
+  await requireSession();
+  await prisma.joinUsInquiry.delete({ where: { id } });
+  revalidatePath("/admin/submissions");
+  redirect("/admin/submissions?deleted=joinus");
+}

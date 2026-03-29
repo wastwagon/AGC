@@ -98,10 +98,20 @@ export async function findMediaReferences(item: MediaItem): Promise<MediaReferen
   });
   const siteJson = siteSettingsRow?.contentJson;
   if (siteJson && typeof siteJson === "object" && !Array.isArray(siteJson)) {
-    const logoVal = String((siteJson as Record<string, unknown>).logo ?? "");
+    const rec = siteJson as Record<string, unknown>;
+    const logoVal = String(rec.logo ?? "");
+    const footerLogoVal = String(rec.footerLogo ?? "");
     for (const n of needles) {
-      if (n && logoVal && logoVal.includes(n)) {
-        add("Site settings", "Header & footer logo", "/admin/site-settings");
+      if (!n) continue;
+      if (logoVal && logoVal.includes(n)) {
+        add("Site settings", "Header logo", "/admin/site-settings");
+        break;
+      }
+    }
+    for (const n of needles) {
+      if (!n) continue;
+      if (footerLogoVal && footerLogoVal.includes(n)) {
+        add("Site settings", "Footer / drawer logo", "/admin/site-settings");
         break;
       }
     }

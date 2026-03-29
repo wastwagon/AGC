@@ -51,6 +51,11 @@ export default async function RootLayout({
 }>) {
   const siteSettings = await getSiteSettings();
   const brandLogoSrc = (await resolveImageUrl(siteSettings.logo || undefined)) || "/agc-logo.png";
+  const footerLogoResolved =
+    siteSettings.footerLogo?.trim() !== ""
+      ? await resolveImageUrl(siteSettings.footerLogo)
+      : null;
+  const footerLogoSrc = footerLogoResolved || brandLogoSrc;
   return (
     <html lang="en" className={`${ibmPlex.variable} ${fraunces.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
@@ -62,7 +67,7 @@ export default async function RootLayout({
         </a>
         <JsonLd siteSettings={siteSettings} />
         <Analytics />
-        <SiteChrome siteSettings={siteSettings} brandLogoSrc={brandLogoSrc}>
+        <SiteChrome siteSettings={siteSettings} brandLogoSrc={brandLogoSrc} footerLogoSrc={footerLogoSrc}>
           <main id="main-content" className="flex-1">{children}</main>
         </SiteChrome>
       </body>

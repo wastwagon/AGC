@@ -25,6 +25,8 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
   const languagesText = settings.languages.map((x) => `${x.code}|${x.label}`).join("\n");
   const [logo, setLogo] = useState(settings.logo || "");
   const [logoPickerOpen, setLogoPickerOpen] = useState(false);
+  const [footerLogo, setFooterLogo] = useState(settings.footerLogo || "");
+  const [footerLogoPickerOpen, setFooterLogoPickerOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const draftKey = "agc:admin:site-settings:draft:v1";
   const initialDraft = useMemo(() => {
@@ -86,10 +88,8 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
             <textarea id="tagline" name="tagline" defaultValue={initialDraft?.tagline ?? settings.tagline} required rows={3} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor="logo" className="block text-sm font-medium text-slate-700">
-              Header &amp; footer logo
-            </label>
-            <p className="mt-0.5 text-xs text-slate-500">Leave empty to use the default site logo file. Use a Media Library id or upload path.</p>
+            <label htmlFor="logo" className="block text-sm font-medium text-slate-700">Header logo</label>
+            <p className="mt-0.5 text-xs text-slate-500">Shown in the top bar and light areas. Empty = default file in /public.</p>
             <div className="mt-1 flex gap-2">
               <input
                 id="logo"
@@ -109,6 +109,35 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
               </button>
             </div>
             <ImagePicker open={logoPickerOpen} onClose={() => setLogoPickerOpen(false)} onSelect={(item) => setLogo(item.id)} />
+          </div>
+          <div className="sm:col-span-2">
+            <label htmlFor="footerLogo" className="block text-sm font-medium text-slate-700">Footer &amp; mobile menu logo (optional)</label>
+            <p className="mt-0.5 text-xs text-slate-500">
+              For dark backgrounds (inverted display only when using the default PNG). Leave empty to reuse the header logo.
+            </p>
+            <div className="mt-1 flex gap-2">
+              <input
+                id="footerLogo"
+                name="footerLogo"
+                value={footerLogo}
+                onChange={(e) => setFooterLogo(e.target.value)}
+                placeholder="e.g. white/wordmark variant"
+                className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+              />
+              <button
+                type="button"
+                onClick={() => setFooterLogoPickerOpen(true)}
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                title="Pick from Media Library"
+              >
+                <ImagePlus className="h-4 w-4" />
+              </button>
+            </div>
+            <ImagePicker
+              open={footerLogoPickerOpen}
+              onClose={() => setFooterLogoPickerOpen(false)}
+              onSelect={(item) => setFooterLogo(item.id)}
+            />
           </div>
           <div>
             <label htmlFor="phone" className="block text-sm font-medium text-slate-700">Phone</label>
