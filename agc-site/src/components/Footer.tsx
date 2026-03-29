@@ -3,27 +3,31 @@
 import Image from "next/image";
 import Link from "next/link";
 import { MapPin, Phone, Mail, Twitter, Linkedin, Instagram, Facebook } from "lucide-react";
-import { footerLinks } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import type { SiteSettings } from "@/lib/site-settings";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { NewsletterSignup } from "./NewsletterSignup";
 
-/** Footer project thumbnails - Our Work items with images */
-const footerWorkItems = [
-  { href: "/our-work/programs", image: placeholderImages.programs, alt: "Programs" },
-  { href: "/our-work/projects", image: placeholderImages.projects, alt: "Projects" },
-  { href: "/our-work/advisory", image: placeholderImages.advisory, alt: "Advisory" },
-  { href: "/app-summit", image: placeholderImages.appSummit, alt: "APP Summit" },
-  { href: "/events", image: placeholderImages.events, alt: "Events" },
-  { href: "/news", image: placeholderImages.news, alt: "News" },
-];
+const footerThumbImageByHref: Record<string, string> = {
+  "/our-work/programs": placeholderImages.programs,
+  "/our-work/projects": placeholderImages.projects,
+  "/our-work/advisory": placeholderImages.advisory,
+  "/app-summit": placeholderImages.appSummit,
+  "/events": placeholderImages.events,
+  "/news": placeholderImages.news,
+};
 
 /**
  * Consultar-style footer: dark navy upper (4 cols), darker lower (copyright)
  * Mobile-first: columns stack, enhanced spacing and accent highlights
  */
 export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSettings; brandLogoSrc: string }) {
+  const { footer: footerChrome } = siteSettings.chrome;
+  const footerWorkItems = footerChrome.workThumbnails.map((item) => ({
+    href: item.href,
+    alt: item.alt,
+    image: footerThumbImageByHref[item.href] ?? placeholderImages.hero,
+  }));
   const socialLinks = [
     { href: siteSettings.social.twitter, icon: Twitter, label: "Twitter" },
     { href: siteSettings.social.linkedin, icon: Linkedin, label: "LinkedIn" },
@@ -72,7 +76,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
             {/* 2. Contact */}
             <div className="lg:pl-0">
               <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-accent-300 sm:mb-8">
-                Contact
+                {footerChrome.contactHeading}
               </h3>
               <ul className="space-y-5">
                 <li className="flex items-start gap-3 text-[15px] text-white/90">
@@ -109,10 +113,10 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
             {/* 3. Services / Quick Links */}
             <div className="lg:pl-0">
               <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-accent-300 sm:mb-8">
-                Quick Links
+                {footerChrome.quickLinksHeading}
               </h3>
               <ul className="space-y-3">
-                {footerLinks.quickLinks.map((link) => (
+                {footerChrome.quickLinks.map((link) => (
                   <li key={link.href}>
                     <Link
                       href={link.href}
@@ -127,7 +131,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                     href="/get-involved"
                     className="text-[15px] text-white/90 transition-colors hover:text-accent-300"
                   >
-                    Get Involved
+                    {footerChrome.getInvolvedLabel}
                   </Link>
                 </li>
               </ul>
@@ -136,7 +140,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
             {/* 4. Projects / Our Work thumbnails */}
             <div>
               <h3 className="mb-6 text-sm font-semibold uppercase tracking-wider text-accent-300 sm:mb-8">
-                Our Work
+                {footerChrome.ourWorkHeading}
               </h3>
               <ul className="grid grid-cols-3 gap-2">
                 {footerWorkItems.map((item) => (
@@ -169,15 +173,15 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
             <Link href="/" className="text-white transition-colors hover:text-accent-300">
               {siteSettings.name}
             </Link>
-            . All rights reserved.
+            . {footerChrome.rightsReserved}
             <span className="mx-2">|</span>
             <Link
               href="/admin/login"
               className="text-white/70 transition-colors hover:text-accent-300"
             >
-              Admin
+              {footerChrome.adminLabel}
             </Link>
-            {footerLinks.legal.map((link) => (
+            {footerChrome.legal.map((link) => (
               <span key={link.href}>
                 <span className="mx-2">·</span>
                 <Link href={link.href} className="text-white/90 transition-colors hover:text-accent-300">

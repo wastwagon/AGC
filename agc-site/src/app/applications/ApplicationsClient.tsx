@@ -1,21 +1,64 @@
 "use client";
 
 import { useState } from "react";
-import { volunteerFormFields } from "@/data/content";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
+import type { ApplicationsFormFields } from "@/data/applications-page";
 
 type ApplicationsClientProps = {
   hero: {
     title: string;
     subtitle: string;
     image?: string;
+    imageAlt: string;
   };
   applyIntro: string;
   programsEmail: string;
+  formEyebrow: string;
+  formCardTitle: string;
+  sectionPersonal: string;
+  sectionExperience: string;
+  sectionMotivation: string;
+  applicationTypeLabel: string;
+  optionVolunteer: string;
+  optionStaff: string;
+  optionFellow: string;
+  availabilityPlaceholder: string;
+  availabilityFullTime: string;
+  availabilityPartTime: string;
+  availabilityFlexible: string;
+  submitSending: string;
+  submitIdle: string;
+  successMessage: string;
+  emailWarnIntro: string;
+  errorFallback: string;
+  formFields: ApplicationsFormFields;
 };
 
-export function ApplicationsClient({ hero, applyIntro, programsEmail }: ApplicationsClientProps) {
+export function ApplicationsClient({
+  hero,
+  applyIntro,
+  programsEmail,
+  formEyebrow,
+  formCardTitle,
+  sectionPersonal,
+  sectionExperience,
+  sectionMotivation,
+  applicationTypeLabel,
+  optionVolunteer,
+  optionStaff,
+  optionFellow,
+  availabilityPlaceholder,
+  availabilityFullTime,
+  availabilityPartTime,
+  availabilityFlexible,
+  submitSending,
+  submitIdle,
+  successMessage,
+  emailWarnIntro,
+  errorFallback,
+  formFields,
+}: ApplicationsClientProps) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [emailNotifyWarning, setEmailNotifyWarning] = useState(false);
@@ -53,7 +96,7 @@ export function ApplicationsClient({ hero, applyIntro, programsEmail }: Applicat
       form.reset();
     } catch (err) {
       setStatus("error");
-      setErrorMessage(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      setErrorMessage(err instanceof Error ? err.message : errorFallback);
     }
   }
 
@@ -68,7 +111,7 @@ export function ApplicationsClient({ hero, applyIntro, programsEmail }: Applicat
         title={hero.title}
         subtitle={hero.subtitle}
         image={hero.image}
-        imageAlt="Volunteer application"
+        imageAlt={hero.imageAlt}
         breadcrumbs={[
           { label: "Home", href: "/" },
           { label: "Get Involved", href: "/get-involved" },
@@ -80,12 +123,12 @@ export function ApplicationsClient({ hero, applyIntro, programsEmail }: Applicat
       <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 border-l-[3px] border-accent-600 py-2 pl-5">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Apply</p>
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">{formEyebrow}</p>
             <p className="mt-2 page-prose max-w-xl text-[1.02rem]">{applyIntro}</p>
           </div>
 
           <div className="page-card p-8 sm:p-10">
-            <h2 className="page-heading text-xl text-stone-900">Application form</h2>
+            <h2 className="page-heading text-xl text-stone-900">{formCardTitle}</h2>
 
             <form onSubmit={handleSubmit} className="relative mt-10 space-y-10">
               <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
@@ -95,19 +138,19 @@ export function ApplicationsClient({ hero, applyIntro, programsEmail }: Applicat
 
               <div>
                 <label htmlFor="applicationType" className={labelClass}>
-                  I am applying as <span className="text-accent-800">*</span>
+                  {applicationTypeLabel} <span className="text-accent-800">*</span>
                 </label>
                 <select id="applicationType" name="applicationType" required className={inputClass} defaultValue="volunteer">
-                  <option value="volunteer">Volunteer</option>
-                  <option value="staff">Staff / career interest</option>
-                  <option value="fellow">Fellowship / research role</option>
+                  <option value="volunteer">{optionVolunteer}</option>
+                  <option value="staff">{optionStaff}</option>
+                  <option value="fellow">{optionFellow}</option>
                 </select>
               </div>
 
               <div>
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Personal information</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">{sectionPersonal}</h3>
                 <div className="mt-5 grid gap-5 sm:grid-cols-2">
-                  {volunteerFormFields.personalInfo.map((field) => (
+                  {formFields.personalInfo.map((field) => (
                     <div
                       key={field.name}
                       className={field.name === "fullName" || field.name === "email" ? "sm:col-span-2" : ""}
@@ -122,9 +165,9 @@ export function ApplicationsClient({ hero, applyIntro, programsEmail }: Applicat
               </div>
 
               <div className="border-t border-stone-200/80 pt-10">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Experience & skills</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">{sectionExperience}</h3>
                 <div className="mt-5 space-y-5">
-                  {volunteerFormFields.experience.map((field) => (
+                  {formFields.experience.map((field) => (
                     <div key={field.name}>
                       <label htmlFor={field.name} className={labelClass}>
                         {field.label}
@@ -136,19 +179,19 @@ export function ApplicationsClient({ hero, applyIntro, programsEmail }: Applicat
               </div>
 
               <div className="border-t border-stone-200/80 pt-10">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Motivation & availability</h3>
+                <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">{sectionMotivation}</h3>
                 <div className="mt-5 space-y-5">
-                  {volunteerFormFields.motivation.map((field) => (
+                  {formFields.motivation.map((field) => (
                     <div key={field.name}>
                       <label htmlFor={field.name} className={labelClass}>
                         {field.label} {field.required && <span className="text-accent-800">*</span>}
                       </label>
                       {field.type === "select" ? (
                         <select id={field.name} name={field.name} className={inputClass}>
-                          <option value="">Select your availability</option>
-                          <option value="full-time">Full-time</option>
-                          <option value="part-time">Part-time</option>
-                          <option value="flexible">Flexible</option>
+                          <option value="">{availabilityPlaceholder}</option>
+                          <option value="full-time">{availabilityFullTime}</option>
+                          <option value="part-time">{availabilityPartTime}</option>
+                          <option value="flexible">{availabilityFlexible}</option>
                         </select>
                       ) : (
                         <textarea
@@ -167,12 +210,11 @@ export function ApplicationsClient({ hero, applyIntro, programsEmail }: Applicat
               {status === "success" && (
                 <div className="space-y-2 text-sm">
                   <p className="rounded-lg border border-emerald-200/80 bg-emerald-50/80 px-4 py-3 text-emerald-900">
-                    Thank you — your application is in. We&apos;ll be in touch when there&apos;s a fit.
+                    {successMessage}
                   </p>
                   {emailNotifyWarning && (
                     <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900">
-                      We could not send the notification email automatically; your application is still saved. If this is
-                      time-sensitive, email {programsEmail} directly.
+                      {emailWarnIntro} {programsEmail} directly.
                     </p>
                   )}
                 </div>
@@ -182,7 +224,7 @@ export function ApplicationsClient({ hero, applyIntro, programsEmail }: Applicat
               )}
 
               <Button type="submit" disabled={status === "sending"}>
-                {status === "sending" ? "Submitting…" : "Submit application"}
+                {status === "sending" ? submitSending : submitIdle}
               </Button>
             </form>
           </div>

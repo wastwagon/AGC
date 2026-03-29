@@ -17,6 +17,7 @@ import {
 } from "../src/data/content";
 import { privacyPolicy, termsOfService } from "../src/data/legal";
 import { getBootstrapHomePageCms } from "../src/lib/cms-bootstrap";
+import { applicationsPageUiDefaults } from "../src/data/applications-page";
 
 const prisma = new PrismaClient();
 
@@ -109,6 +110,7 @@ async function main() {
           "Your skills and time strengthen research, events, and policy dialogue across the continent. Tell us how you’d like to contribute — we read every submission.",
         applyIntro: "A few minutes now helps us match you to the right team. Fields marked * are required.",
         heroImage: "/uploads/placeholder.svg",
+        ...applicationsPageUiDefaults,
       },
     },
     {

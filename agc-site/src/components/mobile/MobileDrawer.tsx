@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import type { LucideIcon } from "lucide-react";
 import {
   Home,
   Building2,
@@ -17,24 +18,25 @@ import {
   ChevronRight,
   BookOpen,
 } from "lucide-react";
-import { ourWorkSubLinks, getInvolvedSubLinks } from "@/data/content";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import type { SiteSettings } from "@/lib/site-settings";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { useMobileNav } from "./MobileNavContext";
 
-type NavItem = { href: string; label: string; icon: typeof Home; subLinks?: { href: string; label: string }[] };
+const drawerIconByHref: Record<string, LucideIcon> = {
+  "/": Home,
+  "/about": Building2,
+  "/our-work": Layers,
+  "/app-summit": Landmark,
+  "/events": Calendar,
+  "/news": Newspaper,
+  "/get-involved": HeartHandshake,
+  "/contact": Mail,
+};
 
-const primaryNav: NavItem[] = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/about", label: "About Us", icon: Building2 },
-  { href: "/our-work", label: "Our Work", icon: Layers, subLinks: ourWorkSubLinks },
-  { href: "/app-summit", label: "APP Summit", icon: Landmark },
-  { href: "/events", label: "Events", icon: Calendar },
-  { href: "/news", label: "News", icon: Newspaper },
-  { href: "/get-involved", label: "Get Involved", icon: HeartHandshake, subLinks: getInvolvedSubLinks },
-  { href: "/contact", label: "Contact", icon: Mail },
-];
+function drawerIconForHref(href: string): LucideIcon {
+  return drawerIconByHref[href] ?? Layers;
+}
 
 export function MobileDrawer({
   siteSettings,
@@ -43,6 +45,8 @@ export function MobileDrawer({
   siteSettings: SiteSettings;
   brandLogoSrc: string;
 }) {
+  const primaryNav = siteSettings.chrome.nav;
+  const chrome = siteSettings.chrome;
   const { mobileOpen, setMobileOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -107,14 +111,14 @@ export function MobileDrawer({
             setMobileOpen(false);
             requestAnimationFrame(() => menuTriggerRef.current?.focus());
           }}
-          aria-label="Close menu"
+          aria-label={chrome.mobileDrawerCloseAriaLabel}
         />
       )}
       <aside
         id="site-mobile-drawer"
         role="dialog"
         aria-modal="true"
-        aria-label="Site navigation"
+        aria-label={chrome.mobileDrawerAriaLabel}
         className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,20rem)] max-w-[22rem] flex-col bg-gradient-to-b from-accent-900 via-[#152a32] to-accent-950 shadow-[8px_0_40px_-12px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
         }`}
@@ -140,7 +144,7 @@ export function MobileDrawer({
               requestAnimationFrame(() => menuTriggerRef.current?.focus());
             }}
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-white/10 text-white transition-colors hover:bg-white/20"
-            aria-label="Close menu"
+            aria-label={chrome.mobileDrawerCloseAriaLabel}
           >
             <X className="h-5 w-5" strokeWidth={2.25} />
           </button>
@@ -153,7 +157,7 @@ export function MobileDrawer({
         >
           <ul className="space-y-0.5">
             {primaryNav.map((item) => {
-              const Icon = item.icon;
+              const Icon = drawerIconForHref(item.href);
               return (
                 <li key={item.href}>
                   <Link
@@ -169,7 +173,7 @@ export function MobileDrawer({
                     </span>
                     <ChevronRight className="h-4 w-4 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5 group-hover:text-white/60" aria-hidden />
                   </Link>
-                  {item.subLinks && item.subLinks.length > 0 && (
+                  {item.subLinks && item.subLinks.length > 0 ? (
                     <ul className="ml-[3.25rem] mt-1 space-y-0.5 border-l border-white/15 pl-3 pb-2">
                       {item.subLinks.map((sub) => (
                         <li key={sub.href}>
@@ -184,7 +188,7 @@ export function MobileDrawer({
                         </li>
                       ))}
                     </ul>
-                  )}
+                  ) : null}
                 </li>
               );
             })}
@@ -201,14 +205,16 @@ export function MobileDrawer({
             <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-500/30 text-accent-100">
               <Search className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
             </span>
-            <span className="font-[family-name:var(--font-fraunces)] text-base">Search the site</span>
+            <span className="font-[family-name:var(--font-fraunces)] text-base">{chrome.mobileSearchButtonLabel}</span>
           </button>
         </nav>
 
         {/* Footer strip — language + CTA */}
         <div className="shrink-0 space-y-3 border-t border-white/10 bg-accent-950/80 px-3 py-4 backdrop-blur-sm">
           <div className="rounded-xl bg-white/5 px-2 py-2 ring-1 ring-white/10">
-            <p className="mb-2 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">Language</p>
+            <p className="mb-2 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">
+              {chrome.mobileLanguageEyebrow}
+            </p>
             <LanguageSelector variant="dark" languages={siteSettings.languages} />
           </div>
           <Link
@@ -217,7 +223,7 @@ export function MobileDrawer({
             className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 text-center font-semibold text-accent-900 shadow-md transition hover:bg-accent-50"
           >
             <Mail className="h-4 w-4" aria-hidden />
-            Contact us
+            {chrome.mobileDrawerContactCta}
           </Link>
         </div>
       </aside>

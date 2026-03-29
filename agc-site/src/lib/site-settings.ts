@@ -1,5 +1,12 @@
 import { cache } from "react";
 import { siteConfig } from "@/data/content";
+import {
+  DEFAULT_SITE_CHROME,
+  type SiteChrome,
+  type SiteFooterChrome,
+  type SiteNavItem,
+  type SiteNavLink,
+} from "@/data/site-chrome";
 import { prisma } from "@/lib/db";
 
 export type SiteSettings = {
@@ -24,11 +31,116 @@ export type SiteSettings = {
     facebook: string;
   };
   languages: { code: string; label: string }[];
+  /** Header, footer, and mobile navigation copy (Admin → Site settings). */
+  chrome: SiteChrome;
 };
 
 const DEFAULT_SITE_SETTINGS: SiteSettings = {
   ...siteConfig,
+  chrome: DEFAULT_SITE_CHROME,
 };
+
+function isNavLink(x: unknown): x is SiteNavLink {
+  if (!x || typeof x !== "object" || Array.isArray(x)) return false;
+  const o = x as Record<string, unknown>;
+  return typeof o.href === "string" && o.href.length > 0 && typeof o.label === "string";
+}
+
+function parseNavItem(x: unknown): SiteNavItem | null {
+  if (!isNavLink(x)) return null;
+  const o = x as Record<string, unknown>;
+  const href = o.href as string;
+  const label = o.label as string;
+  let subLinks: SiteNavLink[] | undefined;
+  if (Array.isArray(o.subLinks)) {
+    const sl = o.subLinks.filter(isNavLink).map((s) => ({ href: s.href as string, label: s.label as string }));
+    if (sl.length > 0) subLinks = sl;
+  }
+  return { href, label, subLinks };
+}
+
+function parseNavList(v: unknown): SiteNavItem[] | null {
+  if (!Array.isArray(v)) return null;
+  const items = v.map(parseNavItem).filter((x): x is SiteNavItem => x !== null);
+  return items.length > 0 ? items : null;
+}
+
+function parseLinkList(v: unknown): SiteNavLink[] | null {
+  if (!Array.isArray(v)) return null;
+  const items = v.filter(isNavLink).map((s) => ({ href: s.href, label: s.label }));
+  return items.length > 0 ? items : null;
+}
+
+function parseWorkThumbs(v: unknown): SiteFooterChrome["workThumbnails"] | null {
+  if (!Array.isArray(v)) return null;
+  const out: SiteFooterChrome["workThumbnails"] = [];
+  for (const x of v) {
+    if (!x || typeof x !== "object" || Array.isArray(x)) continue;
+    const o = x as Record<string, unknown>;
+    if (typeof o.href === "string" && o.href.length > 0 && typeof o.alt === "string") {
+      out.push({ href: o.href, alt: o.alt });
+    }
+  }
+  return out.length > 0 ? out : null;
+}
+
+function parseBottomNav(v: unknown): { href: string; label: string }[] | null {
+  if (!Array.isArray(v)) return null;
+  const out: { href: string; label: string }[] = [];
+  for (const x of v) {
+    if (!x || typeof x !== "object" || Array.isArray(x)) continue;
+    const o = x as Record<string, unknown>;
+    if (typeof o.href === "string" && o.href.length > 0 && typeof o.label === "string") {
+      out.push({ href: o.href, label: o.label });
+    }
+  }
+  return out.length > 0 ? out : null;
+}
+
+export function mergeSiteChrome(patch: unknown): SiteChrome {
+  const base = DEFAULT_SITE_CHROME;
+  if (patch === null || patch === undefined || typeof patch !== "object" || Array.isArray(patch)) {
+    return mergeSiteChrome({});
+  }
+  const p = patch as Record<string, unknown>;
+  const footerPatch =
+    p.footer && typeof p.footer === "object" && !Array.isArray(p.footer)
+      ? (p.footer as Record<string, unknown>)
+      : {};
+
+  const nav = parseNavList(p.nav) ?? base.nav.map((i) => ({ ...i, subLinks: i.subLinks?.map((s) => ({ ...s })) }));
+  const bottomNav = parseBottomNav(p.bottomNav) ?? [...base.bottomNav];
+  const quickLinks = parseLinkList(footerPatch.quickLinks);
+  const legal = parseLinkList(footerPatch.legal);
+  const workThumbnails = parseWorkThumbs(footerPatch.workThumbnails);
+
+  const pickStr = (v: unknown, fallback: string) =>
+    typeof v === "string" && v.trim() !== "" ? v.trim() : fallback;
+
+  return {
+    skipToContentLabel: pickStr(p.skipToContentLabel, base.skipToContentLabel),
+    headerContactCta: pickStr(p.headerContactCta, base.headerContactCta),
+    headerSearchAriaLabel: pickStr(p.headerSearchAriaLabel, base.headerSearchAriaLabel),
+    mobileDrawerAriaLabel: pickStr(p.mobileDrawerAriaLabel, base.mobileDrawerAriaLabel),
+    mobileDrawerCloseAriaLabel: pickStr(p.mobileDrawerCloseAriaLabel, base.mobileDrawerCloseAriaLabel),
+    mobileSearchButtonLabel: pickStr(p.mobileSearchButtonLabel, base.mobileSearchButtonLabel),
+    mobileDrawerContactCta: pickStr(p.mobileDrawerContactCta, base.mobileDrawerContactCta),
+    mobileLanguageEyebrow: pickStr(p.mobileLanguageEyebrow, base.mobileLanguageEyebrow),
+    nav,
+    bottomNav,
+    footer: {
+      contactHeading: pickStr(footerPatch.contactHeading, base.footer.contactHeading),
+      quickLinksHeading: pickStr(footerPatch.quickLinksHeading, base.footer.quickLinksHeading),
+      ourWorkHeading: pickStr(footerPatch.ourWorkHeading, base.footer.ourWorkHeading),
+      getInvolvedLabel: pickStr(footerPatch.getInvolvedLabel, base.footer.getInvolvedLabel),
+      rightsReserved: pickStr(footerPatch.rightsReserved, base.footer.rightsReserved),
+      adminLabel: pickStr(footerPatch.adminLabel, base.footer.adminLabel),
+      quickLinks: quickLinks ?? base.footer.quickLinks.map((l) => ({ ...l })),
+      legal: legal ?? base.footer.legal.map((l) => ({ ...l })),
+      workThumbnails: workThumbnails ?? base.footer.workThumbnails.map((t) => ({ ...t })),
+    },
+  };
+}
 
 function sanitizeSiteSettings(value: unknown): SiteSettings {
   const src = value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
@@ -69,6 +181,7 @@ function sanitizeSiteSettings(value: unknown): SiteSettings {
       facebook: typeof social.facebook === "string" ? social.facebook : DEFAULT_SITE_SETTINGS.social.facebook,
     },
     languages,
+    chrome: mergeSiteChrome(src.chrome),
   };
 }
 
@@ -84,3 +197,5 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     return DEFAULT_SITE_SETTINGS;
   }
 });
+
+export type { SiteChrome, SiteNavItem, SiteNavLink };

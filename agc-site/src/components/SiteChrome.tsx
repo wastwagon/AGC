@@ -37,7 +37,7 @@ function PublicLayoutWithInert({
           {children}
         </div>
         <Footer siteSettings={siteSettings} brandLogoSrc={footerLogoSrc} />
-        <MobileBottomNav />
+        <MobileBottomNav bottomNav={siteSettings.chrome.bottomNav} />
       </div>
       <MobileDrawer siteSettings={siteSettings} brandLogoSrc={footerLogoSrc} />
     </div>

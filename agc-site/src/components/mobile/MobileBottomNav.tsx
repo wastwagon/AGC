@@ -14,22 +14,28 @@ type BottomNavTab = {
   isMenu?: boolean;
 };
 
-const tabs: BottomNavTab[] = [
-  { href: "/", label: "Home", icon: Home },
-  { href: "/our-work", label: "Work", icon: Layers },
-  { href: "/events", label: "Events", icon: Calendar },
-  { href: "/news", label: "News", icon: Newspaper },
-  { href: "__menu__", label: "Menu", icon: Menu, isMenu: true },
-];
+const bottomIconByHref: Record<string, LucideIcon> = {
+  "/": Home,
+  "/our-work": Layers,
+  "/events": Calendar,
+  "/news": Newspaper,
+  "__menu__": Menu,
+};
 
 function isActive(pathname: string, href: string) {
   if (href === "/") return pathname === "/";
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-export function MobileBottomNav() {
+export function MobileBottomNav({ bottomNav }: { bottomNav: { href: string; label: string }[] }) {
   const pathname = usePathname() ?? "/";
   const { openMenu } = useMobileNav();
+
+  const tabs: BottomNavTab[] = bottomNav.map((t) => {
+    const isMenu = t.href === "__menu__";
+    const icon = bottomIconByHref[t.href] ?? Layers;
+    return { href: t.href, label: t.label, icon, isMenu };
+  });
 
   return (
     <nav

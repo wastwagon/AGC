@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Menu, X, Search } from "lucide-react";
-import { ourWorkSubLinks, getInvolvedSubLinks } from "@/data/content";
 import type { SiteSettings } from "@/lib/site-settings";
 import { NavDropdown } from "./NavDropdown";
 import { LanguageSelector } from "./LanguageSelector";
@@ -13,20 +12,8 @@ import { SearchModal } from "./SearchModal";
 import { useMobileNav } from "./mobile/MobileNavContext";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
-type NavItem = { href: string; label: string; subLinks?: { href: string; label: string }[] };
-
-const navWithDropdowns: NavItem[] = [
-  { href: "/", label: "Home" },
-  { href: "/about", label: "About Us" },
-  { href: "/our-work", label: "Our Work", subLinks: ourWorkSubLinks },
-  { href: "/app-summit", label: "APP Summit" },
-  { href: "/events", label: "Events" },
-  { href: "/news", label: "News" },
-  { href: "/get-involved", label: "Get Involved", subLinks: getInvolvedSubLinks },
-  { href: "/contact", label: "Contact" },
-];
-
 export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSettings; brandLogoSrc: string }) {
+  const navWithDropdowns = siteSettings.chrome.nav;
   const { mobileOpen, setMobileOpen, searchOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const [scrolled, setScrolled] = useState(false);
   const showTopbar = true;
@@ -70,7 +57,7 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
             <nav className="hidden shrink-0 items-center justify-center lg:flex" style={{ flex: "1 1 auto", minWidth: 0 }}>
               <ul className="flex items-center justify-center gap-1 whitespace-nowrap">
                 {navWithDropdowns.map((item) =>
-                  item.subLinks ? (
+                  item.subLinks && item.subLinks.length > 0 ? (
                     <li key={item.href} className="group relative">
                       <NavDropdown label={item.label} href={item.href} items={item.subLinks} />
                     </li>
@@ -97,7 +84,7 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                 type="button"
                 onClick={() => setSearchOpen(true)}
                 className="flex h-[50px] w-[55px] items-center justify-center rounded-lg bg-[#dadffb] text-accent-600 transition-colors hover:bg-accent-100 hover:text-accent-700"
-                aria-label="Search"
+                aria-label={siteSettings.chrome.headerSearchAriaLabel}
               >
                 <Search className="h-5 w-5" />
               </button>
@@ -106,7 +93,7 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                 href="/contact"
                 className="hidden rounded-lg bg-gradient-to-r from-accent-600 to-accent-500 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-95 sm:inline-block"
               >
-                Contact
+                {siteSettings.chrome.headerContactCta}
               </Link>
               <button
                 ref={menuTriggerRef}

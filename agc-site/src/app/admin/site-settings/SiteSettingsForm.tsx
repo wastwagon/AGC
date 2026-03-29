@@ -202,6 +202,126 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
         <textarea id="languages" name="languages" defaultValue={initialDraft?.languages ?? languagesText} rows={4} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-sm" />
       </section>
 
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Header, mobile &amp; footer labels</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Public navigation and footer copy. Optional JSON blocks override link lists and menu structure; leave blank to keep built-in defaults after save (empty strings fall back to defaults).
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="skipToContentLabel" className="block text-sm font-medium text-slate-700">Skip link</label>
+            <input id="skipToContentLabel" name="skipToContentLabel" defaultValue={settings.chrome.skipToContentLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="headerContactCta" className="block text-sm font-medium text-slate-700">Header contact button</label>
+            <input id="headerContactCta" name="headerContactCta" defaultValue={settings.chrome.headerContactCta} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="headerSearchAriaLabel" className="block text-sm font-medium text-slate-700">Search (aria-label)</label>
+            <input id="headerSearchAriaLabel" name="headerSearchAriaLabel" defaultValue={settings.chrome.headerSearchAriaLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="mobileDrawerAriaLabel" className="block text-sm font-medium text-slate-700">Mobile drawer (dialog label)</label>
+            <input id="mobileDrawerAriaLabel" name="mobileDrawerAriaLabel" defaultValue={settings.chrome.mobileDrawerAriaLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="mobileDrawerCloseAriaLabel" className="block text-sm font-medium text-slate-700">Mobile close (aria-label)</label>
+            <input id="mobileDrawerCloseAriaLabel" name="mobileDrawerCloseAriaLabel" defaultValue={settings.chrome.mobileDrawerCloseAriaLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="mobileSearchButtonLabel" className="block text-sm font-medium text-slate-700">Mobile search button</label>
+            <input id="mobileSearchButtonLabel" name="mobileSearchButtonLabel" defaultValue={settings.chrome.mobileSearchButtonLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="mobileDrawerContactCta" className="block text-sm font-medium text-slate-700">Mobile drawer contact CTA</label>
+            <input id="mobileDrawerContactCta" name="mobileDrawerContactCta" defaultValue={settings.chrome.mobileDrawerContactCta} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="mobileLanguageEyebrow" className="block text-sm font-medium text-slate-700">Mobile language eyebrow</label>
+            <input id="mobileLanguageEyebrow" name="mobileLanguageEyebrow" defaultValue={settings.chrome.mobileLanguageEyebrow} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="footerContactHeading" className="block text-sm font-medium text-slate-700">Footer: Contact column</label>
+            <input id="footerContactHeading" name="footerContactHeading" defaultValue={settings.chrome.footer.contactHeading} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="footerQuickLinksHeading" className="block text-sm font-medium text-slate-700">Footer: Quick links column</label>
+            <input id="footerQuickLinksHeading" name="footerQuickLinksHeading" defaultValue={settings.chrome.footer.quickLinksHeading} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="footerOurWorkHeading" className="block text-sm font-medium text-slate-700">Footer: Our work column</label>
+            <input id="footerOurWorkHeading" name="footerOurWorkHeading" defaultValue={settings.chrome.footer.ourWorkHeading} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="footerGetInvolvedLabel" className="block text-sm font-medium text-slate-700">Footer: Get involved link</label>
+            <input id="footerGetInvolvedLabel" name="footerGetInvolvedLabel" defaultValue={settings.chrome.footer.getInvolvedLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="footerRightsReserved" className="block text-sm font-medium text-slate-700">Footer: Rights line</label>
+            <input id="footerRightsReserved" name="footerRightsReserved" defaultValue={settings.chrome.footer.rightsReserved} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="footerAdminLabel" className="block text-sm font-medium text-slate-700">Footer: Admin link</label>
+            <input id="footerAdminLabel" name="footerAdminLabel" defaultValue={settings.chrome.footer.adminLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+        </div>
+        <div className="mt-6 space-y-4">
+          <div>
+            <label htmlFor="chromeNavJson" className="block text-sm font-medium text-slate-700">Main nav JSON (optional)</label>
+            <p className="text-xs text-slate-500">Array of <code>{"{ href, label, subLinks?: [{ href, label }] }"}</code>. Empty = default routes.</p>
+            <textarea
+              id="chromeNavJson"
+              name="chromeNavJson"
+              rows={10}
+              defaultValue={JSON.stringify(settings.chrome.nav, null, 2)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+            />
+          </div>
+          <div>
+            <label htmlFor="chromeBottomNavJson" className="block text-sm font-medium text-slate-700">Mobile bottom bar JSON (optional)</label>
+            <p className="text-xs text-slate-500">Array of <code>{"{ href, label }"}</code>. Use <code>__menu__</code> for the drawer tab.</p>
+            <textarea
+              id="chromeBottomNavJson"
+              name="chromeBottomNavJson"
+              rows={6}
+              defaultValue={JSON.stringify(settings.chrome.bottomNav, null, 2)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+            />
+          </div>
+          <div>
+            <label htmlFor="chromeFooterQuickLinksJson" className="block text-sm font-medium text-slate-700">Footer quick links JSON (optional)</label>
+            <textarea
+              id="chromeFooterQuickLinksJson"
+              name="chromeFooterQuickLinksJson"
+              rows={6}
+              defaultValue={JSON.stringify(settings.chrome.footer.quickLinks, null, 2)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+            />
+          </div>
+          <div>
+            <label htmlFor="chromeFooterLegalJson" className="block text-sm font-medium text-slate-700">Footer legal links JSON (optional)</label>
+            <textarea
+              id="chromeFooterLegalJson"
+              name="chromeFooterLegalJson"
+              rows={4}
+              defaultValue={JSON.stringify(settings.chrome.footer.legal, null, 2)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+            />
+          </div>
+          <div>
+            <label htmlFor="chromeFooterWorkThumbsJson" className="block text-sm font-medium text-slate-700">Footer work thumbnails JSON (optional)</label>
+            <p className="text-xs text-slate-500">Array of <code>{"{ href, alt }"}</code>. Images map from known routes in code.</p>
+            <textarea
+              id="chromeFooterWorkThumbsJson"
+              name="chromeFooterWorkThumbsJson"
+              rows={6}
+              defaultValue={JSON.stringify(settings.chrome.footer.workThumbnails, null, 2)}
+              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+            />
+          </div>
+        </div>
+      </section>
+
       <AdminFormStickyActions>
         <SubmitButton />
       </AdminFormStickyActions>

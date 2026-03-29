@@ -1349,6 +1349,189 @@ export function PageContentForm({ item }: PageContentFormProps) {
             </div>
           </div>
         )}
+        {item.slug === "applications" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Applications page helper</p>
+            <p className="text-xs text-slate-500">
+              Hero and intro also live here. Optional <code className="rounded bg-white px-1">fieldLabelOverrides</code> in the JSON
+              below: object mapping field <code className="rounded bg-white px-1">name</code> to custom labels (e.g.{" "}
+              <code className="rounded bg-white px-1">{`{"fullName":"Your name"}`}</code>).
+            </p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Hero image alt</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.heroImageAlt === "string" ? parsedJson.heroImageAlt : ""}
+                  onChange={(e) => updateJsonField("heroImageAlt", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Apply eyebrow</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.formEyebrow === "string" ? parsedJson.formEyebrow : ""}
+                  onChange={(e) => updateJsonField("formEyebrow", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-slate-600">Form card title</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.formCardTitle === "string" ? parsedJson.formCardTitle : ""}
+                  onChange={(e) => updateJsonField("formCardTitle", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Section: Personal</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.sectionPersonal === "string" ? parsedJson.sectionPersonal : ""}
+                  onChange={(e) => updateJsonField("sectionPersonal", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Section: Experience</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.sectionExperience === "string" ? parsedJson.sectionExperience : ""}
+                  onChange={(e) => updateJsonField("sectionExperience", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Section: Motivation</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.sectionMotivation === "string" ? parsedJson.sectionMotivation : ""}
+                  onChange={(e) => updateJsonField("sectionMotivation", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-slate-600">Application type label</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.applicationTypeLabel === "string" ? parsedJson.applicationTypeLabel : ""}
+                  onChange={(e) => updateJsonField("applicationTypeLabel", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Option: Volunteer</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.optionVolunteer === "string" ? parsedJson.optionVolunteer : ""}
+                  onChange={(e) => updateJsonField("optionVolunteer", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Option: Staff</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.optionStaff === "string" ? parsedJson.optionStaff : ""}
+                  onChange={(e) => updateJsonField("optionStaff", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Option: Fellow</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.optionFellow === "string" ? parsedJson.optionFellow : ""}
+                  onChange={(e) => updateJsonField("optionFellow", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Availability placeholder</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.availabilityPlaceholder === "string" ? parsedJson.availabilityPlaceholder : ""}
+                  onChange={(e) => updateJsonField("availabilityPlaceholder", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Availability: Full-time</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.availabilityFullTime === "string" ? parsedJson.availabilityFullTime : ""}
+                  onChange={(e) => updateJsonField("availabilityFullTime", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Availability: Part-time</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.availabilityPartTime === "string" ? parsedJson.availabilityPartTime : ""}
+                  onChange={(e) => updateJsonField("availabilityPartTime", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Availability: Flexible</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.availabilityFlexible === "string" ? parsedJson.availabilityFlexible : ""}
+                  onChange={(e) => updateJsonField("availabilityFlexible", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Submit (idle)</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.submitIdle === "string" ? parsedJson.submitIdle : ""}
+                  onChange={(e) => updateJsonField("submitIdle", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Submit (sending)</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.submitSending === "string" ? parsedJson.submitSending : ""}
+                  onChange={(e) => updateJsonField("submitSending", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-slate-600">Success message</label>
+                <textarea
+                  value={typeof parsedJson.successMessage === "string" ? parsedJson.successMessage : ""}
+                  onChange={(e) => updateJsonField("successMessage", e.target.value)}
+                  rows={2}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-slate-600">Email warning intro (before programs email)</label>
+                <textarea
+                  value={typeof parsedJson.emailWarnIntro === "string" ? parsedJson.emailWarnIntro : ""}
+                  onChange={(e) => updateJsonField("emailWarnIntro", e.target.value)}
+                  rows={2}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-slate-600">Generic error fallback</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.errorFallback === "string" ? parsedJson.errorFallback : ""}
+                  onChange={(e) => updateJsonField("errorFallback", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+          </div>
+        )}
         {(item.slug === "privacy-policy" || item.slug === "terms-of-service") && (
           <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Legal page helper</p>

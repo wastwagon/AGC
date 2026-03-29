@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
+import { DEFAULT_SITE_CHROME } from "@/data/site-chrome";
 
 vi.mock("@/lib/db", () => ({
   prisma: {
@@ -23,6 +24,7 @@ vi.mock("@/lib/rate-limit", () => ({
 vi.mock("@/lib/site-settings", () => ({
   getSiteSettings: vi.fn().mockResolvedValue({
     email: { programs: "programs@example.com", media: "m@example.com", info: "i@example.com" },
+    chrome: DEFAULT_SITE_CHROME,
   }),
 }));
 
