@@ -10,6 +10,7 @@ export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [badgeUrl, setBadgeUrl] = useState("");
+  const [publicRegistrationId, setPublicRegistrationId] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -52,6 +53,7 @@ export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
 
       setStatus("success");
       setBadgeUrl(data.registration.badgeUrl);
+      setPublicRegistrationId(data.registration.registrationId || "");
       form.reset();
     } catch {
       setStatus("error");
@@ -70,11 +72,17 @@ export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
           </div>
           <h2 className="page-heading text-2xl text-stone-900">You&apos;re registered</h2>
           <p className="mt-3 page-prose mx-auto max-w-md text-[0.98rem]">
-            A confirmation email has been sent to you. Download and print your accreditation badge below.
+            A confirmation email has been sent to you. Open your badge in a new tab to print or save. Present the QR code
+            or your registration ID at the door.
           </p>
+          {publicRegistrationId ? (
+            <p className="mt-4 font-mono text-sm font-medium text-stone-800">
+              Registration ID: <span className="select-all">{publicRegistrationId}</span>
+            </p>
+          ) : null}
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:justify-center">
-            <Button asChild href={badgeUrl} variant="primary">
-              Download Badge
+            <Button asChild href={badgeUrl} target="_blank" variant="primary" size="lg">
+              Open badge (print)
             </Button>
             <Button asChild href="/events" variant="outline">
               Back to Events

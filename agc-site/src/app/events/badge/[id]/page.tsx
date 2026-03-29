@@ -32,7 +32,8 @@ export default async function EventBadgePage({ params }: Props) {
   });
 
   return (
-    <div className="min-h-screen bg-[#f7f4ef] p-8 print:bg-white print:p-4">
+    <div className="min-h-screen bg-[#f7f4ef] p-8 print:bg-white print:p-4 print:min-h-0">
+      <style>{"@media print { @page { margin: 12mm; size: auto; } }"}</style>
       <div
         className="mx-auto max-w-md rounded-2xl border border-stone-300/90 bg-[#fffcf7] p-8 shadow-[0_20px_50px_-15px_rgba(30,51,48,0.15)] print:shadow-none print:border-stone-400"
         style={{ width: "85mm" }}
@@ -65,10 +66,13 @@ export default async function EventBadgePage({ params }: Props) {
             alt="QR code for check-in"
             width={160}
             height={160}
-            className="rounded-lg border border-stone-200 bg-[#fffcf7]"
+            className="rounded-lg border border-stone-200 bg-[#fffcf7] print:border-stone-300"
           />
           <p className="mt-2 font-mono text-xs font-medium text-stone-700">{registration.registrationId}</p>
           <p className="mt-1 text-[10px] uppercase tracking-wider text-stone-400">Check-in at venue</p>
+          <p className="mt-3 hidden text-center text-[10px] text-stone-500 print:hidden sm:block max-w-[14rem]">
+            Staff scan this code or enter your registration ID above.
+          </p>
         </div>
       </div>
 

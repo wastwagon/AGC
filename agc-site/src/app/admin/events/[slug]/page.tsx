@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getEventBySlugAdmin } from "@/lib/content";
 import { fallbackEvents } from "@/data/content";
@@ -32,7 +33,22 @@ export default async function AdminEventRegistrationsPage({ params }: Props) {
     <div>
       <AdminPageHeader
         title={event.title}
-        description={`Registrations for this event. ${checkedInCount} of ${registrations.length} checked in. Export CSV for spreadsheets or open a badge to print.`}
+        description={
+          <>
+            <p>
+              Registrations for this event. {checkedInCount} of {registrations.length} checked in. Export CSV for
+              spreadsheets or open a badge to print.
+            </p>
+            <p className="mt-2">
+              <Link
+                href={`/admin/events/scan?event=${encodeURIComponent(slug)}`}
+                className="font-medium text-accent-600 underline decoration-accent-300 underline-offset-2 hover:text-accent-800"
+              >
+                Open check-in scanner (this event only)
+              </Link>
+            </p>
+          </>
+        }
       />
 
       <div className="overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm">

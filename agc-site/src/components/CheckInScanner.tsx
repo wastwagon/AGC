@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
+import Link from "next/link";
 import { Html5Qrcode } from "html5-qrcode";
 
 type CheckInResult = {
@@ -11,13 +12,20 @@ type CheckInResult = {
     organization?: string;
     eventTitle: string;
     registrationId: string;
+    eventSlug?: string;
     checkedInAt?: string;
   };
   message?: string;
   error?: string;
 };
 
-export function CheckInScanner() {
+type CheckInScannerProps = {
+  /** When set, rejects badges for other events (from admin “scan for this event”). */
+  expectedEventSlug?: string;
+  expectedEventTitle?: string;
+};
+
+export function CheckInScanner({ expectedEventSlug, expectedEventTitle }: CheckInScannerProps) {
   const [mode, setMode] = useState<"manual" | "camera">("manual");
   const [manualId, setManualId] = useState("");
   const [result, setResult] = useState<CheckInResult | null>(null);
@@ -26,30 +34,36 @@ export function CheckInScanner() {
   const scannerRef = useRef<Html5Qrcode | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const performCheckIn = useCallback(async (qrToken?: string, registrationId?: string) => {
-    setLoading(true);
-    setResult(null);
-    try {
-      const res = await fetch("/api/events/check-in", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ qrToken: qrToken || undefined, registrationId: registrationId || undefined }),
-        credentials: "include",
-      });
-      const data = await res.json();
-      setResult(data);
-      if (data.valid && !data.alreadyCheckedIn) setManualId("");
-    } catch {
-      setResult({ valid: false, error: "Check-in failed" });
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  const performCheckIn = useCallback(
+    async (scanPayload: string) => {
+      setLoading(true);
+      setResult(null);
+      try {
+        const res = await fetch("/api/events/check-in", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            scan: scanPayload,
+            expectedEventSlug: expectedEventSlug?.trim() || undefined,
+          }),
+          credentials: "include",
+        });
+        const data = await res.json();
+        setResult(data);
+        if (data.valid && !data.alreadyCheckedIn) setManualId("");
+      } catch {
+        setResult({ valid: false, error: "Check-in failed" });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [expectedEventSlug]
+  );
 
   const handleManualSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!manualId.trim()) return;
-    performCheckIn(undefined, manualId.trim());
+    void performCheckIn(manualId.trim());
   };
 
   useEffect(() => {
@@ -62,9 +76,10 @@ export function CheckInScanner() {
           { facingMode: "environment" },
           { fps: 10, qrbox: { width: 250, height: 250 } },
           (decodedText) => {
-            scanner.pause();
-            performCheckIn(decodedText);
-            setScanning(false);
+            void scanner.pause(true);
+            void performCheckIn(decodedText.trim()).finally(() => {
+              void scanner.resume();
+            });
           },
           () => {}
         );
@@ -85,6 +100,19 @@ export function CheckInScanner() {
 
   return (
     <div className="space-y-6">
+      {expectedEventSlug ? (
+        <div className="rounded-lg border border-accent-200 bg-accent-50/90 px-4 py-3 text-sm text-accent-950">
+          <p className="font-medium">Event filter active</p>
+          <p className="mt-1 text-accent-900/90">
+            Only badges for{" "}
+            <strong>{expectedEventTitle?.trim() || expectedEventSlug}</strong> will be accepted.{" "}
+            <Link href="/admin/events/scan" className="font-medium underline decoration-accent-400 underline-offset-2">
+              Clear filter
+            </Link>
+          </p>
+        </div>
+      ) : null}
+
       <div className="flex gap-2">
         <button
           type="button"

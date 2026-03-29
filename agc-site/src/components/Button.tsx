@@ -6,6 +6,9 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   size?: "sm" | "md" | "lg";
   asChild?: boolean;
   href?: string;
+  /** When using `asChild` with `href`, forwarded to Next.js `Link` (e.g. `_blank` for badge download). */
+  target?: React.HTMLAttributeAnchorTarget;
+  rel?: string;
   children: React.ReactNode;
   className?: string;
 }
@@ -28,6 +31,8 @@ export function Button({
   size = "md",
   asChild,
   href,
+  target,
+  rel,
   children,
   className,
   ...props
@@ -38,7 +43,12 @@ export function Button({
 
   if (asChild && href) {
     return (
-      <Link href={href} className={combined}>
+      <Link
+        href={href}
+        className={combined}
+        target={target}
+        rel={rel ?? (target === "_blank" ? "noopener noreferrer" : undefined)}
+      >
         {children}
       </Link>
     );
