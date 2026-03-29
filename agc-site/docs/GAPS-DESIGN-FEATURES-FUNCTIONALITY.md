@@ -1,87 +1,106 @@
-# Gaps: Design, Features, Implementation & Functionality
+# Design, features & handover — status and gaps
 
-A single reference for what’s done, what’s placeholder, and what’s missing so you can prioritise next work.
+Single reference for **what is implemented**, **what is still placeholder or optional**, and **what the receiving team should verify** before go-live. Last aligned with repo capabilities (submissions pipeline, admin, media, auth).
 
 ---
 
-## 1. Design gaps
+## A. Handover checklist (functionality)
+
+Use this as a sign-off list for whoever operates the site after build.
+
+| Item | What to verify |
+|------|----------------|
+| **Database** | `DATABASE_URL` set; `npx prisma migrate deploy` run on each environment after deploy. |
+| **Admin access** | `ADMIN_EMAIL`, `ADMIN_PASSWORD`, **`AUTH_SECRET`** (required in production). Login at `/admin/login`. |
+| **Public URL** | `NEXT_PUBLIC_SITE_URL` matches the live domain (OG, RSS links, emails, badges). |
+| **Email** | `RESEND_API_KEY` (+ verified `RESEND_FROM_EMAIL` domain). Without Resend, submissions **still save to the database**; staff only get email if Resend works. |
+| **Submissions** | `/admin/submissions` — newsletter, applications, contact, partnership, work-with-us; CSV export; delete = permanent (no auto-expiry). |
+| **Dashboard** | `/admin` — inbox counts; links into submissions. |
+| **Media** | Upload path and **Docker volumes** (if used) for `public/uploads` + `data/media-library.json` — document backup/restore. |
+| **Redis** | Optional for rate limiting; multi-instance deploys should set `REDIS_URL` if you outgrow in-memory limits (see `src/lib/rate-limit.ts`). |
+| **Automated checks** | `npm run check` (lint + unit tests + build). Optional: `npm run test:e2e` after `npx playwright install chromium`. |
+| **Credentials** | Rotate `ADMIN_PASSWORD` and `AUTH_SECRET` after handover if builders had access. |
+
+---
+
+## B. What is complete (website + admin)
+
+These are **in code** and considered part of the delivered product:
+
+- **Public forms (all store in Postgres first):** contact, newsletter, volunteer/staff/fellow applications, partnership inquiry, work-with-us (careers) inquiry.
+- **Admin:** NextAuth + **`src/proxy.ts`** guards `/admin` (except login). Server actions on mutations also check session.
+- **Submissions:** List, pagination, per-type CSV export, detail pages, delete actions.
+- **Media library:** Upload, reference blocking on delete, **orphan list** + delete on `/admin/media`.
+- **Site settings:** Global contact, logos (header + optional footer), social, etc. (`site-settings` page content + forms).
+- **CMS:** News, events, publications, team, programs, projects, partners, page content (incl. home/about), taxonomy, event registrations, check-in scanner.
+- **News RSS:** `/news/feed.xml`.
+- **Search:** Header search via `/api/search` (Fuse over key content types).
+
+---
+
+## C. Design gaps
 
 | Gap | Current state | Recommendation |
 |-----|----------------|-----------------|
-| **Real imagery** | All hero/content images use `placeholderImages` (Unsplash or `/uploads/placeholder.svg`) | Add AGC photos to `public/` or media library; set `NEXT_PUBLIC_*_IMAGE` or attach in admin. |
-| **Partner logos** | Home partner strip uses text or generic placeholders | Replace with real logos (SVG/PNG) in admin or `public/`; ensure consistent height/alignment. |
-| **Language selector** | Header shows “English” and a dropdown, but **no i18n**. Selecting another language does nothing. | Either: (a) remove the control until i18n is planned, or (b) add next-intl (or similar) and translate key strings + CMS content. |
-| **Slate in header** | `LanguageSelector` and `SearchModal` still use `text-slate-*` / `border-slate-*` | Optional: switch to `stone` / `accent` to match sitewide tokens (see `UI-SITEWIDE.md`). |
-| **Skip-to-content** | Not clearly present in `Header` | Add a “Skip to main content” link (visible on focus) that targets `#main` or main landmark for a11y. |
-| **Per-page OG images** | Layout sets default OG; many pages don’t set `openGraph.images` | In `generateMetadata` for news/publications/events, set `openGraph.images` from hero/feature image. |
-| **Focus/keyboard** | Some `aria-*` and focus usage; no sitewide audit | Run axe or Lighthouse a11y; fix focus order and visible focus rings on interactive elements. |
+| **Hero / listing imagery** | Many routes fall back to `placeholderImages` or `/uploads/placeholder.svg` until CMS/env provides real assets. | Replace via **Admin → Media** + page editors; or `NEXT_PUBLIC_*` image envs documented in `GAPS-PHASES.md`. |
+| **Home testimonial & fellow spotlight** | Default copy in `src/data/content.ts` is marked **PLACEHOLDER** (fictional names until approved). | Publish real quote + attribution in **Page Content → home** (or replace static defaults after legal/comms sign-off). |
+| **Partner strip / logos** | May still be text or generic assets until edited in admin. | Upload partner logos in **Admin → Partners** and tune home partner strip fields. |
+| **Language selector** | UI suggests multiple languages; **no i18n** — switching does not change copy. | Remove control until `next-intl` (or similar) is planned, or implement real locales. |
+| **Header utility styling** | `LanguageSelector` / `SearchModal` may still use `slate` tokens vs `stone` elsewhere. | Optional visual pass (`docs/UI-SITEWIDE.md`). |
+| **Skip to main content** | Not a standard visible-on-focus skip link. | Add skip link targeting `#main` (or main landmark) — see `docs/UX-A11Y.md`. |
+| **Per-page Open Graph images** | Default OG in layout; not every route sets `openGraph.images` from its hero image. | Add `generateMetadata` image fields for news, publications, events (and key landing pages) when assets exist. |
+| **Accessibility audit** | Partial patterns documented; no single axe/Lighthouse report checked in CI. | Run manual or automated a11y pass before formal handover. |
 
 ---
 
-## 2. Feature gaps
+## D. Feature / product gaps (optional next phase)
 
-| Feature | Current state | Recommendation |
-|--------|----------------|-----------------|
-| **Newsletter list** | Footer signup sends **one email** to programs with the new address; no DB, no list. | Store signups (e.g. `NewsletterSignup` model) and/or integrate Resend Audiences / Mailchimp so you can send campaigns. |
-| **Volunteer applications** | Form sends **email only** to programs; no DB, no admin list. | Add `VolunteerApplication` model and admin list view so staff can review, filter, and export. |
-| **Contact submissions** | Contact form sends email via Resend; **no DB**. | Optional: add `ContactSubmission` model and optional admin “Inbox” to keep a record and avoid losing mail if Resend fails. |
-| **APP Summit content** | All content in `src/data/app-summit.ts` (date, venue, agenda, registration CTA). | Move to CMS (e.g. new “Summit” or PageContent type) so marketing can edit without code deploy. |
-| **APP Summit registration** | Registration CTA links to `/contact`; no dedicated summit registration flow. | If you need capacity/attendee list: add event-type or slug-based registration (reuse event registration flow) or dedicated summit form + DB. |
-| **RSS** | No RSS feed for news. | Add `/news/feed.xml` (or similar) using same data as news listing for syndication and readers. |
-| **News tags** | Tags removed from **article detail** UI; tag **listing** pages (`/news/tag/[slug]`) still work. | Decide: keep tag pages for discovery and add tags back to detail as a small “Tags” line, or remove tag routes and related data. |
-| **Search** | Header search uses `/api/search` + Fuse.js (events, news, publications). Works. | Optional: add analytics for search terms; consider highlighting query in results. |
-| **Event check-in** | Check-in scanner at `/admin/events/scan`; QR on badge; API and DB in place. | No major gap; ensure scanner is tested on target devices (e.g. phones). |
+| Topic | Current state | If you need more |
+|-------|----------------|------------------|
+| **APP Summit** | Content largely in `src/data/app-summit.ts`; registration CTA may point at generic contact. | Move copy to CMS; add dedicated registration (reuse **events** flow or new form + model). |
+| **News tags on article** | Tag **listing** routes exist; tags may be omitted on **article detail** UI. | Decide: show tags on detail for discovery, or deprecate tag URLs. |
+| **Multi-user admin** | Single shared **Credentials** user (`ADMIN_EMAIL` / `ADMIN_PASSWORD`). | Add NextAuth database adapter + `User` model + roles if several staff need separate accounts and audit trails. |
+| **Newsletter campaigns** | Signups are stored; no built-in **broadcast** tool. | Export CSV from admin and use Mailchimp/Resend Audiences, or integrate a provider. |
+| **Media at scale** | Files on disk (+ JSON metadata). | S3-compatible storage + signed URLs if traffic or HA requirements grow. |
+| **Rate limiting** | In-memory or Redis-backed depending on env. | Ensure `REDIS_URL` in production for multiple app instances. |
 
 ---
 
-## 3. Implementation gaps
+## E. Implementation / ops notes
 
-| Area | Current state | Recommendation |
-|------|----------------|-----------------|
-| **Sitemap** | `sitemap.ts` uses **Prisma** (news, publications, events). Build fails or sitemap empty if DB is unavailable (e.g. static export or no DB at build). | If you need static export: make sitemap resilient (try/catch, fallback to static-only URLs) or generate sitemap in a build step that has DB access. |
-| **Applications storage** | Volunteer applications are **email-only**. | Add Prisma model + store in DB; admin list + export (and optional email as notification). |
-| **Newsletter storage** | Newsletter signups are **email-only** (notification to programs). | Add Prisma model for signups; optional admin list and CSV export; optional double opt-in. |
-| **Media storage** | Media library uses local `public/uploads` or external URLs. No S3/cloud in schema. | For production at scale: add S3 (or similar) upload and serve via env-configured storage. |
-| **Rate limiting** | Contact, applications, newsletter use in-memory rate limit. | For multi-instance deploy: switch to Redis (or existing Redis) so limit is shared across instances. |
-| **Env for email** | Contact, applications, event registration, newsletter all require **RESEND_API_KEY** to send mail. | Document in README/deploy docs; without it, forms “succeed” but only log. Ensure production has key and verified domain. |
-| **Fallback content** | Some pages use `fallbackNews`, `fallbackEvents`, etc. when CMS returns nothing. | Keep fallbacks for dev/empty DB; ensure production is seeded or content is added via admin. |
+| Topic | Note |
+|-------|------|
+| **Sitemap** | Uses Prisma; build-time behaviour depends on `BUILD_WITHOUT_DB` and DB availability — see `src/app/sitemap.ts` and deploy docs. |
+| **E2E** | `e2e/join-us-form.spec.ts` mocks `POST /api/join-us`; dev server uses `BUILD_WITHOUT_DB=1` in Playwright config so CI/local need not have Postgres for that smoke test. |
+| **Secrets in repo** | Do not commit `.env*`. `ADMIN_CREDENTIALS.md` (if present) should be **local-only** or removed after handover. |
 
 ---
 
-## 4. Functionality / Admin gaps
+## F. Quick priority matrix (post-handover polish)
 
-| Area | Current state | Recommendation |
-|------|----------------|-----------------|
-| **Admin auth** | Single credentials (env `ADMIN_EMAIL` / `ADMIN_PASSWORD`). | For multiple staff: add role-based access or multiple users (e.g. NextAuth adapter + User model). |
-| **Viewing submissions** | No admin UI for contact form or volunteer applications (email only). | If you add DB storage for these, add admin pages to list, filter, and export. |
-| **Draft vs published** | News, events, publications, etc. have status; homepage uses “published” only. | Already correct; ensure all listing pages filter by `status: "published"` and admins use Draft for preview. |
-| **Media library** | Admin can upload and link media. | Confirm upload path and permissions in production; consider image resizing/optimisation (e.g. Next/Image + sizes). |
-| **Homepage CMS** | Home content (hero, testimonial, spotlight, stats, partners, etc.) editable via **Page Content → home**. | Document in README (already noted); optional: preview-before-publish for home. |
-
----
-
-## 5. Quick priority matrix
-
-| Priority | Category | Item |
-|----------|----------|------|
-| **High** | Design | Replace placeholder images and partner logos with real AGC assets. |
-| **High** | Features | Decide newsletter: add DB + optional Resend Audiences, or keep email-only and document process. |
-| **High** | Features | Decide volunteer applications: add DB + admin list, or keep email-only. |
-| **High** | Implementation | Ensure `RESEND_API_KEY` (and optional `RESEND_FROM_EMAIL`) are set in production. |
-| **Medium** | Design | Add skip-to-content link; optional per-page OG images for news/publications/events. |
-| **Medium** | Features | Move APP Summit content to CMS if non-developers need to edit. |
-| **Medium** | Features | Add RSS for news. |
-| **Medium** | Implementation | Make sitemap resilient when DB is missing at build (if you use static export). |
-| **Low** | Design | Align LanguageSelector/SearchModal with stone/accent; full a11y pass. |
-| **Low** | Features | Language selector: remove or implement i18n. |
-| **Low** | Features | Tags: re-add to news detail or remove tag routes. |
-| **Low** | Implementation | Redis-backed rate limiting for multi-instance; S3 (or similar) for media at scale. |
+| Priority | Area | Item |
+|----------|------|------|
+| **High** | Content | Replace placeholder testimonial/spotlight and hero images with approved assets. |
+| **High** | Ops | Production env: DB migrations, `AUTH_SECRET`, Resend, `NEXT_PUBLIC_SITE_URL`, backups for DB + uploads + media JSON. |
+| **Medium** | Design | Skip link; OG images on key templates; resolve language selector (remove or implement). |
+| **Medium** | Product | APP Summit CMS + registration decision; multi-user admin if team > 1. |
+| **Low** | Design | Full token alignment (slate → stone); exhaustive a11y sweep. |
+| **Low** | Infra | S3 media; Redis everywhere for rate limit. |
 
 ---
 
-## 6. References
+## G. References
 
-- **Content & env:** `docs/GAPS-PHASES.md`, `README.md`
-- **UI system:** `docs/UI-SITEWIDE.md`, `docs/UX-ENHANCEMENT-PHASES.md`
-- **APIs:** `src/app/api/` (contact, applications, newsletter, events/register, search, etc.)
-- **Schema:** `prisma/schema.prisma` (Event, News, Team, Publication, Program, Project, Partner, PageContent, EventRegistration; no NewsletterSignup or VolunteerApplication yet)
+| Doc | Purpose |
+|-----|---------|
+| `README.md` | Local setup, env, deployment entrypoints |
+| `docs/GAPS-PHASES.md` | Image/social/env phased content notes |
+| `docs/UI-SITEWIDE.md`, `docs/UX-A11Y.md`, `docs/UX-ENHANCEMENT-PHASES.md` | UI and accessibility conventions |
+| `docs/DOCKER-DEPLOYMENT.md`, root `docs/COOLIFY-DEPLOY.md` | Hosting |
+| `prisma/schema.prisma` | All content + submission models |
+
+---
+
+### Schema note (obsolete lines in older gap lists)
+
+The database includes among others: `NewsletterSignup`, `VolunteerApplication`, `ContactSubmission`, `PartnershipInquiry`, `JoinUsInquiry`, `EventRegistration`, plus full CMS models. Any older doc that says “newsletter/applications/contact are email-only with no DB” is **out of date**.

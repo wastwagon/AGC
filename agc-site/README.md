@@ -12,6 +12,8 @@ A modern, professional website for the Africa Governance Centre — an independe
 
 **UX / accessibility (mobile nav, admin patterns, loading states):** see [`docs/UX-A11Y.md`](./docs/UX-A11Y.md).
 
+**Design/feature gaps and handover checklist:** see [`docs/GAPS-DESIGN-FEATURES-FUNCTIONALITY.md`](./docs/GAPS-DESIGN-FEATURES-FUNCTIONALITY.md).
+
 ## Local Development
 
 ### Option 1: Direct (Recommended for development)
@@ -67,7 +69,7 @@ All content (events, news, team, publications, programs, projects, partners, pag
 
 **Homepage** hero, testimonial, fellow spotlight, reach/stats, hero slider images, and partner strip: **Admin → Page Content → edit `home`** (or open `/admin/pages/home/edit`). While status is **Draft**, the live site uses defaults from code; set **Published** to apply your edits. Sign in with `ADMIN_EMAIL` and `ADMIN_PASSWORD` from `.env.local`.
 
-**Submissions** (newsletter signups, volunteer applications, contact form): **Admin → Submissions**. Entries are stored in the database; email notifications are still sent when `RESEND_API_KEY` is set.
+**Submissions** (newsletter, volunteer/staff/fellow applications, contact, partnership, work-with-us): **Admin → Submissions**. Entries are stored in the database; staff email notifications are sent when `RESEND_API_KEY` is set (submissions are still saved if email fails).
 
 **Replacing images:** Upload images via **Admin → Media** or directly inside each form’s **Image Picker** (Upload from computer). Then select the uploaded image to save its media ID in the field. Seed data uses placeholder paths (e.g. `/uploads/placeholder.svg`); replace these with your uploaded assets.
 
@@ -118,7 +120,7 @@ Copy `.env.example` to `.env.local` and configure:
 | `RESEND_API_KEY` | [Resend](https://resend.com) API key for contact form emails |
 | `RESEND_FROM_EMAIL` | Optional: verified sender email (default: onboarding@resend.dev) |
 
-Without `RESEND_API_KEY`, the contact form still works (logs to console) but won't send emails.
+Without `RESEND_API_KEY`, public forms still **save to the database** but notification emails are not sent (check **Admin → Submissions**).
 
 ## Project Structure
 
