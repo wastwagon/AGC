@@ -27,6 +27,7 @@ export async function GET(request: NextRequest) {
       "Organization",
       "Dietary Requirements",
       "Registration ID",
+      "Waitlisted",
       "Checked In",
       "Registered At",
     ];
@@ -38,6 +39,7 @@ export async function GET(request: NextRequest) {
       r.organization || "",
       r.dietaryReqs || "",
       r.registrationId,
+      r.waitlisted ? "Yes" : "No",
       r.checkedInAt ? "Yes" : "No",
       r.createdAt.toISOString(),
     ]);

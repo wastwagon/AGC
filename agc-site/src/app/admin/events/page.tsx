@@ -14,19 +14,40 @@ export default async function AdminEventsPage() {
     orderBy: { startDate: "desc" },
   });
   const slugs = dbEvents.map((e) => e.slug).filter(Boolean) as string[];
-  const counts = await prisma.eventRegistration.groupBy({
-    by: ["eventSlug"],
-    where: { eventSlug: { in: slugs } },
-    _count: { id: true },
-  });
-  const checkedInCounts = await prisma.eventRegistration.groupBy({
-    by: ["eventSlug"],
-    where: { eventSlug: { in: slugs }, checkedInAt: { not: null } },
-    _count: { id: true },
-  });
 
-  const countMap = Object.fromEntries(counts.map((c) => [c.eventSlug, c._count.id]));
-  const checkedInMap = Object.fromEntries(checkedInCounts.map((c) => [c.eventSlug, c._count.id]));
+  let countMap: Record<string, number> = {};
+  let confirmedMap: Record<string, number> = {};
+  let waitlistMap: Record<string, number> = {};
+  let checkedInMap: Record<string, number> = {};
+
+  if (slugs.length > 0) {
+    const [counts, confirmedOnly, waitlistOnly, checkedInCounts] = await Promise.all([
+      prisma.eventRegistration.groupBy({
+        by: ["eventSlug"],
+        where: { eventSlug: { in: slugs } },
+        _count: { id: true },
+      }),
+      prisma.eventRegistration.groupBy({
+        by: ["eventSlug"],
+        where: { eventSlug: { in: slugs }, waitlisted: false },
+        _count: { id: true },
+      }),
+      prisma.eventRegistration.groupBy({
+        by: ["eventSlug"],
+        where: { eventSlug: { in: slugs }, waitlisted: true },
+        _count: { id: true },
+      }),
+      prisma.eventRegistration.groupBy({
+        by: ["eventSlug"],
+        where: { eventSlug: { in: slugs }, checkedInAt: { not: null } },
+        _count: { id: true },
+      }),
+    ]);
+    countMap = Object.fromEntries(counts.map((c) => [c.eventSlug, c._count.id]));
+    confirmedMap = Object.fromEntries(confirmedOnly.map((c) => [c.eventSlug, c._count.id]));
+    waitlistMap = Object.fromEntries(waitlistOnly.map((c) => [c.eventSlug, c._count.id]));
+    checkedInMap = Object.fromEntries(checkedInCounts.map((c) => [c.eventSlug, c._count.id]));
+  }
 
   return (
     <div>
@@ -56,6 +77,8 @@ export default async function AdminEventsPage() {
         {dbEvents.map((event) => {
           const slug = event.slug;
           const total = slug ? countMap[slug] ?? 0 : 0;
+          const confirmed = slug ? confirmedMap[slug] ?? 0 : 0;
+          const waitlist = slug ? waitlistMap[slug] ?? 0 : 0;
           const checkedIn = slug ? checkedInMap[slug] ?? 0 : 0;
 
           return (
@@ -94,17 +117,33 @@ export default async function AdminEventsPage() {
                 <DeleteButton action={deleteEvent.bind(null, event.id)} label="Delete event" confirmMessage="Delete this event and all its registrations? This cannot be undone." />
                 <div className="flex items-center gap-2 text-slate-600">
                   <Users className="h-4 w-4" />
-                  <span>
-                    {checkedIn}/{total} checked in
+                  <span className="text-sm">
+                    {checkedIn}/{confirmed > 0 ? confirmed : total || "—"} checked in
+                    {slug && total > 0 ? (
+                      <span className="text-slate-500">
+                        {" "}
+                        · {confirmed} confirmed
+                        {waitlist > 0 ? ` · ${waitlist} waitlist` : ""}
+                      </span>
+                    ) : null}
                   </span>
                 </div>
                 {slug && (
-                  <Link
-                    href={`/admin/events/${slug}`}
-                    className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200"
-                  >
-                    View Registrations
-                  </Link>
+                  <>
+                    <Link
+                      href={`/admin/events/scan?event=${encodeURIComponent(slug)}`}
+                      className="inline-flex min-h-[44px] items-center gap-1.5 rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+                    >
+                      <QrCode className="h-4 w-4 shrink-0" aria-hidden />
+                      Scan this event
+                    </Link>
+                    <Link
+                      href={`/admin/events/${slug}`}
+                      className="rounded-lg bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 hover:bg-slate-200"
+                    >
+                      View Registrations
+                    </Link>
+                  </>
                 )}
               </div>
             </div>
