@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import type { LucideIcon } from "lucide-react";
 import {
   Home,
@@ -20,7 +19,6 @@ import {
 } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import type { SiteSettings } from "@/lib/site-settings";
-import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { useMobileNav } from "./MobileNavContext";
 
 const drawerIconByHref: Record<string, LucideIcon> = {
@@ -38,13 +36,7 @@ function drawerIconForHref(href: string): LucideIcon {
   return drawerIconByHref[href] ?? Layers;
 }
 
-export function MobileDrawer({
-  siteSettings,
-  brandLogoSrc,
-}: {
-  siteSettings: SiteSettings;
-  brandLogoSrc: string;
-}) {
+export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
   const primaryNav = siteSettings.chrome.nav;
   const chrome = siteSettings.chrome;
   const { mobileOpen, setMobileOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
@@ -124,18 +116,8 @@ export function MobileDrawer({
         }`}
         aria-hidden={!mobileOpen}
       >
-        {/* Header — fixed strip */}
-        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-4 py-3.5">
-          <Link href="/" className="flex min-w-0 items-center gap-2.5" onClick={() => setMobileOpen(false)}>
-            <Image
-              src={brandLogoSrc}
-              alt=""
-              width={120}
-              height={36}
-              className={`h-8 w-auto object-contain opacity-95 ${brandLogoSrc === "/agc-logo.png" ? "brightness-0 invert" : ""}`}
-              unoptimized={preferUnoptimizedImage(brandLogoSrc)}
-            />
-          </Link>
+        {/* Header — close */}
+        <div className="flex shrink-0 items-center justify-end gap-2 border-b border-white/10 px-4 py-3.5">
           <button
             ref={closeBtnRef}
             type="button"

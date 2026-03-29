@@ -36,8 +36,14 @@ const nextConfig: NextConfig = {
   output: "standalone",
   images: {
     remotePatterns: buildImageRemotePatterns(),
-    /** Media library files live under /uploads/*; be explicit for the image optimizer. */
-    localPatterns: [{ pathname: "/uploads/**", search: "" }],
+    /**
+     * Local paths allowed for `next/image` optimization. When this list is set, anything
+     * else under `public/` returns 400 from `/_next/image` (e.g. `/agc-logo.png` in admin).
+     */
+    localPatterns: [
+      { pathname: "/uploads/**", search: "" },
+      { pathname: "/agc-logo.png", search: "" },
+    ],
     /**
      * Allows the optimizer to fetch same-origin URLs that resolve to loopback/private IPs (dev)
      * and Docker/internal networks (production). Without this, some deployments return 400 for
