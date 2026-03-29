@@ -16,7 +16,13 @@ import {
   CircleUserRound,
   Inbox,
   Tags,
+  Mail,
+  UserPlus,
+  MessageSquare,
 } from "lucide-react";
+import { auth } from "@/auth";
+import { redirect } from "next/navigation";
+import { prisma } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 
@@ -39,11 +45,84 @@ const sections = [
   { href: "/admin/settings", label: "Website Settings", icon: Settings, desc: "Run migrations and seed manually" },
 ];
 
-export default function AdminDashboardPage() {
+const snapshotItems = [
+  { key: "newsletter", label: "Newsletter", icon: Mail, countKey: "newsletter" as const },
+  { key: "applications", label: "Applications", icon: UserPlus, countKey: "applications" as const },
+  { key: "partnership", label: "Partnership", icon: Handshake, countKey: "partnership" as const },
+  { key: "joinus", label: "Work with us", icon: Briefcase, countKey: "joinUs" as const },
+  { key: "contact", label: "Contact", icon: MessageSquare, countKey: "contact" as const },
+] as const;
+
+export default async function AdminDashboardPage() {
+  const session = await auth();
+  if (!session?.user) redirect("/admin/login");
+
+  let counts = {
+    newsletter: 0,
+    applications: 0,
+    partnership: 0,
+    joinUs: 0,
+    contact: 0,
+  };
+  try {
+    const [newsletter, applications, partnership, joinUs, contact] = await prisma.$transaction([
+      prisma.newsletterSignup.count(),
+      prisma.volunteerApplication.count(),
+      prisma.partnershipInquiry.count(),
+      prisma.joinUsInquiry.count(),
+      prisma.contactSubmission.count(),
+    ]);
+    counts = { newsletter, applications, partnership, joinUs, contact };
+  } catch {
+    /* dashboard still usable if DB unavailable */
+  }
+
+  const inboxTotal =
+    counts.newsletter + counts.applications + counts.partnership + counts.joinUs + counts.contact;
+
   return (
     <div>
       <h1 className="font-serif text-2xl font-bold text-slate-900">Admin Dashboard</h1>
       <p className="mt-2 text-slate-600">Manage all site content from one place.</p>
+
+      <section className="mt-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div>
+            <h2 className="font-semibold text-slate-900">Submission inbox</h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Stored form data (no auto-expiry).{" "}
+              <Link href="/admin/submissions" className="font-medium text-accent-600 hover:underline">
+                Open submissions
+              </Link>
+            </p>
+          </div>
+          <p className="text-sm text-slate-600">
+            <span className="font-semibold tabular-nums text-slate-900">{inboxTotal}</span> total
+          </p>
+        </div>
+        <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+          {snapshotItems.map((item) => {
+            const Icon = item.icon;
+            const n = counts[item.countKey];
+            return (
+              <li key={item.key}>
+                <Link
+                  href="/admin/submissions"
+                  className="flex items-center gap-3 rounded-lg border border-slate-100 bg-slate-50/80 px-3 py-3 transition-colors hover:border-accent-200 hover:bg-accent-50/50"
+                >
+                  <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-accent-600 shadow-sm">
+                    <Icon className="h-5 w-5" aria-hidden />
+                  </span>
+                  <span className="min-w-0">
+                    <span className="block text-xs font-medium uppercase tracking-wide text-slate-500">{item.label}</span>
+                    <span className="text-lg font-semibold tabular-nums text-slate-900">{n}</span>
+                  </span>
+                </Link>
+              </li>
+            );
+          })}
+        </ul>
+      </section>
 
       <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {sections.map((item) => {

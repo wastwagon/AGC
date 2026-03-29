@@ -174,7 +174,8 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
           <>
             Newsletter, applications, partnership and career inquiries, and contact messages. Notifications use Resend when{" "}
             <code className="rounded bg-slate-100 px-1">RESEND_API_KEY</code> is set; records are always stored first.
-            Export CSV for archives. Delete entries here for retention — there is no automatic expiry.
+            Export CSV for archives. Deleting a row (newsletter, application, partnership, work-with-us, or contact)
+            removes it permanently from the database — there is no automatic expiry or anonymisation job.
           </>
         }
       />
