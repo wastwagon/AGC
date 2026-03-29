@@ -12,6 +12,12 @@ export async function updateHomePageContent(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
 
+  const existingRow = await prisma.pageContent.findUnique({ where: { slug: "home" } });
+  const prevJson: Record<string, unknown> =
+    existingRow?.contentJson && typeof existingRow.contentJson === "object" && !Array.isArray(existingRow.contentJson)
+      ? { ...(existingRow.contentJson as Record<string, unknown>) }
+      : {};
+
   const partnersRaw = String(formData.get("partners") ?? "")
     .split("\n")
     .map((s) => s.trim())
@@ -83,7 +89,8 @@ export async function updateHomePageContent(formData: FormData) {
   const status = contentJson.status === "draft" ? "draft" : "published";
   delete contentJson.status;
 
-  const json = JSON.parse(JSON.stringify(contentJson)) as Prisma.InputJsonValue;
+  const merged = { ...prevJson, ...contentJson };
+  const json = JSON.parse(JSON.stringify(merged)) as Prisma.InputJsonValue;
 
   try {
     await prisma.pageContent.upsert({

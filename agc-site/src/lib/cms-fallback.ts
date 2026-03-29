@@ -1,9 +1,11 @@
 import { prisma } from "@/lib/db";
 import type { CmsEvent, CmsNews, CmsPublication } from "@/lib/content";
 
+const allowBundledDemo = process.env.BUILD_WITHOUT_DB === "1";
+
 /**
- * When the CMS has rows but none are published, public pages should not show
- * bundled demo content from code — show empty state + draft notice instead.
+ * Public listings use the database only. Bundled “demo” arrays from code are used
+ * only when BUILD_WITHOUT_DB=1 (e.g. Next.js build without Postgres).
  */
 export async function resolveNewsForPublic(
   publishedItems: CmsNews[],
@@ -15,9 +17,11 @@ export async function resolveNewsForPublic(
     const published = await prisma.news.count({ where: { status: "published" } });
     if (total > 0 && published === 0) return { items: [], cmsDraftsOnly: true };
   } catch {
-    /* build without DB or connection failure — use static fallback */
+    if (allowBundledDemo) return { items: fallback, cmsDraftsOnly: false };
+    return { items: [], cmsDraftsOnly: false };
   }
-  return { items: fallback, cmsDraftsOnly: false };
+  if (allowBundledDemo) return { items: fallback, cmsDraftsOnly: false };
+  return { items: [], cmsDraftsOnly: false };
 }
 
 export async function resolveEventsForPublic(
@@ -30,9 +34,11 @@ export async function resolveEventsForPublic(
     const published = await prisma.event.count({ where: { status: "published" } });
     if (total > 0 && published === 0) return { items: [], cmsDraftsOnly: true };
   } catch {
-    /* build without DB or connection failure */
+    if (allowBundledDemo) return { items: fallback, cmsDraftsOnly: false };
+    return { items: [], cmsDraftsOnly: false };
   }
-  return { items: fallback, cmsDraftsOnly: false };
+  if (allowBundledDemo) return { items: fallback, cmsDraftsOnly: false };
+  return { items: [], cmsDraftsOnly: false };
 }
 
 export async function resolvePublicationsForPublic(
@@ -45,7 +51,9 @@ export async function resolvePublicationsForPublic(
     const published = await prisma.publication.count({ where: { status: "published" } });
     if (total > 0 && published === 0) return { items: [], cmsDraftsOnly: true };
   } catch {
-    /* schema mismatch or DB unavailable at build */
+    if (allowBundledDemo) return { items: fallback, cmsDraftsOnly: false };
+    return { items: [], cmsDraftsOnly: false };
   }
-  return { items: fallback, cmsDraftsOnly: false };
+  if (allowBundledDemo) return { items: fallback, cmsDraftsOnly: false };
+  return { items: [], cmsDraftsOnly: false };
 }

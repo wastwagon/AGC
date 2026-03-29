@@ -23,6 +23,18 @@ Use this as a sign-off list for whoever operates the site after build.
 
 ---
 
+## B1. CMS-first homepage & listings (Phase 6)
+
+- **Homepage** public copy is merged from published `page_content.slug = home` over **bootstrap defaults** (`src/lib/cms-bootstrap.ts`). Draft or missing row → empty sections on the live site. **Admin → Home settings** edits CTA band, news teaser, APP Summit teaser, and all existing hero/stats blocks.
+- **Three pillar cards** under the hero read **Programs / Projects / Advisory** titles and descriptions from **`our-work`** page content plus **`homePillarIntro`** and **`pillarCardImages`** (editable under **Admin → Page Content → edit `our-work`**).
+- **News / events** on the home page use **only published database rows**; bundled demo lists appear only when `BUILD_WITHOUT_DB=1` (CI/build without Postgres).
+- **Hero carousel**: no automatic Unsplash/placeholder slide — empty slider → gradient-only hero (`HeroConsultar`). Upload images in **Media** and list them in Home settings.
+- **APP Summit** page: hero image is optional; gradient fallback when unset. CMS remains `app-summit` slug.
+
+After pulling this phase, run **`npm run db:seed`** on a **new** environment, or open **Home settings** and **save** once so `content_json` includes the new keys. Existing DBs without those keys still inherit bootstrap text for missing sections until you override in admin.
+
+---
+
 ## B. What is complete (website + admin)
 
 These are **in code** and considered part of the delivered product:

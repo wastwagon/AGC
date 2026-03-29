@@ -2,7 +2,6 @@
 
 import Link from "next/link";
 import type { HomePageCms } from "@/lib/home-page-data";
-import { heroContent as defaultHero } from "@/data/content";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
 
@@ -32,21 +31,33 @@ type HeroProps = {
   sliderImages: string[];
 };
 
+const EMPTY_HERO: HomePageCms["heroContent"] = {
+  eyebrow: "",
+  title: "",
+  subtitle: "",
+  cta: "",
+  ctaHref: "/",
+  ctaSecondary: "",
+  ctaSecondaryHref: "/",
+};
+
 export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
-  const heroContent = heroProp ?? defaultHero;
+  const heroContent = heroProp ?? EMPTY_HERO;
   const [current, setCurrent] = useState(0);
   const reducedMotion = useSyncExternalStore(
     subscribePrefersReducedMotion,
     getPrefersReducedMotionSnapshot,
     getPrefersReducedMotionServerSnapshot
   );
-  const slides = sliderImages.length > 0 ? sliderImages : ["/uploads/placeholder.svg"];
+  const slides = sliderImages.filter((s) => typeof s === "string" && s.length > 0);
 
   const next = useCallback(() => {
+    if (slides.length <= 1) return;
     setCurrent((c) => (c + 1) % slides.length);
   }, [slides.length]);
 
   const prev = useCallback(() => {
+    if (slides.length <= 1) return;
     setCurrent((c) => (c - 1 + slides.length) % slides.length);
   }, [slides.length]);
 
@@ -58,27 +69,31 @@ export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
 
   return (
     <section className="group relative flex min-h-[480px] w-full flex-col overflow-hidden sm:min-h-[520px] lg:min-h-[min(85vh,720px)]">
-      {/* Slides */}
-      {slides.map((src, i) => (
-        <div
-          key={i}
-          className="absolute inset-0 transition-opacity duration-1000 motion-reduce:transition-none"
-          style={{
-            opacity: i === current ? 1 : 0,
-            zIndex: i === current ? 1 : 0,
-          }}
-        >
+      {/* Photo slides from CMS, or gradient-only when no images are configured */}
+      {slides.length === 0 ? (
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-stone-900 via-accent-900 to-accent-700" aria-hidden />
+      ) : (
+        slides.map((src, i) => (
           <div
-            className="h-full w-full bg-cover bg-center"
-            style={{ backgroundImage: `url(${src})` }}
-            aria-hidden
-          />
-          <div
-            className="absolute inset-0 bg-gradient-to-br from-stone-950/88 via-accent-900/75 to-accent-600/32"
-            aria-hidden
-          />
-        </div>
-      ))}
+            key={src + i}
+            className="absolute inset-0 transition-opacity duration-1000 motion-reduce:transition-none"
+            style={{
+              opacity: i === current ? 1 : 0,
+              zIndex: i === current ? 1 : 0,
+            }}
+          >
+            <div
+              className="h-full w-full bg-cover bg-center"
+              style={{ backgroundImage: `url(${src})` }}
+              aria-hidden
+            />
+            <div
+              className="absolute inset-0 bg-gradient-to-br from-stone-950/88 via-accent-900/75 to-accent-600/32"
+              aria-hidden
+            />
+          </div>
+        ))
+      )}
 
       {/* Main copy — left column, vertically centred */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 pt-24 pb-8 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32 lg:pb-12">

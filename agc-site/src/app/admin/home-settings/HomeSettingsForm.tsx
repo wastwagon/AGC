@@ -272,6 +272,38 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
         </div>
       </section>
 
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Mid-page CTA band</h2>
+        <p className="mt-1 text-sm text-slate-500">Accent section above events (formerly hard-coded on the homepage).</p>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <input name="ctaBandEyebrow" defaultValue={home.homeCtaBand.eyebrow} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Eyebrow" />
+          <input name="ctaBandTitle" defaultValue={home.homeCtaBand.title} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Headline" />
+          <textarea name="ctaBandBody" defaultValue={home.homeCtaBand.body} rows={4} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Body" />
+          <input name="ctaBandPrimaryCta" defaultValue={home.homeCtaBand.primaryCta} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Primary button label" />
+          <input name="ctaBandPrimaryHref" defaultValue={home.homeCtaBand.primaryHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Primary href" />
+          <input name="ctaBandSecondaryCta" defaultValue={home.homeCtaBand.secondaryCta} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Secondary button label" />
+          <input name="ctaBandSecondaryHref" defaultValue={home.homeCtaBand.secondaryHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Secondary href" />
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Homepage — news teaser</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <input name="homeNewsTitle" defaultValue={home.homeNewsTeaser.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Section title" />
+          <input name="homeNewsSubtitle" defaultValue={home.homeNewsTeaser.subtitle} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Subtitle" />
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Homepage — APP Summit teaser</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2">
+          <input name="homeAppSummitTitle" defaultValue={home.homeAppSummitTeaser.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Title" />
+          <input name="homeAppSummitDescription" defaultValue={home.homeAppSummitTeaser.description} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Description" />
+          <input name="homeAppSummitCtaLabel" defaultValue={home.homeAppSummitTeaser.ctaLabel} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Button label" />
+          <input name="homeAppSummitCtaHref" defaultValue={home.homeAppSummitTeaser.ctaHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Button href" />
+        </div>
+      </section>
+
       <button type="submit" className="rounded-lg bg-accent-600 px-6 py-2 font-medium text-white hover:bg-accent-700">Save Home Settings</button>
 
       <ImagePicker open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={onSelectMedia} />

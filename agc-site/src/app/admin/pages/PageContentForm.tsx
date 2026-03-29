@@ -508,6 +508,50 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 />
               </div>
             </div>
+            <div className="mt-4 rounded-md border border-amber-200 bg-amber-50/40 p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Homepage pillar cards</p>
+              <p className="mt-1 text-[11px] text-slate-500">Three cards directly under the hero; copy comes from Programs / Projects / Advisory blocks below.</p>
+              <label className="mt-2 block text-xs font-medium text-slate-600">Intro line (optional)</label>
+              <input
+                type="text"
+                value={typeof parsedJson.homePillarIntro === "string" ? parsedJson.homePillarIntro : ""}
+                onChange={(e) => updateJsonField("homePillarIntro", e.target.value)}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                placeholder="e.g. Three ways we show up alongside partners"
+              />
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Programs card image</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["pillarCardImages", "programs"])}
+                    onChange={(e) => updateNestedString(["pillarCardImages", "programs"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    placeholder="media-… or /uploads/…"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Projects card image</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["pillarCardImages", "projects"])}
+                    onChange={(e) => updateNestedString(["pillarCardImages", "projects"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    placeholder="media-… or /uploads/…"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Advisory card image</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["pillarCardImages", "advisory"])}
+                    onChange={(e) => updateNestedString(["pillarCardImages", "advisory"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    placeholder="media-… or /uploads/…"
+                  />
+                </div>
+              </div>
+            </div>
             <div className="rounded-md border border-slate-200 bg-white p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Approach section</p>
               <div className="mt-2 grid gap-2">

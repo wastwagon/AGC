@@ -219,6 +219,19 @@ export const homeSettingsFormSchema = z.object({
   spotlightInitials: z.string().min(1).max(10),
   spotlightCtaLabel: z.string().min(1).max(120),
   spotlightCtaHref: z.string().min(1).max(255),
+  ctaBandEyebrow: z.string().max(200).optional(),
+  ctaBandTitle: z.string().max(600).optional(),
+  ctaBandBody: z.string().max(2500).optional(),
+  ctaBandPrimaryCta: z.string().max(120).optional(),
+  ctaBandPrimaryHref: z.string().max(255).optional(),
+  ctaBandSecondaryCta: z.string().max(120).optional(),
+  ctaBandSecondaryHref: z.string().max(255).optional(),
+  homeNewsTitle: z.string().max(255).optional(),
+  homeNewsSubtitle: z.string().max(500).optional(),
+  homeAppSummitTitle: z.string().max(255).optional(),
+  homeAppSummitDescription: z.string().max(500).optional(),
+  homeAppSummitCtaLabel: z.string().max(120).optional(),
+  homeAppSummitCtaHref: z.string().max(255).optional(),
 });
 
 export const aboutSettingsFormSchema = z.object({

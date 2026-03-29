@@ -3,6 +3,8 @@ import type { HomePageCms } from "@/lib/home-page-data";
 
 export function HomeSpotlightStory({ story }: { story: HomePageCms["homeSpotlightStory"] }) {
   const s = story;
+  if (!s.headline?.trim()) return null;
+
   return (
     <section className="border-y border-stone-200/80 bg-[#fffcf7] py-14 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">

@@ -15,7 +15,8 @@ export function AppSummitClient({
   siteSettings,
 }: {
   content: SummitContent;
-  heroImage: string;
+  /** Omit for gradient-only hero when no CMS image is set */
+  heroImage?: string;
   siteSettings: SiteSettings;
 }) {
   const [activeDay, setActiveDay] = useState(0);

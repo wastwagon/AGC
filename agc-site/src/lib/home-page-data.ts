@@ -1,81 +1,61 @@
 import { prisma } from "@/lib/db";
-import {
-  heroContent,
-  homeTestimonial,
-  homeSpotlightStory,
-  homeImpactStats,
-  homeImpactMethodology,
-  heroPartnerStrip,
-} from "@/data/content";
-import { heroSliderImages as defaultHeroSliderImages } from "@/data/images";
+import type { HomePageCms } from "@/lib/home-page-types";
+import { getBootstrapHomePageCms } from "@/lib/cms-bootstrap";
 
-export type HomePageCms = {
-  /** Hero carousel image URLs (from Media). When empty, fallback to env/default. */
-  heroSliderImages: string[];
-  heroContent: {
-    eyebrow: string;
-    title: string;
-    subtitle: string;
-    cta: string;
-    ctaHref: string;
-    ctaSecondary: string;
-    ctaSecondaryHref: string;
-  };
-  homeTestimonial: {
-    quote: string;
-    name: string;
-    title: string;
-    organization: string;
-    initials: string;
-  };
-  homeSpotlightStory: {
-    label: string;
-    headline: string;
-    paragraphs: string[];
-    name: string;
-    role: string;
-    initials: string;
-    ctaLabel: string;
-    ctaHref: string;
-  };
-  homeReach: { title: string; intro: string };
-  homeImpactMethodology: string;
-  homeImpactStats: { value: string; label: string; note: string }[];
-  heroPartnerStrip: string[];
-  /** Intro sentence beside partner list */
-  homePartnerBlurb: string;
-};
+export type { HomePageCms } from "@/lib/home-page-types";
 
-const DEFAULT_PARTNER_BLURB =
-  "Our work is always collaborative—we don't arrive with ready-made answers.";
-
-export function getDefaultHomePageCms(): HomePageCms {
+/** Merge base for the public site when CMS fields are missing — no marketing defaults. */
+export function emptyHomePageCms(): HomePageCms {
+  const emptyStat = { value: "", label: "", note: "" };
   return {
-    heroSliderImages: [...defaultHeroSliderImages],
+    heroSliderImages: [],
     heroContent: {
-      eyebrow: heroContent.eyebrow,
-      title: heroContent.title,
-      subtitle: heroContent.subtitle,
-      cta: heroContent.cta,
-      ctaHref: heroContent.ctaHref,
-      ctaSecondary: heroContent.ctaSecondary,
-      ctaSecondaryHref: heroContent.ctaSecondaryHref,
+      eyebrow: "",
+      title: "",
+      subtitle: "",
+      cta: "",
+      ctaHref: "/",
+      ctaSecondary: "",
+      ctaSecondaryHref: "/",
     },
-    homeTestimonial: { ...homeTestimonial },
+    homeTestimonial: { quote: "", name: "", title: "", organization: "", initials: "" },
     homeSpotlightStory: {
-      ...homeSpotlightStory,
-      paragraphs: [...homeSpotlightStory.paragraphs],
+      label: "",
+      headline: "",
+      paragraphs: [],
+      name: "",
+      role: "",
+      initials: "",
+      ctaLabel: "",
+      ctaHref: "/",
     },
-    homeReach: {
-      title: "The shape of our work",
-      intro:
-        "We measure ourselves by relationships and depth as much as by scale. Here is a snapshot—always happy to share more in conversation.",
+    homeReach: { title: "", intro: "" },
+    homeImpactMethodology: "",
+    homeImpactStats: [emptyStat, emptyStat, emptyStat, emptyStat],
+    heroPartnerStrip: [],
+    homePartnerBlurb: "",
+    homeCtaBand: {
+      eyebrow: "",
+      title: "",
+      body: "",
+      primaryCta: "",
+      primaryHref: "/",
+      secondaryCta: "",
+      secondaryHref: "/",
     },
-    homeImpactMethodology,
-    homeImpactStats: homeImpactStats.map((s) => ({ ...s })),
-    heroPartnerStrip: [...heroPartnerStrip],
-    homePartnerBlurb: DEFAULT_PARTNER_BLURB,
+    homeNewsTeaser: { title: "", subtitle: "" },
+    homeAppSummitTeaser: {
+      title: "",
+      description: "",
+      ctaLabel: "",
+      ctaHref: "/app-summit",
+    },
   };
+}
+
+/** Admin seed / first-time editor template (copy lives in DB after save). */
+export function getDefaultHomePageCms(): HomePageCms {
+  return getBootstrapHomePageCms();
 }
 
 function deepMergeHome(base: HomePageCms, patch: Record<string, unknown>): HomePageCms {
@@ -121,6 +101,18 @@ function deepMergeHome(base: HomePageCms, patch: Record<string, unknown>): HomeP
       Object.assign(out.homeReach, pv);
       continue;
     }
+    if (key === "homeCtaBand" && typeof pv === "object" && !Array.isArray(pv)) {
+      Object.assign(out.homeCtaBand, pv);
+      continue;
+    }
+    if (key === "homeNewsTeaser" && typeof pv === "object" && !Array.isArray(pv)) {
+      Object.assign(out.homeNewsTeaser, pv);
+      continue;
+    }
+    if (key === "homeAppSummitTeaser" && typeof pv === "object" && !Array.isArray(pv)) {
+      Object.assign(out.homeAppSummitTeaser, pv);
+      continue;
+    }
     if (key === "homeImpactMethodology" && typeof pv === "string") {
       out.homeImpactMethodology = pv;
       continue;
@@ -136,23 +128,28 @@ function deepMergeHome(base: HomePageCms, patch: Record<string, unknown>): HomeP
   return out;
 }
 
-/** Public homepage: merge DB `home` contentJson only when that row is published */
+/**
+ * Public homepage: published `home` JSON merged over bootstrap defaults.
+ * Missing keys in the DB (older rows) inherit bootstrap copy; explicit empty strings from admin win.
+ * Draft / missing row → empty shell so the live site does not show unpublished drafts.
+ */
 export async function getHomePageCms(): Promise<HomePageCms> {
-  const defaults = getDefaultHomePageCms();
-  if (process.env.BUILD_WITHOUT_DB === "1") return defaults;
+  if (process.env.BUILD_WITHOUT_DB === "1") {
+    return getBootstrapHomePageCms();
+  }
   const row = await prisma.pageContent.findUnique({ where: { slug: "home" } });
   if (row?.status !== "published" || !row.contentJson || typeof row.contentJson !== "object") {
-    return defaults;
+    return emptyHomePageCms();
   }
-  return deepMergeHome(defaults, row.contentJson as Record<string, unknown>);
+  return deepMergeHome(getBootstrapHomePageCms(), row.contentJson as Record<string, unknown>);
 }
 
-/** Admin editor: merge defaults with stored JSON (any status) */
+/** Admin editor: bootstrap template when empty, else merge stored JSON over bootstrap for missing keys. */
 export async function getHomePageCmsForEdit(): Promise<HomePageCms> {
-  const defaults = getDefaultHomePageCms();
+  const bootstrap = getBootstrapHomePageCms();
   const row = await prisma.pageContent.findUnique({ where: { slug: "home" } });
   if (!row?.contentJson || typeof row.contentJson !== "object") {
-    return defaults;
+    return bootstrap;
   }
-  return deepMergeHome(defaults, row.contentJson as Record<string, unknown>);
+  return deepMergeHome(bootstrap, row.contentJson as Record<string, unknown>);
 }

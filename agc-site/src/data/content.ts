@@ -72,10 +72,7 @@ export const homeImpactStats = [
 export const homeImpactMethodology =
   "Numbers describe our reach, not our worth. We report in full in our annual updates—ask us if you want the detail behind a figure.";
 
-/**
- * PLACEHOLDER — replace with approved quote + attribution after permission.
- * Wording reflects AGC’s actual lines of work: APPI, summits, nonpartisan evidence.
- */
+/** Homepage testimonial — edit live copy under Admin → Home settings (seed/bootstrap supplies initial text). */
 export const homeTestimonial = {
   quote:
     "The African Political Parties Initiative does not tell parties whom to elect—it asks how parties govern between ballots. After Accra, our national executive used the same evidence briefs AGC prepared for the summit to reopen a stalled debate on internal accountability. That is unusual continental work.",
@@ -85,10 +82,7 @@ export const homeTestimonial = {
   initials: "MA",
 };
 
-/**
- * PLACEHOLDER — swap for a real Research & Policy Fellow story or link to news.
- * Matches fellow call: APPI, Africa Governance Review, roundtables, policy advisory.
- */
+/** Fellow spotlight — edit under Admin → Home settings. */
 export const homeSpotlightStory = {
   label: "Fellow spotlight",
   headline: "Eight months with the team behind the Africa Governance Review",

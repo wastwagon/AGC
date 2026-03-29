@@ -64,6 +64,25 @@ export async function updateHomeSettings(formData: FormData) {
       ctaLabel: d.spotlightCtaLabel,
       ctaHref: d.spotlightCtaHref,
     },
+    homeCtaBand: {
+      eyebrow: d.ctaBandEyebrow ?? "",
+      title: d.ctaBandTitle ?? "",
+      body: d.ctaBandBody ?? "",
+      primaryCta: d.ctaBandPrimaryCta ?? "",
+      primaryHref: d.ctaBandPrimaryHref ?? "/get-involved",
+      secondaryCta: d.ctaBandSecondaryCta ?? "",
+      secondaryHref: d.ctaBandSecondaryHref ?? "/about",
+    },
+    homeNewsTeaser: {
+      title: d.homeNewsTitle ?? "",
+      subtitle: d.homeNewsSubtitle ?? "",
+    },
+    homeAppSummitTeaser: {
+      title: d.homeAppSummitTitle ?? "",
+      description: d.homeAppSummitDescription ?? "",
+      ctaLabel: d.homeAppSummitCtaLabel ?? "",
+      ctaHref: d.homeAppSummitCtaHref ?? "/app-summit",
+    },
   };
 
   try {

@@ -16,6 +16,7 @@ import {
   fallbackPublications,
 } from "../src/data/content";
 import { privacyPolicy, termsOfService } from "../src/data/legal";
+import { getBootstrapHomePageCms } from "../src/lib/cms-bootstrap";
 
 const prisma = new PrismaClient();
 
@@ -81,6 +82,10 @@ async function main() {
       slug: "home",
       title: "Homepage",
       status: "published",
+      contentJson: {
+        ...getBootstrapHomePageCms(),
+        heroSliderImages: ["/uploads/placeholder.svg"],
+      },
     },
     {
       slug: "site-settings",
@@ -128,7 +133,16 @@ async function main() {
       slug: "our-work",
       title: "Our Work",
       status: "published",
-      contentJson: { ...workContent, heroImage: "/uploads/placeholder.svg" },
+      contentJson: {
+        ...workContent,
+        heroImage: "/uploads/placeholder.svg",
+        homePillarIntro: "Three ways we show up alongside partners",
+        pillarCardImages: {
+          programs: "/uploads/placeholder.svg",
+          projects: "/uploads/placeholder.svg",
+          advisory: "/uploads/placeholder.svg",
+        },
+      },
     },
     {
       slug: "our-work-projects",
@@ -184,23 +198,7 @@ async function main() {
       },
     });
   }
-  // Home: set heroSliderImages in CMS so admin can edit/replace images (Admin → Page Content → home)
-  const homeRow = await prisma.pageContent.findUnique({ where: { slug: "home" } });
-  if (homeRow) {
-    const current = (homeRow.contentJson as Record<string, unknown>) ?? {};
-    await prisma.pageContent.update({
-      where: { slug: "home" },
-      data: {
-        contentJson: JSON.parse(
-          JSON.stringify({
-            ...current,
-            heroSliderImages: ["/uploads/placeholder.svg"],
-          })
-        ),
-      },
-    });
-  }
-  console.log(`  Page content: ${pages.length} pages (home has heroSliderImages)`);
+  console.log(`  Page content: ${pages.length} pages (home + our-work include pillar/slider defaults in CMS JSON)`);
 
   // Programs (image optional; set /uploads/... in Admin to replace)
   const programs = [
