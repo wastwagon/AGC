@@ -4,6 +4,7 @@ import { useFormStatus } from "react-dom";
 import { useState } from "react";
 import { ImagePlus } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
+import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
 import { createPartner, updatePartner } from "./actions";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 
@@ -26,7 +27,7 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
       disabled={pending}
       className="min-h-[44px] rounded-lg bg-accent-500 px-6 py-2 font-medium text-white hover:bg-accent-600 disabled:opacity-50"
     >
-      {pending ? "Saving…" : isEdit ? "Update" : "Create"}
+      {pending ? "Saving…" : isEdit ? "Save changes" : "Create"}
     </button>
   );
 }
@@ -111,6 +112,7 @@ export function PartnerForm({ item }: PartnerFormProps) {
 
       <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
+        {isEdit ? <AdminFormPreviewLink href="/">Preview on site</AdminFormPreviewLink> : null}
         <a
           href="/admin/partners"
           className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"

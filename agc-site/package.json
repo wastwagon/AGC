@@ -20,6 +20,10 @@
   "dependencies": {
     "@prisma/client": "^5.22.0",
     "@sentry/nextjs": "^10.44.0",
+    "@tiptap/extension-placeholder": "^3.21.0",
+    "@tiptap/pm": "^3.21.0",
+    "@tiptap/react": "^3.21.0",
+    "@tiptap/starter-kit": "^3.21.0",
     "clsx": "^2.1.1",
     "fuse.js": "^7.1.0",
     "html5-qrcode": "^2.3.8",

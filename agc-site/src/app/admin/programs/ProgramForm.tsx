@@ -4,6 +4,7 @@ import { useFormStatus } from "react-dom";
 import { useState } from "react";
 import { ImagePlus } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
+import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
 import { createProgram, updateProgram } from "./actions";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 
@@ -110,6 +111,7 @@ export function ProgramForm({ item }: ProgramFormProps) {
 
       <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
+        {isEdit ? <AdminFormPreviewLink href="/our-work/programs">Preview on site</AdminFormPreviewLink> : null}
         <a
           href="/admin/programs"
           className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"

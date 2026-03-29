@@ -5,10 +5,14 @@ import Link from "next/link";
 import { useState } from "react";
 import { ImagePlus } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
+import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
 import { createNews, updateNews } from "./actions";
 import { newsTags } from "@/data/content";
 import type { TaxonomyOption } from "@/data/taxonomy-defaults";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
+import { RichTextEditor } from "@/components/admin/RichTextEditor";
+import { useImageFieldPreview } from "@/hooks/useImageFieldPreview";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 type NewsFormProps = {
   categoryOptions: TaxonomyOption[];
@@ -35,7 +39,7 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
       disabled={pending}
       className="rounded-lg bg-accent-500 px-6 py-2 font-medium text-white hover:bg-accent-600 disabled:opacity-50"
     >
-      {pending ? "Saving…" : isEdit ? "Update" : "Create"}
+      {pending ? "Saving…" : isEdit ? "Save changes" : "Create"}
     </button>
   );
 }
@@ -45,6 +49,9 @@ export function NewsForm({ categoryOptions, item }: NewsFormProps) {
   const action = isEdit ? updateNews.bind(null, item.id) : createNews;
   const [image, setImage] = useState(item?.image ?? "");
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [contentHtml, setContentHtml] = useState(item?.content ?? "");
+  const [showContentPreview, setShowContentPreview] = useState(false);
+  const { previewUrl: imagePreviewUrl, loading: imagePreviewLoading } = useImageFieldPreview(image);
 
   const selectedCategories = new Set((item?.categories as string[] | null) || []);
 
@@ -52,6 +59,8 @@ export function NewsForm({ categoryOptions, item }: NewsFormProps) {
 
   return (
     <form action={action} className="space-y-6">
+      <input type="hidden" name="content" value={contentHtml} />
+
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-slate-700">
           Title *
@@ -101,6 +110,27 @@ export function NewsForm({ categoryOptions, item }: NewsFormProps) {
           </button>
         </div>
         <p className="mt-1 text-xs text-slate-500">Use Media ID (`media-...`) or a path like `/uploads/filename.jpg`.</p>
+        {imagePreviewLoading ? (
+          <p className="mt-2 text-xs text-slate-500">Loading preview…</p>
+        ) : imagePreviewUrl ? (
+          <div className="mt-3">
+            <p className="text-xs font-medium text-slate-600">Preview</p>
+            {/* eslint-disable-next-line @next/next/no-img-element -- Admin preview; bypass optimizer for /uploads */}
+            <img
+              src={imagePreviewUrl}
+              alt=""
+              className="mt-1 max-h-44 max-w-full rounded-lg border border-slate-200 bg-slate-50 object-contain object-left"
+            />
+          </div>
+        ) : image.trim() ? (
+          <p className="mt-2 text-xs text-amber-800">
+            No preview — for <code className="rounded bg-amber-100 px-1">media-…</code> IDs the file must exist in{" "}
+            <Link href="/admin/media" className="font-medium underline">
+              Media Library
+            </Link>
+            . You can also paste a <code className="rounded bg-amber-100 px-1">/uploads/…</code> URL.
+          </p>
+        ) : null}
       </div>
 
       <div>
@@ -117,16 +147,36 @@ export function NewsForm({ categoryOptions, item }: NewsFormProps) {
       </div>
 
       <div>
-        <label htmlFor="content" className="block text-sm font-medium text-slate-700">
-          Content (HTML allowed - sanitized on display)
-        </label>
-        <textarea
-          id="content"
-          name="content"
-          defaultValue={item?.content ?? ""}
-          rows={12}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-sm text-slate-900"
-        />
+        <div className="flex flex-wrap items-center justify-between gap-2">
+          <label htmlFor="news-content-editor" className="block text-sm font-medium text-slate-700">
+            Content
+          </label>
+          <button
+            type="button"
+            onClick={() => setShowContentPreview((v) => !v)}
+            className="text-sm font-medium text-accent-600 hover:text-accent-700"
+          >
+            {showContentPreview ? "Hide preview" : "Preview content"}
+          </button>
+        </div>
+        <p className="mt-0.5 text-xs text-slate-500">
+          Rich text (headings, lists, links). Output is sanitized on the public article page.
+        </p>
+        <div className="mt-2">
+          <RichTextEditor
+            key={item?.id ?? "new"}
+            editorId="news-content-editor"
+            initialHtml={item?.content ?? ""}
+            onHtmlChange={setContentHtml}
+            placeholder="Write the article…"
+          />
+        </div>
+        {showContentPreview ? (
+          <div
+            className="mt-3 rounded-lg border border-slate-200 bg-[#fffcf7] p-4 text-slate-800 [&_a]:text-accent-600 [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-slate-300 [&_blockquote]:pl-4 [&_h2]:mt-4 [&_h2]:text-xl [&_h2]:font-bold [&_h3]:mt-3 [&_h3]:text-lg [&_h3]:font-semibold [&_h4]:mt-2 [&_h4]:font-semibold [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc"
+            dangerouslySetInnerHTML={{ __html: sanitizeHtml(contentHtml) }}
+          />
+        ) : null}
       </div>
 
       <div>
@@ -214,6 +264,9 @@ export function NewsForm({ categoryOptions, item }: NewsFormProps) {
 
       <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
+        {isEdit && item.slug ? (
+          <AdminFormPreviewLink href={`/news/${encodeURIComponent(item.slug)}`}>Preview on site</AdminFormPreviewLink>
+        ) : null}
         <Link
           href="/admin/news"
           className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"

@@ -17,7 +17,7 @@ export default async function AdminNewsNewPage() {
       <AdminFormErrorSuspense />
       <AdminFormSuccessSuspense />
       <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
-        <NewsForm categoryOptions={taxonomy.newsCategories} />
+        <NewsForm key="new" categoryOptions={taxonomy.newsCategories} />
       </div>
     </div>
   );

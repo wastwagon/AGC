@@ -10,6 +10,7 @@ import { fallbackNews } from "@/data/content";
 import { getNewsCategorySlugs, getCategoryLabel } from "@/lib/news";
 import type { CmsNews } from "@/lib/content";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 
 export const revalidate = 60;
@@ -64,6 +65,7 @@ export default async function NewsDetailPage({ params }: Props) {
           src={imageUrl}
           alt={item.title}
           fill
+          unoptimized={preferUnoptimizedImage(imageUrl)}
           className="object-cover opacity-[0.72]"
           sizes="100vw"
           priority

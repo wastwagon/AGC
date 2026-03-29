@@ -2,11 +2,13 @@
 
 import { useFormStatus } from "react-dom";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { ImagePlus, Plus, Trash2 } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { createEvent, updateEvent } from "./actions";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
+import { useImageFieldPreview } from "@/hooks/useImageFieldPreview";
+import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
 
 export type EventTeamOption = { id: number; name: string };
 
@@ -65,7 +67,7 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
       disabled={pending}
       className="min-h-[44px] rounded-lg bg-accent-500 px-6 py-3 font-medium text-white hover:bg-accent-600 disabled:opacity-50"
     >
-      {pending ? "Saving…" : isEdit ? "Update" : "Create"}
+      {pending ? "Saving…" : isEdit ? "Save changes" : "Create"}
     </button>
   );
 }
@@ -75,50 +77,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
   const action = isEdit ? updateEvent.bind(null, item.id) : createEvent;
   const [image, setImage] = useState(item?.image ?? "");
   const [pickerOpen, setPickerOpen] = useState(false);
-  const [imagePreviewUrl, setImagePreviewUrl] = useState<string | null>(null);
-  const [imagePreviewLoading, setImagePreviewLoading] = useState(false);
-
-  useEffect(() => {
-    const v = image.trim();
-    if (!v) {
-      setImagePreviewUrl(null);
-      setImagePreviewLoading(false);
-      return;
-    }
-    if (v.startsWith("http://") || v.startsWith("https://")) {
-      setImagePreviewUrl(v);
-      setImagePreviewLoading(false);
-      return;
-    }
-    if (v.startsWith("/")) {
-      setImagePreviewUrl(v);
-      setImagePreviewLoading(false);
-      return;
-    }
-    if (!v.startsWith("media-")) {
-      setImagePreviewUrl(null);
-      setImagePreviewLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setImagePreviewLoading(true);
-    setImagePreviewUrl(null);
-    (async () => {
-      try {
-        const res = await fetch("/api/media");
-        const data = (await res.json()) as { items?: MediaItem[] };
-        const found = data.items?.find((m) => m.id === v);
-        if (!cancelled) setImagePreviewUrl(found?.url ?? null);
-      } catch {
-        if (!cancelled) setImagePreviewUrl(null);
-      } finally {
-        if (!cancelled) setImagePreviewLoading(false);
-      }
-    })();
-    return () => {
-      cancelled = true;
-    };
-  }, [image]);
+  const { previewUrl: imagePreviewUrl, loading: imagePreviewLoading } = useImageFieldPreview(image);
 
   const formatDate = (d: Date) => d.toISOString().slice(0, 16);
   const formatDateOnly = (d: Date) => d.toISOString().slice(0, 10);
@@ -513,6 +472,11 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
 
       <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
+        {isEdit && item?.slug ? (
+          <AdminFormPreviewLink href={`/events/register/${encodeURIComponent(item.slug)}`}>
+            Preview on site
+          </AdminFormPreviewLink>
+        ) : null}
         <Link
           href="/admin/events"
           className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"

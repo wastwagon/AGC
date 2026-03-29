@@ -2,6 +2,7 @@
 
 import { useFormStatus } from "react-dom";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
+import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
 import { updateHomePageContent } from "./actions-home";
 import type { HomePageCms } from "@/lib/home-page-data";
 
@@ -235,6 +236,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
 
       <AdminFormStickyActions>
         <SubmitButton />
+        <AdminFormPreviewLink href="/">Preview on site</AdminFormPreviewLink>
       </AdminFormStickyActions>
     </form>
   );

@@ -5,6 +5,8 @@ import { useFormStatus } from "react-dom";
 import { ArrowDown, ArrowUp, ChevronDown, ChevronRight, GripVertical, ImagePlus } from "lucide-react";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
+import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
+import { publicPathForPageSlug } from "@/lib/admin-public-preview";
 import { updatePageContent } from "./actions";
 
 type PageContentFormProps = {
@@ -33,7 +35,7 @@ function SubmitButton() {
       disabled={pending}
       className="min-h-[44px] rounded-lg bg-accent-500 px-6 py-2 font-medium text-white hover:bg-accent-600 disabled:opacity-50"
     >
-      {pending ? "Saving…" : "Update"}
+      {pending ? "Saving…" : "Save changes"}
     </button>
   );
 }
@@ -1804,6 +1806,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
 
       <AdminFormStickyActions>
         <SubmitButton />
+        <AdminFormPreviewLink href={publicPathForPageSlug(item.slug)}>Preview on site</AdminFormPreviewLink>
         <a
           href="/admin/pages"
           className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
