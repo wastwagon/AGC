@@ -194,7 +194,7 @@ export const workContent = {
   programs: {
     title: "Programs",
     subtitle: "Our core focus areas",
-    description: "Through forums and expert roundtables, the African Governance Centre promotes a culture of collaboration, knowledge sharing, and collective action to advance good governance practices and support economic transformation in Africa.",
+    description: "Through forums and expert roundtables, the Africa Governance Centre promotes a culture of collaboration, knowledge sharing, and collective action to advance good governance practices and support economic transformation in Africa.",
     cards: [
       { title: "Youth and Women Empowerment Workshops", description: "AGC organizes workshops and forums dedicated to empowering youth and women in governance and leadership positions." },
       { title: "Research and Policy Forums", description: "AGC hosts research and policy forums to highlight recent findings, policy analyses, and best practices in governance." },
