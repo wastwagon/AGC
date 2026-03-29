@@ -7,6 +7,7 @@ import { PageHero } from "@/components/PageHero";
 import { TeamSectionTabs } from "@/components/TeamSectionTabs";
 import { Button } from "@/components/Button";
 import { resolveImageUrl } from "@/lib/media";
+import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 
 export const metadata = {
   title: "About Us",
@@ -16,9 +17,10 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function AboutPage() {
-  const [cmsTeam, content] = await Promise.all([
+  const [cmsTeam, content, bc] = await Promise.all([
     getTeam(),
     getMergedPageContent<typeof aboutContent>("about", cmsStaticOrEmpty(aboutContent)),
+    getBreadcrumbLabels(),
   ]);
   const heroImage = (await resolveImageUrl((content as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.about;
   const sectionImage = (await resolveImageUrl((content as Record<string, unknown>).sectionImage as string | undefined)) || placeholderImages.about;
@@ -37,7 +39,7 @@ export default async function AboutPage() {
         subtitle={content.hero.subtitle}
         image={heroImage}
         imageAlt="About Africa Governance Centre"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "About Us" }]}
+        breadcrumbs={[{ label: bc.home, href: "/" }, { label: bc.about }]}
       />
 
       <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-24">

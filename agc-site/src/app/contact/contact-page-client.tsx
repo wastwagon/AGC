@@ -59,7 +59,10 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
         subtitle={contactContent.subtitle}
         image={heroImage}
         imageAlt="Get In Touch"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Contact" }]}
+        breadcrumbs={[
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.contact },
+        ]}
       />
 
       <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">

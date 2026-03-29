@@ -28,6 +28,29 @@ export type SiteSearchChrome = {
   typePublication: string;
 };
 
+/** Public page breadcrumb segment labels (Admin → Site settings). */
+export type SiteBreadcrumbChrome = {
+  home: string;
+  about: string;
+  ourWork: string;
+  programs: string;
+  projects: string;
+  advisory: string;
+  getInvolved: string;
+  volunteer: string;
+  partnership: string;
+  joinUs: string;
+  contact: string;
+  news: string;
+  events: string;
+  publications: string;
+  privacyPolicy: string;
+  termsOfService: string;
+  appSummit: string;
+  team: string;
+  eventRegister: string;
+};
+
 /** Footer newsletter block copy. */
 export type SiteNewsletterChrome = {
   heading: string;
@@ -55,6 +78,7 @@ export type SiteChrome = {
   footer: SiteFooterChrome;
   search: SiteSearchChrome;
   newsletter: SiteNewsletterChrome;
+  breadcrumbs: SiteBreadcrumbChrome;
 };
 
 function cloneLinks(links: readonly { href: string; label: string }[]): SiteNavLink[] {
@@ -132,5 +156,26 @@ export const DEFAULT_SITE_CHROME: SiteChrome = {
     subscribed: "Subscribed",
     successMessage: "Thanks for subscribing!",
     errorGeneric: "Something went wrong.",
+  },
+  breadcrumbs: {
+    home: "Home",
+    about: "About Us",
+    ourWork: "Our Work",
+    programs: "Programs",
+    projects: "Projects",
+    advisory: "Advisory",
+    getInvolved: "Get Involved",
+    volunteer: "Volunteer",
+    partnership: "Partnership",
+    joinUs: "Work with us",
+    contact: "Contact",
+    news: "News",
+    events: "Events",
+    publications: "Publications",
+    privacyPolicy: "Privacy Policy",
+    termsOfService: "Terms of Service",
+    appSummit: "APP Summit",
+    team: "Our Team",
+    eventRegister: "Register",
   },
 };

@@ -115,6 +115,10 @@ export function mergeSiteChrome(patch: unknown): SiteChrome {
     p.newsletter && typeof p.newsletter === "object" && !Array.isArray(p.newsletter)
       ? (p.newsletter as Record<string, unknown>)
       : {};
+  const breadcrumbPatch =
+    p.breadcrumbs && typeof p.breadcrumbs === "object" && !Array.isArray(p.breadcrumbs)
+      ? (p.breadcrumbs as Record<string, unknown>)
+      : {};
 
   const nav = parseNavList(p.nav) ?? base.nav.map((i) => ({ ...i, subLinks: i.subLinks?.map((s) => ({ ...s })) }));
   const bottomNav = parseBottomNav(p.bottomNav) ?? [...base.bottomNav];
@@ -124,6 +128,8 @@ export function mergeSiteChrome(patch: unknown): SiteChrome {
 
   const pickStr = (v: unknown, fallback: string) =>
     typeof v === "string" && v.trim() !== "" ? v.trim() : fallback;
+
+  const b = base.breadcrumbs;
 
   return {
     skipToContentLabel: pickStr(p.skipToContentLabel, base.skipToContentLabel),
@@ -168,6 +174,27 @@ export function mergeSiteChrome(patch: unknown): SiteChrome {
       subscribed: pickStr(newsletterPatch.subscribed, base.newsletter.subscribed),
       successMessage: pickStr(newsletterPatch.successMessage, base.newsletter.successMessage),
       errorGeneric: pickStr(newsletterPatch.errorGeneric, base.newsletter.errorGeneric),
+    },
+    breadcrumbs: {
+      home: pickStr(breadcrumbPatch.home, b.home),
+      about: pickStr(breadcrumbPatch.about, b.about),
+      ourWork: pickStr(breadcrumbPatch.ourWork, b.ourWork),
+      programs: pickStr(breadcrumbPatch.programs, b.programs),
+      projects: pickStr(breadcrumbPatch.projects, b.projects),
+      advisory: pickStr(breadcrumbPatch.advisory, b.advisory),
+      getInvolved: pickStr(breadcrumbPatch.getInvolved, b.getInvolved),
+      volunteer: pickStr(breadcrumbPatch.volunteer, b.volunteer),
+      partnership: pickStr(breadcrumbPatch.partnership, b.partnership),
+      joinUs: pickStr(breadcrumbPatch.joinUs, b.joinUs),
+      contact: pickStr(breadcrumbPatch.contact, b.contact),
+      news: pickStr(breadcrumbPatch.news, b.news),
+      events: pickStr(breadcrumbPatch.events, b.events),
+      publications: pickStr(breadcrumbPatch.publications, b.publications),
+      privacyPolicy: pickStr(breadcrumbPatch.privacyPolicy, b.privacyPolicy),
+      termsOfService: pickStr(breadcrumbPatch.termsOfService, b.termsOfService),
+      appSummit: pickStr(breadcrumbPatch.appSummit, b.appSummit),
+      team: pickStr(breadcrumbPatch.team, b.team),
+      eventRegister: pickStr(breadcrumbPatch.eventRegister, b.eventRegister),
     },
   };
 }
@@ -234,4 +261,5 @@ export type {
   SiteNavLink,
   SiteSearchChrome,
   SiteNewsletterChrome,
+  SiteBreadcrumbChrome,
 } from "@/data/site-chrome";

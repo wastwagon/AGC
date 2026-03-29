@@ -13,6 +13,7 @@ import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { resolveNewsForPublic } from "@/lib/cms-fallback";
 import { CmsDraftNotice } from "@/components/CmsDraftNotice";
+import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,11 +36,13 @@ export const revalidate = 60;
 
 export default async function NewsCategoryPage({ params }: Props) {
   const { slug } = await params;
-  const taxonomy = await getSiteTaxonomy();
+  const [taxonomy, cmsNews, bc] = await Promise.all([
+    getSiteTaxonomy(),
+    getNews(50),
+    getBreadcrumbLabels(),
+  ]);
   const category = taxonomy.newsCategories.find((c) => c.slug === slug);
   if (!category) notFound();
-
-  const cmsNews = await getNews(50);
   const { items: allNews, cmsDraftsOnly: newsDraftsOnly } = await resolveNewsForPublic(
     cmsNews,
     fallbackNews as CmsNews[]
@@ -61,8 +64,8 @@ export default async function NewsCategoryPage({ params }: Props) {
         image={placeholderImages.news}
         imageAlt={category.label}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "News", href: "/news" },
+          { label: bc.home, href: "/" },
+          { label: bc.news, href: "/news" },
           { label: category.label },
         ]}
       />

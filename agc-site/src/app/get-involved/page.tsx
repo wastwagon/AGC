@@ -30,7 +30,10 @@ export default async function GetInvolvedPage() {
         subtitle={(content.subtitle as string) ?? getInvolvedContent.subtitle}
         image={heroImage}
         imageAlt="Get Involved"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Get Involved" }]}
+        breadcrumbs={[
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.getInvolved },
+        ]}
       />
 
       <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-24">

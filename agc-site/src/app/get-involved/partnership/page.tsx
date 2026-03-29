@@ -28,9 +28,9 @@ export default async function PartnershipPage() {
         image={heroImage}
         imageAlt="Partnership"
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Get Involved", href: "/get-involved" },
-          { label: "Partnership" },
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.getInvolved, href: "/get-involved" },
+          { label: siteSettings.chrome.breadcrumbs.partnership },
         ]}
       />
 

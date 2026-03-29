@@ -26,7 +26,10 @@ export function AppSummitClient({
   return (
     <>
       <PageHero
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "APP Summit" }]}
+        breadcrumbs={[
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.appSummit },
+        ]}
         title={content.title}
         subtitle={content.subtitle}
         image={heroImage}

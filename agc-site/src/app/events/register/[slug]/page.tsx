@@ -8,6 +8,7 @@ import { PageHero } from "@/components/PageHero";
 import { placeholderImages } from "@/data/images";
 import { EventRegistrationForm } from "@/components/EventRegistrationForm";
 import { prisma } from "@/lib/db";
+import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -34,9 +35,10 @@ export default async function EventRegisterPage({ params }: Props) {
 
   if (!event) notFound();
 
-  const [team, registrationCount] = await Promise.all([
+  const [team, registrationCount, bc] = await Promise.all([
     getTeam(),
     prisma.eventRegistration.count({ where: { eventSlug: slug } }),
+    getBreadcrumbLabels(),
   ]);
 
   const speakerIds = Array.isArray(event.speaker_ids) ? event.speaker_ids : [];
@@ -56,10 +58,10 @@ export default async function EventRegisterPage({ params }: Props) {
         image={placeholderImages.events}
         imageAlt={event.title}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Events", href: "/events" },
+          { label: bc.home, href: "/" },
+          { label: bc.events, href: "/events" },
           { label: event.title, href: "/events" },
-          { label: "Register" },
+          { label: bc.eventRegister },
         ]}
       />
 

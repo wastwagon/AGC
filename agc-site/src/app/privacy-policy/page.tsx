@@ -21,7 +21,10 @@ export default async function PrivacyPolicyPage() {
         variant="minimal"
         title={content.title}
         subtitle={`Last updated · ${content.lastUpdated}`}
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Privacy Policy" }]}
+        breadcrumbs={[
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.privacyPolicy },
+        ]}
       />
 
       <section className="page-section-paper border-t border-stone-200/80 py-14 sm:py-16 lg:py-20">

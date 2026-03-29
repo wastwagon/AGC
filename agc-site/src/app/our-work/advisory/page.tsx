@@ -4,6 +4,7 @@ import { PageHero } from "@/components/PageHero";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { Button } from "@/components/Button";
+import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 
 export const metadata = {
   title: "Advisory",
@@ -13,10 +14,13 @@ export const metadata = {
 type AdvisoryWorkMerged = typeof workContent.advisory & { heroImage?: string };
 
 export default async function AdvisoryPage() {
-  const merged = await getMergedPageContent<AdvisoryWorkMerged>(
-    "our-work-advisory",
-    cmsStaticOrEmpty(workContent.advisory as AdvisoryWorkMerged)
-  );
+  const [merged, bc] = await Promise.all([
+    getMergedPageContent<AdvisoryWorkMerged>(
+      "our-work-advisory",
+      cmsStaticOrEmpty(workContent.advisory as AdvisoryWorkMerged)
+    ),
+    getBreadcrumbLabels(),
+  ]);
   const content = merged;
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.advisory;
 
@@ -29,9 +33,9 @@ export default async function AdvisoryPage() {
         image={heroImage}
         imageAlt="Advisory"
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Our Work", href: "/our-work" },
-          { label: "Advisory" },
+          { label: bc.home, href: "/" },
+          { label: bc.ourWork, href: "/our-work" },
+          { label: bc.advisory },
         ]}
       />
 

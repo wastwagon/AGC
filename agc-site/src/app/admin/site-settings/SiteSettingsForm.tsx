@@ -43,6 +43,42 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
   const [draftRestored] = useState(!!initialDraft);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
+  type ChromeJsonFieldName =
+    | "chromeNavJson"
+    | "chromeBottomNavJson"
+    | "chromeFooterQuickLinksJson"
+    | "chromeFooterLegalJson"
+    | "chromeFooterWorkThumbsJson";
+  const [chromeJsonErrors, setChromeJsonErrors] = useState<Partial<Record<ChromeJsonFieldName, string>>>({});
+
+  function validateChromeJsonField(name: ChromeJsonFieldName, value: string) {
+    const t = value.trim();
+    if (!t) {
+      setChromeJsonErrors((prev) => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+      return;
+    }
+    try {
+      const v = JSON.parse(t) as unknown;
+      if (!Array.isArray(v)) {
+        setChromeJsonErrors((prev) => ({ ...prev, [name]: "Must be a JSON array." }));
+        return;
+      }
+      setChromeJsonErrors((prev) => {
+        const next = { ...prev };
+        delete next[name];
+        return next;
+      });
+    } catch {
+      setChromeJsonErrors((prev) => ({ ...prev, [name]: "Invalid JSON." }));
+    }
+  }
+
+  const bc = settings.chrome.breadcrumbs;
+
   function saveDraft() {
     if (!formRef.current) return;
     const fd = new FormData(formRef.current);
@@ -275,7 +311,13 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
               rows={10}
               defaultValue={JSON.stringify(settings.chrome.nav, null, 2)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+              onBlur={(e) => validateChromeJsonField("chromeNavJson", e.currentTarget.value)}
             />
+            {chromeJsonErrors.chromeNavJson ? (
+              <p className="mt-1 text-xs text-red-600" role="alert">
+                {chromeJsonErrors.chromeNavJson}
+              </p>
+            ) : null}
           </div>
           <div>
             <label htmlFor="chromeBottomNavJson" className="block text-sm font-medium text-slate-700">Mobile bottom bar JSON (optional)</label>
@@ -286,7 +328,13 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
               rows={6}
               defaultValue={JSON.stringify(settings.chrome.bottomNav, null, 2)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+              onBlur={(e) => validateChromeJsonField("chromeBottomNavJson", e.currentTarget.value)}
             />
+            {chromeJsonErrors.chromeBottomNavJson ? (
+              <p className="mt-1 text-xs text-red-600" role="alert">
+                {chromeJsonErrors.chromeBottomNavJson}
+              </p>
+            ) : null}
           </div>
           <div>
             <label htmlFor="chromeFooterQuickLinksJson" className="block text-sm font-medium text-slate-700">Footer quick links JSON (optional)</label>
@@ -296,7 +344,13 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
               rows={6}
               defaultValue={JSON.stringify(settings.chrome.footer.quickLinks, null, 2)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+              onBlur={(e) => validateChromeJsonField("chromeFooterQuickLinksJson", e.currentTarget.value)}
             />
+            {chromeJsonErrors.chromeFooterQuickLinksJson ? (
+              <p className="mt-1 text-xs text-red-600" role="alert">
+                {chromeJsonErrors.chromeFooterQuickLinksJson}
+              </p>
+            ) : null}
           </div>
           <div>
             <label htmlFor="chromeFooterLegalJson" className="block text-sm font-medium text-slate-700">Footer legal links JSON (optional)</label>
@@ -306,7 +360,13 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
               rows={4}
               defaultValue={JSON.stringify(settings.chrome.footer.legal, null, 2)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+              onBlur={(e) => validateChromeJsonField("chromeFooterLegalJson", e.currentTarget.value)}
             />
+            {chromeJsonErrors.chromeFooterLegalJson ? (
+              <p className="mt-1 text-xs text-red-600" role="alert">
+                {chromeJsonErrors.chromeFooterLegalJson}
+              </p>
+            ) : null}
           </div>
           <div>
             <label htmlFor="chromeFooterWorkThumbsJson" className="block text-sm font-medium text-slate-700">Footer work thumbnails JSON (optional)</label>
@@ -317,7 +377,98 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
               rows={6}
               defaultValue={JSON.stringify(settings.chrome.footer.workThumbnails, null, 2)}
               className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
+              onBlur={(e) => validateChromeJsonField("chromeFooterWorkThumbsJson", e.currentTarget.value)}
             />
+            {chromeJsonErrors.chromeFooterWorkThumbsJson ? (
+              <p className="mt-1 text-xs text-red-600" role="alert">
+                {chromeJsonErrors.chromeFooterWorkThumbsJson}
+              </p>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Breadcrumb labels</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Text for public page hero breadcrumbs. Empty fields keep built-in defaults when you save.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="bcHome" className="block text-sm font-medium text-slate-700">Home</label>
+            <input id="bcHome" name="bcHome" defaultValue={initialDraft?.bcHome ?? bc.home} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcAbout" className="block text-sm font-medium text-slate-700">About</label>
+            <input id="bcAbout" name="bcAbout" defaultValue={initialDraft?.bcAbout ?? bc.about} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcOurWork" className="block text-sm font-medium text-slate-700">Our work</label>
+            <input id="bcOurWork" name="bcOurWork" defaultValue={initialDraft?.bcOurWork ?? bc.ourWork} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcPrograms" className="block text-sm font-medium text-slate-700">Programs</label>
+            <input id="bcPrograms" name="bcPrograms" defaultValue={initialDraft?.bcPrograms ?? bc.programs} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcProjects" className="block text-sm font-medium text-slate-700">Projects</label>
+            <input id="bcProjects" name="bcProjects" defaultValue={initialDraft?.bcProjects ?? bc.projects} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcAdvisory" className="block text-sm font-medium text-slate-700">Advisory</label>
+            <input id="bcAdvisory" name="bcAdvisory" defaultValue={initialDraft?.bcAdvisory ?? bc.advisory} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcGetInvolved" className="block text-sm font-medium text-slate-700">Get involved</label>
+            <input id="bcGetInvolved" name="bcGetInvolved" defaultValue={initialDraft?.bcGetInvolved ?? bc.getInvolved} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcVolunteer" className="block text-sm font-medium text-slate-700">Volunteer</label>
+            <input id="bcVolunteer" name="bcVolunteer" defaultValue={initialDraft?.bcVolunteer ?? bc.volunteer} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcPartnership" className="block text-sm font-medium text-slate-700">Partnership</label>
+            <input id="bcPartnership" name="bcPartnership" defaultValue={initialDraft?.bcPartnership ?? bc.partnership} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcJoinUs" className="block text-sm font-medium text-slate-700">Work with us</label>
+            <input id="bcJoinUs" name="bcJoinUs" defaultValue={initialDraft?.bcJoinUs ?? bc.joinUs} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcContact" className="block text-sm font-medium text-slate-700">Contact</label>
+            <input id="bcContact" name="bcContact" defaultValue={initialDraft?.bcContact ?? bc.contact} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcNews" className="block text-sm font-medium text-slate-700">News</label>
+            <input id="bcNews" name="bcNews" defaultValue={initialDraft?.bcNews ?? bc.news} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcEvents" className="block text-sm font-medium text-slate-700">Events</label>
+            <input id="bcEvents" name="bcEvents" defaultValue={initialDraft?.bcEvents ?? bc.events} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcPublications" className="block text-sm font-medium text-slate-700">Publications</label>
+            <input id="bcPublications" name="bcPublications" defaultValue={initialDraft?.bcPublications ?? bc.publications} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcPrivacyPolicy" className="block text-sm font-medium text-slate-700">Privacy policy</label>
+            <input id="bcPrivacyPolicy" name="bcPrivacyPolicy" defaultValue={initialDraft?.bcPrivacyPolicy ?? bc.privacyPolicy} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcTermsOfService" className="block text-sm font-medium text-slate-700">Terms of service</label>
+            <input id="bcTermsOfService" name="bcTermsOfService" defaultValue={initialDraft?.bcTermsOfService ?? bc.termsOfService} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcAppSummit" className="block text-sm font-medium text-slate-700">APP Summit</label>
+            <input id="bcAppSummit" name="bcAppSummit" defaultValue={initialDraft?.bcAppSummit ?? bc.appSummit} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcTeam" className="block text-sm font-medium text-slate-700">Our team</label>
+            <input id="bcTeam" name="bcTeam" defaultValue={initialDraft?.bcTeam ?? bc.team} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="bcEventRegister" className="block text-sm font-medium text-slate-700">Event register</label>
+            <input id="bcEventRegister" name="bcEventRegister" defaultValue={initialDraft?.bcEventRegister ?? bc.eventRegister} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
         </div>
       </section>

@@ -28,9 +28,9 @@ export default async function JoinUsPage() {
         image={heroImage}
         imageAlt="Work with us"
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Get Involved", href: "/get-involved" },
-          { label: "Work with us" },
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.getInvolved, href: "/get-involved" },
+          { label: siteSettings.chrome.breadcrumbs.joinUs },
         ]}
       />
 

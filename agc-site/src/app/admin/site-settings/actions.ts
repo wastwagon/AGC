@@ -94,6 +94,25 @@ export async function updateSiteSettings(formData: FormData) {
     newsletterSubscribed: formData.get("newsletterSubscribed") || undefined,
     newsletterSuccessMessage: formData.get("newsletterSuccessMessage") || undefined,
     newsletterErrorGeneric: formData.get("newsletterErrorGeneric") || undefined,
+    bcHome: formData.get("bcHome") || undefined,
+    bcAbout: formData.get("bcAbout") || undefined,
+    bcOurWork: formData.get("bcOurWork") || undefined,
+    bcPrograms: formData.get("bcPrograms") || undefined,
+    bcProjects: formData.get("bcProjects") || undefined,
+    bcAdvisory: formData.get("bcAdvisory") || undefined,
+    bcGetInvolved: formData.get("bcGetInvolved") || undefined,
+    bcVolunteer: formData.get("bcVolunteer") || undefined,
+    bcPartnership: formData.get("bcPartnership") || undefined,
+    bcJoinUs: formData.get("bcJoinUs") || undefined,
+    bcContact: formData.get("bcContact") || undefined,
+    bcNews: formData.get("bcNews") || undefined,
+    bcEvents: formData.get("bcEvents") || undefined,
+    bcPublications: formData.get("bcPublications") || undefined,
+    bcPrivacyPolicy: formData.get("bcPrivacyPolicy") || undefined,
+    bcTermsOfService: formData.get("bcTermsOfService") || undefined,
+    bcAppSummit: formData.get("bcAppSummit") || undefined,
+    bcTeam: formData.get("bcTeam") || undefined,
+    bcEventRegister: formData.get("bcEventRegister") || undefined,
   };
 
   const parsed = siteSettingsFormSchema.safeParse(raw);
@@ -172,6 +191,27 @@ export async function updateSiteSettings(formData: FormData) {
     subscribed: data.newsletterSubscribed,
     successMessage: data.newsletterSuccessMessage,
     errorGeneric: data.newsletterErrorGeneric,
+  };
+  chromePatch.breadcrumbs = {
+    home: data.bcHome,
+    about: data.bcAbout,
+    ourWork: data.bcOurWork,
+    programs: data.bcPrograms,
+    projects: data.bcProjects,
+    advisory: data.bcAdvisory,
+    getInvolved: data.bcGetInvolved,
+    volunteer: data.bcVolunteer,
+    partnership: data.bcPartnership,
+    joinUs: data.bcJoinUs,
+    contact: data.bcContact,
+    news: data.bcNews,
+    events: data.bcEvents,
+    publications: data.bcPublications,
+    privacyPolicy: data.bcPrivacyPolicy,
+    termsOfService: data.bcTermsOfService,
+    appSummit: data.bcAppSummit,
+    team: data.bcTeam,
+    eventRegister: data.bcEventRegister,
   };
 
   const chrome = mergeSiteChrome(chromePatch);

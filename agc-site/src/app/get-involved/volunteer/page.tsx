@@ -28,9 +28,9 @@ export default async function VolunteerPage() {
         image={heroImage}
         imageAlt="Volunteer"
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Get Involved", href: "/get-involved" },
-          { label: "Volunteer" },
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.getInvolved, href: "/get-involved" },
+          { label: siteSettings.chrome.breadcrumbs.volunteer },
         ]}
       />
 

@@ -46,7 +46,10 @@ export default async function PublicationsPage() {
         subtitle={content.subtitle}
         image={heroImage}
         imageAlt="Publications"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Publications" }]}
+        breadcrumbs={[
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.publications },
+        ]}
       />
 
       <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">

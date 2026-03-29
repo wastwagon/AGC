@@ -49,7 +49,10 @@ export default async function NewsPage() {
         subtitle={content.subtitle}
         image={heroImage}
         imageAlt="Latest News"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "News" }]}
+        breadcrumbs={[
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.news },
+        ]}
       />
 
       <section className="page-section-warm border-t border-stone-200/60 py-16 sm:py-20 lg:py-24">

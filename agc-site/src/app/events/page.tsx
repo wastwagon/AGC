@@ -8,6 +8,7 @@ import type { CmsEvent } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
 import { resolveEventsForPublic } from "@/lib/cms-fallback";
 import { CmsDraftNotice } from "@/components/CmsDraftNotice";
+import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 
 export const metadata = {
   title: "Events",
@@ -17,9 +18,10 @@ export const metadata = {
 export const revalidate = 30;
 
 export default async function EventsPage() {
-  const [cmsEvents, merged] = await Promise.all([
+  const [cmsEvents, merged, bc] = await Promise.all([
     getEvents(),
     getMergedPageContent<typeof eventsContent>("events", cmsStaticOrEmpty(eventsContent)),
+    getBreadcrumbLabels(),
   ]);
   const content = merged as unknown as typeof eventsContent & { heroImage?: string };
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.events;
@@ -40,7 +42,7 @@ export default async function EventsPage() {
         subtitle={content.subtitle}
         image={heroImage}
         imageAlt="Events"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Events" }]}
+        breadcrumbs={[{ label: bc.home, href: "/" }, { label: bc.events }]}
       />
 
       <section className="page-section-warm border-t border-stone-200/60 py-16 sm:py-20 lg:py-24">

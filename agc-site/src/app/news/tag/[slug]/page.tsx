@@ -13,6 +13,7 @@ import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { resolveNewsForPublic } from "@/lib/cms-fallback";
 import { CmsDraftNotice } from "@/components/CmsDraftNotice";
+import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -36,7 +37,11 @@ export default async function NewsTagPage({ params }: Props) {
   const tag = newsTags.find((t) => t.slug === slug);
   if (!tag) notFound();
 
-  const [cmsNews, taxonomy] = await Promise.all([getNews(50), getSiteTaxonomy()]);
+  const [cmsNews, taxonomy, bc] = await Promise.all([
+    getNews(50),
+    getSiteTaxonomy(),
+    getBreadcrumbLabels(),
+  ]);
   const { items: allNews, cmsDraftsOnly: newsDraftsOnly } = await resolveNewsForPublic(
     cmsNews,
     fallbackNews as CmsNews[]
@@ -58,8 +63,8 @@ export default async function NewsTagPage({ params }: Props) {
         image={placeholderImages.news}
         imageAlt={tag.label}
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "News", href: "/news" },
+          { label: bc.home, href: "/" },
+          { label: bc.news, href: "/news" },
           { label: `#${tag.label}` },
         ]}
       />

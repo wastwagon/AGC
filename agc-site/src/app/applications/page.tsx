@@ -20,9 +20,11 @@ type ApplicationsMerged = typeof applicationsStaticFallback & {
 
 const ui = applicationsPageUiDefaults;
 
-function pickAppStr(merged: ApplicationsMerged, key: keyof typeof ui): string {
+function pickAppStr(merged: ApplicationsMerged, key: keyof typeof ui, chromeFallback?: string): string {
   const v = merged[key];
-  return typeof v === "string" && v.trim() !== "" ? v.trim() : String(ui[key]);
+  if (typeof v === "string" && v.trim() !== "") return v.trim();
+  if (chromeFallback !== undefined && chromeFallback.trim() !== "") return chromeFallback.trim();
+  return String(ui[key]);
 }
 
 function crumb(label: string, href?: string) {
@@ -53,10 +55,11 @@ export default async function ApplicationsPage() {
     (heroImageRaw ? await resolveImageUrl(heroImageRaw) : null) ||
     (process.env.BUILD_WITHOUT_DB === "1" ? placeholderImages.applications : undefined);
 
+  const bc = siteSettings.chrome.breadcrumbs;
   const breadcrumbs = [
-    crumb(pickAppStr(merged, "breadcrumbHome"), "/"),
-    crumb(pickAppStr(merged, "breadcrumbGetInvolved"), "/get-involved"),
-    crumb(pickAppStr(merged, "breadcrumbVolunteer"), "/get-involved/volunteer"),
+    crumb(pickAppStr(merged, "breadcrumbHome", bc.home), "/"),
+    crumb(pickAppStr(merged, "breadcrumbGetInvolved", bc.getInvolved), "/get-involved"),
+    crumb(pickAppStr(merged, "breadcrumbVolunteer", bc.volunteer), "/get-involved/volunteer"),
     crumb(pickAppStr(merged, "breadcrumbApplication")),
   ].filter((x): x is NonNullable<typeof x> => x !== null);
 

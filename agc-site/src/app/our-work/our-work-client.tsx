@@ -6,6 +6,7 @@ import { workContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import type { CmsProgram, CmsProject } from "@/lib/content";
+import type { SiteBreadcrumbChrome } from "@/data/site-chrome";
 
 const tabIcons = {
   programs: LayoutGrid,
@@ -23,9 +24,10 @@ type OurWorkClientProps = {
   cmsPrograms: CmsProgram[];
   cmsProjects: CmsProject[];
   content?: typeof workContent;
+  breadcrumbLabels: SiteBreadcrumbChrome;
 };
 
-export function OurWorkClient({ cmsPrograms, cmsProjects, content = workContent }: OurWorkClientProps) {
+export function OurWorkClient({ cmsPrograms, cmsProjects, content = workContent, breadcrumbLabels }: OurWorkClientProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("programs");
 
   const tabs: { key: TabKey; label: string }[] = [
@@ -66,7 +68,7 @@ export function OurWorkClient({ cmsPrograms, cmsProjects, content = workContent 
         subtitle={content.hero.subtitle}
         image={placeholderImages.programs}
         imageAlt="Our Work"
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Our Work" }]}
+        breadcrumbs={[{ label: breadcrumbLabels.home, href: "/" }, { label: breadcrumbLabels.ourWork }]}
       />
 
       <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-24">

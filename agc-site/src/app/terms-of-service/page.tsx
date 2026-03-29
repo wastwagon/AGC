@@ -21,7 +21,10 @@ export default async function TermsOfServicePage() {
         variant="minimal"
         title={content.title}
         subtitle={`Last updated · ${content.lastUpdated}`}
-        breadcrumbs={[{ label: "Home", href: "/" }, { label: "Terms of Service" }]}
+        breadcrumbs={[
+          { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+          { label: siteSettings.chrome.breadcrumbs.termsOfService },
+        ]}
       />
 
       <section className="page-section-paper border-t border-stone-200/80 py-14 sm:py-16 lg:py-20">

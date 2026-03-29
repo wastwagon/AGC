@@ -4,6 +4,7 @@ import { placeholderImages } from "@/data/images";
 import { getTeam } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
 import { PageHero } from "@/components/PageHero";
+import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 import { Button } from "@/components/Button";
 
 export const metadata = {
@@ -14,7 +15,7 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function TeamPage() {
-  const teamMembers = await getTeam();
+  const [teamMembers, bc] = await Promise.all([getTeam(), getBreadcrumbLabels()]);
   const membersWithImages = await Promise.all(
     teamMembers.map(async (member) => ({
       ...member,
@@ -30,9 +31,9 @@ export default async function TeamPage() {
         image={placeholderImages.about}
         imageAlt="Our Team"
         breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "About Us", href: "/about" },
-          { label: "Our Team" },
+          { label: bc.home, href: "/" },
+          { label: bc.about, href: "/about" },
+          { label: bc.team },
         ]}
       />
 
