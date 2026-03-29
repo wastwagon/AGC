@@ -37,6 +37,8 @@ services:
     restart: unless-stopped
     ports:
       - "${WEB_PORT:-9200}:3000"
+    # Both volumes required: JSON library metadata (data/) and binary files (public/uploads) must stay in sync.
+    # Coolify: bind the same named volumes on redeploy or thumbnails return 404 while ids still appear in Admin.
     volumes:
       - agc-media-uploads:/app/public/uploads
       - agc-media-metadata:/app/data

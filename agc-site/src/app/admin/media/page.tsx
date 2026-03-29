@@ -16,6 +16,7 @@ type MediaItem = {
   width?: number;
   height?: number;
   uploadedAt: string;
+  fileMissing?: boolean;
 };
 
 export default function AdminMediaPage() {
@@ -189,14 +190,23 @@ export default function AdminMediaPage() {
                 className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md"
               >
                 <div className="relative aspect-square overflow-hidden bg-slate-100">
-                  {/* eslint-disable-next-line @next/next/no-img-element -- Admin thumbs: bypass optimizer (dev 400 on /uploads). */}
-                  <img
-                    src={item.url}
-                    alt={item.alt || item.title || item.filename}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
+                  {item.fileMissing ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-amber-50 p-2 text-center">
+                      <span className="text-[0.65rem] font-semibold uppercase text-amber-900">File missing</span>
+                      <span className="text-[0.7rem] text-amber-800">Mount persists public/uploads</span>
+                    </div>
+                  ) : (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element -- Admin thumbs: bypass optimizer (dev 400 on /uploads). */}
+                      <img
+                        src={item.url}
+                        alt={item.alt || item.title || item.filename}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                    </>
+                  )}
                 </div>
                 <div className="p-3">
                   <p className="truncate text-sm font-medium text-slate-900" title={item.filename}>

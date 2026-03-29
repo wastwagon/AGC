@@ -13,6 +13,8 @@ export type MediaItem = {
   title?: string;
   width?: number;
   height?: number;
+  /** True when metadata exists but the file is not under public/uploads (volume / deploy mismatch). */
+  fileMissing?: boolean;
 };
 
 type ImagePickerProps = {
@@ -68,7 +70,7 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
           const res = await fetch("/api/media", { method: "POST", body: formData });
           const data = await res.json();
           if (res.ok && data.item) {
-            setItems((prev) => [data.item as MediaItem, ...prev]);
+            setItems((prev) => [{ ...(data.item as MediaItem), fileMissing: false }, ...prev]);
           } else {
             setError(data?.error || `Upload failed for ${file.name}`);
           }
@@ -131,7 +133,10 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
               </Link>
             </div>
             <p className="mt-2 text-xs text-slate-500">
-              Max {formatMaxUploadBytes()} per file. Upload then click an image to use it in this form.
+              Max {formatMaxUploadBytes()} per file. Upload then click an image to use it in this form. If a row shows
+              “file missing”, the database lists it but the binary is not on this server (check Docker/Coolify{" "}
+              <strong className="font-medium">uploads volume</strong> is mounted at <code className="rounded bg-slate-200/80 px-1">public/uploads</code>
+              ).
             </p>
             {error ? <p className="mt-2 text-xs text-red-700">{error}</p> : null}
           </div>
@@ -145,25 +150,45 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
                 <button
                   key={item.id}
                   type="button"
+                  disabled={item.fileMissing}
+                  title={
+                    item.fileMissing
+                      ? "File not on disk — remove this entry from Media Library (orphans/cleanup) or restore the volume"
+                      : undefined
+                  }
                   onClick={() => {
+                    if (item.fileMissing) return;
                     onSelect(item);
                     onClose();
                   }}
-                  className="group relative aspect-square overflow-hidden rounded-xl border-2 border-transparent bg-slate-100 transition-all hover:border-accent-500 hover:shadow-md"
+                  className={`group relative aspect-square overflow-hidden rounded-xl border-2 bg-slate-100 transition-all ${
+                    item.fileMissing
+                      ? "cursor-not-allowed border-amber-300 opacity-90"
+                      : "border-transparent hover:border-accent-500 hover:shadow-md"
+                  }`}
                 >
-                  {/* eslint-disable-next-line @next/next/no-img-element -- Picker thumbs: bypass optimizer (dev 400 on /uploads). */}
-                  <img
-                    src={item.url}
-                    alt={item.alt || item.title || item.filename}
-                    className="absolute inset-0 h-full w-full object-cover"
-                    loading="lazy"
-                    decoding="async"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/20 group-hover:opacity-100">
-                    <span className="rounded-full bg-white p-2 text-accent-600">
-                      <Check className="h-6 w-6" />
-                    </span>
-                  </div>
+                  {item.fileMissing ? (
+                    <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-amber-50/95 p-2 text-center">
+                      <span className="text-[0.65rem] font-semibold uppercase tracking-wide text-amber-900">Missing file</span>
+                      <span className="text-[0.7rem] leading-tight text-amber-800">Not in uploads folder</span>
+                    </div>
+                  ) : (
+                    <>
+                      {/* eslint-disable-next-line @next/next/no-img-element -- Picker thumbs: bypass optimizer (dev 400 on /uploads). */}
+                      <img
+                        src={item.url}
+                        alt={item.alt || item.title || item.filename}
+                        className="absolute inset-0 h-full w-full object-cover"
+                        loading="lazy"
+                        decoding="async"
+                      />
+                      <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/20 group-hover:opacity-100">
+                        <span className="rounded-full bg-white p-2 text-accent-600">
+                          <Check className="h-6 w-6" />
+                        </span>
+                      </div>
+                    </>
+                  )}
                 </button>
               ))}
             </div>

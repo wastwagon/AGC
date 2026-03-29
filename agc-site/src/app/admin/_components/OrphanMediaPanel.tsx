@@ -1,9 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
 import { RefreshCw, Trash2 } from "lucide-react";
-import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 type OrphanItem = {
   id: string;
@@ -105,13 +103,12 @@ export function OrphanMediaPanel({ onLibraryItemRemoved }: Props) {
           {items.map((item) => (
             <li key={item.id} className="flex flex-wrap items-center gap-3 py-3 first:pt-0 last:pb-0">
               <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-slate-100">
-                <Image
+                {/* eslint-disable-next-line @next/next/no-img-element -- avoid image optimizer on /uploads */}
+                <img
                   src={item.url}
                   alt={item.alt || item.title || item.filename}
-                  fill
-                  className="object-cover"
-                  sizes="56px"
-                  unoptimized={preferUnoptimizedImage(item.url)}
+                  className="h-full w-full object-cover"
+                  loading="lazy"
                 />
               </div>
               <div className="min-w-0 flex-1">

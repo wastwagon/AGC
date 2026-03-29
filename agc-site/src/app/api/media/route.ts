@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir } from "fs/promises";
+import { existsSync } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import {
@@ -20,7 +21,12 @@ export async function GET() {
 
   try {
     const items = await listMedia();
-    return NextResponse.json({ items });
+    const uploadsDir = getUploadsDir();
+    const itemsWithDisk = items.map((item) => ({
+      ...item,
+      fileMissing: !existsSync(path.join(uploadsDir, item.filename)),
+    }));
+    return NextResponse.json({ items: itemsWithDisk });
   } catch (err) {
     console.error("Media list error:", err);
     return NextResponse.json({ error: "Failed to list media" }, { status: 500 });
@@ -92,7 +98,7 @@ export async function POST(request: NextRequest) {
 
     await addMediaItem(item);
 
-    return NextResponse.json({ item });
+    return NextResponse.json({ item: { ...item, fileMissing: false } });
   } catch (err) {
     console.error("Media upload error:", err);
     return NextResponse.json({ error: "Failed to upload" }, { status: 500 });

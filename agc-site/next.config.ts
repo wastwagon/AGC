@@ -39,10 +39,11 @@ const nextConfig: NextConfig = {
     /** Media library files live under /uploads/*; be explicit for the image optimizer. */
     localPatterns: [{ pathname: "/uploads/**", search: "" }],
     /**
-     * In dev, the optimizer sometimes follows absolute `http://localhost:…/uploads/…`; Node then
-     * treats 127.0.0.1 as a private IP and returns 400 without this flag.
+     * Allows the optimizer to fetch same-origin URLs that resolve to loopback/private IPs (dev)
+     * and Docker/internal networks (production). Without this, some deployments return 400 for
+     * `/uploads/*` when the upstream fetch hits 127.0.0.1.
      */
-    dangerouslyAllowLocalIP: process.env.NODE_ENV === "development",
+    dangerouslyAllowLocalIP: true,
   },
 };
 

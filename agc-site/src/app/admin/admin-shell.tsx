@@ -30,6 +30,7 @@ import {
 } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
 import { getAdminBreadcrumbs } from "@/lib/admin-breadcrumbs";
+import { HeaderTopbar } from "@/components/HeaderTopbar";
 
 const navItems = [
   { href: "/admin", label: "Dashboard", icon: LayoutDashboard },
@@ -77,7 +78,11 @@ export function AdminShell({ children, siteSettings }: { children: React.ReactNo
   const crumbs = pathname ? getAdminBreadcrumbs(pathname) : [];
 
   return (
-    <div className="flex min-h-screen bg-[#f0f2f5]">
+    <div className="flex min-h-screen flex-col bg-[#f0f2f5]">
+      <div className="sticky top-0 z-40">
+        <HeaderTopbar siteSettings={siteSettings} />
+      </div>
+      <div className="flex min-h-0 flex-1">
       {sidebarOpen && (
         <button
           type="button"
@@ -209,6 +214,7 @@ export function AdminShell({ children, siteSettings }: { children: React.ReactNo
         <main className="flex-1 p-4 sm:p-6">
           <div className="mx-auto max-w-6xl">{children}</div>
         </main>
+      </div>
       </div>
     </div>
   );
