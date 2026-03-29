@@ -5,6 +5,8 @@ import { prisma } from "@/lib/db";
 export type SiteSettings = {
   name: string;
   tagline: string;
+  /** Media library id, `/uploads/...`, or full URL — used for header/footer logo when set */
+  logo: string;
   email: {
     programs: string;
     media: string;
@@ -48,6 +50,7 @@ function sanitizeSiteSettings(value: unknown): SiteSettings {
   return {
     name: typeof src.name === "string" ? src.name : DEFAULT_SITE_SETTINGS.name,
     tagline: typeof src.tagline === "string" ? src.tagline : DEFAULT_SITE_SETTINGS.tagline,
+    logo: typeof src.logo === "string" ? src.logo : DEFAULT_SITE_SETTINGS.logo,
     email: {
       programs: typeof email.programs === "string" ? email.programs : DEFAULT_SITE_SETTINGS.email.programs,
       media: typeof email.media === "string" ? email.media : DEFAULT_SITE_SETTINGS.email.media,

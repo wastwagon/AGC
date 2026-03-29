@@ -31,6 +31,7 @@ export async function updateSiteSettings(formData: FormData) {
   const raw = {
     name: formData.get("name"),
     tagline: formData.get("tagline"),
+    logo: formData.get("logo") || undefined,
     phone: formData.get("phone"),
     address: formData.get("address"),
     officeHours: formData.get("officeHours"),
@@ -53,6 +54,7 @@ export async function updateSiteSettings(formData: FormData) {
   const payload = {
     name: data.name,
     tagline: data.tagline,
+    logo: data.logo?.trim() || "",
     phone: data.phone,
     address: data.address,
     officeHours: data.officeHours,

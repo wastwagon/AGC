@@ -14,12 +14,16 @@ import {
   SlidersHorizontal,
   House,
   CircleUserRound,
+  Inbox,
+  Tags,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
 const sections = [
   { href: "/admin/media", label: "Media", icon: ImageIcon, desc: "Upload and manage images" },
+  { href: "/admin/submissions", label: "Submissions", icon: Inbox, desc: "Forms, newsletter, exports, and retention" },
+  { href: "/admin/taxonomy", label: "Taxonomy", icon: Tags, desc: "News categories, tags, publication types" },
   { href: "/admin/events", label: "Events", icon: Calendar, desc: "Manage events and registrations" },
   { href: "/admin/events/scan", label: "Check-in Scanner", icon: QrCode, desc: "Scan QR codes at events" },
   { href: "/admin/news", label: "News", icon: Newspaper, desc: "News articles and updates" },

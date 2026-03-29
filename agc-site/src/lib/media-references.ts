@@ -92,5 +92,20 @@ export async function findMediaReferences(item: MediaItem): Promise<MediaReferen
     }
   }
 
+  const siteSettingsRow = await prisma.pageContent.findUnique({
+    where: { slug: "site-settings" },
+    select: { contentJson: true },
+  });
+  const siteJson = siteSettingsRow?.contentJson;
+  if (siteJson && typeof siteJson === "object" && !Array.isArray(siteJson)) {
+    const logoVal = String((siteJson as Record<string, unknown>).logo ?? "");
+    for (const n of needles) {
+      if (n && logoVal && logoVal.includes(n)) {
+        add("Site settings", "Header & footer logo", "/admin/site-settings");
+        break;
+      }
+    }
+  }
+
   return refs;
 }

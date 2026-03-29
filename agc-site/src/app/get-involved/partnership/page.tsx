@@ -5,6 +5,7 @@ import { Button } from "@/components/Button";
 import { getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
+import { PartnershipInquiryForm } from "@/components/PartnershipInquiryForm";
 
 export const metadata = {
   title: "Partnership",
@@ -51,6 +52,20 @@ export default async function PartnershipPage() {
                 </li>
               ))}
             </ul>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-stone-200/80 bg-[#faf6ef] py-16 sm:py-20">
+        <div className="container mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Enquiry</p>
+          <h2 className="page-heading mt-3 text-2xl text-stone-900">Send a partnership inquiry</h2>
+          <p className="mt-2 text-stone-600">
+            Prefer the form below — your message is saved in our admin inbox. You can still email us directly if you
+            prefer.
+          </p>
+          <div className="mt-10">
+            <PartnershipInquiryForm programsEmail={siteSettings.email.programs} />
           </div>
         </div>
       </section>

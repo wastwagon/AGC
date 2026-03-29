@@ -1,0 +1,1 @@
+export const SUBMISSIONS_PAGE_SIZE = 25;

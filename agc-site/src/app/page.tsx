@@ -11,8 +11,10 @@ import { HomeSpotlightStory } from "@/components/HomeSpotlightStory";
 import { NewsCard } from "@/components/NewsCard";
 import { HomeEventsSection } from "@/components/HomeEventsSection";
 import { resolveImageUrl } from "@/lib/media";
+import { resolveEventsForPublic, resolveNewsForPublic } from "@/lib/cms-fallback";
+import { CmsDraftNotice } from "@/components/CmsDraftNotice";
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 export default async function HomePage() {
   const [events, news, home, partnersFromDb] = await Promise.all([
@@ -21,7 +23,15 @@ export default async function HomePage() {
     getHomePageCms(),
     getPartners(),
   ]);
-  const allEventsRaw: CmsEvent[] = events.length > 0 ? events : (fallbackEvents as CmsEvent[]);
+  const { items: eventsList, cmsDraftsOnly: homeEventsDrafts } = await resolveEventsForPublic(
+    events,
+    fallbackEvents as CmsEvent[]
+  );
+  const { items: newsList, cmsDraftsOnly: homeNewsDrafts } = await resolveNewsForPublic(
+    news,
+    fallbackNews as CmsNews[]
+  );
+  const allEventsRaw: CmsEvent[] = eventsList;
   const allEvents: CmsEvent[] = await Promise.all(
     allEventsRaw.map(async (e) => ({
       ...e,
@@ -32,7 +42,7 @@ export default async function HomePage() {
   today.setHours(0, 0, 0, 0);
   const pastEvents = allEvents.filter((e) => new Date(e.end_date || e.start_date) < today).slice(0, 3);
   const upcomingEvents = allEvents.filter((e) => new Date(e.end_date || e.start_date) >= today).slice(0, 3);
-  const latestNewsRaw: CmsNews[] = news.length > 0 ? news.slice(0, 3) : (fallbackNews as CmsNews[]).slice(0, 3);
+  const latestNewsRaw: CmsNews[] = newsList.slice(0, 3);
   const latestNews = await Promise.all(
     latestNewsRaw.map(async (n) => ({
       item: n,
@@ -56,6 +66,14 @@ export default async function HomePage() {
   return (
     <>
       <HeroConsultar hero={home.heroContent} sliderImages={heroSlides} />
+
+      {(homeEventsDrafts || homeNewsDrafts) && (
+        <div className="border-b border-amber-200/80 bg-amber-50/95">
+          <div className="mx-auto max-w-6xl px-4 py-3 sm:px-6 lg:px-8">
+            <CmsDraftNotice entityLabel="news or events" adminHref="/admin" />
+          </div>
+        </div>
+      )}
 
       <HeroFeaturesOverlap />
 

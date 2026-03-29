@@ -6,13 +6,15 @@ import { PageHero } from "@/components/PageHero";
 import { EventsListingTabs } from "@/components/events/EventsListingTabs";
 import type { CmsEvent } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
+import { resolveEventsForPublic } from "@/lib/cms-fallback";
+import { CmsDraftNotice } from "@/components/CmsDraftNotice";
 
 export const metadata = {
   title: "Events",
   description: "Upcoming events, conferences, and workshops advancing governance excellence across Africa.",
 };
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 export default async function EventsPage() {
   const [cmsEvents, merged] = await Promise.all([
@@ -21,7 +23,10 @@ export default async function EventsPage() {
   ]);
   const content = merged as unknown as typeof eventsContent & { heroImage?: string };
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.events;
-  const events: CmsEvent[] = cmsEvents.length > 0 ? cmsEvents : (fallbackEvents as CmsEvent[]);
+  const { items: events, cmsDraftsOnly: eventsDraftsOnly } = await resolveEventsForPublic(
+    cmsEvents,
+    fallbackEvents as CmsEvent[]
+  );
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -40,9 +45,10 @@ export default async function EventsPage() {
 
       <section className="page-section-warm border-t border-stone-200/60 py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
+          <div className="max-w-2xl space-y-4">
             <p className="text-sm font-medium text-accent-800">Convenings</p>
             <p className="page-prose mt-2 text-lg">{content.intro}</p>
+            {eventsDraftsOnly && <CmsDraftNotice entityLabel="events" adminHref="/admin/events" />}
           </div>
 
           {events.length > 0 && <EventsListingTabs upcoming={upcoming} past={past} />}

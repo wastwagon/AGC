@@ -43,6 +43,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
+    let emailFailed = false;
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
       to: siteSettings.email.programs,
@@ -60,10 +61,10 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("Resend error:", error);
-      return NextResponse.json({ error: "Failed to send email" }, { status: 500 });
+      emailFailed = true;
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, emailFailed });
   } catch (err) {
     console.error("Contact API error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

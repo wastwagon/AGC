@@ -9,13 +9,15 @@ import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
+import { resolvePublicationsForPublic } from "@/lib/cms-fallback";
+import { CmsDraftNotice } from "@/components/CmsDraftNotice";
 
 export const metadata = {
   title: "Publications",
   description: "Reports, policy briefs, and research from the Africa Governance Centre.",
 };
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 export default async function PublicationsPage() {
   const [cmsPublications, taxonomy, merged, siteSettings] = await Promise.all([
@@ -26,7 +28,10 @@ export default async function PublicationsPage() {
   ]);
   const content = merged as unknown as typeof publicationsContent & { heroImage?: string };
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.publications;
-  const items: CmsPublication[] = cmsPublications.length > 0 ? cmsPublications : (fallbackPublications as CmsPublication[]);
+  const { items, cmsDraftsOnly: publicationsDraftsOnly } = await resolvePublicationsForPublic(
+    cmsPublications,
+    fallbackPublications as CmsPublication[]
+  );
   const itemsWithImages = await Promise.all(
     items.map(async (item) => ({
       item,
@@ -46,9 +51,12 @@ export default async function PublicationsPage() {
 
       <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-12 max-w-2xl">
+          <div className="mb-12 max-w-2xl space-y-4">
             <p className="text-sm font-medium text-accent-800">Library</p>
             <p className="page-prose mt-2">{content.intro}</p>
+            {publicationsDraftsOnly && (
+              <CmsDraftNotice entityLabel="publications" adminHref="/admin/publications" />
+            )}
           </div>
           {items.length > 0 ? (
             <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">

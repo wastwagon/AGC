@@ -1,10 +1,12 @@
 import { getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { placeholderImages } from "@/data/images";
+import { getSiteSettings } from "@/lib/site-settings";
 import { ApplicationsClient } from "./ApplicationsClient";
 
 export default async function ApplicationsPage() {
-  const merged = await getMergedPageContent(
+  const [merged, siteSettings] = await Promise.all([
+    getMergedPageContent(
     "applications",
     {
       heroTitle: "Volunteer application",
@@ -13,7 +15,9 @@ export default async function ApplicationsPage() {
       applyIntro: "A few minutes now helps us match you to the right team. Fields marked * are required.",
       heroImage: placeholderImages.applications,
     } as Record<string, unknown>
-  );
+    ),
+    getSiteSettings(),
+  ]);
 
   const heroImage = (await resolveImageUrl(merged.heroImage as string | undefined)) || placeholderImages.applications;
 
@@ -30,6 +34,7 @@ export default async function ApplicationsPage() {
         (merged.applyIntro as string) ||
         "A few minutes now helps us match you to the right team. Fields marked * are required."
       }
+      programsEmail={siteSettings.email.programs}
     />
   );
 }

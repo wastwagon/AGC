@@ -12,11 +12,13 @@ type ApplicationsClientProps = {
     image: string;
   };
   applyIntro: string;
+  programsEmail: string;
 };
 
-export function ApplicationsClient({ hero, applyIntro }: ApplicationsClientProps) {
+export function ApplicationsClient({ hero, applyIntro, programsEmail }: ApplicationsClientProps) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailNotifyWarning, setEmailNotifyWarning] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -30,6 +32,7 @@ export function ApplicationsClient({ hero, applyIntro }: ApplicationsClientProps
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
+          applicationType: formData.get("applicationType"),
           fullName: formData.get("fullName"),
           email: formData.get("email"),
           phone: formData.get("phone"),
@@ -45,6 +48,7 @@ export function ApplicationsClient({ hero, applyIntro }: ApplicationsClientProps
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to submit");
+      setEmailNotifyWarning(Boolean(data.emailFailed));
       setStatus("success");
       form.reset();
     } catch (err) {
@@ -83,10 +87,21 @@ export function ApplicationsClient({ hero, applyIntro }: ApplicationsClientProps
           <div className="page-card p-8 sm:p-10">
             <h2 className="page-heading text-xl text-stone-900">Application form</h2>
 
-            <form onSubmit={handleSubmit} className="mt-10 space-y-10">
+            <form onSubmit={handleSubmit} className="relative mt-10 space-y-10">
               <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
                 <label htmlFor="website">Website</label>
                 <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
+              </div>
+
+              <div>
+                <label htmlFor="applicationType" className={labelClass}>
+                  I am applying as <span className="text-accent-800">*</span>
+                </label>
+                <select id="applicationType" name="applicationType" required className={inputClass} defaultValue="volunteer">
+                  <option value="volunteer">Volunteer</option>
+                  <option value="staff">Staff / career interest</option>
+                  <option value="fellow">Fellowship / research role</option>
+                </select>
               </div>
 
               <div>
@@ -150,9 +165,17 @@ export function ApplicationsClient({ hero, applyIntro }: ApplicationsClientProps
               </div>
 
               {status === "success" && (
-                <p className="rounded-lg border border-emerald-200/80 bg-emerald-50/80 px-4 py-3 text-sm text-emerald-900">
-                  Thank you — your application is in. We&apos;ll be in touch when there&apos;s a fit.
-                </p>
+                <div className="space-y-2 text-sm">
+                  <p className="rounded-lg border border-emerald-200/80 bg-emerald-50/80 px-4 py-3 text-emerald-900">
+                    Thank you — your application is in. We&apos;ll be in touch when there&apos;s a fit.
+                  </p>
+                  {emailNotifyWarning && (
+                    <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900">
+                      We could not send the notification email automatically; your application is still saved. If this is
+                      time-sensitive, email {programsEmail} directly.
+                    </p>
+                  )}
+                </div>
               )}
               {status === "error" && (
                 <p className="rounded-lg border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-900">{errorMessage}</p>

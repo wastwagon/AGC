@@ -11,6 +11,8 @@ import { Button } from "@/components/Button";
 import { filterNewsByTag, getActiveCategorySlugs, getTagLabel } from "@/lib/news";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
+import { resolveNewsForPublic } from "@/lib/cms-fallback";
+import { CmsDraftNotice } from "@/components/CmsDraftNotice";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -35,7 +37,10 @@ export default async function NewsTagPage({ params }: Props) {
   if (!tag) notFound();
 
   const [cmsNews, taxonomy] = await Promise.all([getNews(50), getSiteTaxonomy()]);
-  const allNews: CmsNews[] = cmsNews.length > 0 ? cmsNews : (fallbackNews as CmsNews[]);
+  const { items: allNews, cmsDraftsOnly: newsDraftsOnly } = await resolveNewsForPublic(
+    cmsNews,
+    fallbackNews as CmsNews[]
+  );
   const newsItems = filterNewsByTag(allNews, slug);
   const activeCategories = getActiveCategorySlugs(allNews, taxonomy.newsCategories);
   const itemsWithImages = await Promise.all(
@@ -73,6 +78,11 @@ export default async function NewsTagPage({ params }: Props) {
               All news
             </Link>
           </div>
+          {newsDraftsOnly && (
+            <div className="mb-6">
+              <CmsDraftNotice entityLabel="news articles" adminHref="/admin/news" />
+            </div>
+          )}
 
           {activeCategories.length > 0 && (
             <NewsFilters

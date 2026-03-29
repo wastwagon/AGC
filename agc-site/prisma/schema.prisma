@@ -187,22 +187,37 @@ model NewsletterSignup {
 }
 
 model VolunteerApplication {
+  id               Int      @id @default(autoincrement())
+  fullName         String   @map("full_name") @db.VarChar(255)
+  email            String   @db.VarChar(255)
+  phone            String?  @db.VarChar(50)
+  position         String?  @db.VarChar(255)
+  organization     String?  @db.VarChar(255)
+  country          String?  @db.VarChar(100)
+  city             String?  @db.VarChar(100)
+  experience       String?  @db.Text
+  skills           String?  @db.Text
+  motivation       String?  @db.Text
+  availability     String?  @db.VarChar(100)
+  applicationType  String   @default("volunteer") @map("application_type") @db.VarChar(50)
+  createdAt        DateTime @default(now()) @map("created_at")
+
+  @@index([createdAt])
+  @@index([applicationType])
+  @@map("volunteer_applications")
+}
+
+model PartnershipInquiry {
   id           Int      @id @default(autoincrement())
-  fullName     String   @map("full_name") @db.VarChar(255)
+  name         String   @db.VarChar(255)
   email        String   @db.VarChar(255)
-  phone        String?  @db.VarChar(50)
-  position     String?  @db.VarChar(255)
   organization String?  @db.VarChar(255)
-  country      String?  @db.VarChar(100)
-  city         String?  @db.VarChar(100)
-  experience   String?  @db.Text
-  skills       String?  @db.Text
-  motivation   String?  @db.Text
-  availability String?  @db.VarChar(100)
+  focusArea    String?  @map("focus_area") @db.VarChar(255)
+  message      String   @db.Text
   createdAt    DateTime @default(now()) @map("created_at")
 
   @@index([createdAt])
-  @@map("volunteer_applications")
+  @@map("partnership_inquiries")
 }
 
 model ContactSubmission {

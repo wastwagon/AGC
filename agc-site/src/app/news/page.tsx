@@ -11,13 +11,15 @@ import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
+import { resolveNewsForPublic } from "@/lib/cms-fallback";
+import { CmsDraftNotice } from "@/components/CmsDraftNotice";
 
 export const metadata = {
   title: "News",
   description: "Latest news, insights, and developments from Africa Governance Centre.",
 };
 
-export const revalidate = 60;
+export const revalidate = 30;
 
 export default async function NewsPage() {
   const [cmsNews, taxonomy, merged, siteSettings] = await Promise.all([
@@ -28,7 +30,10 @@ export default async function NewsPage() {
   ]);
   const content = merged as unknown as typeof newsContent & { heroImage?: string };
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.news;
-  const newsItems: CmsNews[] = cmsNews.length > 0 ? cmsNews : (fallbackNews as CmsNews[]);
+  const { items: newsItems, cmsDraftsOnly: newsDraftsOnly } = await resolveNewsForPublic(
+    cmsNews,
+    fallbackNews as CmsNews[]
+  );
   const activeCategories = getActiveCategorySlugs(newsItems, taxonomy.newsCategories);
   const itemsWithImages = await Promise.all(
     newsItems.map(async (item) => ({
@@ -49,9 +54,12 @@ export default async function NewsPage() {
 
       <section className="page-section-warm border-t border-stone-200/60 py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-10 max-w-2xl">
+          <div className="mb-10 max-w-2xl space-y-4">
             <p className="text-sm font-medium text-accent-800">Updates</p>
-            <p className="page-prose mt-2">{content.intro}</p>
+            <p className="page-prose">{content.intro}</p>
+            {newsDraftsOnly && (
+              <CmsDraftNotice entityLabel="news articles" adminHref="/admin/news" />
+            )}
           </div>
           {activeCategories.length > 0 && (
             <NewsFilters

@@ -20,6 +20,7 @@ import {
 import { ourWorkSubLinks, getInvolvedSubLinks } from "@/data/content";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import type { SiteSettings } from "@/lib/site-settings";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { useMobileNav } from "./MobileNavContext";
 
 type NavItem = { href: string; label: string; icon: typeof Home; subLinks?: { href: string; label: string }[] };
@@ -35,7 +36,13 @@ const primaryNav: NavItem[] = [
   { href: "/contact", label: "Contact", icon: Mail },
 ];
 
-export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
+export function MobileDrawer({
+  siteSettings,
+  brandLogoSrc,
+}: {
+  siteSettings: SiteSettings;
+  brandLogoSrc: string;
+}) {
   const { mobileOpen, setMobileOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
@@ -117,11 +124,12 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-white/10 px-4 py-3.5">
           <Link href="/" className="flex min-w-0 items-center gap-2.5" onClick={() => setMobileOpen(false)}>
             <Image
-              src="/agc-logo.png"
+              src={brandLogoSrc}
               alt=""
               width={120}
               height={36}
-              className="h-8 w-auto object-contain brightness-0 invert opacity-95"
+              className={`h-8 w-auto object-contain opacity-95 ${brandLogoSrc === "/agc-logo.png" ? "brightness-0 invert" : ""}`}
+              unoptimized={preferUnoptimizedImage(brandLogoSrc)}
             />
           </Link>
           <button

@@ -12,6 +12,7 @@ export const newsletterSchema = z.object({
 });
 
 export const applicationSchema = z.object({
+  applicationType: z.enum(["volunteer", "staff", "fellow"]).optional().default("volunteer"),
   fullName: z.string().min(1, "Full name is required").max(200),
   email: z.string().email("Valid email is required"),
   phone: z.string().max(50).optional(),
@@ -23,6 +24,14 @@ export const applicationSchema = z.object({
   skills: z.string().max(2000).optional(),
   motivation: z.string().min(1, "Motivation is required").max(2000),
   availability: z.string().max(50).optional(),
+});
+
+export const partnershipInquirySchema = z.object({
+  name: z.string().min(1, "Name is required").max(200),
+  email: z.string().email("Valid email is required"),
+  organization: z.string().max(200).optional(),
+  focusArea: z.string().max(200).optional(),
+  message: z.string().min(1, "Message is required").max(5000),
 });
 
 export const eventRegistrationSchema = z.object({
@@ -158,6 +167,7 @@ export const pageContentFormSchema = z.object({
 export const siteSettingsFormSchema = z.object({
   name: z.string().min(1, "Site name is required").max(255),
   tagline: z.string().min(1, "Tagline is required").max(1000),
+  logo: z.string().max(500).optional(),
   phone: z.string().min(1, "Phone is required").max(100),
   address: z.string().min(1, "Address is required").max(500),
   officeHours: z.string().min(1, "Office hours are required").max(255),

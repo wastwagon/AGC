@@ -27,6 +27,7 @@ export default function AdminMediaPage() {
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [orphanCount, setOrphanCount] = useState<number | null>(null);
 
   const fetchMedia = useCallback(async () => {
     setLoading(true);
@@ -45,6 +46,24 @@ export default function AdminMediaPage() {
   useEffect(() => {
     fetchMedia();
   }, [fetchMedia]);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch("/api/admin/media/orphans");
+        const data = await res.json();
+        if (!cancelled && res.ok && Array.isArray(data.items)) {
+          setOrphanCount(data.items.length);
+        }
+      } catch {
+        /* ignore */
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [items.length]);
 
   if (loading && items.length === 0) {
     return (
@@ -126,8 +145,14 @@ export default function AdminMediaPage() {
     <div>
       <AdminPageHeader
         title="Media Library"
-        description="Upload images and reuse them across news, events, and pages. Select an image to copy its URL or media ID."
+        description="Upload images and reuse them across news, events, and pages. Select an image to copy its URL or media ID. Deletion is blocked while an asset is referenced; orphaned files (not linked anywhere) can be removed safely."
       />
+
+      {orphanCount !== null && orphanCount > 0 && (
+        <div className="mt-4 rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-950">
+          <strong>{orphanCount}</strong> {orphanCount === 1 ? "image appears" : "images appear"} unused in CMS content — candidates for cleanup. Compare with the grid below; delete only when you are sure they are obsolete.
+        </div>
+      )}
 
       {error && (
         <div className="mt-4 whitespace-pre-wrap rounded-lg border border-red-200 bg-red-50 p-4 text-sm text-red-700">

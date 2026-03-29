@@ -34,7 +34,9 @@ export async function POST(request: Request) {
 
     const data = parsed.data;
 
-    // Store in DB
+    const typeLabel =
+      data.applicationType === "staff" ? "Staff interest" : data.applicationType === "fellow" ? "Fellowship" : "Volunteer";
+
     await prisma.volunteerApplication.create({
       data: {
         fullName: data.fullName,
@@ -48,6 +50,7 @@ export async function POST(request: Request) {
         skills: data.skills ?? null,
         motivation: data.motivation ?? null,
         availability: data.availability ?? null,
+        applicationType: data.applicationType,
       },
     });
 
@@ -55,13 +58,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: true });
     }
 
+    let emailFailed = false;
     const { error } = await resend.emails.send({
       from: process.env.RESEND_FROM_EMAIL || "onboarding@resend.dev",
       to: siteSettings.email.programs,
       replyTo: data.email,
-      subject: `[AGC Volunteer] Application from ${escapeHtml(data.fullName)}`,
+      subject: `[AGC ${typeLabel}] Application from ${data.fullName}`,
       html: `
-        <h2>New Volunteer Application</h2>
+        <h2>New application (${escapeHtml(typeLabel)})</h2>
+        <p><strong>Type:</strong> ${escapeHtml(typeLabel)}</p>
         <p><strong>Full Name:</strong> ${escapeHtml(data.fullName)}</p>
         <p><strong>Email:</strong> ${escapeHtml(data.email)}</p>
         <p><strong>Phone:</strong> ${data.phone ? escapeHtml(data.phone) : "—"}</p>
@@ -81,10 +86,10 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error("Resend error:", error);
-      return NextResponse.json({ error: "Failed to submit application" }, { status: 500 });
+      emailFailed = true;
     }
 
-    return NextResponse.json({ success: true });
+    return NextResponse.json({ success: true, emailFailed });
   } catch (err) {
     console.error("Applications API error:", err);
     return NextResponse.json({ error: "Internal server error" }, { status: 500 });

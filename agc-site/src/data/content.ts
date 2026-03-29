@@ -5,6 +5,7 @@
 
 export const siteConfig = {
   name: "Africa Governance Centre",
+  logo: "",
   tagline:
     "Research and partnerships for fairer institutions—so everyday people can rely on schools, services, and economies that work.",
   email: {

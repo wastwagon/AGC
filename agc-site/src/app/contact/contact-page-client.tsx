@@ -21,6 +21,7 @@ type ContactPageClientProps = { contactContent: ContactContent; heroImage: strin
 export function ContactPageClient({ contactContent, heroImage, siteSettings }: ContactPageClientProps) {
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
+  const [emailNotifyWarning, setEmailNotifyWarning] = useState(false);
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -42,6 +43,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
       });
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Failed to send");
+      setEmailNotifyWarning(Boolean(data.emailFailed));
       setStatus("success");
       form.reset();
     } catch (err) {
@@ -175,7 +177,15 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                   />
                 </div>
                 {status === "success" && (
-                  <p className="text-sm text-green-600">Thank you! Your message has been sent.</p>
+                  <div className="space-y-2 text-sm">
+                    <p className="text-green-700">Thank you! Your message was received.</p>
+                    {emailNotifyWarning && (
+                      <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900">
+                        We could not send the notification email automatically; your message is still saved. If you need an
+                        urgent reply, email us directly at {siteSettings.email.programs}.
+                      </p>
+                    )}
+                  </div>
                 )}
                 {status === "error" && (
                   <p className="text-sm text-red-600">{errorMessage}</p>

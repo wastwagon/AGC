@@ -11,6 +11,7 @@ import { LanguageSelector } from "./LanguageSelector";
 import { HeaderTopbar } from "./HeaderTopbar";
 import { SearchModal } from "./SearchModal";
 import { useMobileNav } from "./mobile/MobileNavContext";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 type NavItem = { href: string; label: string; subLinks?: { href: string; label: string }[] };
 
@@ -25,7 +26,7 @@ const navWithDropdowns: NavItem[] = [
   { href: "/contact", label: "Contact" },
 ];
 
-export function Header({ siteSettings }: { siteSettings: SiteSettings }) {
+export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSettings; brandLogoSrc: string }) {
   const { mobileOpen, setMobileOpen, searchOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const [scrolled, setScrolled] = useState(false);
   const showTopbar = true;
@@ -56,12 +57,13 @@ export function Header({ siteSettings }: { siteSettings: SiteSettings }) {
           <div className="flex h-20 items-center justify-between gap-4">
             <Link href="/" className="shrink-0">
               <Image
-                src="/agc-logo.png"
+                src={brandLogoSrc}
                 alt={siteSettings.name}
                 width={160}
                 height={48}
                 className="h-10 w-auto object-contain lg:h-11"
                 priority
+                unoptimized={preferUnoptimizedImage(brandLogoSrc)}
               />
             </Link>
 

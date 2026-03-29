@@ -6,6 +6,7 @@ import { MapPin, Phone, Mail, Twitter, Linkedin, Instagram, Facebook } from "luc
 import { footerLinks } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import type { SiteSettings } from "@/lib/site-settings";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { NewsletterSignup } from "./NewsletterSignup";
 
 /** Footer project thumbnails - Our Work items with images */
@@ -22,7 +23,7 @@ const footerWorkItems = [
  * Consultar-style footer: dark navy upper (4 cols), darker lower (copyright)
  * Mobile-first: columns stack, enhanced spacing and accent highlights
  */
-export function Footer({ siteSettings }: { siteSettings: SiteSettings }) {
+export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSettings; brandLogoSrc: string }) {
   const socialLinks = [
     { href: siteSettings.social.twitter, icon: Twitter, label: "Twitter" },
     { href: siteSettings.social.linkedin, icon: Linkedin, label: "LinkedIn" },
@@ -39,11 +40,12 @@ export function Footer({ siteSettings }: { siteSettings: SiteSettings }) {
             <div className="min-h-0">
               <Link href="/" className="inline-block max-w-[180px]">
                 <Image
-                  src="/agc-logo.png"
+                  src={brandLogoSrc}
                   alt={siteSettings.name}
                   width={160}
                   height={48}
-                  className="h-10 w-auto object-contain brightness-0 invert"
+                  className={`h-10 w-auto object-contain ${brandLogoSrc === "/agc-logo.png" ? "brightness-0 invert" : ""}`}
+                  unoptimized={preferUnoptimizedImage(brandLogoSrc)}
                 />
               </Link>
               <p className="mt-4 text-[15px] leading-[1.9] text-white/90">

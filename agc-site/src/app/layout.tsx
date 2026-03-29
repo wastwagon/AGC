@@ -5,6 +5,7 @@ import { SiteChrome } from "@/components/SiteChrome";
 import { JsonLd } from "@/components/JsonLd";
 import { Analytics } from "@/components/Analytics";
 import { getSiteSettings } from "@/lib/site-settings";
+import { resolveImageUrl } from "@/lib/media";
 
 /** Body: highly legible, institutional (not generic Inter/DM stack) */
 const ibmPlex = IBM_Plex_Sans({
@@ -49,6 +50,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const siteSettings = await getSiteSettings();
+  const brandLogoSrc = (await resolveImageUrl(siteSettings.logo || undefined)) || "/agc-logo.png";
   return (
     <html lang="en" className={`${ibmPlex.variable} ${fraunces.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
@@ -60,7 +62,7 @@ export default async function RootLayout({
         </a>
         <JsonLd siteSettings={siteSettings} />
         <Analytics />
-        <SiteChrome siteSettings={siteSettings}>
+        <SiteChrome siteSettings={siteSettings} brandLogoSrc={brandLogoSrc}>
           <main id="main-content" className="flex-1">{children}</main>
         </SiteChrome>
       </body>
