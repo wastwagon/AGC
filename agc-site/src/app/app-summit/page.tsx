@@ -1,20 +1,24 @@
 import { appSummitContent } from "@/data/app-summit";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 import { AppSummitClient } from "./AppSummitClient";
 
+type AppSummitMerged = typeof appSummitContent & { heroImage?: string };
+
+const appSummitBuildFallback: AppSummitMerged = {
+  ...appSummitContent,
+  heroImage: "/uploads/placeholder.svg",
+};
+
 export default async function AppSummitPage() {
-  const fallback =
-    process.env.BUILD_WITHOUT_DB === "1"
-      ? ({ ...appSummitContent, heroImage: "/uploads/placeholder.svg" } as Record<string, unknown>)
-      : ({} as Record<string, unknown>);
+  const fallback = cmsStaticOrEmpty(appSummitBuildFallback);
 
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent("app-summit", fallback),
+    getMergedPageContent<AppSummitMerged>("app-summit", fallback),
     getSiteSettings(),
   ]);
-  const content = merged as unknown as typeof appSummitContent & { heroImage?: string };
+  const content = merged;
   const resolved = content.heroImage ? await resolveImageUrl(content.heroImage) : null;
   const heroImage = resolved || undefined;
 

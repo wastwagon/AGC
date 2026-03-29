@@ -7,7 +7,7 @@ import { PublicationCard } from "@/components/PublicationCard";
 import { Button } from "@/components/Button";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
 import { resolvePublicationsForPublic } from "@/lib/cms-fallback";
 import { CmsDraftNotice } from "@/components/CmsDraftNotice";
@@ -23,7 +23,7 @@ export default async function PublicationsPage() {
   const [cmsPublications, taxonomy, merged, siteSettings] = await Promise.all([
     getPublications(50),
     getSiteTaxonomy(),
-    getMergedPageContent("publications", publicationsContent as unknown as Record<string, unknown>),
+    getMergedPageContent<typeof publicationsContent>("publications", cmsStaticOrEmpty(publicationsContent)),
     getSiteSettings(),
   ]);
   const content = merged as unknown as typeof publicationsContent & { heroImage?: string };

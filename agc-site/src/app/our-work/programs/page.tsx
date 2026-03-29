@@ -1,7 +1,7 @@
 import { workContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { Button } from "@/components/Button";
 
@@ -10,9 +10,14 @@ export const metadata = {
   description: "Our core focus areas - forums and expert roundtables advancing governance excellence across Africa.",
 };
 
+type ProgramsWorkMerged = typeof workContent.programs & { heroImage?: string };
+
 export default async function ProgramsPage() {
-  const merged = await getMergedPageContent("our-work-programs", workContent.programs as unknown as Record<string, unknown>);
-  const content = merged as unknown as typeof workContent.programs & { heroImage?: string };
+  const merged = await getMergedPageContent<ProgramsWorkMerged>(
+    "our-work-programs",
+    cmsStaticOrEmpty(workContent.programs as ProgramsWorkMerged)
+  );
+  const content = merged;
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.programs;
 
   return (

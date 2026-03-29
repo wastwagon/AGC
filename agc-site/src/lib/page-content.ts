@@ -1,8 +1,18 @@
 import { getPageContent } from "@/lib/content";
 
 /**
- * Fetch page content from CMS and merge over static fallback.
- * CMS content takes precedence when present.
+ * Full static page object for Prisma-less builds only (`BUILD_WITHOUT_DB=1`).
+ * In production, merge CMS JSON over `{}` so bundled marketing copy is not used as a runtime fallback.
+ */
+export function cmsStaticOrEmpty<T extends Record<string, unknown>>(full: T): T {
+  if (process.env.BUILD_WITHOUT_DB === "1") {
+    return full;
+  }
+  return {} as T;
+}
+
+/**
+ * Fetch page content from CMS and merge over static fallback (or empty object from {@link cmsStaticOrEmpty}).
  */
 export async function getMergedPageContent<T extends Record<string, unknown>>(
   slug: string,

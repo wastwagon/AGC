@@ -2,7 +2,7 @@ import { getInvolvedContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -14,7 +14,7 @@ export const metadata = {
 
 export default async function VolunteerPage() {
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent("get-involved", getInvolvedContent as unknown as Record<string, unknown>),
+    getMergedPageContent<typeof getInvolvedContent>("get-involved", cmsStaticOrEmpty(getInvolvedContent)),
     getSiteSettings(),
   ]);
   const c = (merged as unknown as typeof getInvolvedContent).volunteer;

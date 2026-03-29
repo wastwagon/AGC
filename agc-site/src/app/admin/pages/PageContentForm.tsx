@@ -519,6 +519,14 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
                 placeholder="e.g. Three ways we show up alongside partners"
               />
+              <label className="mt-2 block text-xs font-medium text-slate-600">Card link label (optional)</label>
+              <input
+                type="text"
+                value={typeof parsedJson.pillarReadMoreLabel === "string" ? parsedJson.pillarReadMoreLabel : ""}
+                onChange={(e) => updateJsonField("pillarReadMoreLabel", e.target.value)}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                placeholder="e.g. Read more"
+              />
               <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-600">Programs card image</label>
@@ -968,6 +976,90 @@ export function PageContentForm({ item }: PageContentFormProps) {
         {item.slug === "app-summit" && (
           <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">APP Summit helper</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-medium text-slate-600">About section eyebrow</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.aboutSectionEyebrow === "string" ? parsedJson.aboutSectionEyebrow : ""}
+                  onChange={(e) => updateJsonField("aboutSectionEyebrow", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">About section heading</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.aboutSectionHeading === "string" ? parsedJson.aboutSectionHeading : ""}
+                  onChange={(e) => updateJsonField("aboutSectionHeading", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Label: Date (detail row)</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.detailLabelDate === "string" ? parsedJson.detailLabelDate : ""}
+                  onChange={(e) => updateJsonField("detailLabelDate", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Label: Location</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.detailLabelLocation === "string" ? parsedJson.detailLabelLocation : ""}
+                  onChange={(e) => updateJsonField("detailLabelLocation", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Label: Participants</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.detailLabelParticipants === "string" ? parsedJson.detailLabelParticipants : ""}
+                  onChange={(e) => updateJsonField("detailLabelParticipants", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Programme section eyebrow</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.programmeEyebrow === "string" ? parsedJson.programmeEyebrow : ""}
+                  onChange={(e) => updateJsonField("programmeEyebrow", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Day tab prefix</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.dayTabPrefix === "string" ? parsedJson.dayTabPrefix : ""}
+                  onChange={(e) => updateJsonField("dayTabPrefix", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  placeholder="e.g. Day (space after if needed)"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Contact section CTA label</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.contactSectionCtaLabel === "string" ? parsedJson.contactSectionCtaLabel : ""}
+                  onChange={(e) => updateJsonField("contactSectionCtaLabel", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Hero image alt text</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.heroImageAlt === "string" ? parsedJson.heroImageAlt : ""}
+                  onChange={(e) => updateJsonField("heroImageAlt", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
             <div className="grid gap-3 sm:grid-cols-3">
               <div>
                 <label className="block text-xs font-medium text-slate-600">Date</label>

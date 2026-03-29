@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { privacyPolicy } from "@/data/legal";
 import { PageHero } from "@/components/PageHero";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = {
@@ -11,7 +11,7 @@ export const metadata = {
 
 export default async function PrivacyPolicyPage() {
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent("privacy-policy", privacyPolicy as unknown as Record<string, unknown>),
+    getMergedPageContent<typeof privacyPolicy>("privacy-policy", cmsStaticOrEmpty(privacyPolicy)),
     getSiteSettings(),
   ]);
   const content = merged as unknown as typeof privacyPolicy;

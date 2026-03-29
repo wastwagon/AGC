@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { termsOfService } from "@/data/legal";
 import { PageHero } from "@/components/PageHero";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
 
 export const metadata = {
@@ -11,7 +11,7 @@ export const metadata = {
 
 export default async function TermsOfServicePage() {
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent("terms-of-service", termsOfService as unknown as Record<string, unknown>),
+    getMergedPageContent<typeof termsOfService>("terms-of-service", cmsStaticOrEmpty(termsOfService)),
     getSiteSettings(),
   ]);
   const content = merged as unknown as typeof termsOfService;

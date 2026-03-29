@@ -2,7 +2,7 @@ import Image from "next/image";
 import { aboutContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getTeam } from "@/lib/content";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { PageHero } from "@/components/PageHero";
 import { TeamSectionTabs } from "@/components/TeamSectionTabs";
 import { Button } from "@/components/Button";
@@ -18,7 +18,7 @@ export const revalidate = 60;
 export default async function AboutPage() {
   const [cmsTeam, content] = await Promise.all([
     getTeam(),
-    getMergedPageContent("about", aboutContent),
+    getMergedPageContent<typeof aboutContent>("about", cmsStaticOrEmpty(aboutContent)),
   ]);
   const heroImage = (await resolveImageUrl((content as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.about;
   const sectionImage = (await resolveImageUrl((content as Record<string, unknown>).sectionImage as string | undefined)) || placeholderImages.about;

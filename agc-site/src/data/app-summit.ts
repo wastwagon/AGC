@@ -6,6 +6,17 @@
 export const appSummitContent = {
   title: "African Political Parties Summit 2025",
   subtitle: "Strengthening Democratic Governance",
+  /** Editable via Admin → Page Content → app-summit */
+  aboutSectionEyebrow: "Continental convening",
+  aboutSectionHeading: "About APP Summit 2025",
+  detailLabelDate: "Date",
+  detailLabelLocation: "Location",
+  detailLabelParticipants: "Participants",
+  programmeEyebrow: "Programme",
+  /** Prefix before tab number, e.g. "Day " + 1 */
+  dayTabPrefix: "Day ",
+  contactSectionCtaLabel: "Contact us",
+  heroImageAlt: "APP Summit",
   intro: "The APP Summit is Africa's premier governance event, bringing together leaders, policymakers, researchers, and practitioners from across the continent and beyond.",
   details: {
     date: "August 12-14, 2025",

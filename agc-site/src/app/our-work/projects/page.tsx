@@ -1,7 +1,7 @@
 import { workContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { Button } from "@/components/Button";
 
@@ -10,9 +10,14 @@ export const metadata = {
   description: "Our targeted interventions - strengthening governance frameworks across African countries.",
 };
 
+type ProjectsWorkMerged = typeof workContent.projects & { heroImage?: string };
+
 export default async function ProjectsPage() {
-  const merged = await getMergedPageContent("our-work-projects", workContent.projects as unknown as Record<string, unknown>);
-  const content = merged as unknown as typeof workContent.projects & { heroImage?: string };
+  const merged = await getMergedPageContent<ProjectsWorkMerged>(
+    "our-work-projects",
+    cmsStaticOrEmpty(workContent.projects as ProjectsWorkMerged)
+  );
+  const content = merged;
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.projects;
 
   return (

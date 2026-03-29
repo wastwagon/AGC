@@ -1,7 +1,7 @@
 import { eventsContent, fallbackEvents } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getEvents } from "@/lib/content";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { PageHero } from "@/components/PageHero";
 import { EventsListingTabs } from "@/components/events/EventsListingTabs";
 import type { CmsEvent } from "@/lib/content";
@@ -19,7 +19,7 @@ export const revalidate = 30;
 export default async function EventsPage() {
   const [cmsEvents, merged] = await Promise.all([
     getEvents(),
-    getMergedPageContent("events", eventsContent as unknown as Record<string, unknown>),
+    getMergedPageContent<typeof eventsContent>("events", cmsStaticOrEmpty(eventsContent)),
   ]);
   const content = merged as unknown as typeof eventsContent & { heroImage?: string };
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.events;

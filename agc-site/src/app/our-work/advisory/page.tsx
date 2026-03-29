@@ -1,7 +1,7 @@
 import { workContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { Button } from "@/components/Button";
 
@@ -10,9 +10,14 @@ export const metadata = {
   description: "Our expert services - the Africa Governance Review Project and policy recommendations.",
 };
 
+type AdvisoryWorkMerged = typeof workContent.advisory & { heroImage?: string };
+
 export default async function AdvisoryPage() {
-  const merged = await getMergedPageContent("our-work-advisory", workContent.advisory as unknown as Record<string, unknown>);
-  const content = merged as unknown as typeof workContent.advisory & { heroImage?: string };
+  const merged = await getMergedPageContent<AdvisoryWorkMerged>(
+    "our-work-advisory",
+    cmsStaticOrEmpty(workContent.advisory as AdvisoryWorkMerged)
+  );
+  const content = merged;
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.advisory;
 
   return (

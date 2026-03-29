@@ -1,7 +1,7 @@
 import { workContent, fallbackNews, fallbackEvents } from "@/data/content";
 import { getHomePageCms } from "@/lib/home-page-data";
 import { getEvents, getNews, getPartners } from "@/lib/content";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import type { CmsNews, CmsEvent } from "@/lib/content";
 import { Button } from "@/components/Button";
 import { HeroConsultar } from "@/components/HeroConsultar";
@@ -19,22 +19,20 @@ export const revalidate = 30;
 type OurWorkCms = typeof workContent & {
   heroImage?: string;
   homePillarIntro?: string;
+  pillarReadMoreLabel?: string;
   pillarCardImages?: { programs?: string; projects?: string; advisory?: string };
 };
 
 export default async function HomePage() {
-  const workFallback =
-    process.env.BUILD_WITHOUT_DB === "1" ? (workContent as unknown as Record<string, unknown>) : ({} as Record<string, unknown>);
+  const workFallback = cmsStaticOrEmpty(workContent as OurWorkCms);
 
-  const [events, news, home, partnersFromDb, workMergedRaw] = await Promise.all([
+  const [events, news, home, partnersFromDb, workMerged] = await Promise.all([
     getEvents(),
     getNews(6),
     getHomePageCms(),
     getPartners(),
-    getMergedPageContent("our-work", workFallback),
+    getMergedPageContent<OurWorkCms>("our-work", workFallback),
   ]);
-
-  const workMerged = workMergedRaw as unknown as OurWorkCms;
 
   const { items: eventsList, cmsDraftsOnly: homeEventsDrafts } = await resolveEventsForPublic(
     events,
@@ -116,7 +114,11 @@ export default async function HomePage() {
         </div>
       )}
 
-      <HeroFeaturesOverlap intro={workMerged.homePillarIntro ?? ""} cards={pillarCards} />
+      <HeroFeaturesOverlap
+        intro={workMerged.homePillarIntro ?? ""}
+        readMoreLabel={workMerged.pillarReadMoreLabel?.trim() ?? ""}
+        cards={pillarCards}
+      />
 
       <HomePartnerStrip blurb={home.homePartnerBlurb} partners={stripPartners} />
 

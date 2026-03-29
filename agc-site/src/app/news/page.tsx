@@ -9,7 +9,7 @@ import { Button } from "@/components/Button";
 import { getActiveCategorySlugs } from "@/lib/news";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
 import { resolveNewsForPublic } from "@/lib/cms-fallback";
 import { CmsDraftNotice } from "@/components/CmsDraftNotice";
@@ -25,7 +25,7 @@ export default async function NewsPage() {
   const [cmsNews, taxonomy, merged, siteSettings] = await Promise.all([
     getNews(50),
     getSiteTaxonomy(),
-    getMergedPageContent("news", newsContent as unknown as Record<string, unknown>),
+    getMergedPageContent<typeof newsContent>("news", cmsStaticOrEmpty(newsContent)),
     getSiteSettings(),
   ]);
   const content = merged as unknown as typeof newsContent & { heroImage?: string };

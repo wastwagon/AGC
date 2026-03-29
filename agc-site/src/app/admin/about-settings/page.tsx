@@ -1,5 +1,5 @@
 import { aboutContent } from "@/data/content";
-import { getMergedPageContent } from "@/lib/page-content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { AboutSettingsForm } from "./AboutSettingsForm";
 
@@ -11,7 +11,7 @@ export default async function AdminAboutSettingsPage({
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
   const [content, params] = await Promise.all([
-    getMergedPageContent("about", aboutContent as unknown as Record<string, unknown>),
+    getMergedPageContent<typeof aboutContent>("about", cmsStaticOrEmpty(aboutContent)),
     searchParams,
   ]);
   const c = content as typeof aboutContent & { heroImage?: string; sectionImage?: string };

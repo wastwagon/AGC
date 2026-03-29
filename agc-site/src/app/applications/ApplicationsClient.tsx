@@ -9,7 +9,7 @@ type ApplicationsClientProps = {
   hero: {
     title: string;
     subtitle: string;
-    image: string;
+    image?: string;
   };
   applyIntro: string;
   programsEmail: string;

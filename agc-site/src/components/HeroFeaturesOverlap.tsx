@@ -13,13 +13,15 @@ export type HomePillarCard = {
 
 type Props = {
   intro: string;
+  /** Link suffix on each pillar card; set under Admin → Page Content → our-work */
+  readMoreLabel?: string;
   cards: HomePillarCard[];
 };
 
 /**
  * Three “our work” pillars on the homepage — copy and image refs come from CMS (`our-work` page content).
  */
-export function HeroFeaturesOverlap({ intro, cards }: Props) {
+export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props) {
   if (cards.length === 0) return null;
 
   return (
@@ -54,7 +56,11 @@ export function HeroFeaturesOverlap({ intro, cards }: Props) {
               <div className="flex flex-1 flex-col p-7 md:p-8">
                 <h2 className="font-serif text-xl font-semibold leading-snug tracking-tight text-stone-900">{item.title}</h2>
                 <p className="mt-3 flex-1 text-[15px] leading-relaxed text-stone-600">{item.description}</p>
-                <span className="mt-6 inline-block text-sm font-medium text-accent-700 group-hover:underline">Read more</span>
+                {readMoreLabel.trim() ? (
+                  <span className="mt-6 inline-block text-sm font-medium text-accent-700 group-hover:underline">
+                    {readMoreLabel}
+                  </span>
+                ) : null}
               </div>
             </Link>
           ))}
