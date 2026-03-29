@@ -1,13 +1,8 @@
 import { cache } from "react";
 import { siteConfig } from "@/data/content";
-import {
-  DEFAULT_SITE_CHROME,
-  type SiteChrome,
-  type SiteFooterChrome,
-  type SiteNavItem,
-  type SiteNavLink,
-} from "@/data/site-chrome";
+import { DEFAULT_SITE_CHROME, type SiteChrome } from "@/data/site-chrome";
 import { prisma } from "@/lib/db";
+import { parseBottomNav, parseLinkList, parseNavList, parseWorkThumbs } from "@/lib/site-chrome-parse";
 
 export type SiteSettings = {
   name: string;
@@ -39,63 +34,6 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
   ...siteConfig,
   chrome: DEFAULT_SITE_CHROME,
 };
-
-function isNavLink(x: unknown): x is SiteNavLink {
-  if (!x || typeof x !== "object" || Array.isArray(x)) return false;
-  const o = x as Record<string, unknown>;
-  return typeof o.href === "string" && o.href.length > 0 && typeof o.label === "string";
-}
-
-function parseNavItem(x: unknown): SiteNavItem | null {
-  if (!isNavLink(x)) return null;
-  const o = x as Record<string, unknown>;
-  const href = o.href as string;
-  const label = o.label as string;
-  let subLinks: SiteNavLink[] | undefined;
-  if (Array.isArray(o.subLinks)) {
-    const sl = o.subLinks.filter(isNavLink).map((s) => ({ href: s.href as string, label: s.label as string }));
-    if (sl.length > 0) subLinks = sl;
-  }
-  return { href, label, subLinks };
-}
-
-function parseNavList(v: unknown): SiteNavItem[] | null {
-  if (!Array.isArray(v)) return null;
-  const items = v.map(parseNavItem).filter((x): x is SiteNavItem => x !== null);
-  return items.length > 0 ? items : null;
-}
-
-function parseLinkList(v: unknown): SiteNavLink[] | null {
-  if (!Array.isArray(v)) return null;
-  const items = v.filter(isNavLink).map((s) => ({ href: s.href, label: s.label }));
-  return items.length > 0 ? items : null;
-}
-
-function parseWorkThumbs(v: unknown): SiteFooterChrome["workThumbnails"] | null {
-  if (!Array.isArray(v)) return null;
-  const out: SiteFooterChrome["workThumbnails"] = [];
-  for (const x of v) {
-    if (!x || typeof x !== "object" || Array.isArray(x)) continue;
-    const o = x as Record<string, unknown>;
-    if (typeof o.href === "string" && o.href.length > 0 && typeof o.alt === "string") {
-      out.push({ href: o.href, alt: o.alt });
-    }
-  }
-  return out.length > 0 ? out : null;
-}
-
-function parseBottomNav(v: unknown): { href: string; label: string }[] | null {
-  if (!Array.isArray(v)) return null;
-  const out: { href: string; label: string }[] = [];
-  for (const x of v) {
-    if (!x || typeof x !== "object" || Array.isArray(x)) continue;
-    const o = x as Record<string, unknown>;
-    if (typeof o.href === "string" && o.href.length > 0 && typeof o.label === "string") {
-      out.push({ href: o.href, label: o.label });
-    }
-  }
-  return out.length > 0 ? out : null;
-}
 
 export function mergeSiteChrome(patch: unknown): SiteChrome {
   const base = DEFAULT_SITE_CHROME;
@@ -199,6 +137,14 @@ export function mergeSiteChrome(patch: unknown): SiteChrome {
   };
 }
 
+/** Empty CMS values should not wipe env defaults (`NEXT_PUBLIC_*_URL` in `siteConfig.social`). */
+function coalesceSocialUrl(value: unknown, fallback: string): string {
+  if (typeof value !== "string") return fallback;
+  const t = value.trim();
+  if (!t || t === "#") return fallback;
+  return t;
+}
+
 function sanitizeSiteSettings(value: unknown): SiteSettings {
   const src = value && typeof value === "object" && !Array.isArray(value) ? (value as Record<string, unknown>) : {};
   const email = src.email && typeof src.email === "object" && !Array.isArray(src.email)
@@ -232,10 +178,10 @@ function sanitizeSiteSettings(value: unknown): SiteSettings {
     address: typeof src.address === "string" ? src.address : DEFAULT_SITE_SETTINGS.address,
     officeHours: typeof src.officeHours === "string" ? src.officeHours : DEFAULT_SITE_SETTINGS.officeHours,
     social: {
-      twitter: typeof social.twitter === "string" ? social.twitter : DEFAULT_SITE_SETTINGS.social.twitter,
-      linkedin: typeof social.linkedin === "string" ? social.linkedin : DEFAULT_SITE_SETTINGS.social.linkedin,
-      instagram: typeof social.instagram === "string" ? social.instagram : DEFAULT_SITE_SETTINGS.social.instagram,
-      facebook: typeof social.facebook === "string" ? social.facebook : DEFAULT_SITE_SETTINGS.social.facebook,
+      twitter: coalesceSocialUrl(social.twitter, DEFAULT_SITE_SETTINGS.social.twitter),
+      linkedin: coalesceSocialUrl(social.linkedin, DEFAULT_SITE_SETTINGS.social.linkedin),
+      instagram: coalesceSocialUrl(social.instagram, DEFAULT_SITE_SETTINGS.social.instagram),
+      facebook: coalesceSocialUrl(social.facebook, DEFAULT_SITE_SETTINGS.social.facebook),
     },
     languages,
     chrome: mergeSiteChrome(src.chrome),

@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { ImagePlus } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
 import { updateSiteSettings } from "./actions";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { ImagePicker } from "@/components/ImagePicker";
+import { SiteSettingsChromeLists } from "./SiteSettingsChromeLists";
 
 function SubmitButton() {
   const { pending } = useFormStatus();
@@ -43,43 +44,9 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
   const [draftRestored] = useState(!!initialDraft);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
-  type ChromeJsonFieldName =
-    | "chromeNavJson"
-    | "chromeBottomNavJson"
-    | "chromeFooterQuickLinksJson"
-    | "chromeFooterLegalJson"
-    | "chromeFooterWorkThumbsJson";
-  const [chromeJsonErrors, setChromeJsonErrors] = useState<Partial<Record<ChromeJsonFieldName, string>>>({});
-
-  function validateChromeJsonField(name: ChromeJsonFieldName, value: string) {
-    const t = value.trim();
-    if (!t) {
-      setChromeJsonErrors((prev) => {
-        const next = { ...prev };
-        delete next[name];
-        return next;
-      });
-      return;
-    }
-    try {
-      const v = JSON.parse(t) as unknown;
-      if (!Array.isArray(v)) {
-        setChromeJsonErrors((prev) => ({ ...prev, [name]: "Must be a JSON array." }));
-        return;
-      }
-      setChromeJsonErrors((prev) => {
-        const next = { ...prev };
-        delete next[name];
-        return next;
-      });
-    } catch {
-      setChromeJsonErrors((prev) => ({ ...prev, [name]: "Invalid JSON." }));
-    }
-  }
-
   const bc = settings.chrome.breadcrumbs;
 
-  function saveDraft() {
+  const saveDraft = useCallback(() => {
     if (!formRef.current) return;
     const fd = new FormData(formRef.current);
     const values: Record<string, string> = {};
@@ -87,7 +54,7 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
     const payload = { values, savedAt: new Date().toISOString() };
     window.localStorage.setItem(draftKey, JSON.stringify(payload));
     setLastSavedAt(payload.savedAt);
-  }
+  }, [draftKey]);
 
   function clearDraft() {
     window.localStorage.removeItem(draftKey);
@@ -211,7 +178,8 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Social links</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Full URLs for each platform. Icons appear in the <strong>header top bar</strong> (right) and in the footer when set.
+          Full URLs for each platform. Icons show in the <strong>header top bar</strong> (right) and footer when a URL is set. Leave a field empty to use the matching{" "}
+          <code className="rounded bg-slate-100 px-1 text-xs">NEXT_PUBLIC_*_URL</code> build-time env var if configured.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
@@ -244,7 +212,7 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Header, mobile &amp; footer labels</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Public navigation and footer copy. Optional JSON blocks override link lists and menu structure; leave blank to keep built-in defaults after save (empty strings fall back to defaults).
+          Public navigation and footer copy. Use the editors below for menus and footer lists—no JSON required. Label fields keep built-in defaults when left empty on save.
         </p>
         <div className="mt-4 grid gap-3 sm:grid-cols-2">
           <div>
@@ -304,91 +272,7 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
             <input id="footerAdminLabel" name="footerAdminLabel" defaultValue={settings.chrome.footer.adminLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
         </div>
-        <div className="mt-6 space-y-4">
-          <div>
-            <label htmlFor="chromeNavJson" className="block text-sm font-medium text-slate-700">Main nav JSON (optional)</label>
-            <p className="text-xs text-slate-500">Array of <code>{"{ href, label, subLinks?: [{ href, label }] }"}</code>. Empty = default routes.</p>
-            <textarea
-              id="chromeNavJson"
-              name="chromeNavJson"
-              rows={10}
-              defaultValue={JSON.stringify(settings.chrome.nav, null, 2)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
-              onBlur={(e) => validateChromeJsonField("chromeNavJson", e.currentTarget.value)}
-            />
-            {chromeJsonErrors.chromeNavJson ? (
-              <p className="mt-1 text-xs text-red-600" role="alert">
-                {chromeJsonErrors.chromeNavJson}
-              </p>
-            ) : null}
-          </div>
-          <div>
-            <label htmlFor="chromeBottomNavJson" className="block text-sm font-medium text-slate-700">Mobile bottom bar JSON (optional)</label>
-            <p className="text-xs text-slate-500">Array of <code>{"{ href, label }"}</code>. Use <code>__menu__</code> for the drawer tab.</p>
-            <textarea
-              id="chromeBottomNavJson"
-              name="chromeBottomNavJson"
-              rows={6}
-              defaultValue={JSON.stringify(settings.chrome.bottomNav, null, 2)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
-              onBlur={(e) => validateChromeJsonField("chromeBottomNavJson", e.currentTarget.value)}
-            />
-            {chromeJsonErrors.chromeBottomNavJson ? (
-              <p className="mt-1 text-xs text-red-600" role="alert">
-                {chromeJsonErrors.chromeBottomNavJson}
-              </p>
-            ) : null}
-          </div>
-          <div>
-            <label htmlFor="chromeFooterQuickLinksJson" className="block text-sm font-medium text-slate-700">Footer quick links JSON (optional)</label>
-            <textarea
-              id="chromeFooterQuickLinksJson"
-              name="chromeFooterQuickLinksJson"
-              rows={6}
-              defaultValue={JSON.stringify(settings.chrome.footer.quickLinks, null, 2)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
-              onBlur={(e) => validateChromeJsonField("chromeFooterQuickLinksJson", e.currentTarget.value)}
-            />
-            {chromeJsonErrors.chromeFooterQuickLinksJson ? (
-              <p className="mt-1 text-xs text-red-600" role="alert">
-                {chromeJsonErrors.chromeFooterQuickLinksJson}
-              </p>
-            ) : null}
-          </div>
-          <div>
-            <label htmlFor="chromeFooterLegalJson" className="block text-sm font-medium text-slate-700">Footer legal links JSON (optional)</label>
-            <textarea
-              id="chromeFooterLegalJson"
-              name="chromeFooterLegalJson"
-              rows={4}
-              defaultValue={JSON.stringify(settings.chrome.footer.legal, null, 2)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
-              onBlur={(e) => validateChromeJsonField("chromeFooterLegalJson", e.currentTarget.value)}
-            />
-            {chromeJsonErrors.chromeFooterLegalJson ? (
-              <p className="mt-1 text-xs text-red-600" role="alert">
-                {chromeJsonErrors.chromeFooterLegalJson}
-              </p>
-            ) : null}
-          </div>
-          <div>
-            <label htmlFor="chromeFooterWorkThumbsJson" className="block text-sm font-medium text-slate-700">Footer work thumbnails JSON (optional)</label>
-            <p className="text-xs text-slate-500">Array of <code>{"{ href, alt }"}</code>. Images map from known routes in code.</p>
-            <textarea
-              id="chromeFooterWorkThumbsJson"
-              name="chromeFooterWorkThumbsJson"
-              rows={6}
-              defaultValue={JSON.stringify(settings.chrome.footer.workThumbnails, null, 2)}
-              className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-xs"
-              onBlur={(e) => validateChromeJsonField("chromeFooterWorkThumbsJson", e.currentTarget.value)}
-            />
-            {chromeJsonErrors.chromeFooterWorkThumbsJson ? (
-              <p className="mt-1 text-xs text-red-600" role="alert">
-                {chromeJsonErrors.chromeFooterWorkThumbsJson}
-              </p>
-            ) : null}
-          </div>
-        </div>
+        <SiteSettingsChromeLists chrome={settings.chrome} initialDraft={initialDraft} onListsChange={saveDraft} />
       </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
