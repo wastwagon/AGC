@@ -104,7 +104,11 @@ export default async function HomePage() {
 
   return (
     <>
-      <HeroConsultar hero={home.heroContent} sliderImages={heroSlides} />
+      <HeroConsultar
+        hero={home.heroContent}
+        sliderImages={heroSlides}
+        backgroundVideoSrc="/media/hero-video-background.mp4"
+      />
 
       {(homeEventsDrafts || homeNewsDrafts) && (
         <div className="border-b border-amber-200/80 bg-amber-50/95">

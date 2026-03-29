@@ -29,6 +29,11 @@ type HeroProps = {
   hero?: HomePageCms["heroContent"];
   /** Hero carousel image URLs. From CMS when set; otherwise pass default from page. */
   sliderImages: string[];
+  /**
+   * Looped MP4 from /public (e.g. `/media/hero-video-background.mp4`).
+   * When set and motion is allowed, used instead of the image carousel.
+   */
+  backgroundVideoSrc?: string;
 };
 
 const EMPTY_HERO: HomePageCms["heroContent"] = {
@@ -41,7 +46,7 @@ const EMPTY_HERO: HomePageCms["heroContent"] = {
   ctaSecondaryHref: "/",
 };
 
-export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
+export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc }: HeroProps) {
   const heroContent = heroProp ?? EMPTY_HERO;
   const [current, setCurrent] = useState(0);
   const reducedMotion = useSyncExternalStore(
@@ -50,6 +55,8 @@ export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
     getPrefersReducedMotionServerSnapshot
   );
   const slides = sliderImages.filter((s) => typeof s === "string" && s.length > 0);
+  const useVideoBackground =
+    Boolean(backgroundVideoSrc?.trim()) && !reducedMotion;
 
   const next = useCallback(() => {
     if (slides.length <= 1) return;
@@ -62,15 +69,29 @@ export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
   }, [slides.length]);
 
   useEffect(() => {
-    if (reducedMotion || slides.length <= 1) return;
+    if (reducedMotion || slides.length <= 1 || useVideoBackground) return;
     const id = setInterval(next, 6000);
     return () => clearInterval(id);
-  }, [next, reducedMotion, slides.length]);
+  }, [next, reducedMotion, slides.length, useVideoBackground]);
 
   return (
     <section className="group relative flex min-h-[480px] w-full flex-col overflow-hidden sm:min-h-[520px] lg:min-h-[min(85vh,720px)]">
-      {/* Photo slides from CMS, or gradient-only when no images are configured */}
-      {slides.length === 0 ? (
+      {/* Video (preferred when configured), else CMS slides, else gradient */}
+      {useVideoBackground && backgroundVideoSrc ? (
+        <div className="absolute inset-0 z-0" aria-hidden>
+          <video
+            className="h-full w-full object-cover"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+          >
+            <source src={backgroundVideoSrc} type="video/mp4" />
+          </video>
+          <div className="absolute inset-0 bg-gradient-to-br from-stone-950/88 via-accent-900/75 to-accent-600/32" />
+        </div>
+      ) : slides.length === 0 ? (
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-stone-900 via-accent-900 to-accent-700" aria-hidden />
       ) : (
         slides.map((src, i) => (
@@ -121,7 +142,7 @@ export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
               {heroContent.ctaSecondary}
             </Link>
           </div>
-          {slides.length > 1 && (
+          {!useVideoBackground && slides.length > 1 && (
             <div className="mt-10 flex gap-1.5" role="tablist" aria-label="Hero slides">
               {slides.map((_, i) => (
                 <button
@@ -141,7 +162,7 @@ export function HeroConsultar({ hero: heroProp, sliderImages }: HeroProps) {
         </div>
       </div>
 
-      {slides.length > 1 && (
+      {!useVideoBackground && slides.length > 1 && (
         <>
           <button
             type="button"
