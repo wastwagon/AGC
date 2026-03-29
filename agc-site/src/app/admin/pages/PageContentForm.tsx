@@ -1368,6 +1368,42 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 />
               </div>
               <div>
+                <label className="block text-xs font-medium text-slate-600">Breadcrumb: Home</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.breadcrumbHome === "string" ? parsedJson.breadcrumbHome : ""}
+                  onChange={(e) => updateJsonField("breadcrumbHome", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Breadcrumb: Get involved</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.breadcrumbGetInvolved === "string" ? parsedJson.breadcrumbGetInvolved : ""}
+                  onChange={(e) => updateJsonField("breadcrumbGetInvolved", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Breadcrumb: Volunteer</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.breadcrumbVolunteer === "string" ? parsedJson.breadcrumbVolunteer : ""}
+                  onChange={(e) => updateJsonField("breadcrumbVolunteer", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Breadcrumb: Current page</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.breadcrumbApplication === "string" ? parsedJson.breadcrumbApplication : ""}
+                  onChange={(e) => updateJsonField("breadcrumbApplication", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
                 <label className="block text-xs font-medium text-slate-600">Apply eyebrow</label>
                 <input
                   type="text"

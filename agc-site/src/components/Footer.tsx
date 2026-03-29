@@ -70,7 +70,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                   </li>
                 ))}
               </ul>
-              <NewsletterSignup />
+              <NewsletterSignup copy={siteSettings.chrome.newsletter} />
             </div>
 
             {/* 2. Contact */}

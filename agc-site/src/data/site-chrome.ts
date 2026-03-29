@@ -15,6 +15,32 @@ export type SiteFooterChrome = {
   workThumbnails: { href: string; alt: string }[];
 };
 
+/** Header search modal copy (Admin → Site settings). */
+export type SiteSearchChrome = {
+  dialogAriaLabel: string;
+  placeholder: string;
+  closeAriaLabel: string;
+  loading: string;
+  emptyNoQuery: string;
+  emptyNoResults: string;
+  typeEvent: string;
+  typeNews: string;
+  typePublication: string;
+};
+
+/** Footer newsletter block copy. */
+export type SiteNewsletterChrome = {
+  heading: string;
+  description: string;
+  placeholder: string;
+  emailAriaLabel: string;
+  submit: string;
+  submitLoading: string;
+  subscribed: string;
+  successMessage: string;
+  errorGeneric: string;
+};
+
 export type SiteChrome = {
   skipToContentLabel: string;
   headerContactCta: string;
@@ -27,6 +53,8 @@ export type SiteChrome = {
   nav: SiteNavItem[];
   bottomNav: { href: string; label: string }[];
   footer: SiteFooterChrome;
+  search: SiteSearchChrome;
+  newsletter: SiteNewsletterChrome;
 };
 
 function cloneLinks(links: readonly { href: string; label: string }[]): SiteNavLink[] {
@@ -82,5 +110,27 @@ export const DEFAULT_SITE_CHROME: SiteChrome = {
       { href: "/events", alt: "Events" },
       { href: "/news", alt: "News" },
     ],
+  },
+  search: {
+    dialogAriaLabel: "Site search",
+    placeholder: "Search events, news, publications…",
+    closeAriaLabel: "Close search",
+    loading: "Loading…",
+    emptyNoQuery: "Start typing to search.",
+    emptyNoResults: "No results found.",
+    typeEvent: "Event",
+    typeNews: "News",
+    typePublication: "Publication",
+  },
+  newsletter: {
+    heading: "Stay Updated",
+    description: "Subscribe to our newsletter for updates.",
+    placeholder: "your@email.com",
+    emailAriaLabel: "Email for newsletter",
+    submit: "Subscribe",
+    submitLoading: "…",
+    subscribed: "Subscribed",
+    successMessage: "Thanks for subscribing!",
+    errorGeneric: "Something went wrong.",
   },
 };

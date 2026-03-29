@@ -88,7 +88,11 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
               >
                 <Search className="h-5 w-5" />
               </button>
-              <SearchModal isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+              <SearchModal
+                isOpen={searchOpen}
+                onClose={() => setSearchOpen(false)}
+                copy={siteSettings.chrome.search}
+              />
               <Link
                 href="/contact"
                 className="hidden rounded-lg bg-gradient-to-r from-accent-600 to-accent-500 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-95 sm:inline-block"

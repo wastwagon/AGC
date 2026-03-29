@@ -76,6 +76,24 @@ export async function updateSiteSettings(formData: FormData) {
     chromeFooterQuickLinksJson: formData.get("chromeFooterQuickLinksJson") || undefined,
     chromeFooterLegalJson: formData.get("chromeFooterLegalJson") || undefined,
     chromeFooterWorkThumbsJson: formData.get("chromeFooterWorkThumbsJson") || undefined,
+    searchDialogAriaLabel: formData.get("searchDialogAriaLabel") || undefined,
+    searchPlaceholder: formData.get("searchPlaceholder") || undefined,
+    searchCloseAriaLabel: formData.get("searchCloseAriaLabel") || undefined,
+    searchLoading: formData.get("searchLoading") || undefined,
+    searchEmptyNoQuery: formData.get("searchEmptyNoQuery") || undefined,
+    searchEmptyNoResults: formData.get("searchEmptyNoResults") || undefined,
+    searchTypeEvent: formData.get("searchTypeEvent") || undefined,
+    searchTypeNews: formData.get("searchTypeNews") || undefined,
+    searchTypePublication: formData.get("searchTypePublication") || undefined,
+    newsletterHeading: formData.get("newsletterHeading") || undefined,
+    newsletterDescription: formData.get("newsletterDescription") || undefined,
+    newsletterPlaceholder: formData.get("newsletterPlaceholder") || undefined,
+    newsletterEmailAriaLabel: formData.get("newsletterEmailAriaLabel") || undefined,
+    newsletterSubmit: formData.get("newsletterSubmit") || undefined,
+    newsletterSubmitLoading: formData.get("newsletterSubmitLoading") || undefined,
+    newsletterSubscribed: formData.get("newsletterSubscribed") || undefined,
+    newsletterSuccessMessage: formData.get("newsletterSuccessMessage") || undefined,
+    newsletterErrorGeneric: formData.get("newsletterErrorGeneric") || undefined,
   };
 
   const parsed = siteSettingsFormSchema.safeParse(raw);
@@ -132,6 +150,29 @@ export async function updateSiteSettings(formData: FormData) {
   if (footerLegalJson) footerPatch.legal = footerLegalJson;
   if (footerThumbsJson) footerPatch.workThumbnails = footerThumbsJson;
   chromePatch.footer = footerPatch;
+
+  chromePatch.search = {
+    dialogAriaLabel: data.searchDialogAriaLabel,
+    placeholder: data.searchPlaceholder,
+    closeAriaLabel: data.searchCloseAriaLabel,
+    loading: data.searchLoading,
+    emptyNoQuery: data.searchEmptyNoQuery,
+    emptyNoResults: data.searchEmptyNoResults,
+    typeEvent: data.searchTypeEvent,
+    typeNews: data.searchTypeNews,
+    typePublication: data.searchTypePublication,
+  };
+  chromePatch.newsletter = {
+    heading: data.newsletterHeading,
+    description: data.newsletterDescription,
+    placeholder: data.newsletterPlaceholder,
+    emailAriaLabel: data.newsletterEmailAriaLabel,
+    submit: data.newsletterSubmit,
+    submitLoading: data.newsletterSubmitLoading,
+    subscribed: data.newsletterSubscribed,
+    successMessage: data.newsletterSuccessMessage,
+    errorGeneric: data.newsletterErrorGeneric,
+  };
 
   const chrome = mergeSiteChrome(chromePatch);
 

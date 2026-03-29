@@ -23,6 +23,10 @@ export const applicationsPageUiDefaults = {
   emailWarnIntro:
     "We could not send the notification email automatically; your application is still saved. If this is time-sensitive, email",
   errorFallback: "Something went wrong. Please try again.",
+  breadcrumbHome: "Home",
+  breadcrumbGetInvolved: "Get Involved",
+  breadcrumbVolunteer: "Volunteer",
+  breadcrumbApplication: "Application",
 } as const;
 
 export type VolunteerFieldDef = {

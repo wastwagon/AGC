@@ -107,6 +107,14 @@ export function mergeSiteChrome(patch: unknown): SiteChrome {
     p.footer && typeof p.footer === "object" && !Array.isArray(p.footer)
       ? (p.footer as Record<string, unknown>)
       : {};
+  const searchPatch =
+    p.search && typeof p.search === "object" && !Array.isArray(p.search)
+      ? (p.search as Record<string, unknown>)
+      : {};
+  const newsletterPatch =
+    p.newsletter && typeof p.newsletter === "object" && !Array.isArray(p.newsletter)
+      ? (p.newsletter as Record<string, unknown>)
+      : {};
 
   const nav = parseNavList(p.nav) ?? base.nav.map((i) => ({ ...i, subLinks: i.subLinks?.map((s) => ({ ...s })) }));
   const bottomNav = parseBottomNav(p.bottomNav) ?? [...base.bottomNav];
@@ -138,6 +146,28 @@ export function mergeSiteChrome(patch: unknown): SiteChrome {
       quickLinks: quickLinks ?? base.footer.quickLinks.map((l) => ({ ...l })),
       legal: legal ?? base.footer.legal.map((l) => ({ ...l })),
       workThumbnails: workThumbnails ?? base.footer.workThumbnails.map((t) => ({ ...t })),
+    },
+    search: {
+      dialogAriaLabel: pickStr(searchPatch.dialogAriaLabel, base.search.dialogAriaLabel),
+      placeholder: pickStr(searchPatch.placeholder, base.search.placeholder),
+      closeAriaLabel: pickStr(searchPatch.closeAriaLabel, base.search.closeAriaLabel),
+      loading: pickStr(searchPatch.loading, base.search.loading),
+      emptyNoQuery: pickStr(searchPatch.emptyNoQuery, base.search.emptyNoQuery),
+      emptyNoResults: pickStr(searchPatch.emptyNoResults, base.search.emptyNoResults),
+      typeEvent: pickStr(searchPatch.typeEvent, base.search.typeEvent),
+      typeNews: pickStr(searchPatch.typeNews, base.search.typeNews),
+      typePublication: pickStr(searchPatch.typePublication, base.search.typePublication),
+    },
+    newsletter: {
+      heading: pickStr(newsletterPatch.heading, base.newsletter.heading),
+      description: pickStr(newsletterPatch.description, base.newsletter.description),
+      placeholder: pickStr(newsletterPatch.placeholder, base.newsletter.placeholder),
+      emailAriaLabel: pickStr(newsletterPatch.emailAriaLabel, base.newsletter.emailAriaLabel),
+      submit: pickStr(newsletterPatch.submit, base.newsletter.submit),
+      submitLoading: pickStr(newsletterPatch.submitLoading, base.newsletter.submitLoading),
+      subscribed: pickStr(newsletterPatch.subscribed, base.newsletter.subscribed),
+      successMessage: pickStr(newsletterPatch.successMessage, base.newsletter.successMessage),
+      errorGeneric: pickStr(newsletterPatch.errorGeneric, base.newsletter.errorGeneric),
     },
   };
 }
@@ -198,4 +228,10 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   }
 });
 
-export type { SiteChrome, SiteNavItem, SiteNavLink };
+export type {
+  SiteChrome,
+  SiteNavItem,
+  SiteNavLink,
+  SiteSearchChrome,
+  SiteNewsletterChrome,
+} from "@/data/site-chrome";

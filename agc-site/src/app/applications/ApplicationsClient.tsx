@@ -5,6 +5,8 @@ import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
 import type { ApplicationsFormFields } from "@/data/applications-page";
 
+type BreadcrumbItem = { label: string; href?: string };
+
 type ApplicationsClientProps = {
   hero: {
     title: string;
@@ -12,6 +14,7 @@ type ApplicationsClientProps = {
     image?: string;
     imageAlt: string;
   };
+  breadcrumbs: BreadcrumbItem[];
   applyIntro: string;
   programsEmail: string;
   formEyebrow: string;
@@ -37,6 +40,7 @@ type ApplicationsClientProps = {
 
 export function ApplicationsClient({
   hero,
+  breadcrumbs,
   applyIntro,
   programsEmail,
   formEyebrow,
@@ -112,12 +116,7 @@ export function ApplicationsClient({
         subtitle={hero.subtitle}
         image={hero.image}
         imageAlt={hero.imageAlt}
-        breadcrumbs={[
-          { label: "Home", href: "/" },
-          { label: "Get Involved", href: "/get-involved" },
-          { label: "Volunteer", href: "/get-involved/volunteer" },
-          { label: "Application" },
-        ]}
+        breadcrumbs={breadcrumbs}
       />
 
       <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">

@@ -322,6 +322,91 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
         </div>
       </section>
 
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Search modal &amp; newsletter</h2>
+        <p className="mt-1 text-sm text-slate-600">
+          Header site search and the footer newsletter block. Empty fields keep built-in defaults on save.
+        </p>
+        <h3 className="mt-5 text-sm font-semibold text-slate-800">Search modal</h3>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="searchDialogAriaLabel" className="block text-sm font-medium text-slate-700">Dialog (aria-label)</label>
+            <input id="searchDialogAriaLabel" name="searchDialogAriaLabel" defaultValue={settings.chrome.search.dialogAriaLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="searchCloseAriaLabel" className="block text-sm font-medium text-slate-700">Close button (aria-label)</label>
+            <input id="searchCloseAriaLabel" name="searchCloseAriaLabel" defaultValue={settings.chrome.search.closeAriaLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div className="sm:col-span-2">
+            <label htmlFor="searchPlaceholder" className="block text-sm font-medium text-slate-700">Input placeholder</label>
+            <input id="searchPlaceholder" name="searchPlaceholder" defaultValue={settings.chrome.search.placeholder} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="searchLoading" className="block text-sm font-medium text-slate-700">Loading text</label>
+            <input id="searchLoading" name="searchLoading" defaultValue={settings.chrome.search.loading} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="searchEmptyNoQuery" className="block text-sm font-medium text-slate-700">Empty (no query yet)</label>
+            <input id="searchEmptyNoQuery" name="searchEmptyNoQuery" defaultValue={settings.chrome.search.emptyNoQuery} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="searchEmptyNoResults" className="block text-sm font-medium text-slate-700">No results</label>
+            <input id="searchEmptyNoResults" name="searchEmptyNoResults" defaultValue={settings.chrome.search.emptyNoResults} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="searchTypeEvent" className="block text-sm font-medium text-slate-700">Type label: Event</label>
+            <input id="searchTypeEvent" name="searchTypeEvent" defaultValue={settings.chrome.search.typeEvent} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="searchTypeNews" className="block text-sm font-medium text-slate-700">Type label: News</label>
+            <input id="searchTypeNews" name="searchTypeNews" defaultValue={settings.chrome.search.typeNews} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="searchTypePublication" className="block text-sm font-medium text-slate-700">Type label: Publication</label>
+            <input id="searchTypePublication" name="searchTypePublication" defaultValue={settings.chrome.search.typePublication} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+        </div>
+        <h3 className="mt-8 text-sm font-semibold text-slate-800">Footer newsletter</h3>
+        <div className="mt-3 grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="newsletterHeading" className="block text-sm font-medium text-slate-700">Heading</label>
+            <input id="newsletterHeading" name="newsletterHeading" defaultValue={settings.chrome.newsletter.heading} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div className="sm:col-span-2">
+            <label htmlFor="newsletterDescription" className="block text-sm font-medium text-slate-700">Description</label>
+            <input id="newsletterDescription" name="newsletterDescription" defaultValue={settings.chrome.newsletter.description} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="newsletterPlaceholder" className="block text-sm font-medium text-slate-700">Email placeholder</label>
+            <input id="newsletterPlaceholder" name="newsletterPlaceholder" defaultValue={settings.chrome.newsletter.placeholder} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="newsletterEmailAriaLabel" className="block text-sm font-medium text-slate-700">Email field (aria-label)</label>
+            <input id="newsletterEmailAriaLabel" name="newsletterEmailAriaLabel" defaultValue={settings.chrome.newsletter.emailAriaLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="newsletterSubmit" className="block text-sm font-medium text-slate-700">Submit button</label>
+            <input id="newsletterSubmit" name="newsletterSubmit" defaultValue={settings.chrome.newsletter.submit} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="newsletterSubmitLoading" className="block text-sm font-medium text-slate-700">Submit (loading)</label>
+            <input id="newsletterSubmitLoading" name="newsletterSubmitLoading" defaultValue={settings.chrome.newsletter.submitLoading} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="newsletterSubscribed" className="block text-sm font-medium text-slate-700">After success (button)</label>
+            <input id="newsletterSubscribed" name="newsletterSubscribed" defaultValue={settings.chrome.newsletter.subscribed} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="newsletterSuccessMessage" className="block text-sm font-medium text-slate-700">Success message</label>
+            <input id="newsletterSuccessMessage" name="newsletterSuccessMessage" defaultValue={settings.chrome.newsletter.successMessage} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div className="sm:col-span-2">
+            <label htmlFor="newsletterErrorGeneric" className="block text-sm font-medium text-slate-700">Generic error</label>
+            <input id="newsletterErrorGeneric" name="newsletterErrorGeneric" defaultValue={settings.chrome.newsletter.errorGeneric} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+        </div>
+      </section>
+
       <AdminFormStickyActions>
         <SubmitButton />
       </AdminFormStickyActions>

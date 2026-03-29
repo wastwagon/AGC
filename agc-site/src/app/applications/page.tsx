@@ -20,6 +20,17 @@ type ApplicationsMerged = typeof applicationsStaticFallback & {
 
 const ui = applicationsPageUiDefaults;
 
+function pickAppStr(merged: ApplicationsMerged, key: keyof typeof ui): string {
+  const v = merged[key];
+  return typeof v === "string" && v.trim() !== "" ? v.trim() : String(ui[key]);
+}
+
+function crumb(label: string, href?: string) {
+  const t = label.trim();
+  if (!t) return null;
+  return href ? ({ label: t, href } as const) : ({ label: t } as const);
+}
+
 export default async function ApplicationsPage() {
   const [mergedRaw, siteSettings] = await Promise.all([
     getMergedPageContent<ApplicationsMerged>(
@@ -42,8 +53,16 @@ export default async function ApplicationsPage() {
     (heroImageRaw ? await resolveImageUrl(heroImageRaw) : null) ||
     (process.env.BUILD_WITHOUT_DB === "1" ? placeholderImages.applications : undefined);
 
+  const breadcrumbs = [
+    crumb(pickAppStr(merged, "breadcrumbHome"), "/"),
+    crumb(pickAppStr(merged, "breadcrumbGetInvolved"), "/get-involved"),
+    crumb(pickAppStr(merged, "breadcrumbVolunteer"), "/get-involved/volunteer"),
+    crumb(pickAppStr(merged, "breadcrumbApplication")),
+  ].filter((x): x is NonNullable<typeof x> => x !== null);
+
   return (
     <ApplicationsClient
+      breadcrumbs={breadcrumbs}
       hero={{
         title: String(merged.heroTitle ?? "").trim(),
         subtitle: String(merged.heroSubtitle ?? "").trim(),
