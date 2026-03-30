@@ -146,7 +146,9 @@ export default async function HomePage() {
                     key={`${stat.label}-${i}`}
                     className="rounded-2xl border border-stone-200/70 bg-[#fffcf7] p-6 shadow-sm"
                   >
-                    <p className="font-serif text-3xl font-semibold text-accent-800">{stat.value}</p>
+                    <p className="font-sans text-3xl font-semibold tabular-nums tracking-tight text-accent-800">
+                      {stat.value}
+                    </p>
                     <p className="mt-2 text-sm font-medium text-stone-900">{stat.label}</p>
                     <p className="mt-2 text-xs leading-relaxed text-stone-500">{stat.note}</p>
                   </div>

@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>OceanCyber — Development Proposal | Africa Governance Centre</title>
+  <style>
+    @page { size: A4; margin: 18mm 16mm; }
+    * { box-sizing: border-box; }
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 11pt;
+      line-height: 1.45;
+      color: #1a2332;
+      max-width: 100%;
+      margin: 0;
+      padding: 0;
+    }
+    h1, h2, h3, .brand {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 600;
+    }
+    .header {
+      border-bottom: 3px solid #0c4a6e;
+      padding-bottom: 12pt;
+      margin-bottom: 18pt;
+    }
+    .brand {
+      font-size: 20pt;
+      letter-spacing: 0.02em;
+      color: #0c4a6e;
+      margin: 0 0 4pt 0;
+    }
+    .tagline {
+      font-size: 9pt;
+      color: #64748b;
+      margin: 0;
+    }
+    .doc-title {
+      font-size: 16pt;
+      margin: 20pt 0 6pt 0;
+      color: #0f172a;
+    }
+    .meta {
+      font-size: 10pt;
+      color: #475569;
+      margin: 0;
+    }
+    h2 {
+      font-size: 12pt;
+      color: #0c4a6e;
+      margin: 16pt 0 8pt 0;
+      padding-bottom: 4pt;
+      border-bottom: 1px solid #e2e8f0;
+    }
+    h3 {
+      font-size: 10.5pt;
+      margin: 12pt 0 6pt 0;
+      color: #334155;
+    }
+    p { margin: 0 0 8pt 0; }
+    ul {
+      margin: 0 0 10pt 0;
+      padding-left: 18pt;
+    }
+    li { margin-bottom: 4pt; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 10pt;
+      margin: 10pt 0 14pt 0;
+    }
+    th, td {
+      border: 1px solid #cbd5e1;
+      padding: 8pt 10pt;
+      text-align: left;
+      vertical-align: top;
+    }
+    th {
+      background: #f1f5f9;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-weight: 600;
+    }
+    .num { text-align: right; white-space: nowrap; }
+    .total-row td {
+      font-weight: 600;
+      background: #f8fafc;
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    }
+    .note {
+      font-size: 9pt;
+      color: #64748b;
+      margin-top: 8pt;
+    }
+    .footer-block {
+      margin-top: 22pt;
+      padding-top: 12pt;
+      border-top: 1px solid #e2e8f0;
+      font-size: 9pt;
+      color: #64748b;
+    }
+    .sig-line { margin-top: 24pt; }
+    .fee-banner {
+      background: #0c4a6e;
+      color: #fff;
+      padding: 16pt 18pt;
+      margin: 0 0 20pt 0;
+      text-align: center;
+      border-radius: 2px;
+    }
+    .fee-banner .fee-banner-label {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      opacity: 0.92;
+      margin: 0 0 8pt 0;
+    }
+    .fee-banner .fee-banner-amount {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 26pt;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      margin: 0;
+      line-height: 1.15;
+    }
+    .fee-banner .fee-banner-note {
+      font-size: 9pt;
+      opacity: 0.88;
+      margin: 10pt 0 0 0;
+    }
+    .fee-block {
+      border: 2px solid #0c4a6e;
+      padding: 14pt 16pt;
+      margin: 14pt 0 16pt 0;
+      text-align: center;
+      background: #f8fafc;
+    }
+    .fee-block .fee-block-label {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 10pt;
+      font-weight: 600;
+      color: #0c4a6e;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 6pt 0;
+    }
+    .fee-block .fee-block-amount {
+      font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 22pt;
+      font-weight: 700;
+      color: #0f172a;
+      margin: 0;
+    }
+    table.package-includes th {
+      background: #0c4a6e;
+      color: #fff;
+      font-size: 10pt;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+    table.package-includes td {
+      font-size: 10pt;
+    }
+    table.package-includes tr:nth-child(even) td {
+      background: #f8fafc;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <p class="brand">OceanCyber</p>
+    <p class="tagline">Software development · Accra, Ghana</p>
+    <h1 class="doc-title">Proposal for Full-Stack Website Development</h1>
+    <p class="meta"><strong>Prepared for:</strong> Africa Governance Centre (AGC)<br />
+    <strong>Project:</strong> Public website, administrative content platform, and supporting infrastructure<br />
+    <strong>Date:</strong> 30 March 2026<br />
+    <strong>Reference:</strong> OCY-AGC-FS-2026-03</p>
+  </header>
+
+  <div class="fee-banner" role="region" aria-label="Project fee">
+    <p class="fee-banner-label">Total fixed professional fee</p>
+    <p class="fee-banner-amount">GHS 18,000.00</p>
+    <p class="fee-banner-note"><strong>All-inclusive</strong> single fee for the full scope in Sections 2–3 (see Section 4 list) · exclusive of VAT and applicable levies unless agreed otherwise</p>
+  </div>
+
+  <h2>1. Executive summary</h2>
+  <p>OceanCyber is pleased to submit this proposal for the design, implementation, testing, and handover of a modern full-stack web platform for Africa Governance Centre. The solution delivered aligns with current industry practice: a TypeScript-based Next.js application, PostgreSQL data layer, authenticated administration, integrated forms and event workflows, and <strong>self-hosted</strong> production deployment (Docker Compose and related documentation for infrastructure under your control).</p>
+  <p>The <strong>total fixed professional fee is GHS 18,000.00</strong> (exclusive of VAT, withholding tax, and other statutory levies unless agreed in writing). It is an <strong>all-inclusive</strong> package: Section 4 lists every major component covered by that one figure — <strong>without per-item pricing</strong>. This document sets out scope, deliverables, timeline, and payment terms for clarity and mutual accountability.</p>
+
+  <h2>2. Scope of work (technical)</h2>
+  <p>The following reflects the full-stack development effort for the AGC platform as implemented:</p>
+
+  <h3>2.1 Public experience</h3>
+  <ul>
+    <li>Multi-section marketing and information site (home, about, our work, events, news, publications, get involved, contact, applications, legal pages, and related sub-pages).</li>
+    <li>Responsive layout, mobile navigation patterns, and accessibility-conscious UI components.</li>
+    <li>On-site search and newsletter signup integration.</li>
+  </ul>
+
+  <h3>2.2 Custom administration (&ldquo;CMS&rdquo;) — no external headless CMS</h3>
+  <ul>
+    <li>Secure admin area with authentication.</li>
+    <li>Management of events, news, team, publications, programs, projects, partners, and configurable page content (including rich text where applicable).</li>
+    <li>Media library with upload constraints, usage checks, and administrative tooling.</li>
+    <li>Taxonomy configuration for content classification where applicable.</li>
+    <li>Review and export of inbound submissions from public forms.</li>
+  </ul>
+
+  <h3>2.3 Backend, data, and APIs</h3>
+  <ul>
+    <li>PostgreSQL schema and migrations via Prisma ORM for all content entities and submission records.</li>
+    <li>REST-style API routes for public forms (contact, applications, partnerships, join-us, newsletter), media, health checks, and search.</li>
+    <li>Optional Redis usage where configured for operational needs.</li>
+  </ul>
+
+  <h3>2.4 Events module (advanced)</h3>
+  <ul>
+    <li>Public event registration with validation, capacity and waitlist behaviour, and confirmation workflow.</li>
+    <li>QR-assisted registration identifiers, check-in API, staff scanning interface, and registration export.</li>
+    <li>Calendar (ICS) support for events.</li>
+    <li>Email notifications for event-related flows where outbound mail is configured on your environment (SMTP or provider API as you prefer).</li>
+  </ul>
+
+  <h2>3. Deliverables</h2>
+  <ul>
+    <li>Source code repository with build and run instructions.</li>
+    <li>Configured application for staging/production on <strong>client-controlled, self-hosted</strong> infrastructure (domains, TLS, and environment secrets as supplied by the client).</li>
+    <li>Database migrations and seed strategy as agreed.</li>
+    <li>Handover walkthrough covering admin usage, environment variables, and deployment.</li>
+  </ul>
+
+  <h2>4. Investment (Ghana Cedis — competitive fixed fee)</h2>
+  <p>All amounts are in <strong>Ghana Cedis (GHS)</strong> and are <strong>exclusive of VAT, withholding tax, or other statutory levies</strong> unless a separate tax-inclusive schedule is agreed in writing.</p>
+
+  <div class="fee-block">
+    <p class="fee-block-label">Total fixed professional fee (all-inclusive)</p>
+    <p class="fee-block-amount">GHS 18,000.00</p>
+  </div>
+
+  <p>OceanCyber quotes one <strong>all-inclusive fixed fee</strong>. The list below mirrors the original delivery structure for transparency: each row is <strong>included</strong> in GHS 18,000.00 — there are <strong>no separate charges</strong> for these components within the agreed scope.</p>
+
+  <table class="package-includes">
+    <thead>
+      <tr>
+        <th>Included in package (no itemised pricing)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><strong>Public website</strong> — pages, components, responsive UX, and integration with backend content</td>
+      </tr>
+      <tr>
+        <td><strong>Custom admin platform</strong> — content types, media, taxonomy, submissions review, and site settings</td>
+      </tr>
+      <tr>
+        <td><strong>Data layer &amp; APIs</strong> — Prisma/PostgreSQL models, authentication, form pipelines, search, and health endpoints</td>
+      </tr>
+      <tr>
+        <td><strong>Events subsystem</strong> — registration, QR/check-in, exports, ICS, and staff tools</td>
+      </tr>
+      <tr>
+        <td><strong>Integrations &amp; reliability</strong> — outbound email and Redis caching as configured; web, database, and cache on <strong>self-hosted</strong> infrastructure</td>
+      </tr>
+      <tr>
+        <td><strong>DevOps &amp; documentation</strong> — Docker/Compose, migration workflow, deployment notes</td>
+      </tr>
+      <tr>
+        <td><strong>QA</strong> — automated tests, smoke verification, and pre-handover fixes for agreed scope</td>
+      </tr>
+      <tr>
+        <td><strong>Project management &amp; handover</strong> — client communication and structured handover</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note"><strong>Market positioning.</strong> In Ghana, simple business websites often range roughly GHS 5,000–15,000, while comparable custom web applications with dashboards, authentication, and deep integrations frequently sit in the <strong>GHS 15,000–60,000+</strong> range. The <strong>GHS 18,000.00 all-inclusive</strong> fee above is a <strong>competitive fixed package</strong> for this full product delivered on a focused timeline.</p>
+  <p class="note">Indicative USD equivalent (for international stakeholders only): divide GHS totals by the prevailing Bank of Ghana / commercial mid-rate on invoice date — not a fixed peg.</p>
+
+  <h2>5. Payment terms (suggested)</h2>
+  <p>Against the <strong>all-inclusive total fixed professional fee of GHS 18,000.00</strong>:</p>
+  <ul>
+    <li><strong>40%</strong> on signed agreement and project kick-off (GHS 7,200.00).</li>
+    <li><strong>40%</strong> on completion of core development milestones (admin, public site, and APIs accepted on staging) (GHS 7,200.00).</li>
+    <li><strong>20%</strong> on production handover and closure of agreed punch-list items (GHS 3,600.00).</li>
+  </ul>
+  <p>Alternative schedules (e.g. monthly retainers or milestone-based invoicing) can be agreed before contract signing.</p>
+
+  <h2>6. Timeline (indicative)</h2>
+  <p>For a dedicated engagement with OceanCyber focused on this delivery, the planned duration from kick-off to production handover is <strong>4 weeks</strong>, subject to prompt feedback, content readiness, and readiness of your <strong>self-hosted</strong> environment (domain, TLS, database, optional email configuration). A detailed milestone plan can be attached to the statement of work.</p>
+
+  <h2>7. Assumptions and exclusions</h2>
+  <ul>
+    <li>Client provides timely content, brand assets, and decisions; delays may affect schedule.</li>
+    <li>Server capacity, domain registration, TLS certificates, and any optional external API fees (e.g. transactional email provider) are borne by the client unless otherwise agreed; the application stack itself is designed for <strong>self-hosting</strong> on infrastructure you operate.</li>
+    <li>Major scope changes (new modules, redesign, or additional integrations) are quoted as change requests.</li>
+    <li>Ongoing maintenance, content entry, and SEO campaigns are outside this fixed fee unless a separate support agreement is signed.</li>
+  </ul>
+
+  <h2>8. Validity and acceptance</h2>
+  <p>This proposal is valid for <strong>30 days</strong> from the date above. Acceptance may be confirmed by signed purchase order, countersigned statement of work, or written email confirmation from an authorised representative of Africa Governance Centre.</p>
+
+  <div class="footer-block">
+    <p><strong>OceanCyber</strong> — Ghana<br />
+    Thank you for the opportunity to support Africa Governance Centre&rsquo;s digital presence.</p>
+    <p class="sig-line">Respectfully submitted,<br /><br />
+    <strong>OceanCyber</strong><br />
+    Authorised representative</p>
+  </div>
+
+</body>
+</html>
