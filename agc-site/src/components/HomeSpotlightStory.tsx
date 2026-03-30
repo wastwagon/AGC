@@ -11,7 +11,7 @@ export function HomeSpotlightStory({ story }: { story: HomePageCms["homeSpotligh
         <div className="grid gap-10 lg:grid-cols-12 lg:gap-14 lg:items-start">
           <div className="flex flex-col items-center gap-4 lg:col-span-4 lg:items-start">
             <div
-              className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-600 to-accent-800 font-serif text-3xl font-semibold text-white shadow-md sm:h-32 sm:w-32 sm:text-4xl"
+              className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-accent-600 to-accent-800 font-sans text-3xl font-semibold text-white shadow-md sm:h-32 sm:w-32 sm:text-4xl"
               aria-hidden
             >
               {s.initials}

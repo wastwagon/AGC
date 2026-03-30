@@ -63,7 +63,7 @@ export default async function TeamPage() {
                       )}
                     </div>
                     <div className="p-6">
-                      <h3 className="font-serif text-lg font-bold text-slate-900">{member.name}</h3>
+                      <h3 className="font-sans text-lg font-bold text-slate-900">{member.name}</h3>
                       {member.role && <p className="mt-1 text-sm font-medium text-accent-600">{member.role}</p>}
                       {member.bio && <p className="mt-3 text-sm text-slate-600 line-clamp-4">{member.bio}</p>}
                     </div>

@@ -169,7 +169,7 @@ export default async function HomePage() {
           <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
             <div className="mx-auto grid max-w-4xl gap-8 rounded-2xl border border-stone-200/80 bg-[#faf6ef] p-8 sm:grid-cols-[auto_1fr] sm:gap-10 sm:p-10">
               <div
-                className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-accent-100 font-serif text-2xl font-semibold text-accent-900 sm:mx-0"
+                className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-accent-100 font-sans text-2xl font-semibold text-accent-900 sm:mx-0"
                 aria-hidden
               >
                 {home.homeTestimonial.initials}

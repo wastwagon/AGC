@@ -58,7 +58,7 @@ export function EventBentoCard({
         </div>
       </div>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3 className="font-serif text-lg font-semibold leading-snug text-stone-900 line-clamp-3">{event.title}</h3>
+        <h3 className="font-sans text-lg font-semibold leading-snug text-stone-900 line-clamp-3">{event.title}</h3>
         <p className="mt-2 flex items-center gap-2 text-sm text-slate-500">
           <Calendar className="h-3.5 w-3.5 shrink-0" aria-hidden />
           {dateStr}

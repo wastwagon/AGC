@@ -58,7 +58,7 @@ export function EventCard({ event }: EventCardProps) {
         </div>
       </div>
       <div className="flex flex-1 flex-col p-5 sm:p-6">
-        <h3 className="font-serif text-lg font-bold text-slate-900 line-clamp-2 group-hover:text-accent-600">
+        <h3 className="font-sans text-lg font-bold text-slate-900 line-clamp-2 group-hover:text-accent-600">
           {event.title}
         </h3>
         <p className="mt-2 flex items-center gap-2 text-sm text-slate-500">

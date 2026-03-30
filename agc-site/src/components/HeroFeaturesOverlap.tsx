@@ -54,7 +54,7 @@ export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props)
               </div>
 
               <div className="flex flex-1 flex-col p-7 md:p-8">
-                <h2 className="font-serif text-xl font-semibold leading-snug tracking-tight text-stone-900">{item.title}</h2>
+                <h2 className="font-sans text-xl font-semibold leading-snug tracking-tight text-stone-900">{item.title}</h2>
                 <p className="mt-3 flex-1 text-[15px] leading-relaxed text-stone-600">{item.description}</p>
                 {readMoreLabel.trim() ? (
                   <span className="mt-6 inline-block text-sm font-medium text-accent-700 group-hover:underline">

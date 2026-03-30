@@ -54,7 +54,7 @@ export default async function GetInvolvedPage() {
                 <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-accent-700 text-white transition-transform duration-300 group-hover:scale-[1.02]">
                   <User className="h-7 w-7" />
                 </div>
-                <h3 className="mt-6 font-serif text-2xl font-semibold text-stone-900 sm:text-3xl">
+                <h3 className="mt-6 font-sans text-2xl font-semibold text-stone-900 sm:text-3xl">
                   {content.opportunities[0].title}
                 </h3>
                 <p className="page-prose mt-3">{content.opportunities[0].description}</p>
@@ -85,7 +85,7 @@ export default async function GetInvolvedPage() {
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700 transition-colors group-hover:bg-accent-200/80">
                       <Icon className="h-6 w-6" strokeWidth={1.75} />
                     </div>
-                    <h3 className="mt-4 font-serif text-xl font-semibold text-stone-900">{opp.title}</h3>
+                    <h3 className="mt-4 font-sans text-xl font-semibold text-stone-900">{opp.title}</h3>
                     <p className="page-prose-tight mt-2 text-sm">{opp.description}</p>
                     <ul className="mt-4 space-y-1.5">
                       {opp.items.map((item) => (

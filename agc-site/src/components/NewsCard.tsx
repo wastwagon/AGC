@@ -40,7 +40,7 @@ export function NewsCard({ item, imageUrl = placeholderImages.news, href = "/new
           {dateStr && (
             <p className="text-sm text-slate-500">{dateStr}</p>
           )}
-          <h2 className="mt-2 font-serif text-xl font-bold text-slate-900 line-clamp-2 group-hover:text-accent-600">
+          <h2 className="mt-2 font-sans text-xl font-bold text-slate-900 line-clamp-2 group-hover:text-accent-600">
             {item.title}
           </h2>
           {excerpt && (

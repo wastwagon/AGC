@@ -126,7 +126,7 @@ export function AppSummitClient({
                   <span className="mt-1.5 flex h-2 w-2 shrink-0 rounded-full bg-accent-600" />
                   <div className="min-w-0 flex-1">
                     <p className="text-sm font-semibold text-accent-800">{session.time}</p>
-                    <h4 className="mt-1 font-serif text-lg font-semibold text-stone-900">{session.title}</h4>
+                    <h4 className="mt-1 font-sans text-lg font-semibold text-stone-900">{session.title}</h4>
                     {session.topic && (
                       <p className="page-prose-tight mt-2 text-sm">{session.topic}</p>
                     )}

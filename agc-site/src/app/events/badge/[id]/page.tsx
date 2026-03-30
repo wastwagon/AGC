@@ -51,7 +51,7 @@ export default async function EventBadgePage({ params }: Props) {
         </div>
 
         <div className="mt-5 pt-2">
-          <p className="text-center font-serif text-xl font-semibold text-stone-900">{registration.fullName}</p>
+          <p className="text-center font-sans text-xl font-semibold text-stone-900">{registration.fullName}</p>
           {registration.organization && (
             <p className="mt-1 text-center text-sm text-stone-600">{registration.organization}</p>
           )}

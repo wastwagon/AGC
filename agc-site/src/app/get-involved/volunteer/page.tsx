@@ -45,7 +45,7 @@ export default async function VolunteerPage() {
             <ul className="mt-6 space-y-4">
               {c.items.map((item, i) => (
                 <li key={item} className="flex gap-4 border-b border-stone-200/60 pb-4 last:border-0">
-                  <span className="font-serif text-2xl font-semibold tabular-nums text-accent-800">
+                  <span className="font-sans text-2xl font-semibold tabular-nums text-accent-800">
                     {String(i + 1).padStart(2, "0")}
                   </span>
                   <span className="page-prose flex-1 pt-1">{item}</span>

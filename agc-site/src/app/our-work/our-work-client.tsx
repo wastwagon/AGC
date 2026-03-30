@@ -82,7 +82,7 @@ export function OurWorkClient({ cmsPrograms, cmsProjects, content = workContent,
           <ul className="mt-6 space-y-5">
             {content.approach.objectives.map((obj, i) => (
               <li key={i} className="page-card flex gap-4 p-5 sm:gap-5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-100 font-serif text-sm font-bold text-accent-800">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-100 font-sans text-sm font-bold tabular-nums text-accent-800">
                   {i + 1}
                 </span>
                 <span className="page-prose-tight pt-0.5">{obj}</span>
@@ -141,7 +141,7 @@ export function OurWorkClient({ cmsPrograms, cmsProjects, content = workContent,
                       <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-accent-100 text-accent-700 transition-colors group-hover:bg-accent-200/80">
                         <Icon className="h-5 w-5" strokeWidth={1.75} />
                       </div>
-                      <h3 className="mt-5 font-serif text-lg font-semibold text-stone-900">{card.title}</h3>
+                      <h3 className="mt-5 font-sans text-lg font-semibold text-stone-900">{card.title}</h3>
                       <p className="page-prose-tight mt-3 text-sm">{card.description}</p>
                     </article>
                   );

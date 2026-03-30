@@ -69,7 +69,7 @@ export function TeamSectionTabs({ cmsTeam }: { cmsTeam: TeamMember[] }) {
                   <User className="h-6 w-6" strokeWidth={1.5} />
                 </div>
                 <div>
-                  <h3 className="font-serif text-lg font-semibold text-stone-900">{member.name}</h3>
+                  <h3 className="font-sans text-lg font-semibold text-stone-900">{member.name}</h3>
                   {member.role && <p className="mt-1 text-sm font-medium text-accent-800">{member.role}</p>}
                   {member.bio && (
                     <p className="page-prose-tight mt-3 text-sm">{member.bio}</p>
