@@ -21,6 +21,7 @@ export function OrphanMediaPanel({ onLibraryItemRemoved }: Props) {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [thumbFailed, setThumbFailed] = useState<Record<string, true>>({});
 
   const load = useCallback(async (isRefresh: boolean) => {
     if (isRefresh) setRefreshing(true);
@@ -103,13 +104,22 @@ export function OrphanMediaPanel({ onLibraryItemRemoved }: Props) {
           {items.map((item) => (
             <li key={item.id} className="flex flex-wrap items-center gap-3 py-3 first:pt-0 last:pb-0">
               <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-slate-100">
-                {/* eslint-disable-next-line @next/next/no-img-element -- avoid image optimizer on /uploads */}
-                <img
-                  src={item.url}
-                  alt={item.alt || item.title || item.filename}
-                  className="h-full w-full object-cover"
-                  loading="lazy"
-                />
+                {thumbFailed[item.id] ? (
+                  <div className="flex h-full w-full items-center justify-center bg-amber-50 text-[0.6rem] font-medium text-amber-800">
+                    —
+                  </div>
+                ) : (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element -- avoid image optimizer on /uploads */}
+                    <img
+                      src={item.url}
+                      alt={item.alt || item.title || item.filename}
+                      className="h-full w-full object-cover"
+                      loading="lazy"
+                      onError={() => setThumbFailed((p) => ({ ...p, [item.id]: true }))}
+                    />
+                  </>
+                )}
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-medium text-slate-900" title={item.filename}>

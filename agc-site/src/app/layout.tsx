@@ -19,6 +19,8 @@ const fraunces = Fraunces({
   variable: "--font-fraunces",
   subsets: ["latin"],
   display: "swap",
+  /** Cuts Chrome “preloaded but not used” noise on admin-heavy routes; font still loads via CSS when used. */
+  preload: false,
 });
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernancecentre.org";

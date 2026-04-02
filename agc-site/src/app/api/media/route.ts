@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { writeFile, mkdir, unlink } from "fs/promises";
-import { existsSync } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import {
@@ -10,6 +9,7 @@ import {
   getUploadsDir,
   isAllowedMimeType,
   assertUploadWithinLimit,
+  mediaFileExistsOnDisk,
   type MediaItem,
 } from "@/lib/media";
 import { requireAdmin } from "@/lib/auth-api";
@@ -73,7 +73,7 @@ export async function GET() {
     const uploadsDir = getUploadsDir();
     const itemsWithDisk = items.map((item) => ({
       ...item,
-      fileMissing: !existsSync(path.join(uploadsDir, item.filename)),
+      fileMissing: !mediaFileExistsOnDisk(item, uploadsDir),
     }));
     return NextResponse.json({ items: itemsWithDisk });
   } catch (err) {

@@ -113,6 +113,32 @@ export function getMediaUrl(item: MediaItem): string {
   return item.url.startsWith("/") ? item.url : `/${item.url.replace(/^\//, "")}`;
 }
 
+/** Single segment under uploads/ (flat library); rejects traversal. */
+function uploadsBasename(segment: string | undefined): string | null {
+  if (!segment?.trim()) return null;
+  const base = path.basename(segment.trim().replace(/^\/+/, ""));
+  if (!base || base === "." || base === ".." || base.includes("..")) return null;
+  return base;
+}
+
+/**
+ * True if the binary exists on disk. Checks both `filename` and path derived from `url`
+ * so legacy or inconsistent JSON still detects missing files correctly.
+ */
+export function mediaFileExistsOnDisk(item: MediaItem, uploadsDir: string): boolean {
+  const names = new Set<string>();
+  const fromFilename = uploadsBasename(item.filename);
+  if (fromFilename) names.add(fromFilename);
+  if (item.url?.startsWith("/uploads/")) {
+    const fromUrl = uploadsBasename(item.url.slice("/uploads/".length));
+    if (fromUrl) names.add(fromUrl);
+  }
+  for (const n of names) {
+    if (existsSync(path.join(uploadsDir, n))) return true;
+  }
+  return false;
+}
+
 /** Resolve image reference: media ID (media-xxx), full URL, or path. Use for server components. */
 export async function resolveImageUrl(
   ref: string | { id: string } | undefined

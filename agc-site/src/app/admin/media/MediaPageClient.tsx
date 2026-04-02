@@ -35,6 +35,8 @@ export default function AdminMediaPageClient() {
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "name">("newest");
   const [page, setPage] = useState(1);
+  /** Thumbnail 404 / network errors after API said file exists (CDN, race, or path drift). */
+  const [thumbLoadFailed, setThumbLoadFailed] = useState<Record<string, true>>({});
 
   const fetchMedia = useCallback(async () => {
     setLoading(true);
@@ -285,10 +287,16 @@ export default function AdminMediaPageClient() {
                   className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md"
                 >
                   <div className="relative aspect-square overflow-hidden bg-slate-100">
-                    {item.fileMissing ? (
+                    {item.fileMissing || thumbLoadFailed[item.id] ? (
                       <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-amber-50 p-2 text-center">
-                        <span className="text-[0.65rem] font-semibold uppercase text-amber-900">File missing</span>
-                        <span className="text-[0.7rem] text-amber-800">Mount persists public/uploads</span>
+                        <span className="text-[0.65rem] font-semibold uppercase text-amber-900">
+                          {thumbLoadFailed[item.id] && !item.fileMissing ? "Preview failed" : "File missing"}
+                        </span>
+                        <span className="text-[0.7rem] text-amber-800">
+                          {thumbLoadFailed[item.id] && !item.fileMissing
+                            ? "URL returned 404 — re-upload or fix volume"
+                            : "Mount persists public/uploads + data/media-library.json"}
+                        </span>
                       </div>
                     ) : (
                       <>
@@ -299,6 +307,7 @@ export default function AdminMediaPageClient() {
                           className="absolute inset-0 h-full w-full object-cover"
                           loading="lazy"
                           decoding="async"
+                          onError={() => setThumbLoadFailed((p) => ({ ...p, [item.id]: true }))}
                         />
                       </>
                     )}

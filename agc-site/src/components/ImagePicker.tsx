@@ -31,6 +31,7 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
   const [error, setError] = useState<string | null>(null);
   const [query, setQuery] = useState("");
   const [sortBy, setSortBy] = useState<"newest" | "oldest" | "name">("newest");
+  const [thumbFailed, setThumbFailed] = useState<Record<string, true>>({});
 
   const fetchMedia = useCallback(async () => {
     setLoading(true);
@@ -90,6 +91,7 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
   useEffect(() => {
     if (open) {
       setError(null);
+      setThumbFailed({});
       fetchMedia();
     }
   }, [open, fetchMedia]);
@@ -190,26 +192,28 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
                 <button
                   key={item.id}
                   type="button"
-                  disabled={item.fileMissing}
+                  disabled={item.fileMissing || thumbFailed[item.id]}
                   title={
-                    item.fileMissing
+                    item.fileMissing || thumbFailed[item.id]
                       ? "File not on disk — remove this entry from Media Library (orphans/cleanup) or restore the volume"
                       : undefined
                   }
                   onClick={() => {
-                    if (item.fileMissing) return;
+                    if (item.fileMissing || thumbFailed[item.id]) return;
                     onSelect(item);
                     onClose();
                   }}
                   className={`group relative aspect-square overflow-hidden rounded-xl border-2 bg-slate-100 transition-all ${
-                    item.fileMissing
+                    item.fileMissing || thumbFailed[item.id]
                       ? "cursor-not-allowed border-amber-300 opacity-90"
                       : "border-transparent hover:border-accent-500 hover:shadow-md"
                   }`}
                 >
-                  {item.fileMissing ? (
+                  {item.fileMissing || thumbFailed[item.id] ? (
                     <div className="absolute inset-0 flex flex-col items-center justify-center gap-1 bg-amber-50/95 p-2 text-center">
-                      <span className="text-[0.65rem] font-semibold uppercase tracking-wide text-amber-900">Missing file</span>
+                      <span className="text-[0.65rem] font-semibold uppercase tracking-wide text-amber-900">
+                        {thumbFailed[item.id] && !item.fileMissing ? "Preview failed" : "Missing file"}
+                      </span>
                       <span className="text-[0.7rem] leading-tight text-amber-800">Not in uploads folder</span>
                     </div>
                   ) : (
@@ -221,6 +225,7 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
                         className="absolute inset-0 h-full w-full object-cover"
                         loading="lazy"
                         decoding="async"
+                        onError={() => setThumbFailed((p) => ({ ...p, [item.id]: true }))}
                       />
                       <div className="absolute inset-0 flex items-center justify-center bg-black/0 opacity-0 transition-all group-hover:bg-black/20 group-hover:opacity-100">
                         <span className="rounded-full bg-white p-2 text-accent-600">
