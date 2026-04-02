@@ -20,6 +20,7 @@
     "seed": "npx tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@floating-ui/dom": "^1.7.6",
     "@prisma/client": "^5.22.0",
     "@sentry/nextjs": "^10.44.0",
     "@tiptap/extension-placeholder": "^3.21.0",
