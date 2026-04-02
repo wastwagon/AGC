@@ -46,13 +46,18 @@ export async function listMedia(): Promise<MediaItem[]> {
 
 export async function getMediaById(id: string): Promise<MediaItem | null> {
   const items = await listMedia();
-  return items.find((m) => m.id === id) ?? null;
+  const normalized = id.trim();
+  if (!normalized) return null;
+  const exact = items.find((m) => m.id === normalized);
+  if (exact) return exact;
+  return items.find((m) => m.id.trim().toLowerCase() === normalized.toLowerCase()) ?? null;
 }
 
 /** Resolve media-xxx ID to full URL (for use in components) */
 export async function getMediaUrlById(id: string | undefined): Promise<string | null> {
-  if (!id?.startsWith("media-")) return null;
-  const item = await getMediaById(id);
+  const t = id?.trim();
+  if (!t || !/^media-/i.test(t)) return null;
+  const item = await getMediaById(t);
   return item ? getMediaUrl(item) : null;
 }
 
@@ -143,10 +148,15 @@ export function mediaFileExistsOnDisk(item: MediaItem, uploadsDir: string): bool
 export async function resolveImageUrl(
   ref: string | { id: string } | undefined
 ): Promise<string | null> {
-  if (!ref) return null;
-  const id = typeof ref === "object" ? ref?.id : ref;
+  if (ref === undefined || ref === null) return null;
+  const id =
+    typeof ref === "object"
+      ? ref?.id?.trim()
+      : typeof ref === "string"
+        ? ref.trim()
+        : "";
   if (!id) return null;
-  if (id.startsWith("media-")) return getMediaUrlById(id);
+  if (/^media-/i.test(id)) return getMediaUrlById(id);
   if (id.startsWith("http") || id.startsWith("/")) return id;
   // Content layer paths (uploads/xxx)
   if (id.includes("/") || id.startsWith("uploads")) return id.startsWith("/") ? id : `/${id}`;

@@ -451,8 +451,13 @@ export function getContentFileUrl(path: string | undefined): string | null {
 
 /** Resolve event/image ref to URL for sync use. Content layer uses paths (uploads/xxx or /uploads/xxx). */
 export function resolveImageUrlSync(ref: string | { id: string } | undefined): string | null {
-  if (!ref) return null;
-  const id = typeof ref === "object" ? ref?.id : ref;
+  if (ref === undefined || ref === null) return null;
+  const id =
+    typeof ref === "object"
+      ? ref?.id?.trim()
+      : typeof ref === "string"
+        ? ref.trim()
+        : "";
   if (!id) return null;
   if (id.startsWith("http") || id.startsWith("/")) return id;
   if (id.includes("/") || id.startsWith("uploads")) return id.startsWith("/") ? id : `/${id}`;
