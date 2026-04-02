@@ -1,5 +1,6 @@
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { getHomePageCmsForEdit } from "@/lib/home-page-data";
+import { requireAdminSession } from "@/lib/require-admin";
 import { HomeSettingsForm } from "./HomeSettingsForm";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,7 @@ export default async function AdminHomeSettingsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireAdminSession();
   const [home, params] = await Promise.all([getHomePageCmsForEdit(), searchParams]);
   const saved = params.saved === "1";
   const error = typeof params.error === "string" ? params.error : null;

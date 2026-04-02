@@ -4,6 +4,7 @@ import { getEventBySlugAdmin } from "@/lib/content";
 import { fallbackEvents } from "@/data/content";
 import type { CmsEvent } from "@/lib/content";
 import { prisma } from "@/lib/db";
+import { requireAdminSession } from "@/lib/require-admin";
 import type { EventRegistration } from "@prisma/client";
 import { Download, ListOrdered, Mail, Printer, RotateCcw, UserPlus } from "lucide-react";
 import { AdminPageHeader } from "../../_components/AdminPageHeader";
@@ -21,6 +22,7 @@ type Props = { params: Promise<{ slug: string }> };
 export const dynamic = "force-dynamic";
 
 export default async function AdminEventRegistrationsPage({ params }: Props) {
+  await requireAdminSession();
   const { slug } = await params;
   const cmsEvent = await getEventBySlugAdmin(slug);
   const events = cmsEvent ? [cmsEvent] : (fallbackEvents as CmsEvent[]);

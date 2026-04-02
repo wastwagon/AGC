@@ -22,6 +22,25 @@ function slugify(s: string): string {
     .replace(/^-|-$/g, "");
 }
 
+async function isPublicationSlugTaken(slug: string, excludeId?: number): Promise<boolean> {
+  const existing = await prisma.publication.findFirst({
+    where: {
+      slug,
+      ...(typeof excludeId === "number" ? { id: { not: excludeId } } : {}),
+    },
+    select: { id: true },
+  });
+  return !!existing;
+}
+
+function isSlugUniqueConstraintError(err: unknown): boolean {
+  if (!(err instanceof Prisma.PrismaClientKnownRequestError)) return false;
+  if (err.code !== "P2002") return false;
+  const target = err.meta?.target;
+  if (Array.isArray(target)) return target.includes("slug");
+  return typeof target === "string" ? target.includes("slug") : false;
+}
+
 export async function createPublication(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
@@ -45,6 +64,12 @@ export async function createPublication(formData: FormData) {
 
   const { title, slug, excerpt, types: typeSlugs, file, image, datePublished, author, status } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
+  if (!finalSlug) {
+    redirect(`/admin/publications/new?error=${encodeURIComponent("Please provide a valid slug.")}`);
+  }
+  if (await isPublicationSlugTaken(finalSlug)) {
+    redirect(`/admin/publications/new?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+  }
   const types = await filterPublicationTypes(typeSlugs ?? []);
 
   let created;
@@ -63,6 +88,9 @@ export async function createPublication(formData: FormData) {
       },
     });
   } catch (err) {
+    if (isSlugUniqueConstraintError(err)) {
+      redirect(`/admin/publications/new?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+    }
     console.error("createPublication:", err);
     redirect(`/admin/publications/new?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
   }
@@ -95,6 +123,12 @@ export async function updatePublication(id: number, formData: FormData) {
 
   const { title, slug, excerpt, types: typeSlugs, file, image, datePublished, author, status } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
+  if (!finalSlug) {
+    redirect(`/admin/publications/${id}/edit?error=${encodeURIComponent("Please provide a valid slug.")}`);
+  }
+  if (await isPublicationSlugTaken(finalSlug, id)) {
+    redirect(`/admin/publications/${id}/edit?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+  }
   const types = await filterPublicationTypes(typeSlugs ?? []);
 
   try {
@@ -113,6 +147,9 @@ export async function updatePublication(id: number, formData: FormData) {
       },
     });
   } catch (err) {
+    if (isSlugUniqueConstraintError(err)) {
+      redirect(`/admin/publications/${id}/edit?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+    }
     console.error("updatePublication:", err);
     redirect(`/admin/publications/${id}/edit?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
   }

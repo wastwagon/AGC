@@ -1,11 +1,12 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
+import { writeFile, mkdir, unlink } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import {
   listMedia,
   addMediaItem,
+  removeMediaItem,
   getUploadsDir,
   isAllowedMimeType,
   assertUploadWithinLimit,
@@ -14,6 +15,54 @@ import {
 import { requireAdmin } from "@/lib/auth-api";
 import { parseOptionalDimensionsFromForm, probeRasterDimensions } from "@/lib/image-dimensions";
 import { formatMaxUploadBytes } from "@/lib/media-limits";
+
+function detectMimeFromBuffer(buffer: Buffer): string | null {
+  if (buffer.length >= 3 && buffer[0] === 0xff && buffer[1] === 0xd8 && buffer[2] === 0xff) {
+    return "image/jpeg";
+  }
+  if (
+    buffer.length >= 8 &&
+    buffer[0] === 0x89 &&
+    buffer[1] === 0x50 &&
+    buffer[2] === 0x4e &&
+    buffer[3] === 0x47 &&
+    buffer[4] === 0x0d &&
+    buffer[5] === 0x0a &&
+    buffer[6] === 0x1a &&
+    buffer[7] === 0x0a
+  ) {
+    return "image/png";
+  }
+  if (
+    buffer.length >= 6 &&
+    buffer[0] === 0x47 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46 &&
+    buffer[3] === 0x38 &&
+    (buffer[4] === 0x37 || buffer[4] === 0x39) &&
+    buffer[5] === 0x61
+  ) {
+    return "image/gif";
+  }
+  if (
+    buffer.length >= 12 &&
+    buffer[0] === 0x52 &&
+    buffer[1] === 0x49 &&
+    buffer[2] === 0x46 &&
+    buffer[3] === 0x46 &&
+    buffer[8] === 0x57 &&
+    buffer[9] === 0x45 &&
+    buffer[10] === 0x42 &&
+    buffer[11] === 0x50
+  ) {
+    return "image/webp";
+  }
+  const head = buffer.subarray(0, Math.min(buffer.length, 1024)).toString("utf8").trimStart();
+  if (head.startsWith("<svg") || head.startsWith("<?xml")) {
+    return "image/svg+xml";
+  }
+  return null;
+}
 
 export async function GET() {
   const { error } = await requireAdmin();
@@ -64,7 +113,16 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const ext = mime === "image/svg+xml" ? "svg" : mime.split("/")[1] || "jpg";
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const detectedMime = detectMimeFromBuffer(buffer);
+    if (!detectedMime || !isAllowedMimeType(detectedMime) || (mime !== "application/octet-stream" && mime !== detectedMime)) {
+      return NextResponse.json(
+        { error: "File content does not match an allowed image format." },
+        { status: 400 }
+      );
+    }
+
+    const ext = detectedMime === "image/svg+xml" ? "svg" : detectedMime.split("/")[1] || "jpg";
     const id = `media-${randomUUID()}`;
     const filename = `${id}.${ext}`;
     const uploadsDir = getUploadsDir();
@@ -72,14 +130,11 @@ export async function POST(request: NextRequest) {
 
     await mkdir(uploadsDir, { recursive: true });
 
-    const buffer = Buffer.from(await file.arrayBuffer());
-    await writeFile(filePath, buffer);
-
     const fromForm = parseOptionalDimensionsFromForm(
       typeof widthForm === "string" ? widthForm : undefined,
       typeof heightForm === "string" ? heightForm : undefined
     );
-    const probed = mime !== "image/svg+xml" ? probeRasterDimensions(buffer, mime) : {};
+    const probed = detectedMime !== "image/svg+xml" ? probeRasterDimensions(buffer, detectedMime) : {};
     const width = fromForm.width ?? probed.width;
     const height = fromForm.height ?? probed.height;
 
@@ -91,12 +146,28 @@ export async function POST(request: NextRequest) {
       alt,
       title,
       size: file.size,
-      mimeType: mime,
+      mimeType: detectedMime,
       uploadedAt: new Date().toISOString(),
       ...(width && height ? { width, height } : {}),
     };
 
-    await addMediaItem(item);
+    try {
+      // Metadata first, then file write; rollback metadata if the binary write fails.
+      await addMediaItem(item);
+      await writeFile(filePath, buffer);
+    } catch (persistErr) {
+      try {
+        await unlink(filePath);
+      } catch {
+        // Ignore if the file was not created.
+      }
+      try {
+        await removeMediaItem(id);
+      } catch {
+        // Best-effort rollback; leave a server log for operators.
+      }
+      throw persistErr;
+    }
 
     return NextResponse.json({ item: { ...item, fileMissing: false } });
   } catch (err) {

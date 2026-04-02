@@ -8,6 +8,7 @@ import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspens
 import { DeleteButton } from "../DeleteButton";
 import { deletePublication } from "./actions";
 import { getSiteTaxonomy, labelForPublicationTypeSlug } from "@/lib/site-taxonomy";
+import { requireAdminSession } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -18,6 +19,7 @@ function formatPublicationTypesCell(types: unknown, taxonomy: { slug: string; la
 }
 
 export default async function AdminPublicationsPage() {
+  await requireAdminSession();
   const [items, taxonomy] = await Promise.all([
     prisma.publication.findMany({
       orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],

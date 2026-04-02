@@ -2,7 +2,8 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Calendar, MapPin, Users, Clock } from "lucide-react";
 import { getEventBySlug, getTeam } from "@/lib/content";
-import { fallbackEvents } from "@/data/content";
+import { eventsContent, fallbackEvents } from "@/data/content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import type { CmsEvent, CmsEventAgendaItem } from "@/lib/content";
 import { PageHero } from "@/components/PageHero";
 import { placeholderImages } from "@/data/images";
@@ -37,8 +38,12 @@ export default async function EventRegisterPage({ params }: Props) {
 
   if (!event) notFound();
 
-  const team = await getTeam().catch(() => [] as Awaited<ReturnType<typeof getTeam>>);
-  const bc = await getBreadcrumbLabels().catch(() => DEFAULT_SITE_CHROME.breadcrumbs);
+  const [team, bc, eventsPage] = await Promise.all([
+    getTeam().catch(() => [] as Awaited<ReturnType<typeof getTeam>>),
+    getBreadcrumbLabels().catch(() => DEFAULT_SITE_CHROME.breadcrumbs),
+    getMergedPageContent<typeof eventsContent>("events", cmsStaticOrEmpty(eventsContent)),
+  ]);
+  const pageCopy = eventsPage as unknown as typeof eventsContent & { heroImage?: string };
 
   let confirmedCount = 0;
   let waitlistCount = 0;
@@ -64,13 +69,16 @@ export default async function EventRegisterPage({ params }: Props) {
   const canRegister = !isPastDeadline && (!isFull || allowWaitlist);
   const registeringWaitlist = isFull && allowWaitlist && !isPastDeadline;
 
-  const heroImage = (await resolveImageUrl(event.image)) || placeholderImages.events;
+  const heroImage =
+    (await resolveImageUrl(event.image)) ||
+    (await resolveImageUrl(pageCopy.heroImage)) ||
+    placeholderImages.events;
 
   return (
     <>
       <PageHero
         title={`Register for ${event.title}`}
-        subtitle={venue || "Event registration"}
+        subtitle={venue || pageCopy.subtitle}
         image={heroImage}
         imageAlt={event.title}
         breadcrumbs={[

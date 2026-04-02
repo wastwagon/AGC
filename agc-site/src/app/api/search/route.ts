@@ -18,11 +18,11 @@ export async function GET() {
       getNews(50),
       getPublications(50),
     ]);
+    const useFallback = process.env.BUILD_WITHOUT_DB === "1";
 
-    const events: CmsEvent[] = cmsEvents.length > 0 ? cmsEvents : (fallbackEvents as CmsEvent[]);
-    const news: CmsNews[] = cmsNews.length > 0 ? cmsNews : (fallbackNews as CmsNews[]);
-    const publications: CmsPublication[] =
-      cmsPublications.length > 0 ? cmsPublications : (fallbackPublications as CmsPublication[]);
+    const events: CmsEvent[] = useFallback ? (fallbackEvents as CmsEvent[]) : cmsEvents;
+    const news: CmsNews[] = useFallback ? (fallbackNews as CmsNews[]) : cmsNews;
+    const publications: CmsPublication[] = useFallback ? (fallbackPublications as CmsPublication[]) : cmsPublications;
 
     const items: SearchItem[] = [
       ...events.map((e) => ({

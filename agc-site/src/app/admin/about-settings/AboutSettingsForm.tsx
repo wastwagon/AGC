@@ -6,6 +6,7 @@ import { ImagePlus } from "lucide-react";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 import { updateAboutSettings } from "./actions";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
+import { aboutContent as aboutDefaults } from "@/data/content";
 
 type AboutSettings = {
   title: string;
@@ -21,6 +22,7 @@ type AboutSettings = {
   };
   heroImage?: string;
   sectionImage?: string;
+  teamPage?: { title: string; subtitle: string; heroImage?: string };
 };
 
 export function AboutSettingsForm({ content, saved = false }: { content: AboutSettings; saved?: boolean }) {
@@ -43,7 +45,10 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
   const [sectionImage, setSectionImage] = useState(
     initialDraft?.sectionImage ?? content.sectionImage ?? ""
   );
-  const [pickerTarget, setPickerTarget] = useState<"heroImage" | "sectionImage" | null>(null);
+  const [teamHeroImage, setTeamHeroImage] = useState(
+    initialDraft?.teamHeroImage ?? content.teamPage?.heroImage?.trim() ?? ""
+  );
+  const [pickerTarget, setPickerTarget] = useState<"heroImage" | "sectionImage" | "teamHeroImage" | null>(null);
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({});
   const [draftRestored] = useState(!!initialDraft);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
@@ -83,9 +88,17 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
     return raw;
   }, [sectionImage, mediaMap]);
 
+  const teamHeroPreview = useMemo(() => {
+    const raw = teamHeroImage.trim();
+    if (!raw) return "";
+    if (raw.startsWith("media-")) return mediaMap[raw] || "";
+    return raw;
+  }, [teamHeroImage, mediaMap]);
+
   function onSelectMedia(media: MediaItem) {
     if (pickerTarget === "heroImage") setHeroImage(media.id);
     if (pickerTarget === "sectionImage") setSectionImage(media.id);
+    if (pickerTarget === "teamHeroImage") setTeamHeroImage(media.id);
   }
 
   function saveDraft() {
@@ -139,6 +152,57 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
           <textarea name="strategicContent" defaultValue={initialDraft?.strategicContent ?? content.strategicObjectives.content} rows={5} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Strategic content" />
           <textarea name="strategicPrinciples" defaultValue={initialDraft?.strategicPrinciples ?? content.strategicObjectives.principles} rows={4} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Principles" />
           <textarea name="strategicAgenda2063" defaultValue={initialDraft?.strategicAgenda2063 ?? content.strategicObjectives.agenda2063} rows={4} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Agenda 2063 alignment" />
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Our Team page</h2>
+        <p className="mt-1 text-sm text-slate-600">Hero for the public <code className="rounded bg-slate-100 px-1">/about/team</code> route. If no team hero image is set, the main About hero image is used.</p>
+        <div className="mt-4 grid gap-4">
+          <input
+            name="teamPageTitle"
+            defaultValue={initialDraft?.teamPageTitle ?? content.teamPage?.title ?? aboutDefaults.teamPage.title}
+            className="rounded-lg border border-slate-300 px-4 py-2"
+            placeholder="Team page title"
+          />
+          <input
+            name="teamPageSubtitle"
+            defaultValue={
+              initialDraft?.teamPageSubtitle ?? content.teamPage?.subtitle ?? aboutDefaults.teamPage.subtitle
+            }
+            className="rounded-lg border border-slate-300 px-4 py-2"
+            placeholder="Team page subtitle"
+          />
+          <div>
+            <div className="flex gap-2">
+              <input
+                name="teamHeroImage"
+                value={teamHeroImage}
+                onChange={(e) => setTeamHeroImage(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2"
+                placeholder="Team hero image (optional)"
+              />
+              <button
+                type="button"
+                onClick={() => setPickerTarget("teamHeroImage")}
+                className="inline-flex items-center rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-50"
+                title="Pick from Media Library"
+              >
+                <ImagePlus className="h-4 w-4" />
+              </button>
+            </div>
+            {teamHeroPreview ? (
+              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                <Image
+                  src={teamHeroPreview}
+                  alt="Team hero preview"
+                  fill
+                  className="object-cover"
+                  unoptimized={preferUnoptimizedImage(teamHeroPreview)}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
       </section>
 

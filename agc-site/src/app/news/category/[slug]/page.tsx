@@ -11,6 +11,7 @@ import { Button } from "@/components/Button";
 import { filterNewsByCategory, getActiveCategorySlugs, getCategoryLabel } from "@/lib/news";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveNewsForPublic } from "@/lib/cms-fallback";
 import { CmsDraftNotice } from "@/components/CmsDraftNotice";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
@@ -36,13 +37,16 @@ export const revalidate = 60;
 
 export default async function NewsCategoryPage({ params }: Props) {
   const { slug } = await params;
-  const [taxonomy, cmsNews, bc] = await Promise.all([
+  const [taxonomy, cmsNews, bc, merged] = await Promise.all([
     getSiteTaxonomy(),
     getNews(50),
     getBreadcrumbLabels(),
+    getMergedPageContent<typeof newsContent>("news", cmsStaticOrEmpty(newsContent)),
   ]);
   const category = taxonomy.newsCategories.find((c) => c.slug === slug);
   if (!category) notFound();
+  const pageCopy = merged as unknown as typeof newsContent & { heroImage?: string };
+  const heroImage = (await resolveImageUrl(pageCopy.heroImage)) || placeholderImages.news;
   const { items: allNews, cmsDraftsOnly: newsDraftsOnly } = await resolveNewsForPublic(
     cmsNews,
     fallbackNews as CmsNews[]
@@ -60,8 +64,8 @@ export default async function NewsCategoryPage({ params }: Props) {
     <>
       <PageHero
         title={category.label}
-        subtitle={category.description || newsContent.subtitle}
-        image={placeholderImages.news}
+        subtitle={category.description || pageCopy.subtitle}
+        image={heroImage}
         imageAlt={category.label}
         breadcrumbs={[
           { label: bc.home, href: "/" },
@@ -106,7 +110,7 @@ export default async function NewsCategoryPage({ params }: Props) {
             </div>
           ) : (
             <div className="page-card max-w-lg border-l-[4px] border-l-accent-600 p-8 sm:p-10">
-              <p className="page-prose">{newsContent.filters.noResults}</p>
+              <p className="page-prose">{pageCopy.filters.noResults}</p>
               <Button asChild href="/news" variant="primary" className="mt-6">
                 View all news
               </Button>

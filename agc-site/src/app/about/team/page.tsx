@@ -2,6 +2,7 @@ import Image from "next/image";
 import { aboutContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getTeam } from "@/lib/content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { PageHero } from "@/components/PageHero";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
@@ -15,7 +16,11 @@ export const metadata = {
 export const revalidate = 60;
 
 export default async function TeamPage() {
-  const [teamMembers, bc] = await Promise.all([getTeam(), getBreadcrumbLabels()]);
+  const [teamMembers, bc, merged] = await Promise.all([
+    getTeam(),
+    getBreadcrumbLabels(),
+    getMergedPageContent<typeof aboutContent>("about", cmsStaticOrEmpty(aboutContent)),
+  ]);
   const membersWithImages = await Promise.all(
     teamMembers.map(async (member) => ({
       ...member,
@@ -23,13 +28,35 @@ export default async function TeamPage() {
     }))
   );
 
+  const root = merged as typeof aboutContent & { heroImage?: string };
+  const teamFromCms = root.teamPage;
+  const teamPage = {
+    title:
+      typeof teamFromCms?.title === "string" && teamFromCms.title.trim() !== ""
+        ? teamFromCms.title
+        : aboutContent.teamPage.title,
+    subtitle:
+      typeof teamFromCms?.subtitle === "string" && teamFromCms.subtitle.trim() !== ""
+        ? teamFromCms.subtitle
+        : aboutContent.teamPage.subtitle,
+    heroImage:
+      typeof teamFromCms === "object" &&
+      teamFromCms !== null &&
+      "heroImage" in teamFromCms &&
+      typeof (teamFromCms as { heroImage?: string }).heroImage === "string"
+        ? (teamFromCms as { heroImage?: string }).heroImage
+        : undefined,
+  };
+  const heroImage =
+    (await resolveImageUrl(teamPage.heroImage ?? root.heroImage)) || placeholderImages.about;
+
   return (
     <>
       <PageHero
-        title="Our Team"
-        subtitle="Advisory Board, Management Team, Fellows, and Associate Fellows"
-        image={placeholderImages.about}
-        imageAlt="Our Team"
+        title={teamPage.title}
+        subtitle={teamPage.subtitle}
+        image={heroImage}
+        imageAlt={teamPage.title}
         breadcrumbs={[
           { label: bc.home, href: "/" },
           { label: bc.about, href: "/about" },

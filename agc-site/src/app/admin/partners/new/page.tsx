@@ -1,11 +1,13 @@
 import { AdminFormErrorSuspense } from "../../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../../_components/AdminFormSuccessSuspense";
 import { AdminPageHeader } from "../../_components/AdminPageHeader";
+import { requireAdminSession } from "@/lib/require-admin";
 import { PartnerForm } from "../PartnerForm";
 
 export const dynamic = "force-dynamic";
 
-export default function AdminPartnersNewPage() {
+export default async function AdminPartnersNewPage() {
+  await requireAdminSession();
   return (
     <div>
       <AdminPageHeader

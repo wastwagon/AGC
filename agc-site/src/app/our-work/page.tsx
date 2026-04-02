@@ -1,6 +1,6 @@
 import { OurWorkClient } from "./our-work-client";
 import { getPrograms, getProjects } from "@/lib/content";
-import { workContent } from "@/data/content";
+import { workContent, type OurWorkPageContent } from "@/data/content";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -23,7 +23,7 @@ export default async function OurWorkPage() {
     <OurWorkClient
       cmsPrograms={cmsPrograms}
       cmsProjects={cmsProjects}
-      content={merged as unknown as typeof workContent}
+      content={merged as unknown as OurWorkPageContent}
       breadcrumbLabels={siteSettings.chrome.breadcrumbs}
     />
   );

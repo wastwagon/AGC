@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { LayoutGrid, Target, Users, BookOpen, Zap, Users2, Megaphone, Globe, Shield, Lightbulb } from "lucide-react";
-import { workContent } from "@/data/content";
+import type { OurWorkPageContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import type { CmsProgram, CmsProject } from "@/lib/content";
@@ -23,11 +23,11 @@ type CardItem = { title: string; description: string };
 type OurWorkClientProps = {
   cmsPrograms: CmsProgram[];
   cmsProjects: CmsProject[];
-  content?: typeof workContent;
+  content: OurWorkPageContent;
   breadcrumbLabels: SiteBreadcrumbChrome;
 };
 
-export function OurWorkClient({ cmsPrograms, cmsProjects, content = workContent, breadcrumbLabels }: OurWorkClientProps) {
+export function OurWorkClient({ cmsPrograms, cmsProjects, content, breadcrumbLabels }: OurWorkClientProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("programs");
 
   const tabs: { key: TabKey; label: string }[] = [

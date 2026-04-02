@@ -1,4 +1,5 @@
 import { prisma } from "@/lib/db";
+import { requireAdminSession } from "@/lib/require-admin";
 import Link from "next/link";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { AdminMaintenancePanel } from "./AdminMaintenancePanel";
@@ -33,6 +34,7 @@ async function getContentCounts() {
 }
 
 export default async function AdminSettingsPage() {
+  await requireAdminSession();
   const counts = await getContentCounts();
 
   return (

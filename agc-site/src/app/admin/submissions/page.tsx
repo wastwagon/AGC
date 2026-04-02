@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { requireAdminSession } from "@/lib/require-admin";
 import { Mail, UserPlus, MessageSquare, Handshake, Briefcase, ChevronLeft, ChevronRight, Download } from "lucide-react";
 import { AdminMobileEntityCard } from "../_components/AdminMobileEntityCard";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
@@ -96,8 +95,7 @@ type SearchParams = Promise<{
 }>;
 
 export default async function AdminSubmissionsPage({ searchParams }: { searchParams: SearchParams }) {
-  const session = await auth();
-  if (!session?.user) redirect("/admin/login");
+  await requireAdminSession();
 
   const sp = await searchParams;
   const np = parsePage(sp.np);

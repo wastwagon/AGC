@@ -19,7 +19,15 @@ export async function updateAboutSettings(formData: FormData) {
   }
   const d = parsed.data;
 
+  const existing = await prisma.pageContent.findUnique({ where: { slug: "about" } });
+  const prevJson =
+    existing?.contentJson && typeof existing.contentJson === "object" && !Array.isArray(existing.contentJson)
+      ? ({ ...(existing.contentJson as Record<string, unknown>) } as Record<string, unknown>)
+      : {};
+
+  const teamHero = d.teamHeroImage?.trim();
   const payload = {
+    ...prevJson,
     title: d.title,
     hero: { subtitle: d.heroSubtitle },
     intro: d.intro,
@@ -33,6 +41,11 @@ export async function updateAboutSettings(formData: FormData) {
     },
     heroImage: d.heroImage || undefined,
     sectionImage: d.sectionImage || undefined,
+    teamPage: {
+      title: d.teamPageTitle,
+      subtitle: d.teamPageSubtitle,
+      ...(teamHero ? { heroImage: teamHero } : {}),
+    },
   };
 
   try {
@@ -47,6 +60,7 @@ export async function updateAboutSettings(formData: FormData) {
   }
 
   revalidatePath("/about");
+  revalidatePath("/about/team");
   revalidatePath("/admin/about-settings");
   redirect("/admin/about-settings?saved=1");
 }

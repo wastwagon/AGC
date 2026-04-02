@@ -7,10 +7,12 @@ import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 import { DeleteButton } from "../DeleteButton";
 import { deleteTeam } from "./actions";
+import { requireAdminSession } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminTeamPage() {
+  await requireAdminSession();
   const items = await prisma.team.findMany({
     orderBy: { order: "asc" },
   });

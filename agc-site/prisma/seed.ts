@@ -21,6 +21,10 @@ import { applicationsPageUiDefaults } from "../src/data/applications-page";
 
 const prisma = new PrismaClient();
 
+/** When "1" or "true", seed overwrites existing PageContent rows from repo defaults (destructive). Default: only create missing slugs. */
+const resetPageContent =
+  process.env.SEED_RESET_PAGE_CONTENT === "1" || process.env.SEED_RESET_PAGE_CONTENT === "true";
+
 const defaultTaxonomyJson = {
   newsCategories: [
     { slug: "appi", label: "African Political Parties Initiative", description: "APPI-related news and engagements" },
@@ -70,6 +74,13 @@ async function main() {
       objectivesAgenda2063:
         "Aligned with the vision of the African Union's Agenda 2063: The Africa We Want.",
       status: "published",
+      contentJson: {
+        teamPage: {
+          title: "Our Team",
+          subtitle: "Advisory Board, Management Team, Fellows, and Associate Fellows",
+          heroImage: "/uploads/placeholder.svg",
+        },
+      },
     },
     {
       slug: "contact",
@@ -187,21 +198,32 @@ async function main() {
     },
   ];
 
+  let pageCreates = 0;
+  let pageUpdates = 0;
   for (const p of pages) {
-    await prisma.pageContent.upsert({
-      where: { slug: p.slug },
-      create: p,
-      update: {
-        title: p.title,
-        heroTitle: p.heroTitle,
-        heroSubtitle: p.heroSubtitle,
-        intro: p.intro,
-        status: p.status,
-        contentJson: p.contentJson,
-      },
-    });
+    const existing = await prisma.pageContent.findUnique({ where: { slug: p.slug } });
+    if (!existing) {
+      await prisma.pageContent.create({ data: p });
+      pageCreates++;
+    } else if (resetPageContent) {
+      await prisma.pageContent.update({
+        where: { slug: p.slug },
+        data: {
+          title: p.title,
+          heroTitle: p.heroTitle,
+          heroSubtitle: p.heroSubtitle,
+          intro: p.intro,
+          status: p.status,
+          contentJson: p.contentJson,
+        },
+      });
+      pageUpdates++;
+    }
   }
-  console.log(`  Page content: ${pages.length} pages (home + our-work include pillar/slider defaults in CMS JSON)`);
+  console.log(
+    `  Page content: ${pages.length} baseline slugs — created ${pageCreates}, skipped ${pages.length - pageCreates - pageUpdates} (unchanged)` +
+      (resetPageContent ? `, reset ${pageUpdates} (SEED_RESET_PAGE_CONTENT)` : " (set SEED_RESET_PAGE_CONTENT=1 to overwrite CMS pages from seed)")
+  );
 
   // Programs (image optional; set /uploads/... in Admin to replace)
   const programs = [

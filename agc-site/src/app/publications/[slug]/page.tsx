@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { ArrowLeft, Calendar, Download } from "lucide-react";
+import { publicationsContent, fallbackPublications } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getPublicationBySlug, getContentFileUrl } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
-import { fallbackPublications } from "@/data/content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { getSiteSettings } from "@/lib/site-settings";
 import type { CmsPublication } from "@/lib/content";
 import { getSiteTaxonomy, labelForPublicationTypeSlug } from "@/lib/site-taxonomy";
 
@@ -46,10 +48,20 @@ async function getPublicationItem(slug: string): Promise<CmsPublication | null> 
 
 export default async function PublicationDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [item, taxonomy] = await Promise.all([getPublicationItem(slug), getSiteTaxonomy()]);
+  const [item, taxonomy, merged, siteSettings] = await Promise.all([
+    getPublicationItem(slug),
+    getSiteTaxonomy(),
+    getMergedPageContent<typeof publicationsContent>("publications", cmsStaticOrEmpty(publicationsContent)),
+    getSiteSettings(),
+  ]);
   if (!item) notFound();
 
-  const imageUrl = (await resolveImageUrl(item.image)) || placeholderImages.publications;
+  const pageCopy = merged as unknown as typeof publicationsContent & { heroImage?: string };
+  const imageUrl =
+    (await resolveImageUrl(item.image)) ||
+    (await resolveImageUrl(pageCopy.heroImage)) ||
+    placeholderImages.publications;
+  const bc = siteSettings.chrome.breadcrumbs;
   const date = item.date_published || item.date_created;
   const dateStr = date
     ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })
@@ -103,11 +115,11 @@ export default async function PublicationDetailPage({ params }: Props) {
           <div className="page-card rounded-2xl border border-stone-200/90 px-5 py-8 shadow-[0_12px_40px_-12px_rgba(28,25,23,0.12)] sm:px-8 sm:py-10 lg:px-10 lg:py-12">
             <nav aria-label="Breadcrumb" className="mb-8 border-b border-stone-200/80 pb-6 text-sm text-stone-500">
               <Link href="/" className="transition-colors hover:text-accent-700">
-                Home
+                {bc.home}
               </Link>
               <span className="mx-2 text-stone-300">/</span>
               <Link href="/publications" className="transition-colors hover:text-accent-700">
-                Publications
+                {bc.publications}
               </Link>
               <span className="mx-2 text-stone-300">/</span>
               <span className="line-clamp-1 text-stone-700">{item.title}</span>

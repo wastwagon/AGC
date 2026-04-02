@@ -16,6 +16,25 @@ function slugify(s: string): string {
     .replace(/^-|-$/g, "");
 }
 
+async function isEventSlugTaken(slug: string, excludeId?: number): Promise<boolean> {
+  const existing = await prisma.event.findFirst({
+    where: {
+      slug,
+      ...(typeof excludeId === "number" ? { id: { not: excludeId } } : {}),
+    },
+    select: { id: true },
+  });
+  return !!existing;
+}
+
+function isSlugUniqueConstraintError(err: unknown): boolean {
+  if (!(err instanceof Prisma.PrismaClientKnownRequestError)) return false;
+  if (err.code !== "P2002") return false;
+  const target = err.meta?.target;
+  if (Array.isArray(target)) return target.includes("slug");
+  return typeof target === "string" ? target.includes("slug") : false;
+}
+
 export async function createEvent(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
@@ -49,6 +68,12 @@ export async function createEvent(formData: FormData) {
 
   const data = parsed.data;
   const finalSlug = data.slug?.trim() || slugify(data.title);
+  if (!finalSlug) {
+    redirect(`/admin/events/new?error=${encodeURIComponent("Please provide a valid slug.")}`);
+  }
+  if (await isEventSlugTaken(finalSlug)) {
+    redirect(`/admin/events/new?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+  }
 
   let created;
   try {
@@ -79,6 +104,9 @@ export async function createEvent(formData: FormData) {
       },
     });
   } catch (err) {
+    if (isSlugUniqueConstraintError(err)) {
+      redirect(`/admin/events/new?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+    }
     console.error("createEvent:", err);
     redirect(`/admin/events/new?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
   }
@@ -122,6 +150,12 @@ export async function updateEvent(id: number, formData: FormData) {
 
   const data = parsed.data;
   const finalSlug = data.slug?.trim() || slugify(data.title);
+  if (!finalSlug) {
+    redirect(`/admin/events/edit/${id}?error=${encodeURIComponent("Please provide a valid slug.")}`);
+  }
+  if (await isEventSlugTaken(finalSlug, id)) {
+    redirect(`/admin/events/edit/${id}?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+  }
 
   try {
     const agendaValue = parseAgendaJsonField(data.agendaJson);
@@ -152,6 +186,9 @@ export async function updateEvent(id: number, formData: FormData) {
       },
     });
   } catch (err) {
+    if (isSlugUniqueConstraintError(err)) {
+      redirect(`/admin/events/edit/${id}?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+    }
     console.error("updateEvent:", err);
     redirect(`/admin/events/edit/${id}?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
   }

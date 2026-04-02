@@ -2,11 +2,13 @@ import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { formatTaxonomyLines, getSiteTaxonomy } from "@/lib/site-taxonomy";
+import { requireAdminSession } from "@/lib/require-admin";
 import { saveSiteTaxonomy } from "./actions";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminTaxonomyPage() {
+  await requireAdminSession();
   const taxonomy = await getSiteTaxonomy();
   const newsCategories = formatTaxonomyLines(taxonomy.newsCategories);
   const publicationTypes = formatTaxonomyLines(taxonomy.publicationTypes);

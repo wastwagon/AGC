@@ -20,9 +20,8 @@ import {
   UserPlus,
   MessageSquare,
 } from "lucide-react";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { requireAdminSession } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
@@ -54,8 +53,7 @@ const snapshotItems = [
 ] as const;
 
 export default async function AdminDashboardPage() {
-  const session = await auth();
-  if (!session?.user) redirect("/admin/login");
+  await requireAdminSession();
 
   let counts = {
     newsletter: 0,

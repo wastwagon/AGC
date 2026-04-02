@@ -3,10 +3,12 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { Calendar, Download, FolderOpen } from "lucide-react";
+import { newsContent, fallbackNews } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getNewsBySlug } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
-import { fallbackNews } from "@/data/content";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { getSiteSettings } from "@/lib/site-settings";
 import { getNewsCategorySlugs, getCategoryLabel } from "@/lib/news";
 import type { CmsNews } from "@/lib/content";
 import { sanitizeHtml } from "@/lib/sanitize";
@@ -49,10 +51,20 @@ async function getNewsItem(slug: string): Promise<CmsNews | null> {
 
 export default async function NewsDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [item, taxonomy] = await Promise.all([getNewsItem(slug), getSiteTaxonomy()]);
+  const [item, taxonomy, merged, siteSettings] = await Promise.all([
+    getNewsItem(slug),
+    getSiteTaxonomy(),
+    getMergedPageContent<typeof newsContent>("news", cmsStaticOrEmpty(newsContent)),
+    getSiteSettings(),
+  ]);
   if (!item) notFound();
 
-  const imageUrl = (await resolveImageUrl(item.image)) || placeholderImages.news;
+  const pageCopy = merged as unknown as typeof newsContent & { heroImage?: string };
+  const imageUrl =
+    (await resolveImageUrl(item.image)) ||
+    (await resolveImageUrl(pageCopy.heroImage)) ||
+    placeholderImages.news;
+  const bc = siteSettings.chrome.breadcrumbs;
   const date = item.date_published || item.date_created;
   const dateStr = date
     ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })
@@ -74,7 +86,7 @@ export default async function NewsDetailPage({ params }: Props) {
         <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 lg:p-16">
           <div className="mx-auto w-full max-w-3xl">
             <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white">
-              News & updates
+              {pageCopy.title}
             </p>
             <h1 className="font-serif text-3xl font-semibold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-[2.35rem]">
               {item.title}
@@ -92,11 +104,11 @@ export default async function NewsDetailPage({ params }: Props) {
           <div className="page-card rounded-2xl border border-stone-200/90 px-5 py-8 shadow-[0_12px_40px_-12px_rgba(28,25,23,0.12)] sm:px-8 sm:py-10 lg:px-10 lg:py-12">
             <nav aria-label="Breadcrumb" className="mb-8 border-b border-stone-200/80 pb-6 text-sm text-stone-500">
               <Link href="/" className="transition-colors hover:text-accent-700">
-                Home
+                {bc.home}
               </Link>
               <span className="mx-2 text-stone-300">/</span>
               <Link href="/news" className="transition-colors hover:text-accent-700">
-                News
+                {bc.news}
               </Link>
               <span className="mx-2 text-stone-300">/</span>
               <span className="line-clamp-1 text-stone-700">{item.title}</span>

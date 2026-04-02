@@ -5,10 +5,12 @@ import { AdminMobileEntityCard, AdminStatusPill } from "../_components/AdminMobi
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
+import { requireAdminSession } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPagesPage() {
+  await requireAdminSession();
   const items = (await prisma.pageContent.findMany({
     orderBy: { slug: "asc" },
   })).filter((x) => x.slug !== "site-settings");

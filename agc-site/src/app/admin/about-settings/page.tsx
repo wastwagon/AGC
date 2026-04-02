@@ -1,5 +1,6 @@
 import { aboutContent } from "@/data/content";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { requireAdminSession } from "@/lib/require-admin";
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { AboutSettingsForm } from "./AboutSettingsForm";
 
@@ -10,6 +11,7 @@ export default async function AdminAboutSettingsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireAdminSession();
   const [content, params] = await Promise.all([
     getMergedPageContent<typeof aboutContent>("about", cmsStaticOrEmpty(aboutContent)),
     searchParams,

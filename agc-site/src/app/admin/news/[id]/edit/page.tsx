@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { requireAdminSession } from "@/lib/require-admin";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { AdminFormErrorSuspense } from "../../../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../../../_components/AdminFormSuccessSuspense";
@@ -11,6 +12,7 @@ export const dynamic = "force-dynamic";
 type Props = { params: Promise<{ id: string }> };
 
 export default async function AdminNewsEditPage({ params }: Props) {
+  await requireAdminSession();
   const { id } = await params;
   const numId = parseInt(id, 10);
   if (isNaN(numId)) notFound();

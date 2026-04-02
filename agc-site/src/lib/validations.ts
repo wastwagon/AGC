@@ -302,6 +302,9 @@ export const aboutSettingsFormSchema = z.object({
   strategicAgenda2063: z.string().min(1).max(10000),
   heroImage: z.string().max(500).optional(),
   sectionImage: z.string().max(500).optional(),
+  teamPageTitle: z.string().min(1).max(255),
+  teamPageSubtitle: z.string().min(1).max(1000),
+  teamHeroImage: z.string().max(500).optional(),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;

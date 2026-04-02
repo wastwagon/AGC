@@ -1,5 +1,6 @@
 import { AdminPageHeader } from "../_components/AdminPageHeader";
 import { getSiteSettings } from "@/lib/site-settings";
+import { requireAdminSession } from "@/lib/require-admin";
 import { SiteSettingsForm } from "./SiteSettingsForm";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,7 @@ export default async function AdminSiteSettingsPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
+  await requireAdminSession();
   const [settings, params] = await Promise.all([getSiteSettings(), searchParams]);
   const saved = params.saved === "1";
   const error = typeof params.error === "string" ? params.error : null;

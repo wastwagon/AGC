@@ -118,6 +118,11 @@ export const aboutContent = {
     fellows: "Fellows",
     associateFellows: "Associate Fellows",
   },
+  /** Public /about/team hero; overridable via PageContent slug `about` (content_json.teamPage). */
+  teamPage: {
+    title: "Our Team",
+    subtitle: "Advisory Board, Management Team, Fellows, and Associate Fellows",
+  },
 };
 
 /** Fallback team when CMS returns no members */
@@ -225,6 +230,8 @@ export const workContent = {
     ],
   },
 };
+
+export type OurWorkPageContent = typeof workContent;
 
 export const getInvolvedContent = {
   title: "Get Involved",

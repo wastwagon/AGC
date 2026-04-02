@@ -1,4 +1,5 @@
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
+import { requireAdminSession } from "@/lib/require-admin";
 import { AdminFormErrorSuspense } from "../../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../../_components/AdminFormSuccessSuspense";
 import { AdminPageHeader } from "../../_components/AdminPageHeader";
@@ -7,6 +8,7 @@ import { NewsForm } from "../NewsForm";
 export const dynamic = "force-dynamic";
 
 export default async function AdminNewsNewPage() {
+  await requireAdminSession();
   const taxonomy = await getSiteTaxonomy();
   return (
     <div>

@@ -26,6 +26,7 @@ export interface MediaItem {
 }
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/gif", "image/webp", "image/svg+xml"];
+let metadataWriteQueue: Promise<unknown> = Promise.resolve();
 
 async function ensureDirs(): Promise<void> {
   await mkdir(path.dirname(METADATA_PATH), { recursive: true });
@@ -60,19 +61,52 @@ export async function saveMediaMetadata(items: MediaItem[]): Promise<void> {
   await writeFile(METADATA_PATH, JSON.stringify(items, null, 2), "utf-8");
 }
 
+async function withMediaMetadataWriteLock<T>(operation: () => Promise<T>): Promise<T> {
+  const run = metadataWriteQueue.then(operation, operation);
+  metadataWriteQueue = run.then(
+    () => undefined,
+    () => undefined
+  );
+  return run;
+}
+
 export async function addMediaItem(item: MediaItem): Promise<void> {
-  const items = await listMedia();
-  items.unshift(item);
-  await saveMediaMetadata(items);
+  await withMediaMetadataWriteLock(async () => {
+    const items = await listMedia();
+    items.unshift(item);
+    await saveMediaMetadata(items);
+  });
 }
 
 export async function removeMediaItem(id: string): Promise<boolean> {
-  const items = await listMedia();
-  const idx = items.findIndex((m) => m.id === id);
-  if (idx === -1) return false;
-  items.splice(idx, 1);
-  await saveMediaMetadata(items);
-  return true;
+  return withMediaMetadataWriteLock(async () => {
+    const items = await listMedia();
+    const idx = items.findIndex((m) => m.id === id);
+    if (idx === -1) return false;
+    items.splice(idx, 1);
+    await saveMediaMetadata(items);
+    return true;
+  });
+}
+
+export async function updateMediaItem(
+  id: string,
+  patch: { alt?: string; title?: string }
+): Promise<MediaItem | null> {
+  return withMediaMetadataWriteLock(async () => {
+    const items = await listMedia();
+    const idx = items.findIndex((m) => m.id === id);
+    if (idx === -1) return null;
+    const current = items[idx];
+    const next: MediaItem = {
+      ...current,
+      ...(patch.alt !== undefined ? { alt: patch.alt } : {}),
+      ...(patch.title !== undefined ? { title: patch.title } : {}),
+    };
+    items[idx] = next;
+    await saveMediaMetadata(items);
+    return next;
+  });
 }
 
 export function getMediaUrl(item: MediaItem): string {

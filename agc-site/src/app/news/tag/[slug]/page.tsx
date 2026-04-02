@@ -11,6 +11,7 @@ import { Button } from "@/components/Button";
 import { filterNewsByTag, getActiveCategorySlugs, getTagLabel } from "@/lib/news";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveNewsForPublic } from "@/lib/cms-fallback";
 import { CmsDraftNotice } from "@/components/CmsDraftNotice";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
@@ -37,11 +38,14 @@ export default async function NewsTagPage({ params }: Props) {
   const tag = newsTags.find((t) => t.slug === slug);
   if (!tag) notFound();
 
-  const [cmsNews, taxonomy, bc] = await Promise.all([
+  const [cmsNews, taxonomy, bc, merged] = await Promise.all([
     getNews(50),
     getSiteTaxonomy(),
     getBreadcrumbLabels(),
+    getMergedPageContent<typeof newsContent>("news", cmsStaticOrEmpty(newsContent)),
   ]);
+  const pageCopy = merged as unknown as typeof newsContent & { heroImage?: string };
+  const heroImage = (await resolveImageUrl(pageCopy.heroImage)) || placeholderImages.news;
   const { items: allNews, cmsDraftsOnly: newsDraftsOnly } = await resolveNewsForPublic(
     cmsNews,
     fallbackNews as CmsNews[]
@@ -60,7 +64,7 @@ export default async function NewsTagPage({ params }: Props) {
       <PageHero
         title={tag.label}
         subtitle={`Stories and updates tagged “${tag.label}”. Explore related topics via categories below.`}
-        image={placeholderImages.news}
+        image={heroImage}
         imageAlt={tag.label}
         breadcrumbs={[
           { label: bc.home, href: "/" },
@@ -105,7 +109,7 @@ export default async function NewsTagPage({ params }: Props) {
             </div>
           ) : (
             <div className="page-card max-w-lg border-l-[4px] border-l-accent-600 p-8 sm:p-10">
-              <p className="page-prose">{newsContent.filters.noResults}</p>
+              <p className="page-prose">{pageCopy.filters.noResults}</p>
               <Button asChild href="/news" variant="primary" className="mt-6">
                 View all news
               </Button>

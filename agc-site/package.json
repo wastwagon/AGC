@@ -12,7 +12,8 @@
     "test:watch": "vitest",
     "test:e2e": "playwright test",
     "test:e2e:install": "playwright install chromium",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "db:audit-slugs": "tsx prisma/audit-duplicate-slugs.ts"
   },
   "prisma": {
     "seed": "npx tsx prisma/seed.ts"

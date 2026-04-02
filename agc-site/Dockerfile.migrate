@@ -1,5 +1,5 @@
 # One-off job: Prisma migrate deploy + optional db seed (baseline CMS content).
-# Used by docker-compose before `web` starts. Seed is idempotent (skips when rows exist).
+# Used by docker-compose before `web` starts. PageContent: creates missing slugs only unless SEED_RESET_PAGE_CONTENT=1.
 FROM node:20-slim
 RUN apt-get update -y && apt-get install -y openssl ca-certificates && rm -rf /var/lib/apt/lists/*
 WORKDIR /app

@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
+import { requireAdminSession } from "@/lib/require-admin";
 import { AdminPageHeader } from "../../../_components/AdminPageHeader";
 import { DeleteButton } from "../../../DeleteButton";
 import { deleteContactSubmission } from "../../actions";
@@ -12,8 +11,7 @@ type Props = { params: Promise<{ id: string }> };
 export const dynamic = "force-dynamic";
 
 export default async function AdminContactSubmissionDetailPage({ params }: Props) {
-  const session = await auth();
-  if (!session?.user) redirect("/admin/login");
+  await requireAdminSession();
 
   const { id: idRaw } = await params;
   const id = parseInt(idRaw, 10);

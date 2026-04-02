@@ -2,6 +2,7 @@
 
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { newsFormSchema } from "@/lib/validations";
@@ -19,6 +20,25 @@ function slugify(s: string): string {
     .toLowerCase()
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
+}
+
+async function isNewsSlugTaken(slug: string, excludeId?: number): Promise<boolean> {
+  const existing = await prisma.news.findFirst({
+    where: {
+      slug,
+      ...(typeof excludeId === "number" ? { id: { not: excludeId } } : {}),
+    },
+    select: { id: true },
+  });
+  return !!existing;
+}
+
+function isSlugUniqueConstraintError(err: unknown): boolean {
+  if (!(err instanceof Prisma.PrismaClientKnownRequestError)) return false;
+  if (err.code !== "P2002") return false;
+  const target = err.meta?.target;
+  if (Array.isArray(target)) return target.includes("slug");
+  return typeof target === "string" ? target.includes("slug") : false;
 }
 
 export async function createNews(formData: FormData) {
@@ -45,6 +65,12 @@ export async function createNews(formData: FormData) {
 
   const { title, slug, image, excerpt, content, author, categories: rawCats, tags, status, datePublished } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
+  if (!finalSlug) {
+    redirect(`/admin/news/new?error=${encodeURIComponent("Please provide a valid slug.")}`);
+  }
+  if (await isNewsSlugTaken(finalSlug)) {
+    redirect(`/admin/news/new?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+  }
   const categories = await filterNewsCategories(rawCats ?? []);
 
   let created;
@@ -64,6 +90,9 @@ export async function createNews(formData: FormData) {
       },
     });
   } catch (err) {
+    if (isSlugUniqueConstraintError(err)) {
+      redirect(`/admin/news/new?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+    }
     console.error("createNews:", err);
     redirect(`/admin/news/new?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
   }
@@ -98,6 +127,12 @@ export async function updateNews(id: number, formData: FormData) {
 
   const { title, slug, image, excerpt, content, author, categories: rawCats, tags, status, datePublished } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
+  if (!finalSlug) {
+    redirect(`/admin/news/${id}/edit?error=${encodeURIComponent("Please provide a valid slug.")}`);
+  }
+  if (await isNewsSlugTaken(finalSlug, id)) {
+    redirect(`/admin/news/${id}/edit?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+  }
   const categories = await filterNewsCategories(rawCats ?? []);
 
   try {
@@ -117,6 +152,9 @@ export async function updateNews(id: number, formData: FormData) {
       },
     });
   } catch (err) {
+    if (isSlugUniqueConstraintError(err)) {
+      redirect(`/admin/news/${id}/edit?error=${encodeURIComponent("Slug already exists. Use a different slug.")}`);
+    }
     console.error("updateNews:", err);
     redirect(`/admin/news/${id}/edit?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
   }

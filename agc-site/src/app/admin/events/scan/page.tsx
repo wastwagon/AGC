@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { QrCode } from "lucide-react";
 import { CheckInScanner } from "@/components/CheckInScanner";
+import { requireAdminSession } from "@/lib/require-admin";
 import { AdminPageHeader } from "../../_components/AdminPageHeader";
 import { getEventBySlugAdmin } from "@/lib/content";
 import { fallbackEvents } from "@/data/content";
@@ -9,6 +10,7 @@ import type { CmsEvent } from "@/lib/content";
 type Props = { searchParams: Promise<{ event?: string }> };
 
 export default async function AdminScanPage({ searchParams }: Props) {
+  await requireAdminSession();
   const { event: rawSlug } = await searchParams;
   const eventSlug = rawSlug?.trim() || "";
 

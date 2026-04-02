@@ -7,10 +7,12 @@ import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 import { DeleteButton } from "../DeleteButton";
 import { deleteNews } from "./actions";
+import { requireAdminSession } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminNewsPage() {
+  await requireAdminSession();
   const items = await prisma.news.findMany({
     orderBy: { createdAt: "desc" },
   });

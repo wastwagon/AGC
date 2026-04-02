@@ -6,10 +6,12 @@ import { AdminFormErrorSuspense } from "../_components/AdminFormErrorSuspense";
 import { AdminFormSuccessSuspense } from "../_components/AdminFormSuccessSuspense";
 import { DeleteButton } from "../DeleteButton";
 import { deleteEvent } from "./actions";
+import { requireAdminSession } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminEventsPage() {
+  await requireAdminSession();
   const dbEvents = await prisma.event.findMany({
     orderBy: { startDate: "desc" },
   });

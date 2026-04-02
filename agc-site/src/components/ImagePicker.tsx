@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import Link from "next/link";
 import { X, Check, Upload, Loader2 } from "lucide-react";
 import { MAX_MEDIA_UPLOAD_BYTES, formatMaxUploadBytes } from "@/lib/media-limits";
@@ -11,6 +11,7 @@ export type MediaItem = {
   url: string;
   alt?: string;
   title?: string;
+  uploadedAt?: string;
   width?: number;
   height?: number;
   /** True when metadata exists but the file is not under public/uploads (volume / deploy mismatch). */
@@ -28,6 +29,8 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [sortBy, setSortBy] = useState<"newest" | "oldest" | "name">("newest");
 
   const fetchMedia = useCallback(async () => {
     setLoading(true);
@@ -91,6 +94,21 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
     }
   }, [open, fetchMedia]);
 
+  const visibleItems = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    const filtered = q
+      ? items.filter((item) =>
+          [item.filename, item.title || "", item.alt || "", item.id].join(" ").toLowerCase().includes(q)
+        )
+      : items;
+    return [...filtered].sort((a, b) => {
+      if (sortBy === "name") return (a.title || a.filename).localeCompare(b.title || b.filename);
+      const at = new Date(a.uploadedAt || 0).getTime();
+      const bt = new Date(b.uploadedAt || 0).getTime();
+      return sortBy === "oldest" ? at - bt : bt - at;
+    });
+  }, [items, query, sortBy]);
+
   if (!open) return null;
 
   return (
@@ -132,6 +150,26 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
                 Open full Media Library
               </Link>
             </div>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <input
+                type="search"
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                placeholder="Search filename, title, alt, ID"
+                className="w-64 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                aria-label="Search media picker"
+              />
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as "newest" | "oldest" | "name")}
+                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                aria-label="Sort media picker"
+              >
+                <option value="newest">Newest first</option>
+                <option value="oldest">Oldest first</option>
+                <option value="name">Name (A-Z)</option>
+              </select>
+            </div>
             <p className="mt-2 text-xs text-slate-500">
               Max {formatMaxUploadBytes()} per file. Upload then click an image to use it in this form. If a row shows
               “file missing”, the database lists it but the binary is not on this server (check Docker/Coolify{" "}
@@ -144,9 +182,11 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
             <div className="py-12 text-center text-slate-500">Loading…</div>
           ) : items.length === 0 ? (
             <div className="py-12 text-center text-slate-500">No images in library yet. Upload from your computer above.</div>
+          ) : visibleItems.length === 0 ? (
+            <div className="py-12 text-center text-slate-500">No images match your search.</div>
           ) : (
             <div className="grid gap-4 sm:grid-cols-3 md:grid-cols-4">
-              {items.map((item) => (
+              {visibleItems.map((item) => (
                 <button
                   key={item.id}
                   type="button"

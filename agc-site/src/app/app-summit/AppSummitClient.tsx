@@ -4,17 +4,15 @@ import { useState } from "react";
 import { Calendar, MapPin, Users } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
-import { appSummitContent } from "@/data/app-summit";
+import type { AppSummitCmsContent } from "@/data/app-summit";
 import type { SiteSettings } from "@/lib/site-settings";
-
-type SummitContent = typeof appSummitContent;
 
 export function AppSummitClient({
   content,
   heroImage,
   siteSettings,
 }: {
-  content: SummitContent;
+  content: AppSummitCmsContent;
   /** Omit for gradient-only hero when no CMS image is set */
   heroImage?: string;
   siteSettings: SiteSettings;

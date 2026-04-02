@@ -6,12 +6,14 @@ import { AdminPageHeader } from "../../../_components/AdminPageHeader";
 import { PageContentForm } from "../../PageContentForm";
 import { HomePageContentForm } from "../../HomePageContentForm";
 import { getHomePageCmsForEdit } from "@/lib/home-page-data";
+import { requireAdminSession } from "@/lib/require-admin";
 
 export const dynamic = "force-dynamic";
 
 type Props = { params: Promise<{ slug: string }> };
 
 export default async function AdminPagesEditPage({ params }: Props) {
+  await requireAdminSession();
   const { slug } = await params;
   const decodedSlug = decodeURIComponent(slug);
 
