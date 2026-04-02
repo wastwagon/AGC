@@ -12,6 +12,7 @@ export default async function AdminTaxonomyPage() {
   const taxonomy = await getSiteTaxonomy();
   const newsCategories = formatTaxonomyLines(taxonomy.newsCategories);
   const publicationTypes = formatTaxonomyLines(taxonomy.publicationTypes);
+  const newsTags = formatTaxonomyLines(taxonomy.newsTags);
 
   return (
     <div>
@@ -19,7 +20,7 @@ export default async function AdminTaxonomyPage() {
         title="Taxonomy"
         description={
           <>
-            Define <strong>news categories</strong> and <strong>publication types</strong> used as checklists when creating content. One option per line:{" "}
+            Define <strong>news categories</strong>, <strong>publication types</strong>, and <strong>news tags</strong> used when creating content. One option per line:{" "}
             <code className="rounded bg-slate-100 px-1">slug | label</code> or{" "}
             <code className="rounded bg-slate-100 px-1">slug | label | description</code>. Slugs are normalized (lowercase, hyphens).
           </>
@@ -57,6 +58,23 @@ export default async function AdminTaxonomyPage() {
             spellCheck={false}
           />
           <p className="mt-1 text-xs text-slate-500">Editors pick from this list when adding publications (multiple allowed).</p>
+        </div>
+
+        <div>
+          <label htmlFor="newsTags" className="block text-sm font-medium text-slate-700">
+            News tags
+          </label>
+          <textarea
+            id="newsTags"
+            name="newsTags"
+            rows={10}
+            defaultValue={newsTags}
+            className="mt-2 w-full rounded-lg border border-slate-300 px-3 py-2 font-mono text-sm text-slate-900"
+            spellCheck={false}
+          />
+          <p className="mt-1 text-xs text-slate-500">
+            Suggested slugs for the comma-separated tags field on news articles. Articles may still use other slugs; this list drives tag landing pages and labels.
+          </p>
         </div>
 
         <button

@@ -121,6 +121,10 @@ function deepMergeHome(base: HomePageCms, patch: Record<string, unknown>): HomeP
       out.heroPartnerStrip = pv.map(String);
       continue;
     }
+    if (key === "heroBackgroundVideoSrc" && typeof pv === "string") {
+      out.heroBackgroundVideoSrc = pv;
+      continue;
+    }
     if (key === "homePartnerBlurb" && typeof pv === "string") {
       out.homePartnerBlurb = pv;
     }

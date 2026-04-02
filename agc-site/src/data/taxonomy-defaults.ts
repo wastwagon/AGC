@@ -24,3 +24,16 @@ export const defaultPublicationTypeOptions: TaxonomyOption[] = [
   { slug: "working_paper", label: "Working paper", description: "Draft or discussion papers" },
   { slug: "toolkit", label: "Toolkit / guide", description: "Practical guides and toolkits" },
 ];
+
+/** Flat news tags (comma-separated on articles); same line format as categories in Admin → Taxonomy */
+export const defaultNewsTagOptions: TaxonomyOption[] = [
+  { slug: "political-parties", label: "Political Parties" },
+  { slug: "governance", label: "Governance" },
+  { slug: "ghana", label: "Ghana" },
+  { slug: "algeria", label: "Algeria" },
+  { slug: "summit", label: "Summit" },
+  { slug: "elections", label: "Elections" },
+  { slug: "fellows", label: "Fellows" },
+  { slug: "research", label: "Research" },
+  { slug: "accra-declaration", label: "Accra Declaration" },
+];

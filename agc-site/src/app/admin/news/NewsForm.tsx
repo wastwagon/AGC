@@ -7,7 +7,6 @@ import { ImagePlus } from "lucide-react";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
 import { createNews, updateNews } from "./actions";
-import { newsTags } from "@/data/content";
 import type { TaxonomyOption } from "@/data/taxonomy-defaults";
 import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
@@ -16,6 +15,7 @@ import { sanitizeHtml } from "@/lib/sanitize";
 
 type NewsFormProps = {
   categoryOptions: TaxonomyOption[];
+  tagOptions: TaxonomyOption[];
   item?: {
     id: number;
     title: string;
@@ -44,7 +44,7 @@ function SubmitButton({ isEdit }: { isEdit: boolean }) {
   );
 }
 
-export function NewsForm({ categoryOptions, item }: NewsFormProps) {
+export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
   const isEdit = !!item;
   const action = isEdit ? updateNews.bind(null, item.id) : createNews;
   const [image, setImage] = useState(item?.image ?? "");
@@ -227,7 +227,7 @@ export function NewsForm({ categoryOptions, item }: NewsFormProps) {
           placeholder="governance, ghana"
           className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
         />
-        <p className="mt-1 text-xs text-slate-500">Available: {newsTags.map((t) => t.slug).join(", ")}</p>
+        <p className="mt-1 text-xs text-slate-500">Suggested slugs: {tagOptions.map((t) => t.slug).join(", ")}</p>
       </div>
 
       <div>

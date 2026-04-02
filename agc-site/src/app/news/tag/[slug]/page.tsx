@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { newsContent, newsTags, fallbackNews } from "@/data/content";
+import { newsContent, fallbackNews } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getNews } from "@/lib/content";
 import type { CmsNews } from "@/lib/content";
@@ -18,13 +18,15 @@ import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 
 type Props = { params: Promise<{ slug: string }> };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const { newsTags } = await getSiteTaxonomy();
   return newsTags.map((t) => ({ slug: t.slug }));
 }
 
 export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
-  const label = getTagLabel(slug);
+  const { newsTags } = await getSiteTaxonomy();
+  const label = getTagLabel(slug, newsTags);
   return {
     title: `${label} | News`,
     description: `News tagged with ${label} from Africa Governance Centre.`,
@@ -35,15 +37,15 @@ export const revalidate = 60;
 
 export default async function NewsTagPage({ params }: Props) {
   const { slug } = await params;
-  const tag = newsTags.find((t) => t.slug === slug);
-  if (!tag) notFound();
-
   const [cmsNews, taxonomy, bc, merged] = await Promise.all([
     getNews(50),
     getSiteTaxonomy(),
     getBreadcrumbLabels(),
     getMergedPageContent<typeof newsContent>("news", cmsStaticOrEmpty(newsContent)),
   ]);
+  const tag = taxonomy.newsTags.find((t) => t.slug === slug);
+  if (!tag) notFound();
+
   const pageCopy = merged as unknown as typeof newsContent & { heroImage?: string };
   const heroImage = (await resolveImageUrl(pageCopy.heroImage)) || placeholderImages.news;
   const { items: allNews, cmsDraftsOnly: newsDraftsOnly } = await resolveNewsForPublic(

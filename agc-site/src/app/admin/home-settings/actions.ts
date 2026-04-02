@@ -30,6 +30,7 @@ export async function updateHomeSettings(formData: FormData) {
 
   const payload = {
     heroSliderImages: splitLines(d.heroSliderImages),
+    heroBackgroundVideoSrc: d.heroBackgroundVideoSrc?.trim() ?? "",
     heroContent: {
       eyebrow: d.heroEyebrow,
       title: d.heroTitle,

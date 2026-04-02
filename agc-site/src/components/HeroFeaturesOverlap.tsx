@@ -20,6 +20,7 @@ type Props = {
 
 /**
  * Three “our work” pillars on the homepage — copy and image refs come from CMS (`our-work` page content).
+ * Stacking: sits above the hero bottom (`z-[11]` vs hero copy `z-10`) so the overlap reads clearly.
  */
 export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props) {
   if (cards.length === 0) return null;
@@ -28,7 +29,11 @@ export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props)
     <section className="relative z-[11] -mt-[60px] border-0 pt-0 max-lg:mt-0">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {intro.trim() ? (
-          <p className="mb-4 text-center text-sm text-stone-600 max-lg:hidden lg:mb-2 lg:text-left">{intro}</p>
+          <div className="mb-5 flex justify-center lg:mb-6 lg:justify-start">
+            <p className="max-w-xl text-balance rounded-2xl border border-stone-200/90 bg-[#fffcf7]/95 px-5 py-3 text-center text-base font-semibold leading-snug text-stone-900 shadow-[0_8px_30px_-8px_rgba(28,25,23,0.35)] backdrop-blur-sm sm:px-6 sm:py-3.5 sm:text-lg lg:text-left">
+              {intro}
+            </p>
+          </div>
         ) : null}
         <div className="grid auto-rows-fr gap-5 md:grid-cols-3 md:gap-6">
           {cards.map((item, i) => (

@@ -14,14 +14,15 @@ export async function saveSiteTaxonomy(formData: FormData) {
 
   const newsCategories = parseTaxonomyLines(String(formData.get("newsCategories") ?? ""));
   const publicationTypes = parseTaxonomyLines(String(formData.get("publicationTypes") ?? ""));
+  const newsTags = parseTaxonomyLines(String(formData.get("newsTags") ?? ""));
 
-  if (newsCategories.length === 0 || publicationTypes.length === 0) {
+  if (newsCategories.length === 0 || publicationTypes.length === 0 || newsTags.length === 0) {
     redirect(
-      `/admin/taxonomy?error=${encodeURIComponent("Add at least one news category and one publication type (one per line: slug | label).")}`
+      `/admin/taxonomy?error=${encodeURIComponent("Add at least one news category, one publication type, and one news tag (one per line: slug | label).")}`
     );
   }
 
-  const contentJson = { newsCategories, publicationTypes } as unknown as Prisma.InputJsonValue;
+  const contentJson = { newsCategories, publicationTypes, newsTags } as unknown as Prisma.InputJsonValue;
 
   try {
     await prisma.pageContent.upsert({
@@ -41,6 +42,7 @@ export async function saveSiteTaxonomy(formData: FormData) {
 
   revalidatePath("/admin/taxonomy");
   revalidatePath("/news");
+  revalidatePath("/news/tag", "layout");
   revalidatePath("/publications");
   redirect("/admin/taxonomy?saved=1");
 }

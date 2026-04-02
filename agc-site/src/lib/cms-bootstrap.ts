@@ -19,6 +19,7 @@ const DEFAULT_PARTNER_BLURB =
 export function getBootstrapHomePageCms(): HomePageCms {
   return {
     heroSliderImages: [],
+    heroBackgroundVideoSrc: "/media/hero-video-background.mp4",
     heroContent: {
       eyebrow: heroContent.eyebrow,
       title: heroContent.title,

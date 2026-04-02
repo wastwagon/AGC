@@ -256,6 +256,7 @@ export const homeSettingsFormSchema = z.object({
   heroCtaSecondary: z.string().min(1).max(120),
   heroCtaSecondaryHref: z.string().min(1).max(255),
   heroSliderImages: z.string().max(10000).optional(),
+  heroBackgroundVideoSrc: z.string().max(500).optional(),
   homeReachTitle: z.string().min(1).max(255),
   homeReachIntro: z.string().min(1).max(2000),
   homeImpactMethodology: z.string().min(1).max(2000),

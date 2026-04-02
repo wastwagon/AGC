@@ -443,18 +443,8 @@ export const newsContent = {
 /** @deprecated Prefer `getSiteTaxonomy()` / `defaultNewsCategoryOptions` — kept for backwards-compatible imports */
 export { defaultNewsCategoryOptions as newsCategories } from "./taxonomy-defaults";
 
-/** News tags - WordPress-style flat taxonomy */
-export const newsTags = [
-  { slug: "political-parties", label: "Political Parties" },
-  { slug: "governance", label: "Governance" },
-  { slug: "ghana", label: "Ghana" },
-  { slug: "algeria", label: "Algeria" },
-  { slug: "summit", label: "Summit" },
-  { slug: "elections", label: "Elections" },
-  { slug: "fellows", label: "Fellows" },
-  { slug: "research", label: "Research" },
-  { slug: "accra-declaration", label: "Accra Declaration" },
-];
+/** @deprecated Prefer `getSiteTaxonomy().newsTags` / `defaultNewsTagOptions` */
+export { defaultNewsTagOptions as newsTags } from "./taxonomy-defaults";
 
 /** Fallback news when CMS returns no items (e.g. CMS not configured or no published news) */
 export const fallbackNews = [

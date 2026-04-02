@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import {
   defaultNewsCategoryOptions,
+  defaultNewsTagOptions,
   defaultPublicationTypeOptions,
   type TaxonomyOption,
 } from "@/data/taxonomy-defaults";
@@ -10,6 +11,7 @@ export const SITE_TAXONOMY_SLUG = "site-taxonomy";
 export type SiteTaxonomyJson = {
   newsCategories: TaxonomyOption[];
   publicationTypes: TaxonomyOption[];
+  newsTags: TaxonomyOption[];
 };
 
 function normalizeOptions(raw: unknown): TaxonomyOption[] {
@@ -27,7 +29,7 @@ function normalizeOptions(raw: unknown): TaxonomyOption[] {
     .filter((x): x is TaxonomyOption => x !== null);
 }
 
-/** News + publication type options from DB, or code defaults. */
+/** News categories, publication types, and news tags from DB, or code defaults. */
 export async function getSiteTaxonomy(): Promise<SiteTaxonomyJson> {
   try {
     const row = await prisma.pageContent.findUnique({
@@ -39,18 +41,22 @@ export async function getSiteTaxonomy(): Promise<SiteTaxonomyJson> {
       return {
         newsCategories: defaultNewsCategoryOptions,
         publicationTypes: defaultPublicationTypeOptions,
+        newsTags: defaultNewsTagOptions,
       };
     }
     const newsCategories = normalizeOptions(json.newsCategories);
     const publicationTypes = normalizeOptions(json.publicationTypes);
+    const newsTags = normalizeOptions(json.newsTags);
     return {
       newsCategories: newsCategories.length ? newsCategories : defaultNewsCategoryOptions,
       publicationTypes: publicationTypes.length ? publicationTypes : defaultPublicationTypeOptions,
+      newsTags: newsTags.length ? newsTags : defaultNewsTagOptions,
     };
   } catch {
     return {
       newsCategories: defaultNewsCategoryOptions,
       publicationTypes: defaultPublicationTypeOptions,
+      newsTags: defaultNewsTagOptions,
     };
   }
 }
@@ -59,6 +65,7 @@ export function getDefaultSiteTaxonomyJson(): SiteTaxonomyJson {
   return {
     newsCategories: defaultNewsCategoryOptions,
     publicationTypes: defaultPublicationTypeOptions,
+    newsTags: defaultNewsTagOptions,
   };
 }
 

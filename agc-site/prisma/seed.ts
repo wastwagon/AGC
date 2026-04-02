@@ -41,6 +41,17 @@ const defaultTaxonomyJson = {
     { slug: "working_paper", label: "Working paper", description: "Draft or discussion papers" },
     { slug: "toolkit", label: "Toolkit / guide", description: "Practical guides and toolkits" },
   ],
+  newsTags: [
+    { slug: "political-parties", label: "Political Parties" },
+    { slug: "governance", label: "Governance" },
+    { slug: "ghana", label: "Ghana" },
+    { slug: "algeria", label: "Algeria" },
+    { slug: "summit", label: "Summit" },
+    { slug: "elections", label: "Elections" },
+    { slug: "fellows", label: "Fellows" },
+    { slug: "research", label: "Research" },
+    { slug: "accra-declaration", label: "Accra Declaration" },
+  ],
 };
 
 async function main() {
@@ -360,7 +371,7 @@ async function main() {
         contentJson: defaultTaxonomyJson,
       },
     });
-    console.log("  Taxonomy: site defaults (news categories + publication types) — edit in Admin → Taxonomy");
+    console.log("  Taxonomy: site defaults (news categories, publication types, news tags) — edit in Admin → Taxonomy");
   }
 
   console.log("\nSeed complete. Replace images and edit content via Admin (Media, News, Events, Publications, Partners, Page Content → home).");

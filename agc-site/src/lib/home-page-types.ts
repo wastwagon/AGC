@@ -1,5 +1,7 @@
 export type HomePageCms = {
   heroSliderImages: string[];
+  /** Looped MP4 under `/public` (e.g. `/media/hero-video-background.mp4`). Empty string disables video (slider/gradient only). */
+  heroBackgroundVideoSrc?: string;
   heroContent: {
     eyebrow: string;
     title: string;

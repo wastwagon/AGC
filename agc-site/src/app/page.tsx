@@ -62,6 +62,13 @@ export default async function HomePage() {
   );
 
   const heroSlides = home.heroSliderImages ?? [];
+  const rawHeroVideo = home.heroBackgroundVideoSrc;
+  const heroBackgroundVideoSrc =
+    rawHeroVideo === undefined || rawHeroVideo === null
+      ? undefined
+      : rawHeroVideo.trim() === ""
+        ? undefined
+        : rawHeroVideo.trim();
   const stripPartners =
     partnersFromDb.length > 0
       ? await Promise.all(
@@ -107,7 +114,7 @@ export default async function HomePage() {
       <HeroConsultar
         hero={home.heroContent}
         sliderImages={heroSlides}
-        backgroundVideoSrc="/media/hero-video-background.mp4"
+        backgroundVideoSrc={heroBackgroundVideoSrc}
       />
 
       {(homeEventsDrafts || homeNewsDrafts) && (

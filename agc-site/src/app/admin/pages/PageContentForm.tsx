@@ -512,7 +512,12 @@ export function PageContentForm({ item }: PageContentFormProps) {
             </div>
             <div className="mt-4 rounded-md border border-amber-200 bg-amber-50/40 p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Homepage pillar cards</p>
-              <p className="mt-1 text-[11px] text-slate-500">Three cards directly under the hero; copy comes from Programs / Projects / Advisory blocks below.</p>
+              <p className="mt-1 text-[11px] text-slate-500">
+                Three cards under the hero overlap the hero visually (higher z-index). Titles and descriptions come from the{" "}
+                <strong className="font-medium text-slate-700">programs</strong>, <strong className="font-medium text-slate-700">projects</strong>, and{" "}
+                <strong className="font-medium text-slate-700">advisory</strong> blocks on this page. Use Media Library IDs or{" "}
+                <code className="rounded bg-white px-0.5">/uploads/…</code> paths for images.
+              </p>
               <label className="mt-2 block text-xs font-medium text-slate-600">Intro line (optional)</label>
               <input
                 type="text"
