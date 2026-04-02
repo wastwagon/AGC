@@ -17,7 +17,7 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-# Ensure Prisma Client matches schema (npm ci does not run postinstall generate in all environments)
+# Generate client after full tree (schema not available during deps npm ci)
 RUN npx prisma generate
 # No DB in build context; content layer returns fallbacks (see src/lib/content.ts)
 RUN BUILD_WITHOUT_DB=1 npm run build
