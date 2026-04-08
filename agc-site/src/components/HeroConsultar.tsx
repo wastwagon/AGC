@@ -75,7 +75,7 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
   }, [next, reducedMotion, slides.length, useVideoBackground]);
 
   return (
-    <section className="group relative flex min-h-[480px] w-full flex-col overflow-hidden sm:min-h-[520px] lg:min-h-[min(85vh,720px)]">
+    <section className="group relative flex min-h-[380px] w-full flex-col overflow-hidden sm:min-h-[440px] lg:min-h-[min(68vh,560px)]">
       {/* Video (preferred when configured), else CMS slides, else gradient */}
       {useVideoBackground && backgroundVideoSrc ? (
         <div className="absolute inset-0 z-0" aria-hidden>
@@ -116,8 +116,8 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
         ))
       )}
 
-      {/* Main copy — left column, vertically centred */}
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-center px-4 pt-24 pb-8 sm:px-6 sm:pt-28 lg:px-8 lg:pt-32 lg:pb-12">
+      {/* Main copy — left column, top-aligned */}
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-start px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 lg:px-8 lg:pb-14 lg:pt-24">
         <div className="max-w-2xl">
           <p className="mb-4 max-w-lg text-sm font-medium leading-snug text-accent-100 sm:text-base">
             {heroContent.eyebrow}

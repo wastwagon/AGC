@@ -2,6 +2,7 @@ import { cache } from "react";
 import { siteConfig } from "@/data/content";
 import { DEFAULT_SITE_CHROME, type SiteChrome, type SiteNavItem } from "@/data/site-chrome";
 import { prisma } from "@/lib/db";
+import { resolveImageUrl } from "@/lib/media";
 import { parseBottomNav, parseLinkList, parseNavList, parseWorkThumbs } from "@/lib/site-chrome-parse";
 
 export type SiteSettings = {
@@ -36,8 +37,8 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
 };
 
 /**
- * Legacy CMS rows often keep Programs/Projects/Advisory/Publications under Our Work.
- * The site uses tabs on `/our-work` and a top-level `/publications` route instead.
+ * Legacy CMS rows often keep Programs/Projects/Advisory under Our Work.
+ * Strip submenus from top-level items that use in-page tabs; omit `/publications` from the header.
  */
 function normalizeHeaderNav(nav: SiteNavItem[]): SiteNavItem[] {
   const stripped = nav.map((item) => {
@@ -47,14 +48,7 @@ function normalizeHeaderNav(nav: SiteNavItem[]): SiteNavItem[] {
     }
     return item;
   });
-  if (stripped.some((i) => i.href === "/publications")) {
-    return stripped;
-  }
-  const newsIdx = stripped.findIndex((i) => i.href === "/news");
-  const insertAt = newsIdx >= 0 ? newsIdx + 1 : stripped.length;
-  const next = [...stripped];
-  next.splice(insertAt, 0, { href: "/publications", label: "Publications" });
-  return next;
+  return stripped.filter((i) => i.href !== "/publications");
 }
 
 export function mergeSiteChrome(patch: unknown): SiteChrome {
@@ -212,6 +206,27 @@ function sanitizeSiteSettings(value: unknown): SiteSettings {
   };
 }
 
+/** Resolve media ids / paths for footer “Our work” tile images (public + admin preview). */
+async function resolveFooterWorkThumbnailImages(settings: SiteSettings): Promise<SiteSettings> {
+  const thumbs = settings.chrome.footer.workThumbnails;
+  if (thumbs.length === 0) return settings;
+  const resolved = await Promise.all(
+    thumbs.map(async (t) => {
+      const raw = typeof t.image === "string" ? t.image.trim() : "";
+      if (!raw) return t;
+      const url = await resolveImageUrl(raw);
+      return { ...t, image: url ?? raw };
+    })
+  );
+  return {
+    ...settings,
+    chrome: {
+      ...settings.chrome,
+      footer: { ...settings.chrome.footer, workThumbnails: resolved },
+    },
+  };
+}
+
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   try {
     const row = await prisma.pageContent.findUnique({
@@ -219,7 +234,8 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       select: { contentJson: true },
     });
     if (!row?.contentJson) return DEFAULT_SITE_SETTINGS;
-    return sanitizeSiteSettings(row.contentJson);
+    const base = sanitizeSiteSettings(row.contentJson);
+    return await resolveFooterWorkThumbnailImages(base);
   } catch {
     return DEFAULT_SITE_SETTINGS;
   }

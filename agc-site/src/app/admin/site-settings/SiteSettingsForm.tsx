@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useFormStatus } from "react-dom";
 import { ImagePlus } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
@@ -30,19 +30,29 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
   const [footerLogoPickerOpen, setFooterLogoPickerOpen] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const draftKey = "agc:admin:site-settings:draft:v1";
-  const initialDraft = useMemo(() => {
-    if (typeof window === "undefined") return null as Record<string, string> | null;
+  /** Loaded in useEffect only — avoids reading localStorage during render (SSR vs client hydration mismatch). */
+  const [localDraft, setLocalDraft] = useState<Record<string, string> | null>(null);
+  const [draftHydrated, setDraftHydrated] = useState(false);
+  const initialDraft = localDraft;
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
+
+  useEffect(() => {
     try {
       const raw = window.localStorage.getItem(draftKey);
-      if (!raw) return null;
+      if (!raw) return;
       const parsed = JSON.parse(raw) as { values?: Record<string, string> };
-      return parsed.values || null;
+      const v = parsed.values;
+      if (v && typeof v === "object" && Object.keys(v).length > 0) {
+        setLocalDraft(v);
+        if (typeof v.logo === "string" && v.logo.trim()) setLogo(v.logo);
+        if (typeof v.footerLogo === "string" && v.footerLogo.trim()) setFooterLogo(v.footerLogo);
+      }
     } catch {
-      return null;
+      // ignore invalid draft
+    } finally {
+      setDraftHydrated(true);
     }
-  }, []);
-  const [draftRestored] = useState(!!initialDraft);
-  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
+  }, [draftKey]);
 
   const bc = settings.chrome.breadcrumbs;
 
@@ -66,10 +76,19 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
     window.localStorage.removeItem(draftKey);
   }, [saved, draftKey]);
 
+  const showDraftRestoredBanner =
+    draftHydrated && initialDraft !== null && Object.keys(initialDraft).length > 0 && !saved;
+
   return (
-    <form ref={formRef} action={updateSiteSettings} onInput={saveDraft} className="space-y-6">
+    <form
+      ref={formRef}
+      action={updateSiteSettings}
+      onInput={saveDraft}
+      className="space-y-6"
+      key={draftHydrated ? `site-settings-${initialDraft ? "draft" : "nodraft"}` : "site-settings-ssr"}
+    >
       <div className="flex flex-wrap items-center gap-2 text-xs text-slate-500">
-        {draftRestored && !saved ? (
+        {showDraftRestoredBanner ? (
           <span className="rounded-md border border-amber-200 bg-amber-50 px-2 py-1 text-amber-700">
             Restored unsaved local draft.
           </span>

@@ -20,17 +20,21 @@ type Props = {
 
 /**
  * Three “our work” pillars on the homepage — copy and image refs come from CMS (`our-work` page content).
- * Stacking: sits above the hero bottom (`z-[11]` vs hero copy `z-10`) so the overlap reads clearly.
+ * Sits below the hero (no negative margin) so the intro pill and cards don’t collide with hero copy.
  */
 export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props) {
   if (cards.length === 0) return null;
 
   return (
-    <section className="relative z-[11] -mt-[60px] border-0 pt-12 sm:pt-14 lg:pt-10 max-lg:mt-0 pb-20 sm:pb-24 lg:pb-28">
+    <section className="relative border-0 bg-[#fffcf7] pt-10 sm:pt-12 lg:pt-12 pb-8 sm:pb-10 lg:pb-12 ">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {intro.trim() ? (
-          <div className="mb-12 flex justify-center sm:mb-14 lg:mb-16 lg:justify-start">
-            <p className="max-w-xl text-balance rounded-2xl border border-stone-200/90 bg-[#fffcf7]/95 px-5 py-3 text-center text-base font-semibold leading-snug text-stone-900 shadow-[0_8px_30px_-8px_rgba(28,25,23,0.35)] backdrop-blur-sm sm:px-6 sm:py-3.5 sm:text-lg lg:text-left">
+          <div className="mb-8 flex justify-center sm:mb-10 lg:mb-12 lg:justify-start">
+            {/*
+              Solid fill + no backdrop-blur: avoids dark rectangular “blur layer” artifacts over the hero.
+              w-fit keeps the pill hugging the copy; shadow stays soft and rounded.
+            */}
+            <p className="max-w-xl w-fit text-balance rounded-2xl border border-stone-200/90 bg-[#fffcf7] px-5 py-3 text-center text-base font-semibold leading-snug text-stone-900 shadow-[0_10px_40px_-12px_rgba(28,25,23,0.18)] sm:px-6 sm:py-3.5 sm:text-lg lg:text-left">
               {intro}
             </p>
           </div>
@@ -38,13 +42,11 @@ export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props)
         <div
           className={`grid auto-rows-fr gap-5 md:grid-cols-3 md:gap-6 ${intro.trim() ? "mt-2 sm:mt-3" : ""}`}
         >
-          {cards.map((item, i) => (
+          {cards.map((item) => (
             <Link
               key={item.title}
               href={item.href}
-              className={`group flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition hover:border-accent-200/60 hover:shadow-md ${
-                i === 1 ? "md:-translate-y-1" : ""
-              }`}
+              className="group flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition hover:border-accent-200/60 hover:shadow-md"
             >
               <div className="relative aspect-[16/10] w-full shrink-0 bg-sky-100/90">
                 {item.image ? (
@@ -68,7 +70,7 @@ export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props)
                 <h2 className="font-sans text-xl font-semibold leading-snug tracking-tight text-stone-900">{item.title}</h2>
                 <p className="mt-3 flex-1 text-[15px] leading-relaxed text-stone-600">{item.description}</p>
                 {readMoreLabel.trim() ? (
-                  <span className="mt-6 inline-block text-sm font-medium text-accent-800 underline underline-offset-2 group-hover:text-accent-900">
+                  <span className="mt-auto pt-6 text-sm font-medium text-accent-800 underline underline-offset-2 group-hover:text-accent-900">
                     {readMoreLabel}
                   </span>
                 ) : null}

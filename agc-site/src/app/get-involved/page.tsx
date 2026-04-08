@@ -23,6 +23,17 @@ export default async function GetInvolvedPage() {
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.getInvolved;
   const { bottomSection } = content;
 
+  const firstOpportunity = content.opportunities[0];
+  const firstHrefTrim = typeof firstOpportunity?.href === "string" ? firstOpportunity.href.trim() : "";
+  const firstContactDefault =
+    firstOpportunity?.id === "partnership" || firstOpportunity?.id === "join-us";
+  const volunteerCardHref =
+    firstHrefTrim !== ""
+      ? firstHrefTrim
+      : firstContactDefault
+        ? "/contact"
+        : firstOpportunity?.pageHref ?? "/applications";
+
   return (
     <>
       <PageHero
@@ -46,7 +57,7 @@ export default async function GetInvolvedPage() {
 
           <div className="mt-14 grid gap-6 lg:grid-cols-3 lg:gap-8">
             <Link
-              href={content.opportunities[0].pageHref}
+              href={volunteerCardHref}
               className="group relative overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] p-8 shadow-sm transition-all duration-300 hover:border-accent-300/60 hover:shadow-lg sm:p-10 lg:col-span-2 lg:flex lg:flex-col lg:justify-between"
             >
               <div className="absolute right-0 top-0 h-40 w-40 translate-x-10 -translate-y-10 rounded-full bg-accent-100/60 opacity-80 transition-opacity group-hover:opacity-100" />
@@ -55,11 +66,11 @@ export default async function GetInvolvedPage() {
                   <User className="h-7 w-7" />
                 </div>
                 <h3 className="mt-6 font-sans text-2xl font-semibold text-stone-900 sm:text-3xl">
-                  {content.opportunities[0].title}
+                  {firstOpportunity.title}
                 </h3>
-                <p className="page-prose mt-3">{content.opportunities[0].description}</p>
+                <p className="page-prose mt-3">{firstOpportunity.description}</p>
                 <ul className="mt-6 grid gap-2 sm:grid-cols-2">
-                  {content.opportunities[0].items.map((item) => (
+                  {firstOpportunity.items.map((item) => (
                     <li key={item} className="flex items-center gap-2 text-stone-600">
                       <span className="h-1.5 w-1.5 shrink-0 rounded-full bg-accent-600" />
                       {item}
@@ -68,7 +79,7 @@ export default async function GetInvolvedPage() {
                 </ul>
               </div>
               <span className="relative mt-8 inline-flex items-center gap-2 text-sm font-semibold text-accent-800 transition-all group-hover:gap-3">
-                {content.opportunities[0].cta}
+                {firstOpportunity.cta}
                 <ArrowUpRight className="h-4 w-4" />
               </span>
             </Link>

@@ -111,7 +111,7 @@ export function ApplicationsClient({
   return (
     <>
       <PageHero
-        variant="minimal"
+        variant={hero.image ? "compact" : "minimal"}
         title={hero.title}
         subtitle={hero.subtitle}
         image={hero.image}

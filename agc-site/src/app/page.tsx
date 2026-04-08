@@ -185,8 +185,6 @@ export default async function HomePage() {
 
       <HomePartnerStrip blurb={home.homePartnerBlurb} partners={stripPartners} />
 
-      <div className="h-12 bg-[#fffcf7] sm:h-14" aria-hidden />
-
       {(showReach || impactStats.length > 0 || showMethodology) && (
         <section className="border-y border-stone-200/80 bg-[#f2ebe3]/60 py-14 sm:py-20">
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
