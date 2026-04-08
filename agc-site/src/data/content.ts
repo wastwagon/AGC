@@ -592,12 +592,8 @@ export const navLinks = [
   { href: "/contact", label: "Contact" },
 ];
 
-export const ourWorkSubLinks = [
-  { href: "/our-work/programs", label: "Programs" },
-  { href: "/our-work/projects", label: "Projects" },
-  { href: "/our-work/advisory", label: "Advisory" },
-  { href: "/publications", label: "Publications" },
-];
+/** Our Work uses tabs on `/our-work` (Programs / Projects / Advisory). No header dropdown. */
+export const ourWorkSubLinks: { href: string; label: string }[] = [];
 
 export const getInvolvedSubLinks = [
   { href: "/get-involved/volunteer", label: "Volunteer" },

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 export type BreadcrumbItem = {
   label: string;
@@ -66,10 +67,18 @@ export function PageHero({
     const src = image ?? "";
     const alt = imageAlt ?? "";
     return (
-      <section className="relative flex min-h-[160px] flex-col justify-center sm:min-h-[200px] lg:min-h-[240px]">
+      <section className="relative flex min-h-[220px] flex-col justify-center sm:min-h-[280px] lg:min-h-[320px]">
         <div className="absolute inset-0">
           {src ? (
-            <Image src={src} alt={alt} fill className="object-cover object-center" sizes="100vw" priority />
+            <Image
+              src={src}
+              alt={alt}
+              fill
+              className="object-cover object-center"
+              sizes="100vw"
+              priority
+              unoptimized={preferUnoptimizedImage(src)}
+            />
           ) : (
             <div className="h-full w-full bg-gradient-to-br from-stone-900 to-accent-900" aria-hidden />
           )}
@@ -111,7 +120,15 @@ export function PageHero({
     <section className="relative flex min-h-[220px] flex-col justify-center sm:min-h-[280px] lg:min-h-[340px]">
       <div className="absolute inset-0">
         {src ? (
-          <Image src={src} alt={alt} fill className="object-cover object-center" sizes="100vw" priority />
+          <Image
+            src={src}
+            alt={alt}
+            fill
+            className="object-cover object-center"
+            sizes="100vw"
+            priority
+            unoptimized={preferUnoptimizedImage(src)}
+          />
         ) : (
           <div className="h-full w-full bg-gradient-to-br from-stone-950 via-accent-900 to-accent-800" aria-hidden />
         )}

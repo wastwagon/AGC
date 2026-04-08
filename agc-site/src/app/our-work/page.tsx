@@ -3,6 +3,7 @@ import { getPrograms, getProjects } from "@/lib/content";
 import { workContent, type OurWorkPageContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { cardImageUrlOrNull } from "@/lib/image-delivery";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -30,7 +31,7 @@ export default async function OurWorkPage() {
       key: `program-${p.id}`,
       title: p.title,
       description: stripHtmlDescription(p.description, 300),
-      imageUrl: (await resolveImageUrl(p.image)) || null,
+      imageUrl: cardImageUrlOrNull((await resolveImageUrl(p.image)) ?? null),
     }))
   );
 
@@ -39,7 +40,7 @@ export default async function OurWorkPage() {
       key: `project-${p.id}`,
       title: p.title,
       description: stripHtmlDescription(p.description, 300),
-      imageUrl: (await resolveImageUrl(p.image)) || null,
+      imageUrl: cardImageUrlOrNull((await resolveImageUrl(p.image)) ?? null),
     }))
   );
 

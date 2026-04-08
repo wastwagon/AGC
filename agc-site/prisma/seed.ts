@@ -236,15 +236,15 @@ async function main() {
       (resetPageContent ? `, reset ${pageUpdates} (SEED_RESET_PAGE_CONTENT)` : " (set SEED_RESET_PAGE_CONTENT=1 to overwrite CMS pages from seed)")
   );
 
-  // Programs (image optional; set /uploads/... in Admin to replace)
+  // Programs (image optional — null in seed; admin sets /uploads/... or media id when needed)
   const programs = [
-    { title: "Youth and Women Empowerment Workshops", description: "AGC organizes workshops and forums dedicated to empowering youth and women in governance and leadership positions.", order: 1, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Research and Policy Forums", description: "AGC hosts research and policy forums to highlight recent findings, policy analyses, and best practices in governance.", order: 2, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Annual Summits and Meetings", description: "AGC organizes annual meetings and events that bring together distinguished leaders, experts, and policymakers.", order: 3, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Public-Private Dialogues", description: "AGC organizes public-private dialogues to promote collaboration between government entities and the private sector.", order: 4, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Expert Forums on Good Governance", description: "AGC conducts regular forums focused on good governance, bringing together policymakers, experts, civil society organizations, and stakeholders from across Africa.", order: 5, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Regional Governance Conferences", description: "AGC collaborates with regional organizations such as the African Union, ECOWAS, and SADC to convene governance conferences.", order: 6, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Sector-Specific Roundtables", description: "AGC organizes expert roundtables focused on sector-specific governance challenges, involving key stakeholders from sectors such as health, education, infrastructure, agriculture, and energy.", order: 7, status: "published" as const, image: "/uploads/placeholder.svg" },
+    { title: "Youth and Women Empowerment Workshops", description: "AGC organizes workshops and forums dedicated to empowering youth and women in governance and leadership positions.", order: 1, status: "published" as const, image: null as string | null },
+    { title: "Research and Policy Forums", description: "AGC hosts research and policy forums to highlight recent findings, policy analyses, and best practices in governance.", order: 2, status: "published" as const, image: null as string | null },
+    { title: "Annual Summits and Meetings", description: "AGC organizes annual meetings and events that bring together distinguished leaders, experts, and policymakers.", order: 3, status: "published" as const, image: null as string | null },
+    { title: "Public-Private Dialogues", description: "AGC organizes public-private dialogues to promote collaboration between government entities and the private sector.", order: 4, status: "published" as const, image: null as string | null },
+    { title: "Expert Forums on Good Governance", description: "AGC conducts regular forums focused on good governance, bringing together policymakers, experts, civil society organizations, and stakeholders from across Africa.", order: 5, status: "published" as const, image: null as string | null },
+    { title: "Regional Governance Conferences", description: "AGC collaborates with regional organizations such as the African Union, ECOWAS, and SADC to convene governance conferences.", order: 6, status: "published" as const, image: null as string | null },
+    { title: "Sector-Specific Roundtables", description: "AGC organizes expert roundtables focused on sector-specific governance challenges, involving key stakeholders from sectors such as health, education, infrastructure, agriculture, and energy.", order: 7, status: "published" as const, image: null as string | null },
   ];
 
   const existingPrograms = await prisma.program.count();
@@ -253,13 +253,13 @@ async function main() {
   }
   console.log(`  Programs: ${programs.length}`);
 
-  // Projects (image optional; replace in Admin)
+  // Projects (image optional — null in seed; admin sets image when needed)
   const projects = [
-    { title: "Africa Governance Review", description: "The Africa Governance Review Project is a comprehensive initiative dedicated to conducting detailed assessments, offering policy recommendations, and facilitating discussions on governance challenges and opportunities across African nations.", order: 1, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Media and Democracy Initiative", description: "The Media and Democracy Initiative of the Africa Governance Centre seeks to empower media professionals, support independent journalism, and strengthen the media's ability to facilitate informed citizen participation in governance processes.", order: 2, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Public Sector Efficiency and Innovation Project", description: "The Public Sector Efficiency and Innovation Project is dedicated to addressing the critical need for streamlined operations, improved public service delivery, and the integration of innovative solutions to support Africa's development.", order: 3, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "African Political Parties Initiative", description: "The African Political Parties Initiative (APPI) is a project developed by the Africa Governance Centre dedicated to supporting the role of political parties in Africa's development.", order: 4, status: "published" as const, image: "/uploads/placeholder.svg" },
-    { title: "Africa Resource Governance Initiative", description: "The Africa Resource Governance Initiative (ARGI), a project of the Africa Governance Centre, is dedicated to promoting transparency, accountability, and sustainable management of natural resources across Africa.", order: 5, status: "published" as const, image: "/uploads/placeholder.svg" },
+    { title: "Africa Governance Review", description: "The Africa Governance Review Project is a comprehensive initiative dedicated to conducting detailed assessments, offering policy recommendations, and facilitating discussions on governance challenges and opportunities across African nations.", order: 1, status: "published" as const, image: null as string | null },
+    { title: "Media and Democracy Initiative", description: "The Media and Democracy Initiative of the Africa Governance Centre seeks to empower media professionals, support independent journalism, and strengthen the media's ability to facilitate informed citizen participation in governance processes.", order: 2, status: "published" as const, image: null as string | null },
+    { title: "Public Sector Efficiency and Innovation Project", description: "The Public Sector Efficiency and Innovation Project is dedicated to addressing the critical need for streamlined operations, improved public service delivery, and the integration of innovative solutions to support Africa's development.", order: 3, status: "published" as const, image: null as string | null },
+    { title: "African Political Parties Initiative", description: "The African Political Parties Initiative (APPI) is a project developed by the Africa Governance Centre dedicated to supporting the role of political parties in Africa's development.", order: 4, status: "published" as const, image: null as string | null },
+    { title: "Africa Resource Governance Initiative", description: "The Africa Resource Governance Initiative (ARGI), a project of the Africa Governance Centre, is dedicated to promoting transparency, accountability, and sustainable management of natural resources across Africa.", order: 5, status: "published" as const, image: null as string | null },
   ];
 
   const existingProjects = await prisma.project.count();

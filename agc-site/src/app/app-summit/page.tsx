@@ -4,12 +4,28 @@ import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 import { AppSummitClient } from "./AppSummitClient";
 
-type AppSummitMerged = typeof appSummitContent & { heroImage?: string };
+export const revalidate = 60;
+
+const PLACEHOLDER_HERO = "/uploads/placeholder.svg";
+
+type AppSummitMerged = typeof appSummitContent & { heroImage?: string; sectionImage?: string };
 
 const appSummitBuildFallback: AppSummitMerged = {
   ...appSummitContent,
-  heroImage: "/uploads/placeholder.svg",
+  heroImage: PLACEHOLDER_HERO,
 };
+
+/** Skip seeded placeholder; try hero then section image so CMS media ids always surface. */
+async function resolveAppSummitHeroImage(content: AppSummitMerged): Promise<string | undefined> {
+  const candidates = [content.heroImage, content.sectionImage].filter(
+    (ref): ref is string => typeof ref === "string" && ref.trim() !== "" && ref.trim() !== PLACEHOLDER_HERO
+  );
+  for (const ref of candidates) {
+    const url = await resolveImageUrl(ref);
+    if (url && url !== PLACEHOLDER_HERO) return url;
+  }
+  return undefined;
+}
 
 export default async function AppSummitPage() {
   const fallback = cmsStaticOrEmpty(appSummitBuildFallback);
@@ -19,8 +35,7 @@ export default async function AppSummitPage() {
     getSiteSettings(),
   ]);
   const content = merged;
-  const resolved = content.heroImage ? await resolveImageUrl(content.heroImage) : null;
-  const heroImage = resolved || undefined;
+  const heroImage = await resolveAppSummitHeroImage(content);
 
   return <AppSummitClient content={content} heroImage={heroImage} siteSettings={siteSettings} />;
 }

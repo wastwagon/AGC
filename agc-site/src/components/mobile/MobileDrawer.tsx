@@ -28,6 +28,7 @@ const drawerIconByHref: Record<string, LucideIcon> = {
   "/app-summit": Landmark,
   "/events": Calendar,
   "/news": Newspaper,
+  "/publications": BookOpen,
   "/get-involved": HeartHandshake,
   "/contact": Mail,
 };

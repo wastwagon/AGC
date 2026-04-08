@@ -1,7 +1,7 @@
 import { workContent } from "@/data/content";
-import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { cardImageUrlOrNull } from "@/lib/image-delivery";
 import { resolveImageUrl } from "@/lib/media";
 import { Button } from "@/components/Button";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
@@ -22,7 +22,8 @@ export default async function AdvisoryPage() {
     getBreadcrumbLabels(),
   ]);
   const content = merged;
-  const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.advisory;
+  const heroSrc =
+    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
 
   return (
     <>
@@ -30,7 +31,7 @@ export default async function AdvisoryPage() {
         variant="compact"
         title={content.title}
         subtitle={content.subtitle}
-        image={heroImage}
+        image={heroSrc}
         imageAlt="Advisory"
         breadcrumbs={[
           { label: bc.home, href: "/" },

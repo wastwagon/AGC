@@ -26,25 +26,27 @@ export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props)
   if (cards.length === 0) return null;
 
   return (
-    <section className="relative z-[11] -mt-[60px] border-0 pt-0 max-lg:mt-0">
+    <section className="relative z-[11] -mt-[60px] border-0 pt-12 sm:pt-14 lg:pt-10 max-lg:mt-0 pb-20 sm:pb-24 lg:pb-28">
       <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {intro.trim() ? (
-          <div className="mb-5 flex justify-center lg:mb-6 lg:justify-start">
+          <div className="mb-12 flex justify-center sm:mb-14 lg:mb-16 lg:justify-start">
             <p className="max-w-xl text-balance rounded-2xl border border-stone-200/90 bg-[#fffcf7]/95 px-5 py-3 text-center text-base font-semibold leading-snug text-stone-900 shadow-[0_8px_30px_-8px_rgba(28,25,23,0.35)] backdrop-blur-sm sm:px-6 sm:py-3.5 sm:text-lg lg:text-left">
               {intro}
             </p>
           </div>
         ) : null}
-        <div className="grid auto-rows-fr gap-5 md:grid-cols-3 md:gap-6">
+        <div
+          className={`grid auto-rows-fr gap-5 md:grid-cols-3 md:gap-6 ${intro.trim() ? "mt-2 sm:mt-3" : ""}`}
+        >
           {cards.map((item, i) => (
             <Link
-              key={item.href}
+              key={item.title}
               href={item.href}
               className={`group flex h-full min-h-0 flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition hover:border-accent-200/60 hover:shadow-md ${
                 i === 1 ? "md:-translate-y-1" : ""
               }`}
             >
-              <div className="relative aspect-[16/10] w-full shrink-0 bg-stone-200/90">
+              <div className="relative aspect-[16/10] w-full shrink-0 bg-sky-100/90">
                 {item.image ? (
                   <Image
                     src={item.image}
@@ -55,14 +57,18 @@ export function HeroFeaturesOverlap({ intro, readMoreLabel = "", cards }: Props)
                     unoptimized={preferUnoptimizedImage(item.image)}
                     aria-hidden
                   />
-                ) : null}
+                ) : (
+                  <span className="absolute inset-0 flex items-center justify-center text-xs font-medium text-sky-800/35">
+                    Image placeholder
+                  </span>
+                )}
               </div>
 
               <div className="flex flex-1 flex-col p-7 md:p-8">
                 <h2 className="font-sans text-xl font-semibold leading-snug tracking-tight text-stone-900">{item.title}</h2>
                 <p className="mt-3 flex-1 text-[15px] leading-relaxed text-stone-600">{item.description}</p>
                 {readMoreLabel.trim() ? (
-                  <span className="mt-6 inline-block text-sm font-medium text-accent-700 group-hover:underline">
+                  <span className="mt-6 inline-block text-sm font-medium text-accent-800 underline underline-offset-2 group-hover:text-accent-900">
                     {readMoreLabel}
                   </span>
                 ) : null}

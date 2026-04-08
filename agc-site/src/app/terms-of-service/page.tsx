@@ -1,26 +1,43 @@
 import Link from "next/link";
 import { termsOfService } from "@/data/legal";
 import { PageHero } from "@/components/PageHero";
-import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { getMergedPageContent } from "@/lib/page-content";
+import { cardImageUrlOrNull } from "@/lib/image-delivery";
+import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
+
+/** Always read fresh CMS + media resolution so hero image updates are not stuck behind static cache. */
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Terms of Service",
   description: "Rules and guidelines for using the Africa Governance Centre website and services.",
 };
 
+type TermsMerged = typeof termsOfService & { heroImage?: string; sectionImage?: string };
+
 export default async function TermsOfServicePage() {
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent<typeof termsOfService>("terms-of-service", cmsStaticOrEmpty(termsOfService)),
+    getMergedPageContent<TermsMerged>("terms-of-service", termsOfService as TermsMerged),
     getSiteSettings(),
   ]);
-  const content = merged as unknown as typeof termsOfService;
+  const content = merged;
+
+  const heroRaw = content.heroImage?.trim() || content.sectionImage?.trim() || undefined;
+  const resolved = await resolveImageUrl(heroRaw);
+  const heroSrc = cardImageUrlOrNull(resolved) ?? undefined;
+  const heroSubtitle = [content.subtitle?.trim(), `Last updated · ${content.lastUpdated}`]
+    .filter(Boolean)
+    .join(" · ");
+
   return (
     <>
       <PageHero
-        variant="minimal"
+        variant={heroSrc ? "compact" : "minimal"}
         title={content.title}
-        subtitle={`Last updated · ${content.lastUpdated}`}
+        subtitle={heroSubtitle}
+        image={heroSrc}
+        imageAlt=""
         breadcrumbs={[
           { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
           { label: siteSettings.chrome.breadcrumbs.termsOfService },

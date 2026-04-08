@@ -1,4 +1,4 @@
-import { ourWorkSubLinks, getInvolvedSubLinks, footerLinks } from "./content";
+import { getInvolvedSubLinks, footerLinks } from "./content";
 
 export type SiteNavLink = { href: string; label: string };
 export type SiteNavItem = SiteNavLink & { subLinks?: SiteNavLink[] };
@@ -88,10 +88,11 @@ function cloneLinks(links: readonly { href: string; label: string }[]): SiteNavL
 export const defaultSiteNav: SiteNavItem[] = [
   { href: "/", label: "Home" },
   { href: "/about", label: "About Us" },
-  { href: "/our-work", label: "Our Work", subLinks: cloneLinks(ourWorkSubLinks) },
+  { href: "/our-work", label: "Our Work" },
   { href: "/app-summit", label: "APP Summit" },
   { href: "/events", label: "Events" },
   { href: "/news", label: "News" },
+  { href: "/publications", label: "Publications" },
   { href: "/get-involved", label: "Get Involved", subLinks: cloneLinks(getInvolvedSubLinks) },
   { href: "/contact", label: "Contact" },
 ];
@@ -127,12 +128,12 @@ export const DEFAULT_SITE_CHROME: SiteChrome = {
     quickLinks: cloneLinks(footerLinks.quickLinks),
     legal: cloneLinks(footerLinks.legal),
     workThumbnails: [
-      { href: "/our-work/programs", alt: "Programs" },
-      { href: "/our-work/projects", alt: "Projects" },
-      { href: "/our-work/advisory", alt: "Advisory" },
+      { href: "/our-work#programs", alt: "Programs" },
+      { href: "/our-work#projects", alt: "Projects" },
+      { href: "/our-work#advisory", alt: "Advisory" },
+      { href: "/publications", alt: "Publications" },
       { href: "/app-summit", alt: "APP Summit" },
       { href: "/events", alt: "Events" },
-      { href: "/news", alt: "News" },
     ],
   },
   search: {
