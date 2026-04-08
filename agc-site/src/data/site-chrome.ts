@@ -12,7 +12,8 @@ export type SiteFooterChrome = {
   adminLabel: string;
   quickLinks: SiteNavLink[];
   legal: SiteNavLink[];
-  workThumbnails: { href: string; alt: string }[];
+  /** Optional image ref (media id, `/uploads/...`, or URL) — resolved at runtime for the public footer. */
+  workThumbnails: { href: string; alt: string; image?: string }[];
 };
 
 /** Header search modal copy (Admin → Site settings). */
@@ -92,7 +93,6 @@ export const defaultSiteNav: SiteNavItem[] = [
   { href: "/app-summit", label: "APP Summit" },
   { href: "/events", label: "Events" },
   { href: "/news", label: "News" },
-  { href: "/publications", label: "Publications" },
   { href: "/get-involved", label: "Get Involved" },
   { href: "/contact", label: "Contact" },
 ];

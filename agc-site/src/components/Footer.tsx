@@ -12,10 +12,20 @@ const footerThumbImageByHref: Record<string, string> = {
   "/our-work/programs": placeholderImages.programs,
   "/our-work/projects": placeholderImages.projects,
   "/our-work/advisory": placeholderImages.advisory,
+  "/our-work#programs": placeholderImages.programs,
+  "/our-work#projects": placeholderImages.projects,
+  "/our-work#advisory": placeholderImages.advisory,
+  "/publications": placeholderImages.publications,
   "/app-summit": placeholderImages.appSummit,
   "/events": placeholderImages.events,
   "/news": placeholderImages.news,
 };
+
+function footerThumbSrc(item: { href: string; alt: string; image?: string }): string {
+  const fromSettings = item.image?.trim();
+  if (fromSettings) return fromSettings;
+  return footerThumbImageByHref[item.href] ?? placeholderImages.hero;
+}
 
 /**
  * Consultar-style footer: dark navy upper (4 cols), darker lower (copyright)
@@ -26,7 +36,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
   const footerWorkItems = footerChrome.workThumbnails.map((item) => ({
     href: item.href,
     alt: item.alt,
-    image: footerThumbImageByHref[item.href] ?? placeholderImages.hero,
+    image: footerThumbSrc(item),
   }));
   const socialLinks = [
     { href: siteSettings.social.twitter, icon: Twitter, label: "Twitter" },
@@ -155,6 +165,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                         width={100}
                         height={100}
                         className="h-full w-full object-cover"
+                        unoptimized={preferUnoptimizedImage(item.image)}
                       />
                     </Link>
                   </li>

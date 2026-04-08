@@ -46,7 +46,8 @@ export function parseWorkThumbs(v: unknown): SiteFooterChrome["workThumbnails"] 
     const href = typeof o.href === "string" ? o.href.trim() : "";
     const alt = typeof o.alt === "string" ? o.alt.trim() : "";
     if (!href || !alt) continue;
-    out.push({ href, alt });
+    const image = typeof o.image === "string" ? o.image.trim() : "";
+    out.push(image ? { href, alt, image } : { href, alt });
   }
   return out.length > 0 ? out : null;
 }
@@ -94,10 +95,17 @@ export function serializeHrefLabelArray(rows: { href: string; label: string }[])
   return JSON.stringify(buildHrefLabelPayload(rows));
 }
 
-export function buildWorkThumbsPayload(rows: { href: string; alt: string }[]): SiteFooterChrome["workThumbnails"] {
-  return rows.filter((r) => r.href.trim() && r.alt.trim()).map((r) => ({ href: r.href.trim(), alt: r.alt.trim() }));
+export function buildWorkThumbsPayload(rows: { href: string; alt: string; image?: string }[]): SiteFooterChrome["workThumbnails"] {
+  return rows
+    .filter((r) => r.href.trim() && r.alt.trim())
+    .map((r) => {
+      const href = r.href.trim();
+      const alt = r.alt.trim();
+      const image = typeof r.image === "string" ? r.image.trim() : "";
+      return image ? { href, alt, image } : { href, alt };
+    });
 }
 
-export function serializeWorkThumbsForSettings(rows: { href: string; alt: string }[]): string {
+export function serializeWorkThumbsForSettings(rows: { href: string; alt: string; image?: string }[]): string {
   return JSON.stringify(buildWorkThumbsPayload(rows));
 }
