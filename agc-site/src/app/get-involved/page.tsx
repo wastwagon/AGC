@@ -76,10 +76,18 @@ export default async function GetInvolvedPage() {
             <div className="flex flex-col gap-6 lg:gap-8">
               {content.opportunities.slice(1).map((opp, i) => {
                 const Icon = icons[i + 1] ?? Briefcase;
+                const hrefTrim = typeof opp.href === "string" ? opp.href.trim() : "";
+                const contactDefault = opp.id === "partnership" || opp.id === "join-us";
+                const cardHref =
+                  hrefTrim !== ""
+                    ? hrefTrim
+                    : contactDefault
+                      ? "/contact"
+                      : opp.pageHref;
                 return (
                   <Link
                     key={opp.id}
-                    href={opp.pageHref}
+                    href={cardHref}
                     className="group page-card flex flex-1 flex-col p-7 transition-all duration-300 hover:border-accent-200/50 hover:shadow-md sm:p-8"
                   >
                     <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700 transition-colors group-hover:bg-accent-200/80">
