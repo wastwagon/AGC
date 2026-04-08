@@ -41,7 +41,7 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
  */
 function normalizeHeaderNav(nav: SiteNavItem[]): SiteNavItem[] {
   const stripped = nav.map((item) => {
-    if (item.href === "/our-work") {
+    if (item.href === "/our-work" || item.href === "/get-involved") {
       const { subLinks: _, ...rest } = item;
       return rest;
     }

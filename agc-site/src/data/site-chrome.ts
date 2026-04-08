@@ -1,4 +1,4 @@
-import { getInvolvedSubLinks, footerLinks } from "./content";
+import { footerLinks } from "./content";
 
 export type SiteNavLink = { href: string; label: string };
 export type SiteNavItem = SiteNavLink & { subLinks?: SiteNavLink[] };
@@ -93,7 +93,7 @@ export const defaultSiteNav: SiteNavItem[] = [
   { href: "/events", label: "Events" },
   { href: "/news", label: "News" },
   { href: "/publications", label: "Publications" },
-  { href: "/get-involved", label: "Get Involved", subLinks: cloneLinks(getInvolvedSubLinks) },
+  { href: "/get-involved", label: "Get Involved" },
   { href: "/contact", label: "Contact" },
 ];
 
