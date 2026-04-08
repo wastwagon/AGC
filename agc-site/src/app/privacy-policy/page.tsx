@@ -1,26 +1,44 @@
 import Link from "next/link";
 import { privacyPolicy } from "@/data/legal";
 import { PageHero } from "@/components/PageHero";
-import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { getMergedPageContent } from "@/lib/page-content";
+import { cardImageUrlOrNull } from "@/lib/image-delivery";
+import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
+
+/** Always read fresh CMS + media resolution so hero image updates are not stuck behind static cache. */
+export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "Privacy Policy",
   description: "How Africa Governance Centre collects, uses, and protects your information.",
 };
 
+type PrivacyMerged = typeof privacyPolicy & { heroImage?: string; sectionImage?: string };
+
 export default async function PrivacyPolicyPage() {
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent<typeof privacyPolicy>("privacy-policy", cmsStaticOrEmpty(privacyPolicy)),
+    // Merge over full static legal copy so CMS fields (e.g. heroImage) overlay reliably.
+    getMergedPageContent<PrivacyMerged>("privacy-policy", privacyPolicy as PrivacyMerged),
     getSiteSettings(),
   ]);
-  const content = merged as unknown as typeof privacyPolicy;
+  const content = merged;
+
+  const heroRaw = content.heroImage?.trim() || content.sectionImage?.trim() || undefined;
+  const resolved = await resolveImageUrl(heroRaw);
+  const heroSrc = cardImageUrlOrNull(resolved) ?? undefined;
+  const heroSubtitle = [content.subtitle?.trim(), `Last updated · ${content.lastUpdated}`]
+    .filter(Boolean)
+    .join(" · ");
+
   return (
     <>
       <PageHero
-        variant="minimal"
+        variant={heroSrc ? "compact" : "minimal"}
         title={content.title}
-        subtitle={`Last updated · ${content.lastUpdated}`}
+        subtitle={heroSubtitle}
+        image={heroSrc}
+        imageAlt=""
         breadcrumbs={[
           { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
           { label: siteSettings.chrome.breadcrumbs.privacyPolicy },

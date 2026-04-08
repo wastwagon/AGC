@@ -14,7 +14,7 @@ export function HomePartnerStrip({
     typeof p === "string" ? { name: p } : p
   );
   return (
-    <section className="border-y border-stone-200 bg-stone-800 px-4 py-6 sm:px-6 lg:px-8">
+    <section className="border-y border-stone-200 bg-stone-800 px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <div className="mx-auto flex max-w-6xl flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-8">
         <p className="max-w-prose text-sm leading-snug text-white sm:max-w-xs">{blurb}</p>
         <div className="flex min-w-0 flex-1 flex-col gap-2 sm:items-end">

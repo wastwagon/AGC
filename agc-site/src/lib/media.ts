@@ -2,7 +2,7 @@
  * Media Library - WordPress-style central image management
  * Images stored in public/uploads/, metadata in data/media-library.json
  */
-import { readFile, writeFile, mkdir } from "fs/promises";
+import { readFile, writeFile, mkdir, readdir } from "fs/promises";
 import { existsSync } from "fs";
 import path from "path";
 import { MAX_MEDIA_UPLOAD_BYTES } from "@/lib/media-limits";
@@ -53,12 +53,36 @@ export async function getMediaById(id: string): Promise<MediaItem | null> {
   return items.find((m) => m.id.trim().toLowerCase() === normalized.toLowerCase()) ?? null;
 }
 
+/**
+ * If library JSON is missing an entry but the binary was uploaded (e.g. JSON reset,
+ * Docker vs host dev, or manual copy), resolve `/uploads/<id>.<ext>` when a file matches.
+ */
+async function findUploadUrlForMediaIdOnDisk(mediaId: string): Promise<string | null> {
+  const dir = getUploadsDir();
+  if (!existsSync(dir)) return null;
+  const prefix = mediaId.trim();
+  if (!prefix || !/^media-/i.test(prefix)) return null;
+  try {
+    const files = await readdir(dir);
+    const match = files.find(
+      (f) => f === prefix || f.startsWith(`${prefix}.`) || f.toLowerCase().startsWith(`${prefix.toLowerCase()}.`)
+    );
+    if (match && !match.includes("..")) {
+      return `/uploads/${match}`;
+    }
+  } catch {
+    return null;
+  }
+  return null;
+}
+
 /** Resolve media-xxx ID to full URL (for use in components) */
 export async function getMediaUrlById(id: string | undefined): Promise<string | null> {
   const t = id?.trim();
   if (!t || !/^media-/i.test(t)) return null;
   const item = await getMediaById(t);
-  return item ? getMediaUrl(item) : null;
+  if (item) return getMediaUrl(item);
+  return findUploadUrlForMediaIdOnDisk(t);
 }
 
 export async function saveMediaMetadata(items: MediaItem[]): Promise<void> {

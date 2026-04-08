@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { siteConfig } from "@/data/content";
-import { DEFAULT_SITE_CHROME, type SiteChrome } from "@/data/site-chrome";
+import { DEFAULT_SITE_CHROME, type SiteChrome, type SiteNavItem } from "@/data/site-chrome";
 import { prisma } from "@/lib/db";
 import { parseBottomNav, parseLinkList, parseNavList, parseWorkThumbs } from "@/lib/site-chrome-parse";
 
@@ -35,6 +35,28 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
   chrome: DEFAULT_SITE_CHROME,
 };
 
+/**
+ * Legacy CMS rows often keep Programs/Projects/Advisory/Publications under Our Work.
+ * The site uses tabs on `/our-work` and a top-level `/publications` route instead.
+ */
+function normalizeHeaderNav(nav: SiteNavItem[]): SiteNavItem[] {
+  const stripped = nav.map((item) => {
+    if (item.href === "/our-work") {
+      const { subLinks: _, ...rest } = item;
+      return rest;
+    }
+    return item;
+  });
+  if (stripped.some((i) => i.href === "/publications")) {
+    return stripped;
+  }
+  const newsIdx = stripped.findIndex((i) => i.href === "/news");
+  const insertAt = newsIdx >= 0 ? newsIdx + 1 : stripped.length;
+  const next = [...stripped];
+  next.splice(insertAt, 0, { href: "/publications", label: "Publications" });
+  return next;
+}
+
 export function mergeSiteChrome(patch: unknown): SiteChrome {
   const base = DEFAULT_SITE_CHROME;
   if (patch === null || patch === undefined || typeof patch !== "object" || Array.isArray(patch)) {
@@ -58,7 +80,9 @@ export function mergeSiteChrome(patch: unknown): SiteChrome {
       ? (p.breadcrumbs as Record<string, unknown>)
       : {};
 
-  const nav = parseNavList(p.nav) ?? base.nav.map((i) => ({ ...i, subLinks: i.subLinks?.map((s) => ({ ...s })) }));
+  const rawNav =
+    parseNavList(p.nav) ?? base.nav.map((i) => ({ ...i, subLinks: i.subLinks?.map((s) => ({ ...s })) }));
+  const nav = normalizeHeaderNav(rawNav);
   const bottomNav = parseBottomNav(p.bottomNav) ?? [...base.bottomNav];
   const quickLinks = parseLinkList(footerPatch.quickLinks);
   const legal = parseLinkList(footerPatch.legal);

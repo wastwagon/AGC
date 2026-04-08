@@ -84,5 +84,17 @@ export async function updatePageContent(slug: string, formData: FormData) {
   revalidatePath("/admin/pages");
   revalidatePath(`/admin/pages/${slug}/edit`);
   revalidatePath("/");
+  revalidatePublicRouteForPageSlug(data.slug);
   redirect(`/admin/pages/${encodeURIComponent(slug)}/edit?saved=1`);
+}
+
+/** Map CMS page slug to public URL so ISR cache updates after admin save (hero images, copy). */
+function revalidatePublicRouteForPageSlug(slug: string) {
+  if (slug === "home") return;
+  const pathBySlug: Record<string, string> = {
+    "our-work-programs": "/our-work/programs",
+    "our-work-projects": "/our-work/projects",
+    "our-work-advisory": "/our-work/advisory",
+  };
+  revalidatePath(pathBySlug[slug] ?? `/${slug}`);
 }

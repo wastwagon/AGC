@@ -19,3 +19,13 @@ export function isLocalUploadImageSrc(src: string): boolean {
 export function preferUnoptimizedImage(src: string): boolean {
   return isLocalUploadImageSrc(src) || src.endsWith(".svg");
 }
+
+/** Seeded Programs/Projects used this path as “no custom image”; cards should hide the image strip. */
+export const UPLOADS_PLACEHOLDER_SVG = "/uploads/placeholder.svg";
+
+/** Use after `resolveImageUrl`: no image area when empty or default placeholder. */
+export function cardImageUrlOrNull(resolved: string | null | undefined): string | null {
+  const u = resolved?.trim();
+  if (!u || u === UPLOADS_PLACEHOLDER_SVG) return null;
+  return u;
+}

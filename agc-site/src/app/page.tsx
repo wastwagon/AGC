@@ -10,6 +10,7 @@ import { HomePartnerStrip } from "@/components/HomePartnerStrip";
 import { HomeSpotlightStory } from "@/components/HomeSpotlightStory";
 import { NewsCard } from "@/components/NewsCard";
 import { HomeEventsSection } from "@/components/HomeEventsSection";
+import { cardImageUrlOrNull } from "@/lib/image-delivery";
 import { resolveImageUrl } from "@/lib/media";
 import { resolveEventsForPublic, resolveNewsForPublic } from "@/lib/cms-fallback";
 import { CmsDraftNotice } from "@/components/CmsDraftNotice";
@@ -23,15 +24,60 @@ type OurWorkCms = typeof workContent & {
   pillarCardImages?: { programs?: string; projects?: string; advisory?: string };
 };
 
+/** CMS fields on Our Work — Programs / Projects / Advisory page records (slug `our-work-*`). */
+type WorkSectionPageMerged = { heroImage?: string; sectionImage?: string };
+
+/**
+ * Homepage pillar image: optional override from main `our-work` (pillarCardImages), else the
+ * matching section page hero, then section image — same assets as `/our-work/programs` etc.
+ */
+async function resolveHomePillarImage(
+  pillarOverride: string | undefined,
+  section: WorkSectionPageMerged
+): Promise<string | undefined> {
+  const candidates = [
+    pillarOverride?.trim() || undefined,
+    section.heroImage?.trim() || undefined,
+    section.sectionImage?.trim() || undefined,
+  ].filter((x): x is string => Boolean(x));
+
+  for (const raw of candidates) {
+    const url = cardImageUrlOrNull((await resolveImageUrl(raw)) ?? null);
+    if (url) return url;
+  }
+  return undefined;
+}
+
 export default async function HomePage() {
   const workFallback = cmsStaticOrEmpty(workContent as OurWorkCms);
 
-  const [events, news, home, partnersFromDb, workMerged] = await Promise.all([
+  const [
+    events,
+    news,
+    home,
+    partnersFromDb,
+    workMerged,
+    programsSectionMerged,
+    projectsSectionMerged,
+    advisorySectionMerged,
+  ] = await Promise.all([
     getEvents(),
     getNews(6),
     getHomePageCms(),
     getPartners(),
     getMergedPageContent<OurWorkCms>("our-work", workFallback),
+    getMergedPageContent<typeof workContent.programs & WorkSectionPageMerged>(
+      "our-work-programs",
+      cmsStaticOrEmpty(workContent.programs as typeof workContent.programs & WorkSectionPageMerged)
+    ),
+    getMergedPageContent<typeof workContent.projects & WorkSectionPageMerged>(
+      "our-work-projects",
+      cmsStaticOrEmpty(workContent.projects as typeof workContent.projects & WorkSectionPageMerged)
+    ),
+    getMergedPageContent<typeof workContent.advisory & WorkSectionPageMerged>(
+      "our-work-advisory",
+      cmsStaticOrEmpty(workContent.advisory as typeof workContent.advisory & WorkSectionPageMerged)
+    ),
   ]);
 
   const { items: eventsList, cmsDraftsOnly: homeEventsDrafts } = await resolveEventsForPublic(
@@ -81,24 +127,30 @@ export default async function HomePage() {
       : home.heroPartnerStrip.map((name) => ({ name }));
 
   const pillarImages = workMerged.pillarCardImages ?? {};
+  const [imgPrograms, imgProjects, imgAdvisory] = await Promise.all([
+    resolveHomePillarImage(pillarImages.programs, programsSectionMerged),
+    resolveHomePillarImage(pillarImages.projects, projectsSectionMerged),
+    resolveHomePillarImage(pillarImages.advisory, advisorySectionMerged),
+  ]);
+
   const pillarCards = [
     {
-      title: workMerged.programs?.title ?? "",
-      description: workMerged.programs?.description ?? "",
-      href: "/our-work/programs",
-      image: (await resolveImageUrl(pillarImages.programs)) || undefined,
+      title: workMerged.programs?.title?.trim() || programsSectionMerged.title || "",
+      description: workMerged.programs?.description?.trim() || programsSectionMerged.description || "",
+      href: "/our-work",
+      image: imgPrograms,
     },
     {
-      title: workMerged.projects?.title ?? "",
-      description: workMerged.projects?.description ?? "",
-      href: "/our-work/projects",
-      image: (await resolveImageUrl(pillarImages.projects)) || undefined,
+      title: workMerged.projects?.title?.trim() || projectsSectionMerged.title || "",
+      description: workMerged.projects?.description?.trim() || projectsSectionMerged.description || "",
+      href: "/our-work",
+      image: imgProjects,
     },
     {
-      title: workMerged.advisory?.title ?? "",
-      description: workMerged.advisory?.description ?? "",
-      href: "/our-work/advisory",
-      image: (await resolveImageUrl(pillarImages.advisory)) || undefined,
+      title: workMerged.advisory?.title?.trim() || advisorySectionMerged.title || "",
+      description: workMerged.advisory?.description?.trim() || advisorySectionMerged.description || "",
+      href: "/our-work",
+      image: imgAdvisory,
     },
   ].filter((c) => c.title.trim() && c.description.trim());
 
@@ -133,7 +185,7 @@ export default async function HomePage() {
 
       <HomePartnerStrip blurb={home.homePartnerBlurb} partners={stripPartners} />
 
-      <div className="h-10 bg-[#fffcf7] sm:h-12" aria-hidden />
+      <div className="h-12 bg-[#fffcf7] sm:h-14" aria-hidden />
 
       {(showReach || impactStats.length > 0 || showMethodology) && (
         <section className="border-y border-stone-200/80 bg-[#f2ebe3]/60 py-14 sm:py-20">

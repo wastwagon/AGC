@@ -409,8 +409,12 @@ export async function getPageContent(slug: string) {
   if (!p) return null;
   const heroTitle = p.heroTitle;
   const heroSubtitle = p.heroSubtitle;
+  const fromDb =
+    p.contentJson != null && typeof p.contentJson === "object" && !Array.isArray(p.contentJson)
+      ? (p.contentJson as Record<string, unknown>)
+      : {};
   const contentJson: Record<string, unknown> = {
-    ...(p.contentJson as Record<string, unknown>),
+    ...fromDb,
     title: p.title ?? heroTitle,
     subtitle: heroSubtitle,
     hero: { title: heroTitle, subtitle: heroSubtitle },
@@ -426,6 +430,13 @@ export async function getPageContent(slug: string) {
         }
       : undefined,
   };
+  // Admin stores hero / section media IDs on `content_json`; keep them after column overlays.
+  if (typeof fromDb.heroImage === "string" && fromDb.heroImage.trim()) {
+    contentJson.heroImage = fromDb.heroImage.trim();
+  }
+  if (typeof fromDb.sectionImage === "string" && fromDb.sectionImage.trim()) {
+    contentJson.sectionImage = fromDb.sectionImage.trim();
+  }
   return {
     id: p.id,
     slug: p.slug,

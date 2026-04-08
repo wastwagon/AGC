@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { LayoutGrid, Target, Users } from "lucide-react";
 import type { OurWorkPageContent } from "@/data/content";
@@ -18,7 +18,7 @@ export type OurWorkAreaCard = {
   key: string;
   title: string;
   description: string;
-  /** Resolved URL from CMS image (uploads / media id); null uses a soft placeholder. */
+  /** Resolved URL from CMS image; when null/empty, the card shows text only (no image area). */
   imageUrl: string | null;
 };
 
@@ -32,6 +32,13 @@ type OurWorkClientProps = {
   breadcrumbLabels: SiteBreadcrumbChrome;
 };
 
+function tabFromHash(): TabKey | null {
+  if (typeof window === "undefined") return null;
+  const h = window.location.hash.replace(/^#/, "");
+  if (h === "programs" || h === "projects" || h === "advisory") return h;
+  return null;
+}
+
 export function OurWorkClient({
   programsResolved,
   projectsResolved,
@@ -40,6 +47,23 @@ export function OurWorkClient({
   breadcrumbLabels,
 }: OurWorkClientProps) {
   const [activeTab, setActiveTab] = useState<TabKey>("programs");
+
+  useEffect(() => {
+    const fromHash = tabFromHash();
+    if (fromHash) {
+      setActiveTab(fromHash);
+      requestAnimationFrame(() => {
+        document.getElementById("our-work-areas")?.scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+    }
+  }, []);
+
+  useEffect(() => {
+    const next = `#${activeTab}`;
+    if (typeof window !== "undefined" && window.location.hash !== next) {
+      window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${next}`);
+    }
+  }, [activeTab]);
 
   const tabs: { key: TabKey; label: string }[] = [
     { key: "programs", label: content.tabs.programs },
@@ -114,14 +138,17 @@ export function OurWorkClient({
         </div>
       </section>
 
-      <section className="page-section-warm border-t border-stone-200/60 py-16 sm:py-20 lg:py-24">
+      <section
+        id="our-work-areas"
+        className="page-section-warm border-t border-stone-200/60 py-20 sm:py-24 lg:py-28"
+      >
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-xl lg:text-left">
             <p className="text-sm font-medium text-accent-800">Programmes & projects</p>
             <p className="page-prose mt-2 text-stone-600">{activeContent.description}</p>
           </div>
           <div
-            className="mt-8 flex flex-wrap gap-0 border-b border-stone-300/80"
+            className="mt-10 flex flex-wrap gap-0 border-b border-stone-300/80 sm:mt-12"
             role="tablist"
             aria-label="Work areas"
           >
@@ -134,7 +161,11 @@ export function OurWorkClient({
                   type="button"
                   role="tab"
                   aria-selected={isActive}
-                  onClick={() => setActiveTab(tab.key)}
+                  onClick={() => {
+                    setActiveTab(tab.key);
+                    const el = document.getElementById("our-work-areas");
+                    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                  }}
                   className={`relative flex items-center gap-2 px-4 py-3.5 text-sm font-medium transition-colors sm:px-6 ${
                     isActive
                       ? "text-accent-900 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-accent-600"
@@ -148,39 +179,38 @@ export function OurWorkClient({
             })}
           </div>
 
-          <div className="mt-12">
+          <div className="mt-14 sm:mt-16">
             {cards.length > 0 ? (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {cards.map((card) => (
-                  <article
-                    key={card.key}
-                    className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md"
-                  >
-                    <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-stone-200/60">
-                      {card.imageUrl ? (
-                        <Image
-                          src={card.imageUrl}
-                          alt={card.title}
-                          fill
-                          className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                          unoptimized={preferUnoptimizedImage(card.imageUrl)}
-                        />
-                      ) : (
-                        <div
-                          className="absolute inset-0 bg-gradient-to-br from-accent-200/35 via-stone-200/50 to-accent-100/40"
-                          aria-hidden
-                        />
-                      )}
-                    </div>
-                    <div className="flex flex-1 flex-col p-6 sm:p-7">
-                      <h3 className="font-[family-name:var(--font-fraunces)] text-lg font-semibold leading-snug text-stone-900">
-                        {card.title}
-                      </h3>
-                      <p className="page-prose-tight mt-3 flex-1 text-sm text-stone-600">{card.description}</p>
-                    </div>
-                  </article>
-                ))}
+                {cards.map((card) => {
+                  const imageSrc = card.imageUrl?.trim() ?? "";
+                  const hasImage = imageSrc.length > 0;
+                  return (
+                    <article
+                      key={card.key}
+                      className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md"
+                    >
+                      {hasImage ? (
+                        <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-stone-200/60">
+                          <Image
+                            src={imageSrc}
+                            alt={card.title}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            unoptimized={preferUnoptimizedImage(imageSrc)}
+                          />
+                        </div>
+                      ) : null}
+                      <div className="flex flex-1 flex-col p-6 sm:p-7">
+                        <h3 className="font-[family-name:var(--font-fraunces)] text-lg font-semibold leading-snug text-stone-900">
+                          {card.title}
+                        </h3>
+                        <p className="page-prose-tight mt-3 flex-1 text-sm text-stone-600">{card.description}</p>
+                      </div>
+                    </article>
+                  );
+                })}
               </div>
             ) : (
               <div className="rounded-2xl border border-dashed border-stone-300 bg-[#fffcf7] py-14 text-center">
