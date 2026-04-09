@@ -1,15 +1,96 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Globe } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
 
 type LanguageSelectorProps = { variant?: "light" | "dark"; languages?: SiteSettings["languages"] };
 
+const DEFAULT_LANGUAGE_OPTIONS: SiteSettings["languages"] = [
+  { code: "en", label: "English" },
+  { code: "fr", label: "Français" },
+  { code: "pt", label: "Português" },
+  { code: "sw", label: "Kiswahili" },
+  { code: "am", label: "አማርኛ" },
+  { code: "es", label: "Español" },
+  { code: "ha", label: "Hausa" },
+];
+const GOOGLE_INCLUDED_LANGS = DEFAULT_LANGUAGE_OPTIONS.map((x) => x.code).join(",");
+
+declare global {
+  interface Window {
+    google?: {
+      translate?: {
+        TranslateElement?: new (
+          options: Record<string, unknown>,
+          elementId: string
+        ) => unknown;
+      };
+    };
+    googleTranslateElementInit?: () => void;
+  }
+}
+
 export function LanguageSelector({ variant = "light", languages }: LanguageSelectorProps) {
   const [open, setOpen] = useState(false);
-  const languageList = languages ?? [{ code: "en", label: "English" }];
-  const current = languageList[0];
+  const hasCustomLanguages = Array.isArray(languages) && languages.length > 1;
+  const languageList = hasCustomLanguages ? languages : DEFAULT_LANGUAGE_OPTIONS;
+  const [selectedCode, setSelectedCode] = useState(languageList[0]?.code ?? "en");
+  const current = useMemo(
+    () => languageList.find((lang) => lang.code === selectedCode) ?? languageList[0],
+    [languageList, selectedCode]
+  );
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem("agc:preferred-language");
+      if (!saved) return;
+      if (languageList.some((lang) => lang.code === saved)) setSelectedCode(saved);
+    } catch {
+      // Ignore storage failures.
+    }
+  }, [languageList]);
+
+  useEffect(() => {
+    if (document.getElementById("agc-google-translate-script")) return;
+    window.googleTranslateElementInit = () => {
+      if (!window.google?.translate?.TranslateElement) return;
+      new window.google.translate.TranslateElement(
+        { pageLanguage: "en", autoDisplay: false, includedLanguages: GOOGLE_INCLUDED_LANGS },
+        "agc-google-translate-element"
+      );
+    };
+    const script = document.createElement("script");
+    script.id = "agc-google-translate-script";
+    script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
+    script.async = true;
+    document.body.appendChild(script);
+  }, []);
+
+  const setGoogleTranslateCookie = (code: string) => {
+    const val = `/en/${code}`;
+    document.cookie = `googtrans=${val};path=/`;
+    document.cookie = `googtrans=${val};domain=${window.location.hostname};path=/`;
+  };
+
+  const onSelectLanguage = (code: string) => {
+    setSelectedCode(code);
+    setOpen(false);
+    try {
+      window.localStorage.setItem("agc:preferred-language", code);
+    } catch {
+      // Ignore storage failures.
+    }
+    const combo = document.querySelector(".goog-te-combo") as HTMLSelectElement | null;
+    if (combo) {
+      combo.value = code;
+      combo.dispatchEvent(new Event("change"));
+      return;
+    }
+    // Fallback for slow script load/init: set cookie and refresh.
+    setGoogleTranslateCookie(code);
+    window.location.reload();
+  };
 
   const btn =
     variant === "dark"
@@ -46,18 +127,23 @@ export function LanguageSelector({ variant = "light", languages }: LanguageSelec
                 role="option"
                 aria-selected={current?.code === lang.code}
               >
-                <span
+                <button
+                  type="button"
+                  onClick={() => onSelectLanguage(lang.code)}
                   className={`block px-4 py-2 text-sm ${
-                    variant === "dark" ? "text-white/95 hover:bg-white/10" : "text-slate-700"
+                    variant === "dark"
+                      ? "w-full text-left text-white/95 hover:bg-white/10"
+                      : "w-full text-left text-slate-700 hover:bg-slate-50"
                   }`}
                 >
                   {lang.label}
-                </span>
+                </button>
               </li>
             ))}
           </ul>
         </>
       )}
+      <div id="agc-google-translate-element" className="sr-only" aria-hidden />
     </div>
   );
 }

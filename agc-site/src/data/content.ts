@@ -23,7 +23,15 @@ export const siteConfig = {
     instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "",
     facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL || "",
   },
-  languages: [{ code: "en", label: "English" }],
+  languages: [
+    { code: "en", label: "English" },
+    { code: "fr", label: "Français" },
+    { code: "pt", label: "Português" },
+    { code: "sw", label: "Kiswahili" },
+    { code: "am", label: "አማርኛ" },
+    { code: "es", label: "Español" },
+    { code: "ha", label: "Hausa" },
+  ],
 };
 
 export const heroContent = {

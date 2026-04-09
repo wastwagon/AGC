@@ -38,17 +38,20 @@ export function PageHero({
       <section className="border-b border-stone-200/90 bg-[#fffcf7]">
         <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
           <nav aria-label="Breadcrumb" className="text-sm text-stone-500">
-            <ol className="flex flex-wrap items-center gap-1">
+            <ol className="flex flex-wrap items-center gap-1.5">
               {items.map((item, i) => (
-                <li key={i} className="flex items-center gap-1">
+                <li key={i} className="flex items-center gap-1.5">
                   {item.href ? (
-                    <Link href={item.href} className="transition-colors hover:text-accent-700">
+                    <Link href={item.href} className="font-medium text-stone-600 transition-colors hover:text-accent-700">
                       {item.label}
                     </Link>
                   ) : (
-                    <span className="font-medium text-stone-400">{item.label}</span>
+                    <span className="relative inline-block pb-2 font-semibold text-accent-800">
+                      {item.label}
+                      <span className="absolute left-0 right-0 -bottom-0.5 mx-auto h-1 rounded-full bg-accent-500/85" aria-hidden />
+                    </span>
                   )}
-                  {i < items.length - 1 && <span className="text-stone-300">/</span>}
+                  {i < items.length - 1 && <span className="text-stone-300/90">/</span>}
                 </li>
               ))}
             </ol>
@@ -57,7 +60,6 @@ export function PageHero({
             {title}
           </h1>
           {subtitle && <p className="mt-3 text-stone-600">{subtitle}</p>}
-          <div className="mt-6 h-px w-16 bg-accent-500" aria-hidden />
         </div>
       </section>
     );
@@ -88,18 +90,21 @@ export function PageHero({
           />
         </div>
         <div className="container relative z-10 mx-auto w-full px-4 py-10 text-left sm:px-6 lg:px-8 lg:py-12">
-          <nav aria-label="Breadcrumb" className="text-sm text-white/70">
-            <ol className="flex flex-wrap items-center gap-1">
+          <nav aria-label="Breadcrumb" className="text-sm text-white/75">
+            <ol className="flex flex-wrap items-center gap-1.5">
               {items.map((item, i) => (
-                <li key={i} className="flex items-center gap-1">
+                <li key={i} className="flex items-center gap-1.5">
                   {item.href ? (
-                    <Link href={item.href} className="transition-colors hover:text-white">
+                    <Link href={item.href} className="font-medium text-white/80 transition-colors hover:text-white">
                       {item.label}
                     </Link>
                   ) : (
-                    <span className="text-accent-200">{item.label}</span>
+                    <span className="relative inline-block pb-2 font-semibold text-accent-200">
+                      {item.label}
+                      <span className="absolute left-0 right-0 -bottom-0.5 mx-auto h-1 rounded-full bg-accent-300/90" aria-hidden />
+                    </span>
                   )}
-                  {i < items.length - 1 && <span className="text-white/40">/</span>}
+                  {i < items.length - 1 && <span className="text-white/45">/</span>}
                 </li>
               ))}
             </ol>
@@ -145,15 +150,18 @@ export function PageHero({
           </h1>
           {subtitle && <p className="mt-4 text-lg text-white/90 sm:text-xl">{subtitle}</p>}
           <nav aria-label="Breadcrumb" className="mt-8">
-            <ol className="flex flex-wrap items-center justify-center gap-1 text-sm text-white/80 sm:gap-2 sm:text-base">
+            <ol className="flex flex-wrap items-center justify-center gap-1.5 text-sm text-white/80 sm:gap-2 sm:text-base">
               {items.map((item, i) => (
                 <li key={i} className="flex items-center gap-1 sm:gap-2">
                   {item.href ? (
-                    <Link href={item.href} className="transition-colors hover:text-accent-200">
+                    <Link href={item.href} className="font-medium text-white/85 transition-colors hover:text-accent-200">
                       {item.label}
                     </Link>
                   ) : (
-                    <span className="text-accent-200">{item.label}</span>
+                    <span className="relative inline-block pb-2 font-semibold text-accent-200">
+                      {item.label}
+                      <span className="absolute left-0 right-0 -bottom-0.5 mx-auto h-1 rounded-full bg-accent-300/90" aria-hidden />
+                    </span>
                   )}
                   {i < items.length - 1 && (
                     <span className="text-white/50" aria-hidden>

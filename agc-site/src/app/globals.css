@@ -180,3 +180,18 @@ body {
   pointer-events: none;
   color: var(--muted);
 }
+
+/* Google Translate cleanup: keep page translation, hide Google top banner/tooltips/UI chrome. */
+iframe.goog-te-banner-frame.skiptranslate,
+.goog-te-banner-frame.skiptranslate,
+body > .skiptranslate,
+#goog-gt-tt,
+.goog-te-balloon-frame,
+.goog-logo-link,
+.goog-te-gadget,
+.goog-te-gadget-simple {
+  display: none !important;
+}
+body {
+  top: 0 !important;
+}
