@@ -13,12 +13,39 @@ export const appSummitContent = {
   detailLabelLocation: "Location",
   detailLabelParticipants: "Participants",
   programmeEyebrow: "Programme",
+  /** When false, the Programme / APPS agenda section (day tabs & schedule) is hidden on the public site. */
+  programmeAgendaVisible: true,
   /** Prefix before tab number, e.g. "Day " + 1 */
   dayTabPrefix: "Day ",
   contactSectionCtaLabel: "Contact us",
   heroImageAlt: "APP Summit",
   intro:
     "The African Political Parties Summit (APPS) is conceptualized as the flagship annual convening designed to provide a high-level continental platform for dialogue, collaboration, and capacity building among political actors. The Summit aims to strengthen democratic institutions, promote inter-party cooperation, and advance inclusive and accountable governance across Africa.",
+  /** Purpose & impact — editable via Admin → Page Content → app-summit (empty heading + intro hides section). */
+  purposeImpact: {
+    /** Optional line above the heading (empty = omit). */
+    eyebrow: "",
+    heading: "Purpose and Impact",
+    intro:
+      "The Summit serves as a continental forum to review political progress, align priorities, issue joint declarations, and consolidate reform commitments.",
+    pillars: [
+      {
+        title: "Political Reform",
+        description:
+          "Shape collective agendas for political reform and institutional strengthening across African political systems.",
+      },
+      {
+        title: "Policy Innovation",
+        description:
+          "Foster policy innovation and knowledge exchange between political parties and governance institutions.",
+      },
+      {
+        title: "Inter-Party Cooperation",
+        description:
+          "Build bridges between political parties and facilitate cross-party collaboration on continental priorities.",
+      },
+    ],
+  },
   /** Inaugural edition — venue, dates, opening, participants (editable in Admin → Page Content → app-summit). */
   inauguralParagraph:
     "The inaugural edition of the APPS was held from August 10-12, 2025 at the Accra International Conference Centre. It brought together a distinguished and diverse group of participants, including Heads of State, Prime Ministers, Ministers of State and Senior Party Officials from across the continent. The Summit was officially opened by H.E. Jane Naana opoku-Agyemang, Vice President of Ghana and the President of Sao Tome H.E. Carlos Manuel Vila Nova.",

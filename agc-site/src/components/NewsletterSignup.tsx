@@ -35,7 +35,7 @@ export function NewsletterSignup({ copy }: { copy: SiteNewsletterChrome }) {
   }
 
   return (
-    <div className="mt-6">
+    <div id="newsletter" className="mt-6 scroll-mt-24">
       <h4 className="text-sm font-semibold uppercase tracking-wider text-accent-300">{copy.heading}</h4>
       <p className="mt-2 text-[14px] text-white/80">{copy.description}</p>
       <form onSubmit={handleSubmit} className="mt-3 flex flex-col gap-2 sm:flex-row sm:items-center">

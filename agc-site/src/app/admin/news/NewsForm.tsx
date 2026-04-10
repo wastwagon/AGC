@@ -28,6 +28,7 @@ type NewsFormProps = {
     tags: unknown;
     status: string;
     datePublished: Date | null;
+    downloadResources?: unknown;
   };
 };
 
@@ -228,6 +229,33 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
           className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
         />
         <p className="mt-1 text-xs text-slate-500">Suggested slugs: {tagOptions.map((t) => t.slug).join(", ")}</p>
+      </div>
+
+      <div>
+        <label htmlFor="downloadResourcesJson" className="block text-sm font-medium text-slate-700">
+          Document downloads (PDFs, calls, reports)
+        </label>
+        <p className="mt-1 text-xs text-slate-500">
+          JSON array of objects with <code className="rounded bg-slate-100 px-1">label</code>,{" "}
+          <code className="rounded bg-slate-100 px-1">href</code> (path under <code className="rounded bg-slate-100 px-1">/uploads/…</code> or
+          media URL), and optional <code className="rounded bg-slate-100 px-1">description</code>. Leave{" "}
+          <code className="rounded bg-slate-100 px-1">[]</code> if none.
+        </p>
+        <textarea
+          id="downloadResourcesJson"
+          name="downloadResourcesJson"
+          rows={10}
+          spellCheck={false}
+          defaultValue={(() => {
+            const d = item?.downloadResources;
+            if (d == null) return "[]";
+            if (Array.isArray(d)) return JSON.stringify(d, null, 2);
+            if (typeof d === "object") return JSON.stringify([d], null, 2);
+            return "[]";
+          })()}
+          className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-900"
+          placeholder={`[\n  {\n    "label": "Download report (PDF)",\n    "description": "Short line shown under the title.",\n    "href": "/uploads/documents/example.pdf"\n  }\n]`}
+        />
       </div>
 
       <div>

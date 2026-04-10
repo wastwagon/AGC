@@ -481,6 +481,13 @@ export const fallbackNews = [
     categories: ["appi", "reports", "events"],
     tags: ["political-parties", "summit", "accra-declaration"],
     excerpt: "The Summary Report of the 2025 African Political Parties Summit is now available and can be downloaded.",
+    downloadResources: [
+      {
+        label: "Download APPS 2025 Summary Report (PDF)",
+        description: "Full summary report from the African Political Parties Summit in Accra.",
+        href: "/uploads/documents/apps-2025-summary-report.pdf",
+      },
+    ],
     content: `<p>The Summary Report of the 2025 African Political Parties Summit is now available and can be downloaded.</p>
 <p>The African Political Parties Summit (APPS), held from 12–14 August at the Accra International Conference Centre, marked a significant milestone in advancing political governance and party development across the continent.</p>
 <p>Building on the Africa Governance Centre's African Political Parties Initiative, which was launched by President John Dramani Mahama on 7 March 2025, the summit convened over 700 delegates from 30 countries and 48 political parties to explore strategies for aligning party systems with Africa's economic transformation agenda.</p>
@@ -497,6 +504,13 @@ export const fallbackNews = [
     categories: ["announcements", "fellowships"],
     tags: ["fellows", "research", "governance"],
     excerpt: "The Africa Governance Centre (AGC) is pleased to announce its call for Research and Policy Fellows, designed to engage leading scholars, policy experts, and thought leaders in advancing governance innovation across Africa.",
+    downloadResources: [
+      {
+        label: "Call for fellows — application pack (PDF)",
+        description: "Scope, eligibility, and how to apply for the Research and Policy Fellows programme.",
+        href: "/uploads/documents/agc-research-policy-fellows-call.pdf",
+      },
+    ],
     content: `<p>The Africa Governance Centre (AGC) is pleased to announce its call for Research and Policy Fellows, designed to engage leading scholars, policy experts, and thought leaders in advancing governance innovation across Africa.</p>
 <h2>What to expect</h2>
 <p>This opportunity provides a dynamic platform for contributing to evidence-based policymaking, institutional reform, and strategic governance initiatives. Fellows will work closely with AGC teams and partners on flagship projects such as, the African Political Parties Initiative, Africa Governance Review, High-level expert roundtables, Targeted policy advisory efforts.</p>
@@ -538,6 +552,7 @@ export const fallbackPublications = [
     slug: "apps-summary-report-2025",
     excerpt: "The Summary Report of the 2025 African Political Parties Summit, held in Accra, Ghana. The summit convened over 700 delegates from 30 countries and 48 political parties.",
     types: ["report"],
+    file: "/uploads/documents/apps-2025-summary-report.pdf",
     date_published: "2025-09-09T00:00:00Z",
     author: "Africa Governance Centre",
   },

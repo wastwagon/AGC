@@ -36,6 +36,7 @@ export default async function AppSummitPage() {
   /** If CMS JSON omitted intro/inaugural, keep repo defaults (canonical APPS copy). */
   const content: AppSummitMerged = {
     ...merged,
+    programmeAgendaVisible: merged.programmeAgendaVisible !== false,
     intro: merged.intro?.trim() ? merged.intro : appSummitContent.intro,
     inauguralParagraph: merged.inauguralParagraph?.trim()
       ? merged.inauguralParagraph

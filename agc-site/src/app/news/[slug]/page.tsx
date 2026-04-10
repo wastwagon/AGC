@@ -14,6 +14,7 @@ import type { CmsNews } from "@/lib/content";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
+import { normalizeNewsDownloads } from "@/lib/news-downloads";
 
 export const revalidate = 60;
 
@@ -69,6 +70,7 @@ export default async function NewsDetailPage({ params }: Props) {
   const dateStr = date
     ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })
     : "";
+  const documentDownloads = normalizeNewsDownloads(item);
 
   return (
     <article className="min-h-screen bg-[#f7f4ef]">
@@ -151,26 +153,33 @@ export default async function NewsDetailPage({ params }: Props) {
               }}
             />
 
-            {(() => {
-              const resources = (item as { downloadResources?: { label: string; description: string; href: string } })
-                .downloadResources;
-              if (!resources || !resources.href || resources.href === "#") return null;
-              return (
-                <div className="mt-14 border-t border-stone-200 pt-10">
-                  <div className="page-card border-l-[4px] border-l-accent-600 p-6 sm:p-8">
-                    <h3 className="page-heading text-xl text-stone-900">{resources.label}</h3>
-                    <p className="mt-2 page-prose text-[0.98rem]">{resources.description}</p>
-                    <a
-                      href={resources.href}
-                      className="mt-5 inline-flex items-center gap-2 rounded-lg bg-accent-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-800"
-                    >
-                      <Download className="h-4 w-4" aria-hidden />
-                      Download resources
-                    </a>
-                  </div>
-                </div>
-              );
-            })()}
+            {documentDownloads.length > 0 ? (
+              <div className="mt-14 border-t border-stone-200 pt-10">
+                <h3 className="page-heading text-lg text-stone-900">Documents</h3>
+                <p className="mt-1 text-sm text-stone-600">Download PDFs and resources linked to this article.</p>
+                <ul className="mt-6 space-y-4">
+                  {documentDownloads.map((doc) => (
+                    <li key={`${doc.label}-${doc.href}`}>
+                      <div className="page-card border-l-[4px] border-l-accent-600 p-6 sm:p-8">
+                        <h4 className="page-heading text-xl text-stone-900">{doc.label}</h4>
+                        {doc.description ? (
+                          <p className="mt-2 page-prose text-[0.98rem] text-stone-700">{doc.description}</p>
+                        ) : null}
+                        <a
+                          href={doc.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-5 inline-flex items-center gap-2 rounded-lg bg-accent-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-800"
+                        >
+                          <Download className="h-4 w-4" aria-hidden />
+                          Download
+                        </a>
+                      </div>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
 
           </div>
         </div>
