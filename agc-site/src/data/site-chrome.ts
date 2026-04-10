@@ -88,13 +88,18 @@ function cloneLinks(links: readonly { href: string; label: string }[]): SiteNavL
 
 export const defaultSiteNav: SiteNavItem[] = [
   { href: "/", label: "Home" },
-  { href: "/about", label: "About Us" },
+  {
+    href: "/about",
+    label: "About Us",
+    subLinks: [
+      { href: "/get-involved", label: "Get Involved" },
+      { href: "/aypf", label: "AYPF" },
+    ],
+  },
   { href: "/our-work", label: "Our Work" },
   { href: "/app-summit", label: "APP Summit" },
   { href: "/events", label: "Events" },
   { href: "/news", label: "News" },
-  { href: "/get-involved", label: "Get Involved" },
-  { href: "/contact", label: "Contact" },
 ];
 
 export const DEFAULT_SITE_CHROME: SiteChrome = {

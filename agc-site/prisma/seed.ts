@@ -4,6 +4,7 @@
  */
 import { PrismaClient } from "@prisma/client";
 import { appSummitContent } from "../src/data/app-summit";
+import { aypfContent } from "../src/data/aypf";
 import {
   getInvolvedContent,
   workContent,
@@ -121,6 +122,12 @@ async function main() {
       title: "APP Summit",
       status: "published",
       contentJson: { ...appSummitContent, heroImage: "/uploads/placeholder.svg" },
+    },
+    {
+      slug: "aypf",
+      title: "African Youth in Politics Forum (AYPF)",
+      status: "published",
+      contentJson: { ...aypfContent, heroImage: "/uploads/placeholder.svg" },
     },
     {
       slug: "applications",

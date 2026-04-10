@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X, Search } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
 import { NavDropdown } from "./NavDropdown";
 import { LanguageSelector } from "./LanguageSelector";
@@ -80,25 +80,11 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
               <div className="hidden sm:block">
                 <LanguageSelector languages={siteSettings.languages} />
               </div>
-              <button
-                type="button"
-                onClick={() => setSearchOpen(true)}
-                className="flex h-[50px] w-[55px] items-center justify-center rounded-lg bg-[#dadffb] text-accent-600 transition-colors hover:bg-accent-100 hover:text-accent-700"
-                aria-label={siteSettings.chrome.headerSearchAriaLabel}
-              >
-                <Search className="h-5 w-5" />
-              </button>
               <SearchModal
                 isOpen={searchOpen}
                 onClose={() => setSearchOpen(false)}
                 copy={siteSettings.chrome.search}
               />
-              <Link
-                href="/contact"
-                className="hidden rounded-lg bg-gradient-to-r from-accent-600 to-accent-500 px-5 py-2.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-95 sm:inline-block"
-              >
-                {siteSettings.chrome.headerContactCta}
-              </Link>
               <button
                 ref={menuTriggerRef}
                 type="button"

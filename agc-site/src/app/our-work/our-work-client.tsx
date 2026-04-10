@@ -203,7 +203,7 @@ export function OurWorkClient({
                         </div>
                       ) : null}
                       <div className="flex flex-1 flex-col p-6 sm:p-7">
-                        <h3 className="font-[family-name:var(--font-fraunces)] text-lg font-semibold leading-snug text-stone-900">
+                        <h3 className="font-serif text-lg font-semibold leading-snug text-stone-900">
                           {card.title}
                         </h3>
                         <p className="page-prose-tight mt-3 flex-1 text-sm text-stone-600">{card.description}</p>

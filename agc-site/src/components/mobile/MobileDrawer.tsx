@@ -11,8 +11,6 @@ import {
   Calendar,
   Newspaper,
   HeartHandshake,
-  Mail,
-  Search,
   X,
   ChevronRight,
   BookOpen,
@@ -30,7 +28,6 @@ const drawerIconByHref: Record<string, LucideIcon> = {
   "/news": Newspaper,
   "/publications": BookOpen,
   "/get-involved": HeartHandshake,
-  "/contact": Mail,
 };
 
 function drawerIconForHref(href: string): LucideIcon {
@@ -40,7 +37,7 @@ function drawerIconForHref(href: string): LucideIcon {
 export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
   const primaryNav = siteSettings.chrome.nav;
   const chrome = siteSettings.chrome;
-  const { mobileOpen, setMobileOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
+  const { mobileOpen, setMobileOpen, menuTriggerRef } = useMobileNav();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   // Escape closes; Tab cycles focus inside drawer (WCAG-friendly)
@@ -151,7 +148,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-accent-100 ring-1 ring-white/10">
                       <Icon className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
                     </span>
-                    <span className="min-w-0 flex-1 font-[family-name:var(--font-fraunces)] text-base tracking-tight">
+                    <span className="min-w-0 flex-1 font-serif text-base tracking-tight">
                       {item.label}
                     </span>
                     <ChevronRight className="h-4 w-4 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5 group-hover:text-white/60" aria-hidden />
@@ -176,38 +173,16 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
               );
             })}
           </ul>
-
-          <button
-            type="button"
-            onClick={() => {
-              setMobileOpen(false);
-              setSearchOpen(true);
-            }}
-            className="mt-4 flex w-full items-center gap-3 rounded-xl border border-white/15 bg-white/5 px-3 py-3.5 text-left text-white transition-colors hover:bg-white/10"
-          >
-            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-500/30 text-accent-100">
-              <Search className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
-            </span>
-            <span className="font-[family-name:var(--font-fraunces)] text-base">{chrome.mobileSearchButtonLabel}</span>
-          </button>
         </nav>
 
-        {/* Footer strip — language + CTA */}
-        <div className="shrink-0 space-y-3 border-t border-white/10 bg-accent-950/80 px-3 py-4 backdrop-blur-sm">
+        {/* Footer strip — language (search & contact live in the top bar) */}
+        <div className="shrink-0 border-t border-white/10 bg-accent-950/80 px-3 py-4 backdrop-blur-sm">
           <div className="rounded-xl bg-white/5 px-2 py-2 ring-1 ring-white/10">
             <p className="mb-2 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">
               {chrome.mobileLanguageEyebrow}
             </p>
             <LanguageSelector variant="dark" languages={siteSettings.languages} />
           </div>
-          <Link
-            href="/contact"
-            onClick={() => setMobileOpen(false)}
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-white px-4 py-3.5 text-center font-semibold text-accent-900 shadow-md transition hover:bg-accent-50"
-          >
-            <Mail className="h-4 w-4" aria-hidden />
-            {chrome.mobileDrawerContactCta}
-          </Link>
         </div>
       </aside>
     </>

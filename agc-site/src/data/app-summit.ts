@@ -17,15 +17,19 @@ export const appSummitContent = {
   dayTabPrefix: "Day ",
   contactSectionCtaLabel: "Contact us",
   heroImageAlt: "APP Summit",
-  intro: "The APP Summit is Africa's premier governance event, bringing together leaders, policymakers, researchers, and practitioners from across the continent and beyond.",
+  intro:
+    "The African Political Parties Summit (APPS) is conceptualized as the flagship annual convening designed to provide a high-level continental platform for dialogue, collaboration, and capacity building among political actors. The Summit aims to strengthen democratic institutions, promote inter-party cooperation, and advance inclusive and accountable governance across Africa.",
+  /** Inaugural edition — venue, dates, opening, participants (editable in Admin → Page Content → app-summit). */
+  inauguralParagraph:
+    "The inaugural edition of the APPS was held from August 10-12, 2025 at the Accra International Conference Centre. It brought together a distinguished and diverse group of participants, including Heads of State, Prime Ministers, Ministers of State and Senior Party Officials from across the continent. The Summit was officially opened by H.E. Jane Naana opoku-Agyemang, Vice President of Ghana and the President of Sao Tome H.E. Carlos Manuel Vila Nova.",
   details: {
-    date: "August 12-14, 2025",
-    location: "Accra, Ghana",
-    participants: "500+ Participants",
+    date: "August 10-12, 2025",
+    location: "Accra International Conference Centre, Ghana",
+    participants: "Heads of State, Ministers & senior party officials",
   },
   registration: {
     title: "Quick Registration",
-    subtitle: "Secure your spot at APP Summit 2025",
+    subtitle: "Secure your spot at APP Summit 2026",
     cta: "Register Now",
     href: "/contact",
   },

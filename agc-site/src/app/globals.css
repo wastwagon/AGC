@@ -29,8 +29,8 @@
   --color-muted: var(--muted);
   --color-border: var(--border);
   --color-card: var(--card);
-  --font-sans: var(--font-ibm-plex);
-  --font-serif: var(--font-fraunces);
+  --font-sans: var(--font-manrope);
+  --font-serif: var(--font-lora);
   /* Logo teal-blue palette */
   --color-accent-50: #eef7fa;
   --color-accent-100: #d6edf3;
