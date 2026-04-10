@@ -33,7 +33,14 @@ export default async function AppSummitPage() {
     getMergedPageContent<AppSummitMerged>("app-summit", appSummitBuildFallback),
     getSiteSettings(),
   ]);
-  const content = merged;
+  /** If CMS JSON omitted intro/inaugural, keep repo defaults (canonical APPS copy). */
+  const content: AppSummitMerged = {
+    ...merged,
+    intro: merged.intro?.trim() ? merged.intro : appSummitContent.intro,
+    inauguralParagraph: merged.inauguralParagraph?.trim()
+      ? merged.inauguralParagraph
+      : appSummitContent.inauguralParagraph,
+  };
   const heroImage = await resolveAppSummitHeroImage(content);
 
   return <AppSummitClient content={content} heroImage={heroImage} siteSettings={siteSettings} />;

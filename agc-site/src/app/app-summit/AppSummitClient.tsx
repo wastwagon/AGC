@@ -20,6 +20,8 @@ export function AppSummitClient({
   const [activeDay, setActiveDay] = useState(0);
   const { details, registration, agenda } = content;
   const activeAgenda = agenda.days[activeDay];
+  /** Normalize legacy CMS copy that still says 2025 on the registration card */
+  const registrationSubtitle = (registration.subtitle ?? "").replace(/\b2025\b/g, "2026");
 
   return (
     <>
@@ -80,7 +82,7 @@ export function AppSummitClient({
             </div>
             <div className="rounded-2xl border border-stone-200/90 bg-[#faf6ef] p-10 shadow-sm lg:p-12">
               <h3 className="page-heading text-xl">{registration.title}</h3>
-              <p className="page-prose mt-2 text-sm">{registration.subtitle}</p>
+              <p className="page-prose mt-2 text-sm">{registrationSubtitle}</p>
               <Button asChild href={registration.href} variant="primary" className="mt-6 w-full rounded-xl bg-accent-700 hover:bg-accent-800">
                 {registration.cta}
               </Button>
