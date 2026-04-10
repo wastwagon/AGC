@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { aypfContent } from "@/data/aypf";
 import { prisma } from "@/lib/db";
+import { shouldSkipPrismaCalls } from "@/lib/skip-db";
 
 /**
  * Baseline PageContent rows that were added after early deployments.
@@ -15,7 +16,7 @@ const BASELINE_PAGES: { slug: string; title: string; contentJson: Record<string,
 ];
 
 export async function ensureMissingBaselinePageRows(): Promise<void> {
-  if (process.env.BUILD_WITHOUT_DB === "1") return;
+  if (shouldSkipPrismaCalls()) return;
 
   for (const p of BASELINE_PAGES) {
     try {

@@ -1,19 +1,15 @@
 import { MetadataRoute } from "next";
 import { prisma } from "@/lib/db";
+import { shouldSkipPrismaCalls } from "@/lib/skip-db";
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernancecentre.org";
-
-/** Skip DB during `docker build` — matches src/lib/content.ts */
-function buildSkipsDb(): boolean {
-  return process.env.BUILD_WITHOUT_DB === "1";
-}
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let news: { slug: string | null; datePublished: Date | null }[] = [];
   let publications: { slug: string | null; datePublished: Date | null }[] = [];
   let events: { slug: string | null; startDate: Date }[] = [];
 
-  if (!buildSkipsDb()) {
+  if (!shouldSkipPrismaCalls()) {
     try {
       [news, publications, events] = await Promise.all([
         prisma.news.findMany({

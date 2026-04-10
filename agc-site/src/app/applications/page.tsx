@@ -1,5 +1,6 @@
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
+import { shouldSkipPrismaCalls } from "@/lib/skip-db";
 import { placeholderImages } from "@/data/images";
 import { applicationsPageUiDefaults, buildApplicationsFormFields } from "@/data/applications-page";
 import { getSiteSettings } from "@/lib/site-settings";
@@ -53,7 +54,7 @@ export default async function ApplicationsPage() {
   const heroImageRaw = merged.heroImage as string | undefined;
   const heroImage =
     (heroImageRaw ? await resolveImageUrl(heroImageRaw) : null) ||
-    (process.env.BUILD_WITHOUT_DB === "1" ? placeholderImages.applications : undefined);
+    (shouldSkipPrismaCalls() ? placeholderImages.applications : undefined);
 
   const bc = siteSettings.chrome.breadcrumbs;
   const breadcrumbs = [

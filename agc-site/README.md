@@ -20,6 +20,8 @@ A modern, professional website for the Africa Governance Centre — an independe
 
 **PostgreSQL is required** for `/admin`, Prisma models, and editable site content. If you see `Can't reach database server at localhost:5436`, nothing is listening at `DATABASE_URL` — start Postgres or fix the URL.
 
+**Preview the public site without Postgres:** in development, public data reads **fall back automatically** when the DB is unreachable (same idea as `BUILD_WITHOUT_DB`). You can still set `DEV_WITHOUT_DB=1` in `agc-site/.env.local` to skip Prisma entirely and avoid `prisma:error` lines in the terminal. **`/admin` still needs a running database** (Prisma errors there are expected until Postgres is up).
+
 1. **Start Postgres (Docker — from repo root, parent of `agc-site/`):**  
    Start **Docker Desktop** (or your Docker daemon), then:
    ```bash

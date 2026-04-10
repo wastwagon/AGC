@@ -1,5 +1,10 @@
 import type { NextConfig } from "next";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { withSentryConfig } from "@sentry/nextjs";
+
+/** Directory containing this config (not a parent folder that has its own package-lock.json). */
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 /** Allow `next/image` optimizer to fetch same-origin media on any deployment host (VPS, sslip.io, etc.). */
 function buildImageRemotePatterns(): NonNullable<NonNullable<NextConfig["images"]>["remotePatterns"]> {
@@ -34,6 +39,10 @@ function buildImageRemotePatterns(): NonNullable<NonNullable<NextConfig["images"
 
 const nextConfig: NextConfig = {
   output: "standalone",
+  /** When a parent directory has a lockfile, Turbopack can pick the wrong root; dev uses `--webpack` anyway. */
+  turbopack: {
+    root: projectRoot,
+  },
   images: {
     remotePatterns: buildImageRemotePatterns(),
     /**

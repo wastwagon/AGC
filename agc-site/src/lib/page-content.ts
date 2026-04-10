@@ -1,11 +1,12 @@
 import { getPageContent } from "@/lib/content";
+import { shouldSkipPrismaCalls } from "@/lib/skip-db";
 
 /**
- * Full static page object for Prisma-less builds only (`BUILD_WITHOUT_DB=1`).
- * In production, merge CMS JSON over `{}` so bundled marketing copy is not used as a runtime fallback.
+ * Full static page object when DB is skipped (`BUILD_WITHOUT_DB` or `DEV_WITHOUT_DB`).
+ * In production with DB, merge CMS JSON over `{}` so bundled marketing copy is not used as a runtime fallback.
  */
 export function cmsStaticOrEmpty<T extends Record<string, unknown>>(full: T): T {
-  if (process.env.BUILD_WITHOUT_DB === "1") {
+  if (shouldSkipPrismaCalls()) {
     return full;
   }
   return {} as T;

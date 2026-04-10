@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/db";
 import type { HomePageCms } from "@/lib/home-page-types";
 import { getBootstrapHomePageCms } from "@/lib/cms-bootstrap";
+import { devPublicRead, shouldSkipPrismaCalls } from "@/lib/skip-db";
 
 export type { HomePageCms } from "@/lib/home-page-types";
 
@@ -138,14 +139,16 @@ function deepMergeHome(base: HomePageCms, patch: Record<string, unknown>): HomeP
  * Draft / missing row → empty shell so the live site does not show unpublished drafts.
  */
 export async function getHomePageCms(): Promise<HomePageCms> {
-  if (process.env.BUILD_WITHOUT_DB === "1") {
+  if (shouldSkipPrismaCalls()) {
     return getBootstrapHomePageCms();
   }
-  const row = await prisma.pageContent.findUnique({ where: { slug: "home" } });
-  if (row?.status !== "published" || !row.contentJson || typeof row.contentJson !== "object") {
-    return emptyHomePageCms();
-  }
-  return deepMergeHome(getBootstrapHomePageCms(), row.contentJson as Record<string, unknown>);
+  return devPublicRead(getBootstrapHomePageCms(), async () => {
+    const row = await prisma.pageContent.findUnique({ where: { slug: "home" } });
+    if (row?.status !== "published" || !row.contentJson || typeof row.contentJson !== "object") {
+      return emptyHomePageCms();
+    }
+    return deepMergeHome(getBootstrapHomePageCms(), row.contentJson as Record<string, unknown>);
+  });
 }
 
 /** Admin editor: bootstrap template when empty, else merge stored JSON over bootstrap for missing keys. */

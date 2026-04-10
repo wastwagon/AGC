@@ -4,21 +4,7 @@
  */
 
 import { prisma } from "@/lib/db";
-
-/** Set during `docker build` when no database is available (see Dockerfile). */
-function buildSkipsDb(): boolean {
-  return process.env.BUILD_WITHOUT_DB === "1";
-}
-
-/** DB missing a column/table vs current Prisma schema (run `npx prisma migrate deploy`). */
-function isPrismaSchemaMismatch(e: unknown): boolean {
-  return (
-    typeof e === "object" &&
-    e !== null &&
-    "code" in e &&
-    (e as { code: string }).code === "P2022"
-  );
-}
+import { devPublicRead } from "@/lib/skip-db";
 
 // ============ Shared types (compatible with former Cms* interfaces) ============
 
@@ -123,164 +109,169 @@ export interface CmsPartner {
 // ============ Events ============
 
 export async function getEvents() {
-  if (buildSkipsDb()) return [];
-  const rows = await prisma.event.findMany({
-    where: { status: "published" },
-    orderBy: { startDate: "desc" },
+  return devPublicRead([], async () => {
+    const rows = await prisma.event.findMany({
+      where: { status: "published" },
+      orderBy: { startDate: "desc" },
+    });
+    return rows.map((e) => ({
+      id: e.id,
+      status: e.status,
+      title: e.title,
+      slug: e.slug ?? undefined,
+      description: e.description ?? undefined,
+      location: e.location ?? undefined,
+      start_date: e.startDate.toISOString(),
+      end_date: e.endDate?.toISOString(),
+      image: e.image ?? undefined,
+      link: e.link ?? undefined,
+      category: e.category ?? undefined,
+      event_type: e.eventType ?? undefined,
+      venue_name: e.venueName ?? undefined,
+      venue_address: e.venueAddress ?? undefined,
+      capacity: e.capacity ?? undefined,
+      registration_deadline: e.registrationDeadline?.toISOString(),
+      allow_waitlist: e.allowWaitlist,
+      agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
+      speaker_ids: e.speakerIds as number[] | undefined,
+    }));
   });
-  return rows.map((e) => ({
-    id: e.id,
-    status: e.status,
-    title: e.title,
-    slug: e.slug ?? undefined,
-    description: e.description ?? undefined,
-    location: e.location ?? undefined,
-    start_date: e.startDate.toISOString(),
-    end_date: e.endDate?.toISOString(),
-    image: e.image ?? undefined,
-    link: e.link ?? undefined,
-    category: e.category ?? undefined,
-    event_type: e.eventType ?? undefined,
-    venue_name: e.venueName ?? undefined,
-    venue_address: e.venueAddress ?? undefined,
-    capacity: e.capacity ?? undefined,
-    registration_deadline: e.registrationDeadline?.toISOString(),
-    allow_waitlist: e.allowWaitlist,
-    agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
-    speaker_ids: e.speakerIds as number[] | undefined,
-  }));
 }
 
 /** Admin: fetch event by slug (any status) */
 export async function getEventBySlugAdmin(slug: string) {
-  if (buildSkipsDb()) return null;
-  const e = await prisma.event.findFirst({
-    where: { slug },
+  return devPublicRead(null, async () => {
+    const e = await prisma.event.findFirst({
+      where: { slug },
+    });
+    if (!e) return null;
+    return {
+      id: e.id,
+      status: e.status,
+      title: e.title,
+      slug: e.slug ?? undefined,
+      description: e.description ?? undefined,
+      location: e.location ?? undefined,
+      start_date: e.startDate.toISOString(),
+      end_date: e.endDate?.toISOString(),
+      image: e.image ?? undefined,
+      link: e.link ?? undefined,
+      category: e.category ?? undefined,
+      event_type: e.eventType ?? undefined,
+      venue_name: e.venueName ?? undefined,
+      venue_address: e.venueAddress ?? undefined,
+      capacity: e.capacity ?? undefined,
+      registration_deadline: e.registrationDeadline?.toISOString(),
+      allow_waitlist: e.allowWaitlist,
+      agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
+      speaker_ids: e.speakerIds as number[] | undefined,
+    };
   });
-  if (!e) return null;
-  return {
-    id: e.id,
-    status: e.status,
-    title: e.title,
-    slug: e.slug ?? undefined,
-    description: e.description ?? undefined,
-    location: e.location ?? undefined,
-    start_date: e.startDate.toISOString(),
-    end_date: e.endDate?.toISOString(),
-    image: e.image ?? undefined,
-    link: e.link ?? undefined,
-    category: e.category ?? undefined,
-    event_type: e.eventType ?? undefined,
-    venue_name: e.venueName ?? undefined,
-    venue_address: e.venueAddress ?? undefined,
-    capacity: e.capacity ?? undefined,
-    registration_deadline: e.registrationDeadline?.toISOString(),
-    allow_waitlist: e.allowWaitlist,
-    agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
-    speaker_ids: e.speakerIds as number[] | undefined,
-  };
 }
 
 export async function getEventBySlug(slug: string) {
-  if (buildSkipsDb()) return null;
-  const e = await prisma.event.findFirst({
-    where: { slug, status: "published" },
+  return devPublicRead(null, async () => {
+    const e = await prisma.event.findFirst({
+      where: { slug, status: "published" },
+    });
+    if (!e) return null;
+    return {
+      id: e.id,
+      status: e.status,
+      title: e.title,
+      slug: e.slug ?? undefined,
+      description: e.description ?? undefined,
+      location: e.location ?? undefined,
+      start_date: e.startDate.toISOString(),
+      end_date: e.endDate?.toISOString(),
+      image: e.image ?? undefined,
+      link: e.link ?? undefined,
+      category: e.category ?? undefined,
+      event_type: e.eventType ?? undefined,
+      venue_name: e.venueName ?? undefined,
+      venue_address: e.venueAddress ?? undefined,
+      capacity: e.capacity ?? undefined,
+      registration_deadline: e.registrationDeadline?.toISOString(),
+      allow_waitlist: e.allowWaitlist,
+      agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
+      speaker_ids: e.speakerIds as number[] | undefined,
+    };
   });
-  if (!e) return null;
-  return {
-    id: e.id,
-    status: e.status,
-    title: e.title,
-    slug: e.slug ?? undefined,
-    description: e.description ?? undefined,
-    location: e.location ?? undefined,
-    start_date: e.startDate.toISOString(),
-    end_date: e.endDate?.toISOString(),
-    image: e.image ?? undefined,
-    link: e.link ?? undefined,
-    category: e.category ?? undefined,
-    event_type: e.eventType ?? undefined,
-    venue_name: e.venueName ?? undefined,
-    venue_address: e.venueAddress ?? undefined,
-    capacity: e.capacity ?? undefined,
-    registration_deadline: e.registrationDeadline?.toISOString(),
-    allow_waitlist: e.allowWaitlist,
-    agenda: e.agenda as { time?: string; title: string; description?: string }[] | undefined,
-    speaker_ids: e.speakerIds as number[] | undefined,
-  };
 }
 
 // ============ News ============
 
 export async function getNews(limit = 10) {
-  if (buildSkipsDb()) return [];
-  const rows = await prisma.news.findMany({
-    where: { status: "published" },
-    orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],
-    take: limit,
+  return devPublicRead([], async () => {
+    const rows = await prisma.news.findMany({
+      where: { status: "published" },
+      orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],
+      take: limit,
+    });
+    return rows.map((n) => ({
+      id: n.id,
+      status: n.status,
+      title: n.title,
+      slug: n.slug ?? undefined,
+      excerpt: n.excerpt ?? undefined,
+      content: n.content ?? undefined,
+      image: n.image ?? undefined,
+      date_created: n.createdAt.toISOString(),
+      date_published: n.datePublished?.toISOString(),
+      author: n.author ?? undefined,
+      categories: n.categories as string[] | undefined,
+      tags: n.tags as string[] | undefined,
+    }));
   });
-  return rows.map((n) => ({
-    id: n.id,
-    status: n.status,
-    title: n.title,
-    slug: n.slug ?? undefined,
-    excerpt: n.excerpt ?? undefined,
-    content: n.content ?? undefined,
-    image: n.image ?? undefined,
-    date_created: n.createdAt.toISOString(),
-    date_published: n.datePublished?.toISOString(),
-    author: n.author ?? undefined,
-    categories: n.categories as string[] | undefined,
-    tags: n.tags as string[] | undefined,
-  }));
 }
 
 export async function getNewsBySlug(slug: string) {
-  if (buildSkipsDb()) return null;
-  const n = await prisma.news.findFirst({
-    where: { slug, status: "published" },
+  return devPublicRead(null, async () => {
+    const n = await prisma.news.findFirst({
+      where: { slug, status: "published" },
+    });
+    if (!n) return null;
+    return {
+      id: n.id,
+      status: n.status,
+      title: n.title,
+      slug: n.slug ?? undefined,
+      excerpt: n.excerpt ?? undefined,
+      content: n.content ?? undefined,
+      image: n.image ?? undefined,
+      date_created: n.createdAt.toISOString(),
+      date_published: n.datePublished?.toISOString(),
+      author: n.author ?? undefined,
+      categories: n.categories as string[] | undefined,
+      tags: n.tags as string[] | undefined,
+    };
   });
-  if (!n) return null;
-  return {
-    id: n.id,
-    status: n.status,
-    title: n.title,
-    slug: n.slug ?? undefined,
-    excerpt: n.excerpt ?? undefined,
-    content: n.content ?? undefined,
-    image: n.image ?? undefined,
-    date_created: n.createdAt.toISOString(),
-    date_published: n.datePublished?.toISOString(),
-    author: n.author ?? undefined,
-    categories: n.categories as string[] | undefined,
-    tags: n.tags as string[] | undefined,
-  };
 }
 
 // ============ Team ============
 
 export async function getTeam(): Promise<CmsTeamMember[]> {
-  if (buildSkipsDb()) return [];
-  const rows = await prisma.team.findMany({
-    where: { status: "published" },
-    orderBy: { order: "asc" },
+  return devPublicRead([], async () => {
+    const rows = await prisma.team.findMany({
+      where: { status: "published" },
+      orderBy: { order: "asc" },
+    });
+    return rows.map((t) => ({
+      id: t.id,
+      status: t.status,
+      name: t.name,
+      role: t.role ?? undefined,
+      bio: t.bio ?? undefined,
+      image: t.image ?? undefined,
+      order: t.order,
+    }));
   });
-  return rows.map((t) => ({
-    id: t.id,
-    status: t.status,
-    name: t.name,
-    role: t.role ?? undefined,
-    bio: t.bio ?? undefined,
-    image: t.image ?? undefined,
-    order: t.order,
-  }));
 }
 
 // ============ Publications ============
 
 export async function getPublications(limit = 20) {
-  if (buildSkipsDb()) return [];
-  try {
+  return devPublicRead([], async () => {
     const rows = await prisma.publication.findMany({
       where: { status: "published" },
       orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],
@@ -302,22 +293,11 @@ export async function getPublications(limit = 20) {
         author: p.author ?? undefined,
       };
     });
-  } catch (e) {
-    if (isPrismaSchemaMismatch(e)) {
-      if (process.env.NODE_ENV === "development") {
-        console.warn(
-          "[getPublications] DB schema out of date — run `npx prisma migrate deploy`. Using empty list."
-        );
-      }
-      return [];
-    }
-    throw e;
-  }
+  });
 }
 
 export async function getPublicationBySlug(slug: string) {
-  if (buildSkipsDb()) return null;
-  try {
+  return devPublicRead(null, async () => {
     const p = await prisma.publication.findFirst({
       where: { slug, status: "published" },
     });
@@ -336,113 +316,107 @@ export async function getPublicationBySlug(slug: string) {
       date_created: p.createdAt.toISOString(),
       author: p.author ?? undefined,
     };
-  } catch (e) {
-    if (isPrismaSchemaMismatch(e)) {
-      if (process.env.NODE_ENV === "development") {
-        console.warn(
-          "[getPublicationBySlug] DB schema out of date — run `npx prisma migrate deploy`. Skipping CMS row."
-        );
-      }
-      return null;
-    }
-    throw e;
-  }
+  });
 }
 
 // ============ Programs, Projects, Partners ============
 
 export async function getPrograms() {
-  if (buildSkipsDb()) return [];
-  const rows = await prisma.program.findMany({
-    where: { status: "published" },
-    orderBy: { order: "asc" },
+  return devPublicRead([], async () => {
+    const rows = await prisma.program.findMany({
+      where: { status: "published" },
+      orderBy: { order: "asc" },
+    });
+    return rows.map((p) => ({
+      id: p.id,
+      status: p.status,
+      title: p.title,
+      description: p.description ?? undefined,
+      image: p.image ?? undefined,
+      order: p.order,
+    }));
   });
-  return rows.map((p) => ({
-    id: p.id,
-    status: p.status,
-    title: p.title,
-    description: p.description ?? undefined,
-    image: p.image ?? undefined,
-    order: p.order,
-  }));
 }
 
 export async function getProjects() {
-  if (buildSkipsDb()) return [];
-  const rows = await prisma.project.findMany({
-    where: { status: "published" },
-    orderBy: { order: "asc" },
+  return devPublicRead([], async () => {
+    const rows = await prisma.project.findMany({
+      where: { status: "published" },
+      orderBy: { order: "asc" },
+    });
+    return rows.map((p) => ({
+      id: p.id,
+      status: p.status,
+      title: p.title,
+      description: p.description ?? undefined,
+      image: p.image ?? undefined,
+      order: p.order,
+    }));
   });
-  return rows.map((p) => ({
-    id: p.id,
-    status: p.status,
-    title: p.title,
-    description: p.description ?? undefined,
-    image: p.image ?? undefined,
-    order: p.order,
-  }));
 }
 
 export async function getPartners() {
-  if (buildSkipsDb()) return [];
-  const rows = await prisma.partner.findMany({
-    where: { status: "published" },
-    orderBy: { order: "asc" },
+  return devPublicRead([], async () => {
+    const rows = await prisma.partner.findMany({
+      where: { status: "published" },
+      orderBy: { order: "asc" },
+    });
+    return rows.map((p) => ({
+      id: p.id,
+      status: p.status,
+      name: p.name,
+      logo: p.logo ?? undefined,
+      url: p.url ?? undefined,
+      order: p.order,
+    }));
   });
-  return rows.map((p) => ({
-    id: p.id,
-    status: p.status,
-    name: p.name,
-    logo: p.logo ?? undefined,
-    url: p.url ?? undefined,
-    order: p.order,
-  }));
 }
 
 // ============ Page Content ============
 
 export async function getPageContent(slug: string) {
-  if (buildSkipsDb()) return null;
-  const p = await prisma.pageContent.findFirst({
-    where: { slug, status: "published" },
+  return devPublicRead(null, async () => {
+    const p = await prisma.pageContent.findFirst({
+      where: { slug, status: "published" },
+    });
+    if (!p) return null;
+    const heroTitle = p.heroTitle;
+    const heroSubtitle = p.heroSubtitle;
+    const fromDb =
+      p.contentJson != null && typeof p.contentJson === "object" && !Array.isArray(p.contentJson)
+        ? (p.contentJson as Record<string, unknown>)
+        : {};
+    const contentJson: Record<string, unknown> = {
+      ...fromDb,
+      title: p.title ?? heroTitle,
+      subtitle: heroSubtitle,
+      hero: { title: heroTitle, subtitle: heroSubtitle },
+      intro: p.intro,
+      description: p.description,
+      mission: p.mission,
+      strategicObjectives: p.objectivesTitle
+        ? {
+            title: p.objectivesTitle,
+            content: p.objectivesContent,
+            principles: p.objectivesPrinciples,
+            agenda2063: p.objectivesAgenda2063,
+          }
+        : undefined,
+    };
+    // Admin stores hero / section media IDs on `content_json`; keep them after column overlays.
+    if (typeof fromDb.heroImage === "string" && fromDb.heroImage.trim()) {
+      contentJson.heroImage = fromDb.heroImage.trim();
+    }
+    if (typeof fromDb.sectionImage === "string" && fromDb.sectionImage.trim()) {
+      contentJson.sectionImage = fromDb.sectionImage.trim();
+    }
+    return {
+      id: p.id,
+      slug: p.slug,
+      title: p.title ?? undefined,
+      content_json: contentJson,
+    };
   });
-  if (!p) return null;
-  const heroTitle = p.heroTitle;
-  const heroSubtitle = p.heroSubtitle;
-  const fromDb =
-    p.contentJson != null && typeof p.contentJson === "object" && !Array.isArray(p.contentJson)
-      ? (p.contentJson as Record<string, unknown>)
-      : {};
-  const contentJson: Record<string, unknown> = {
-    ...fromDb,
-    title: p.title ?? heroTitle,
-    subtitle: heroSubtitle,
-    hero: { title: heroTitle, subtitle: heroSubtitle },
-    intro: p.intro,
-    description: p.description,
-    mission: p.mission,
-    strategicObjectives: p.objectivesTitle
-      ? {
-          title: p.objectivesTitle,
-          content: p.objectivesContent,
-          principles: p.objectivesPrinciples,
-          agenda2063: p.objectivesAgenda2063,
-        }
-      : undefined,
-  };
-  // Admin stores hero / section media IDs on `content_json`; keep them after column overlays.
-  if (typeof fromDb.heroImage === "string" && fromDb.heroImage.trim()) {
-    contentJson.heroImage = fromDb.heroImage.trim();
-  }
-  if (typeof fromDb.sectionImage === "string" && fromDb.sectionImage.trim()) {
-    contentJson.sectionImage = fromDb.sectionImage.trim();
-  }
-  return {
-    id: p.id,
-    slug: p.slug,
-    title: p.title ?? undefined,
-    content_json: contentJson,
-  };
 }
 
 // ============ Media/Image URLs (uploads live in /public/uploads) ============
