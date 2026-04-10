@@ -1067,6 +1067,24 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 />
               </div>
             </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">About intro (APPS vision & aims)</label>
+              <textarea
+                value={typeof parsedJson.intro === "string" ? parsedJson.intro : ""}
+                onChange={(e) => updateJsonField("intro", e.target.value)}
+                rows={4}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Inaugural edition paragraph</label>
+              <textarea
+                value={typeof parsedJson.inauguralParagraph === "string" ? parsedJson.inauguralParagraph : ""}
+                onChange={(e) => updateJsonField("inauguralParagraph", e.target.value)}
+                rows={4}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
             <div className="grid gap-3 sm:grid-cols-3">
               <div>
                 <label className="block text-xs font-medium text-slate-600">Date</label>
@@ -1352,6 +1370,312 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          </div>
+        )}
+        {item.slug === "aypf" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">AYPF helper</p>
+            <p className="text-xs text-slate-500">
+              Hero image uses the shared field below. List fields: one item per line.
+            </p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Breadcrumb label (last segment)</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.breadcrumbLabel === "string" ? parsedJson.breadcrumbLabel : ""}
+                  onChange={(e) => updateJsonField("breadcrumbLabel", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Hero image alt</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.heroImageAlt === "string" ? parsedJson.heroImageAlt : ""}
+                  onChange={(e) => updateJsonField("heroImageAlt", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-slate-600">Page title (hero)</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.title === "string" ? parsedJson.title : ""}
+                  onChange={(e) => updateJsonField("title", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-xs font-medium text-slate-600">Hero subtitle</label>
+                <textarea
+                  value={typeof parsedJson.subtitle === "string" ? parsedJson.subtitle : ""}
+                  onChange={(e) => updateJsonField("subtitle", e.target.value)}
+                  rows={2}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Lead paragraph</label>
+              <textarea
+                value={typeof parsedJson.leadParagraph === "string" ? parsedJson.leadParagraph : ""}
+                onChange={(e) => updateJsonField("leadParagraph", e.target.value)}
+                rows={3}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Launch paragraph</label>
+              <textarea
+                value={typeof parsedJson.launchParagraph === "string" ? parsedJson.launchParagraph : ""}
+                onChange={(e) => updateJsonField("launchParagraph", e.target.value)}
+                rows={3}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Theme (quoted)</label>
+              <textarea
+                value={typeof parsedJson.themeQuote === "string" ? parsedJson.themeQuote : ""}
+                onChange={(e) => updateJsonField("themeQuote", e.target.value)}
+                rows={2}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Inaugural paragraph</label>
+              <textarea
+                value={typeof parsedJson.inauguralParagraph === "string" ? parsedJson.inauguralParagraph : ""}
+                onChange={(e) => updateJsonField("inauguralParagraph", e.target.value)}
+                rows={2}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Purpose section</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Eyebrow</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["purposeSection", "eyebrow"])}
+                    onChange={(e) => updateNestedString(["purposeSection", "eyebrow"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Heading</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["purposeSection", "heading"])}
+                    onChange={(e) => updateNestedString(["purposeSection", "heading"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+              <div className="mt-2">
+                <label className="block text-xs font-medium text-slate-600">Intro</label>
+                <textarea
+                  value={getNestedString(["purposeSection", "intro"])}
+                  onChange={(e) => updateNestedString(["purposeSection", "intro"], e.target.value)}
+                  rows={2}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="mt-2">
+                <label className="block text-xs font-medium text-slate-600">Focus areas (one per line)</label>
+                <textarea
+                  value={getNestedStringArray(["purposeSection", "focusAreas"]).join("\n")}
+                  onChange={(e) =>
+                    updateNestedStringArray(
+                      ["purposeSection", "focusAreas"],
+                      e.target.value
+                        .split("\n")
+                        .map((s) => s.trim())
+                        .filter(Boolean)
+                    )
+                  }
+                  rows={6}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono text-xs"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Legitimacy paragraph</label>
+              <textarea
+                value={typeof parsedJson.legitimacyParagraph === "string" ? parsedJson.legitimacyParagraph : ""}
+                onChange={(e) => updateJsonField("legitimacyParagraph", e.target.value)}
+                rows={2}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">From dialogue to action</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Eyebrow</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["actionSection", "eyebrow"])}
+                    onChange={(e) => updateNestedString(["actionSection", "eyebrow"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Heading</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["actionSection", "heading"])}
+                    onChange={(e) => updateNestedString(["actionSection", "heading"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+              <div className="mt-2">
+                <label className="block text-xs font-medium text-slate-600">Intro</label>
+                <textarea
+                  value={getNestedString(["actionSection", "intro"])}
+                  onChange={(e) => updateNestedString(["actionSection", "intro"], e.target.value)}
+                  rows={3}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="mt-2">
+                <label className="block text-xs font-medium text-slate-600">Discussion points (one per line)</label>
+                <textarea
+                  value={getNestedStringArray(["actionSection", "discussionPoints"]).join("\n")}
+                  onChange={(e) =>
+                    updateNestedStringArray(
+                      ["actionSection", "discussionPoints"],
+                      e.target.value
+                        .split("\n")
+                        .map((s) => s.trim())
+                        .filter(Boolean)
+                    )
+                  }
+                  rows={5}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono text-xs"
+                />
+              </div>
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Looking ahead</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Eyebrow</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["lookingAheadSection", "eyebrow"])}
+                    onChange={(e) => updateNestedString(["lookingAheadSection", "eyebrow"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Heading</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["lookingAheadSection", "heading"])}
+                    onChange={(e) => updateNestedString(["lookingAheadSection", "heading"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              </div>
+              <div className="mt-2">
+                <label className="block text-xs font-medium text-slate-600">Intro</label>
+                <textarea
+                  value={getNestedString(["lookingAheadSection", "intro"])}
+                  onChange={(e) => updateNestedString(["lookingAheadSection", "intro"], e.target.value)}
+                  rows={3}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="mt-2">
+                <label className="block text-xs font-medium text-slate-600">Topics (one per line)</label>
+                <textarea
+                  value={getNestedStringArray(["lookingAheadSection", "topics"]).join("\n")}
+                  onChange={(e) =>
+                    updateNestedStringArray(
+                      ["lookingAheadSection", "topics"],
+                      e.target.value
+                        .split("\n")
+                        .map((s) => s.trim())
+                        .filter(Boolean)
+                    )
+                  }
+                  rows={5}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono text-xs"
+                />
+              </div>
+              <div className="mt-2">
+                <label className="block text-xs font-medium text-slate-600">Invitation note</label>
+                <textarea
+                  value={getNestedString(["lookingAheadSection", "invitationNote"])}
+                  onChange={(e) => updateNestedString(["lookingAheadSection", "invitationNote"], e.target.value)}
+                  rows={2}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Register</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-medium text-slate-600">Heading</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["registerSection", "heading"])}
+                    onChange={(e) => updateNestedString(["registerSection", "heading"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-medium text-slate-600">Intro</label>
+                  <textarea
+                    value={getNestedString(["registerSection", "intro"])}
+                    onChange={(e) => updateNestedString(["registerSection", "intro"], e.target.value)}
+                    rows={2}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">CTA label</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["registerSection", "ctaLabel"])}
+                    onChange={(e) => updateNestedString(["registerSection", "ctaLabel"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Registration URL</label>
+                  <input
+                    type="url"
+                    value={getNestedString(["registerSection", "registrationHref"])}
+                    onChange={(e) => updateNestedString(["registerSection", "registrationHref"], e.target.value)}
+                    placeholder="https://…"
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <label className="block text-xs font-medium text-slate-600">Benefits list (one per line)</label>
+                  <textarea
+                    value={getNestedStringArray(["registerSection", "benefits"]).join("\n")}
+                    onChange={(e) =>
+                      updateNestedStringArray(
+                        ["registerSection", "benefits"],
+                        e.target.value
+                          .split("\n")
+                          .map((s) => s.trim())
+                          .filter(Boolean)
+                      )
+                    }
+                    rows={4}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono text-xs"
+                  />
+                </div>
               </div>
             </div>
           </div>

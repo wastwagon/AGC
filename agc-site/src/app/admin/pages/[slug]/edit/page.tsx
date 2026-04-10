@@ -7,6 +7,7 @@ import { PageContentForm } from "../../PageContentForm";
 import { HomePageContentForm } from "../../HomePageContentForm";
 import { getHomePageCmsForEdit } from "@/lib/home-page-data";
 import { requireAdminSession } from "@/lib/require-admin";
+import { ensureMissingBaselinePageRows } from "@/lib/ensure-missing-page-rows";
 
 export const dynamic = "force-dynamic";
 
@@ -49,6 +50,7 @@ export default async function AdminPagesEditPage({ params }: Props) {
     );
   }
 
+  await ensureMissingBaselinePageRows();
   const item = await prisma.pageContent.findUnique({ where: { slug: decodedSlug } });
   if (!item) notFound();
 

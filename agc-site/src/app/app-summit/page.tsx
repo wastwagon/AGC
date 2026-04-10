@@ -1,5 +1,5 @@
 import { appSummitContent } from "@/data/app-summit";
-import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 import { AppSummitClient } from "./AppSummitClient";
@@ -28,10 +28,9 @@ async function resolveAppSummitHeroImage(content: AppSummitMerged): Promise<stri
 }
 
 export default async function AppSummitPage() {
-  const fallback = cmsStaticOrEmpty(appSummitBuildFallback);
-
+  /** Full base so new fields (e.g. inaugural copy) merge in even when CMS row predates them. */
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent<AppSummitMerged>("app-summit", fallback),
+    getMergedPageContent<AppSummitMerged>("app-summit", appSummitBuildFallback),
     getSiteSettings(),
   ]);
   const content = merged;

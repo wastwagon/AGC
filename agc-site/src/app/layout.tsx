@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, IBM_Plex_Sans } from "next/font/google";
+import { Lora, Manrope } from "next/font/google";
 import "./globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
 import { JsonLd } from "@/components/JsonLd";
@@ -7,19 +7,18 @@ import { Analytics } from "@/components/Analytics";
 import { getSiteSettings } from "@/lib/site-settings";
 import { resolveImageUrl } from "@/lib/media";
 
-/** Body: highly legible, institutional (not generic Inter/DM stack) */
-const ibmPlex = IBM_Plex_Sans({
-  variable: "--font-ibm-plex",
+/** Body / UI — geometric sans, strong at small sizes */
+const manrope = Manrope({
+  variable: "--font-manrope",
   subsets: ["latin"],
   display: "swap",
 });
 
-/** Display: distinctive editorial feel vs template Playfair */
-const fraunces = Fraunces({
-  variable: "--font-fraunces",
+/** Headings & editorial display — readable serif */
+const lora = Lora({
+  variable: "--font-lora",
   subsets: ["latin"],
   display: "swap",
-  /** Cuts Chrome “preloaded but not used” noise on admin-heavy routes; font still loads via CSS when used. */
   preload: false,
 });
 
@@ -59,7 +58,7 @@ export default async function RootLayout({
       : null;
   const footerLogoSrc = footerLogoResolved || brandLogoSrc;
   return (
-    <html lang="en" className={`${ibmPlex.variable} ${fraunces.variable}`}>
+    <html lang="en" className={`${manrope.variable} ${lora.variable}`}>
       <body className="min-h-screen flex flex-col antialiased">
         <a
           href="#main-content"

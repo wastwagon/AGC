@@ -46,3 +46,8 @@ export function useMobileNav() {
   }
   return ctx;
 }
+
+/** For components (e.g. {@link HeaderTopbar}) that may render in admin without {@link MobileNavProvider}. */
+export function useOptionalMobileNav() {
+  return useContext(MobileNavContext);
+}

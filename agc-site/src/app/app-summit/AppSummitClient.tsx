@@ -38,13 +38,16 @@ export function AppSummitClient({
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-3 lg:gap-16">
             <div className="lg:col-span-2">
+              <p className="page-prose text-lg leading-relaxed">{content.intro}</p>
+              {content.inauguralParagraph?.trim() ? (
+                <p className="page-prose mt-6 text-lg leading-relaxed">{content.inauguralParagraph}</p>
+              ) : null}
               {content.aboutSectionEyebrow?.trim() ? (
-                <p className="text-sm font-medium text-accent-800">{content.aboutSectionEyebrow}</p>
+                <p className="mt-10 text-sm font-medium text-accent-800">{content.aboutSectionEyebrow}</p>
               ) : null}
               {content.aboutSectionHeading?.trim() ? (
                 <h2 className="page-heading mt-2 text-2xl sm:text-3xl">{content.aboutSectionHeading}</h2>
               ) : null}
-              <p className="page-prose mt-4 text-lg">{content.intro}</p>
               <ul className="mt-10 flex flex-wrap gap-6 sm:gap-10">
                 <li className="flex items-center gap-3">
                   <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
