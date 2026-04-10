@@ -1,4 +1,5 @@
 import { cache } from "react";
+import { Prisma } from "@prisma/client";
 import { siteConfig } from "@/data/content";
 import { DEFAULT_SITE_CHROME, type SiteChrome, type SiteNavItem } from "@/data/site-chrome";
 import { prisma } from "@/lib/db";
@@ -227,19 +228,44 @@ async function resolveFooterWorkThumbnailImages(settings: SiteSettings): Promise
   };
 }
 
-export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
-  try {
-    const row = await prisma.pageContent.findUnique({
-      where: { slug: "site-settings" },
-      select: { contentJson: true },
-    });
-    if (!row?.contentJson) return DEFAULT_SITE_SETTINGS;
-    const base = sanitizeSiteSettings(row.contentJson);
-    return await resolveFooterWorkThumbnailImages(base);
-  } catch (e) {
-    console.error("[getSiteSettings] Database read failed; using bundled defaults. Nav/chrome will match repo until DB is reachable.", e);
-    return DEFAULT_SITE_SETTINGS;
+/** Transient DB / pool issues — retry before falling back to bundled nav (avoids “flash” of default nav). */
+const RETRYABLE_PRISMA_CODES = new Set([
+  "P1001", // Can't reach database server
+  "P1002", // The database server was reached but timed out
+  "P1008", // Operations timed out
+  "P1017", // Server has closed the connection
+  "P2024", // Timed out fetching a new connection from the pool
+]);
+
+function isRetryablePrismaError(e: unknown): boolean {
+  if (e instanceof Prisma.PrismaClientKnownRequestError && RETRYABLE_PRISMA_CODES.has(e.code)) {
+    return true;
   }
+  if (e instanceof Prisma.PrismaClientInitializationError) return true;
+  return false;
+}
+
+export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
+  const maxAttempts = 3;
+  for (let attempt = 0; attempt < maxAttempts; attempt++) {
+    try {
+      const row = await prisma.pageContent.findUnique({
+        where: { slug: "site-settings" },
+        select: { contentJson: true },
+      });
+      if (!row?.contentJson) return DEFAULT_SITE_SETTINGS;
+      const base = sanitizeSiteSettings(row.contentJson);
+      return await resolveFooterWorkThumbnailImages(base);
+    } catch (e) {
+      if (isRetryablePrismaError(e) && attempt < maxAttempts - 1) {
+        await new Promise((r) => setTimeout(r, 100 * 2 ** attempt));
+        continue;
+      }
+      console.error("[getSiteSettings] Database read failed; using bundled defaults. Nav/chrome will match repo until DB is reachable.", e);
+      return DEFAULT_SITE_SETTINGS;
+    }
+  }
+  return DEFAULT_SITE_SETTINGS;
 });
 
 export type {
