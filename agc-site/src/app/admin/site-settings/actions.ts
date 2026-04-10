@@ -154,8 +154,8 @@ export async function updateSiteSettings(formData: FormData) {
     mobileDrawerContactCta: data.mobileDrawerContactCta,
     mobileLanguageEyebrow: data.mobileLanguageEyebrow,
   };
-  if (navJson) chromePatch.nav = navJson;
-  if (bottomNavJson) chromePatch.bottomNav = bottomNavJson;
+  if (navJson !== undefined) chromePatch.nav = navJson;
+  if (bottomNavJson !== undefined) chromePatch.bottomNav = bottomNavJson;
 
   const footerPatch: Record<string, unknown> = {
     contactHeading: data.footerContactHeading,
@@ -165,9 +165,9 @@ export async function updateSiteSettings(formData: FormData) {
     rightsReserved: data.footerRightsReserved,
     adminLabel: data.footerAdminLabel,
   };
-  if (footerQuickJson) footerPatch.quickLinks = footerQuickJson;
-  if (footerLegalJson) footerPatch.legal = footerLegalJson;
-  if (footerThumbsJson) footerPatch.workThumbnails = footerThumbsJson;
+  if (footerQuickJson !== undefined) footerPatch.quickLinks = footerQuickJson;
+  if (footerLegalJson !== undefined) footerPatch.legal = footerLegalJson;
+  if (footerThumbsJson !== undefined) footerPatch.workThumbnails = footerThumbsJson;
   chromePatch.footer = footerPatch;
 
   chromePatch.search = {
@@ -214,7 +214,30 @@ export async function updateSiteSettings(formData: FormData) {
     eventRegister: data.bcEventRegister,
   };
 
-  const chrome = mergeSiteChrome(chromePatch);
+  const existingRow = await prisma.pageContent.findUnique({
+    where: { slug: "site-settings" },
+    select: { contentJson: true },
+  });
+  const existingJson = (existingRow?.contentJson as Record<string, unknown> | undefined) ?? {};
+  const existingChrome =
+    existingJson.chrome && typeof existingJson.chrome === "object" && !Array.isArray(existingJson.chrome)
+      ? (existingJson.chrome as Record<string, unknown>)
+      : {};
+  const existingFooter =
+    existingChrome.footer && typeof existingChrome.footer === "object" && !Array.isArray(existingChrome.footer)
+      ? (existingChrome.footer as Record<string, unknown>)
+      : {};
+
+  const mergedChromePatch: Record<string, unknown> = {
+    ...existingChrome,
+    ...chromePatch,
+    footer: {
+      ...existingFooter,
+      ...(chromePatch.footer as Record<string, unknown>),
+    },
+  };
+
+  const chrome = mergeSiteChrome(mergedChromePatch);
 
   const payload = {
     name: data.name,

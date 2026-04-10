@@ -236,7 +236,8 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     if (!row?.contentJson) return DEFAULT_SITE_SETTINGS;
     const base = sanitizeSiteSettings(row.contentJson);
     return await resolveFooterWorkThumbnailImages(base);
-  } catch {
+  } catch (e) {
+    console.error("[getSiteSettings] Database read failed; using bundled defaults. Nav/chrome will match repo until DB is reachable.", e);
     return DEFAULT_SITE_SETTINGS;
   }
 });
