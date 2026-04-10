@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Lora, Manrope } from "next/font/google";
+import { Manrope } from "next/font/google";
 import "./globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
 import { JsonLd } from "@/components/JsonLd";
@@ -12,14 +12,6 @@ const manrope = Manrope({
   variable: "--font-manrope",
   subsets: ["latin"],
   display: "swap",
-});
-
-/** Headings & editorial display — readable serif */
-const lora = Lora({
-  variable: "--font-lora",
-  subsets: ["latin"],
-  display: "swap",
-  preload: true,
 });
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernancecentre.org";
@@ -58,7 +50,7 @@ export default async function RootLayout({
       : null;
   const footerLogoSrc = footerLogoResolved || brandLogoSrc;
   return (
-    <html lang="en" className={`${manrope.variable} ${lora.variable}`}>
+    <html lang="en" className={manrope.variable}>
       <body className={`min-h-screen flex flex-col antialiased ${manrope.className}`}>
         <a
           href="#main-content"

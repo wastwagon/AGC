@@ -30,7 +30,8 @@
   --color-border: var(--border);
   --color-card: var(--card);
   --font-sans: var(--font-manrope);
-  --font-serif: var(--font-lora);
+  /* Serif stack aliases to Manrope so headings and body match site-wide */
+  --font-serif: var(--font-manrope);
   /* Logo teal-blue palette */
   --color-accent-50: #eef7fa;
   --color-accent-100: #d6edf3;
@@ -152,7 +153,7 @@ body {
   color: rgb(87 83 78);
 }
 .page-heading {
-  font-family: var(--font-serif), ui-serif, Georgia, serif;
+  font-family: var(--font-sans), system-ui, sans-serif;
   font-weight: 600;
   letter-spacing: -0.02em;
   color: rgb(28 25 23);
