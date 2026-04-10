@@ -9,6 +9,9 @@ import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
 import { publicPathForPageSlug } from "@/lib/admin-public-preview";
 import { updatePageContent } from "./actions";
 
+/** Root keys use the quick editor; nested paths support Get Involved sub-page heroes. */
+type PickerTarget = null | "heroImage" | "sectionImage" | { nested: string[] };
+
 type PageContentFormProps = {
   item: {
     slug: string;
@@ -52,7 +55,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
   );
   /** Server and first client paint must match — restore local draft in useEffect only (avoids hydration mismatch). */
   const [jsonText, setJsonText] = useState(initialJson);
-  const [pickerTarget, setPickerTarget] = useState<"heroImage" | "sectionImage" | null>(null);
+  const [pickerTarget, setPickerTarget] = useState<PickerTarget>(null);
   const [dragDayIdx, setDragDayIdx] = useState<number | null>(null);
   const [dragLegalIdx, setDragLegalIdx] = useState<number | null>(null);
   const [dragSession, setDragSession] = useState<{ dayIdx: number; sessionIdx: number } | null>(null);
@@ -263,8 +266,11 @@ export function PageContentForm({ item }: PageContentFormProps) {
 
   function onSelectMedia(media: MediaItem) {
     if (!pickerTarget) return;
-    // Prefer media ID so content follows library metadata, not hardcoded path.
-    updateJsonField(pickerTarget, media.id);
+    if (pickerTarget === "heroImage" || pickerTarget === "sectionImage") {
+      updateJsonField(pickerTarget, media.id);
+    } else {
+      updateNestedString(pickerTarget.nested, media.id);
+    }
     setPickerTarget(null);
   }
 
@@ -788,6 +794,151 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 rows={3}
                 className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
               />
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Sub-page hero images</p>
+              <p className="mt-1 text-xs text-slate-500">
+                Backgrounds for <code className="text-[0.7rem]">/get-involved/join-us</code>,{" "}
+                <code className="text-[0.7rem]">/get-involved/partnership</code>, and{" "}
+                <code className="text-[0.7rem]">/get-involved/volunteer</code>. Use a media id (e.g.{" "}
+                <code className="text-[0.7rem]">media-…</code>) or <code className="text-[0.7rem]">/uploads/…</code>.
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+                {(
+                  [
+                    { label: "Work with us (join-us)", path: ["joinUs", "heroImage"] as const },
+                    { label: "Partnership", path: ["partnership", "heroImage"] as const },
+                    { label: "Volunteer", path: ["volunteer", "heroImage"] as const },
+                  ] as const
+                ).map(({ label, path }) => (
+                  <div key={path.join(".")}>
+                    <label className="block text-xs font-medium text-slate-600">{label}</label>
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        type="text"
+                        value={getNestedString([...path])}
+                        onChange={(e) => updateNestedString([...path], e.target.value)}
+                        placeholder="media-… or /uploads/…"
+                        className="w-full min-w-0 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-900"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPickerTarget({ nested: [...path] })}
+                        className="inline-flex shrink-0 items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100"
+                        title="Pick from Media Library"
+                      >
+                        <ImagePlus className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="rounded-md border border-slate-200 bg-white p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Sub-page text</p>
+              <p className="mt-1 text-xs text-slate-500">
+                Copy for the three detail routes below. The main hub cards are edited in <strong>Opportunities</strong>{" "}
+                further down.
+              </p>
+              <div className="mt-3 space-y-2">
+                {(
+                  [
+                    { key: "joinUs", label: "Work with us (/get-involved/join-us)", ctaHrefKey: "contactHref" as const },
+                    { key: "partnership", label: "Partnership (/get-involved/partnership)", ctaHrefKey: "contactHref" as const },
+                    { key: "volunteer", label: "Volunteer (/get-involved/volunteer)", ctaHrefKey: "applicationHref" as const },
+                  ] as const
+                ).map(({ key, label, ctaHrefKey }) => (
+                  <details key={key} className="group rounded-md border border-slate-200 bg-slate-50/80 open:bg-white">
+                    <summary className="cursor-pointer list-none px-3 py-2 text-sm font-medium text-slate-800 [&::-webkit-details-marker]:hidden">
+                      <span className="inline-flex items-center gap-2">
+                        <ChevronRight className="h-4 w-4 shrink-0 text-slate-500 transition group-open:rotate-90" />
+                        {label}
+                      </span>
+                    </summary>
+                    <div className="space-y-2 border-t border-slate-200 px-3 pb-3 pt-2">
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <div>
+                          <label className="block text-xs font-medium text-slate-600">Hero title</label>
+                          <input
+                            type="text"
+                            value={getNestedString([key, "title"])}
+                            onChange={(e) => updateNestedString([key, "title"], e.target.value)}
+                            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-600">Hero subtitle</label>
+                          <input
+                            type="text"
+                            value={getNestedString([key, "subtitle"])}
+                            onChange={(e) => updateNestedString([key, "subtitle"], e.target.value)}
+                            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                          />
+                        </div>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Intro</label>
+                        <textarea
+                          value={getNestedString([key, "intro"])}
+                          onChange={(e) => updateNestedString([key, "intro"], e.target.value)}
+                          rows={3}
+                          className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Description</label>
+                        <textarea
+                          value={getNestedString([key, "description"])}
+                          onChange={(e) => updateNestedString([key, "description"], e.target.value)}
+                          rows={4}
+                          className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Bullet list (one line per item)</label>
+                        <textarea
+                          value={getNestedStringArray([key, "items"]).join("\n")}
+                          onChange={(e) =>
+                            updateNestedStringArray(
+                              [key, "items"],
+                              e.target.value
+                                .split("\n")
+                                .map((line) => line.trim())
+                                .filter(Boolean)
+                            )
+                          }
+                          rows={5}
+                          placeholder="One bullet per line"
+                          className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                        />
+                      </div>
+                      <div className="grid gap-2 sm:grid-cols-2">
+                        <div>
+                          <label className="block text-xs font-medium text-slate-600">Primary button label (CTA)</label>
+                          <input
+                            type="text"
+                            value={getNestedString([key, "cta"])}
+                            onChange={(e) => updateNestedString([key, "cta"], e.target.value)}
+                            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-xs font-medium text-slate-600">
+                            {ctaHrefKey === "applicationHref" ? "Apply / primary link (href)" : "Contact / primary link (href)"}
+                          </label>
+                          <input
+                            type="text"
+                            value={getNestedString([key, ctaHrefKey])}
+                            onChange={(e) => updateNestedString([key, ctaHrefKey], e.target.value)}
+                            placeholder="/contact or /applications"
+                            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </details>
+                ))}
+              </div>
             </div>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
