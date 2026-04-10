@@ -1,11 +1,33 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Calendar, MapPin, Users } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
 import type { AppSummitCmsContent } from "@/data/app-summit";
 import type { SiteSettings } from "@/lib/site-settings";
+
+/** Avoids the year (e.g. 2026) wrapping alone on its own line in the registration card */
+function RegistrationCardSubtitle({ text }: { text: string }): ReactNode {
+  const normalized = text
+    .replace(/\b2025\b/g, "2026")
+    .replace(/(Summit)\s+(20\d{2})/gi, "Summit\u00a0$2");
+  const re = /(APP\s+Summit\s+20\d{2})/i;
+  const match = normalized.match(re);
+  if (!match || match.index === undefined) {
+    return normalized;
+  }
+  const before = normalized.slice(0, match.index);
+  const mid = match[0];
+  const after = normalized.slice(match.index + mid.length);
+  return (
+    <>
+      {before}
+      <span className="whitespace-nowrap">{mid}</span>
+      {after}
+    </>
+  );
+}
 
 export function AppSummitClient({
   content,
@@ -20,8 +42,14 @@ export function AppSummitClient({
   const [activeDay, setActiveDay] = useState(0);
   const { details, registration, agenda } = content;
   const activeAgenda = agenda.days[activeDay];
-  /** Normalize legacy CMS copy that still says 2025 on the registration card */
-  const registrationSubtitle = (registration.subtitle ?? "").replace(/\b2025\b/g, "2026");
+  const registrationSubtitle = registration.subtitle ?? "";
+  const d = details ?? { date: "", location: "", participants: "" };
+  const showDate = Boolean(d.date?.trim());
+  const showLocation = Boolean(d.location?.trim());
+  const showParticipants = Boolean(d.participants?.trim());
+  const hasDetailRows = showDate || showLocation || showParticipants;
+  const hasAboutHeader =
+    Boolean(content.aboutSectionEyebrow?.trim()) || Boolean(content.aboutSectionHeading?.trim());
 
   return (
     <>
@@ -40,50 +68,64 @@ export function AppSummitClient({
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-3 lg:gap-16">
             <div className="lg:col-span-2">
-              <p className="page-prose text-lg leading-relaxed">{content.intro}</p>
+              {content.aboutSectionEyebrow?.trim() ? (
+                <p className="text-sm font-medium text-accent-800">{content.aboutSectionEyebrow}</p>
+              ) : null}
+              {content.aboutSectionHeading?.trim() ? (
+                <h2
+                  className={`page-heading text-2xl sm:text-3xl ${content.aboutSectionEyebrow?.trim() ? "mt-2" : ""}`}
+                >
+                  {content.aboutSectionHeading}
+                </h2>
+              ) : null}
+              <p className={`page-prose text-lg leading-relaxed ${hasAboutHeader ? "mt-4" : ""}`}>{content.intro}</p>
               {content.inauguralParagraph?.trim() ? (
                 <p className="page-prose mt-6 text-lg leading-relaxed">{content.inauguralParagraph}</p>
               ) : null}
-              {content.aboutSectionEyebrow?.trim() ? (
-                <p className="mt-10 text-sm font-medium text-accent-800">{content.aboutSectionEyebrow}</p>
+              {hasDetailRows ? (
+                <ul className="mt-10 flex flex-wrap gap-6 sm:gap-10">
+                  {showDate ? (
+                    <li className="flex items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                        <Calendar className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-stone-500">{content.detailLabelDate}</p>
+                        <p className="font-semibold text-stone-900">{d.date}</p>
+                      </div>
+                    </li>
+                  ) : null}
+                  {showLocation ? (
+                    <li className="flex items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                        <MapPin className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-stone-500">{content.detailLabelLocation}</p>
+                        <p className="font-semibold text-stone-900">{d.location}</p>
+                      </div>
+                    </li>
+                  ) : null}
+                  {showParticipants ? (
+                    <li className="flex items-center gap-3">
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                        <Users className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-stone-500">{content.detailLabelParticipants}</p>
+                        <p className="font-semibold text-stone-900">{d.participants}</p>
+                      </div>
+                    </li>
+                  ) : null}
+                </ul>
               ) : null}
-              {content.aboutSectionHeading?.trim() ? (
-                <h2 className="page-heading mt-2 text-2xl sm:text-3xl">{content.aboutSectionHeading}</h2>
-              ) : null}
-              <ul className="mt-10 flex flex-wrap gap-6 sm:gap-10">
-                <li className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
-                    <Calendar className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-stone-500">{content.detailLabelDate}</p>
-                    <p className="font-semibold text-stone-900">{details.date}</p>
-                  </div>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
-                    <MapPin className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-stone-500">{content.detailLabelLocation}</p>
-                    <p className="font-semibold text-stone-900">{details.location}</p>
-                  </div>
-                </li>
-                <li className="flex items-center gap-3">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
-                    <Users className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="text-sm font-medium text-stone-500">{content.detailLabelParticipants}</p>
-                    <p className="font-semibold text-stone-900">{details.participants}</p>
-                  </div>
-                </li>
-              </ul>
             </div>
-            <div className="rounded-2xl border border-stone-200/90 bg-[#faf6ef] p-10 shadow-sm lg:p-12">
+            <div className="self-start rounded-2xl border border-stone-200/90 bg-[#faf6ef] p-6 shadow-sm sm:p-8">
               <h3 className="page-heading text-xl">{registration.title}</h3>
-              <p className="page-prose mt-2 text-sm">{registrationSubtitle}</p>
-              <Button asChild href={registration.href} variant="primary" className="mt-6 w-full rounded-xl bg-accent-700 hover:bg-accent-800">
+              <p className="page-prose mt-2 text-sm text-balance">
+                <RegistrationCardSubtitle text={registrationSubtitle} />
+              </p>
+              <Button asChild href={registration.href} variant="primary" className="mt-5 w-full rounded-xl bg-accent-700 hover:bg-accent-800">
                 {registration.cta}
               </Button>
             </div>
