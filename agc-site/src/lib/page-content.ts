@@ -42,10 +42,20 @@ function deepMerge<T extends Record<string, unknown>>(
       typeof tgtVal === "object" &&
       !Array.isArray(tgtVal)
     ) {
-      (result as Record<string, unknown>)[key] = deepMerge(
-        tgtVal as Record<string, unknown>,
-        srcVal as Record<string, unknown>
-      );
+      const srcObj = srcVal as Record<string, unknown>;
+      const tgtObj = tgtVal as Record<string, unknown>;
+      /** CMS `{}` over a string-only map (e.g. cleared detail fields) must not resurrect fallback strings. */
+      if (
+        Object.keys(srcObj).length === 0 &&
+        Object.keys(tgtObj).length > 0 &&
+        Object.values(tgtObj).every((v) => typeof v === "string")
+      ) {
+        (result as Record<string, unknown>)[key] = Object.fromEntries(
+          Object.keys(tgtObj).map((k) => [k, ""])
+        );
+      } else {
+        (result as Record<string, unknown>)[key] = deepMerge(tgtObj, srcObj);
+      }
     } else if (srcVal !== undefined) {
       (result as Record<string, unknown>)[key] = srcVal;
     }
