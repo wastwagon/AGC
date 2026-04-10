@@ -162,8 +162,8 @@ export function PageContentForm({ item }: PageContentFormProps) {
       cur = cur[p] as Record<string, unknown>;
     }
     const leaf = path[path.length - 1];
-    if (value.trim().length === 0) delete cur[leaf];
-    else cur[leaf] = value;
+    /** Persist `""` so CMS JSON overrides deepMerge fallbacks; omitting keys would keep repo defaults. */
+    cur[leaf] = value.trim() === "" ? "" : value;
     updateJsonObject(next);
   }
 
