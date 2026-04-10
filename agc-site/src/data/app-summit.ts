@@ -6,9 +6,9 @@
 export const appSummitContent = {
   title: "African Political Parties Summit 2025",
   subtitle: "Strengthening Democratic Governance",
-  /** Editable via Admin → Page Content → app-summit */
-  aboutSectionEyebrow: "Continental convening",
-  aboutSectionHeading: "About APP Summit 2025",
+  /** Editable via Admin → Page Content → app-summit (leave empty to show only intro + inaugural copy) */
+  aboutSectionEyebrow: "",
+  aboutSectionHeading: "",
   detailLabelDate: "Date",
   detailLabelLocation: "Location",
   detailLabelParticipants: "Participants",
@@ -29,7 +29,7 @@ export const appSummitContent = {
   },
   registration: {
     title: "Quick Registration",
-    subtitle: "Secure your spot at APP Summit 2026",
+    subtitle: "Secure your spot at APP Summit\u202f2026",
     cta: "Register Now",
     href: "/contact",
   },

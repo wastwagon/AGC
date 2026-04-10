@@ -1,3 +1,4 @@
+import { Prisma } from "@prisma/client";
 import { aypfContent } from "@/data/aypf";
 import { prisma } from "@/lib/db";
 
@@ -25,7 +26,7 @@ export async function ensureMissingBaselinePageRows(): Promise<void> {
             slug: p.slug,
             title: p.title,
             status: "published",
-            contentJson: p.contentJson,
+            contentJson: p.contentJson as Prisma.InputJsonValue,
           },
         });
       }
