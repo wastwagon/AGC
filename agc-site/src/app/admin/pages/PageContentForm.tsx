@@ -50,39 +50,33 @@ export function PageContentForm({ item }: PageContentFormProps) {
     () => `agc:page-content:draft:${item.slug}:contentJson`,
     [item.slug]
   );
-  const initialDraft = useMemo(() => {
-    if (typeof window === "undefined") {
-      return { value: initialJson, restored: false, savedAt: null as string | null };
-    }
-    try {
-      const raw = window.localStorage.getItem(draftStorageKey);
-      if (!raw) return { value: initialJson, restored: false, savedAt: null as string | null };
-      const parsed = JSON.parse(raw) as { value?: string; savedAt?: string };
-      if (typeof parsed.value === "string" && parsed.value !== initialJson) {
-        return {
-          value: parsed.value,
-          restored: true,
-          savedAt: typeof parsed.savedAt === "string" ? parsed.savedAt : null,
-        };
-      }
-      return {
-        value: initialJson,
-        restored: false,
-        savedAt: typeof parsed.savedAt === "string" ? parsed.savedAt : null,
-      };
-    } catch {
-      return { value: initialJson, restored: false, savedAt: null as string | null };
-    }
-  }, [draftStorageKey, initialJson]);
-  const [jsonText, setJsonText] = useState(initialDraft.value);
+  /** Server and first client paint must match — restore local draft in useEffect only (avoids hydration mismatch). */
+  const [jsonText, setJsonText] = useState(initialJson);
   const [pickerTarget, setPickerTarget] = useState<"heroImage" | "sectionImage" | null>(null);
   const [dragDayIdx, setDragDayIdx] = useState<number | null>(null);
   const [dragLegalIdx, setDragLegalIdx] = useState<number | null>(null);
   const [dragSession, setDragSession] = useState<{ dayIdx: number; sessionIdx: number } | null>(null);
   const [collapsedDays, setCollapsedDays] = useState<number[]>([]);
   const [collapsedSections, setCollapsedSections] = useState<number[]>([]);
-  const [draftRestored, setDraftRestored] = useState(initialDraft.restored);
-  const [lastSavedAt, setLastSavedAt] = useState<string | null>(initialDraft.savedAt);
+  const [draftRestored, setDraftRestored] = useState(false);
+  const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
+
+  useEffect(() => {
+    try {
+      const raw = window.localStorage.getItem(draftStorageKey);
+      if (!raw) return;
+      const parsed = JSON.parse(raw) as { value?: string; savedAt?: string };
+      if (typeof parsed.savedAt === "string") {
+        setLastSavedAt(parsed.savedAt);
+      }
+      if (typeof parsed.value === "string" && parsed.value !== initialJson) {
+        setJsonText(parsed.value);
+        setDraftRestored(true);
+      }
+    } catch {
+      // ignore invalid draft
+    }
+  }, [draftStorageKey, initialJson]);
 
   useEffect(() => {
     const t = window.setTimeout(() => {
@@ -138,6 +132,12 @@ export function PageContentForm({ item }: PageContentFormProps) {
     const next = { ...parsedJson };
     if (value.trim().length === 0) delete next[key];
     else next[key] = value;
+    updateJsonObject(next);
+  }
+
+  function updateJsonFieldBoolean(key: string, value: boolean) {
+    const next = { ...parsedJson };
+    next[key] = value;
     updateJsonObject(next);
   }
 
@@ -983,6 +983,21 @@ export function PageContentForm({ item }: PageContentFormProps) {
         {item.slug === "app-summit" && (
           <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">APP Summit helper</p>
+            <label className="flex cursor-pointer items-start gap-3 rounded-md border border-slate-200 bg-white p-3 text-sm text-slate-800">
+              <input
+                type="checkbox"
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300"
+                checked={parsedJson.programmeAgendaVisible !== false}
+                onChange={(e) => updateJsonFieldBoolean("programmeAgendaVisible", e.target.checked)}
+              />
+              <span>
+                <span className="font-medium text-slate-900">Show Programme / APPS agenda</span>
+                <span className="mt-1 block text-xs font-normal text-slate-600">
+                  Uncheck to hide the day tabs and schedule block on the public site. The rest of the APP Summit page
+                  stays visible.
+                </span>
+              </span>
+            </label>
             <div className="grid gap-2 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-medium text-slate-600">About section eyebrow</label>

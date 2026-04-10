@@ -51,10 +51,12 @@ model News {
   image         String?   @db.VarChar(500)
   datePublished DateTime? @map("date_published")
   author        String?   @db.VarChar(255)
-  categories    Json?
-  tags          Json?
-  status        String    @default("draft") @db.VarChar(50)
-  createdAt     DateTime  @default(now()) @map("created_at")
+  categories         Json?
+  tags               Json?
+  /// Optional PDFs / documents shown on the public article (label, href, optional description).
+  downloadResources  Json?     @map("download_resources")
+  status             String    @default("draft") @db.VarChar(50)
+  createdAt          DateTime  @default(now()) @map("created_at")
 
   @@index([status])
   @@index([datePublished])

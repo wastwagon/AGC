@@ -4,6 +4,8 @@
  */
 
 import { prisma } from "@/lib/db";
+import type { NewsDocumentDownload } from "@/lib/news-downloads";
+import { normalizeNewsDownloads } from "@/lib/news-downloads";
 import { devPublicRead } from "@/lib/skip-db";
 
 // ============ Shared types (compatible with former Cms* interfaces) ============
@@ -77,6 +79,8 @@ export interface CmsNews {
   categories?: string[];
   tags?: string[];
   author?: string;
+  /** PDFs / documents shown on the article (from `download_resources` JSON). */
+  downloadResources?: NewsDocumentDownload[];
 }
 
 export interface CmsProgram {
@@ -208,20 +212,24 @@ export async function getNews(limit = 10) {
       orderBy: [{ datePublished: "desc" }, { createdAt: "desc" }],
       take: limit,
     });
-    return rows.map((n) => ({
-      id: n.id,
-      status: n.status,
-      title: n.title,
-      slug: n.slug ?? undefined,
-      excerpt: n.excerpt ?? undefined,
-      content: n.content ?? undefined,
-      image: n.image ?? undefined,
-      date_created: n.createdAt.toISOString(),
-      date_published: n.datePublished?.toISOString(),
-      author: n.author ?? undefined,
-      categories: n.categories as string[] | undefined,
-      tags: n.tags as string[] | undefined,
-    }));
+    return rows.map((n) => {
+      const downloads = normalizeNewsDownloads({ downloadResources: n.downloadResources });
+      return {
+        id: n.id,
+        status: n.status,
+        title: n.title,
+        slug: n.slug ?? undefined,
+        excerpt: n.excerpt ?? undefined,
+        content: n.content ?? undefined,
+        image: n.image ?? undefined,
+        date_created: n.createdAt.toISOString(),
+        date_published: n.datePublished?.toISOString(),
+        author: n.author ?? undefined,
+        categories: n.categories as string[] | undefined,
+        tags: n.tags as string[] | undefined,
+        ...(downloads.length ? { downloadResources: downloads } : {}),
+      };
+    });
   });
 }
 
@@ -231,6 +239,7 @@ export async function getNewsBySlug(slug: string) {
       where: { slug, status: "published" },
     });
     if (!n) return null;
+    const downloads = normalizeNewsDownloads({ downloadResources: n.downloadResources });
     return {
       id: n.id,
       status: n.status,
@@ -244,6 +253,7 @@ export async function getNewsBySlug(slug: string) {
       author: n.author ?? undefined,
       categories: n.categories as string[] | undefined,
       tags: n.tags as string[] | undefined,
+      ...(downloads.length ? { downloadResources: downloads } : {}),
     };
   });
 }

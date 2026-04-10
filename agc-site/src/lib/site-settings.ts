@@ -38,11 +38,11 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
 
 /**
  * Legacy CMS rows often keep Programs/Projects/Advisory under Our Work.
- * Strip submenus from top-level items that use in-page tabs; omit `/publications` from the header.
+ * Strip submenus from `/our-work` (in-page tabs); omit `/publications` from the header.
  */
 function normalizeHeaderNav(nav: SiteNavItem[]): SiteNavItem[] {
   const stripped = nav.map((item) => {
-    if (item.href === "/our-work" || item.href === "/get-involved") {
+    if (item.href === "/our-work") {
       const { subLinks: _, ...rest } = item;
       return rest;
     }

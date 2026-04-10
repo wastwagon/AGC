@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type ReactNode } from "react";
-import { Calendar, MapPin, Users } from "lucide-react";
+import { Calendar, Handshake, Lightbulb, MapPin, Scale, Users } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
 import type { AppSummitCmsContent } from "@/data/app-summit";
@@ -50,6 +50,14 @@ export function AppSummitClient({
   const hasDetailRows = showDate || showLocation || showParticipants;
   const hasAboutHeader =
     Boolean(content.aboutSectionEyebrow?.trim()) || Boolean(content.aboutSectionHeading?.trim());
+  const pi = content.purposeImpact;
+  const pillarIcons = [Scale, Lightbulb, Handshake] as const;
+  const showPurposeImpact =
+    Boolean(pi) &&
+    (Boolean(pi?.heading?.trim()) ||
+      Boolean(pi?.intro?.trim()) ||
+      Boolean(pi?.pillars?.some((p) => p.title?.trim() || p.description?.trim())));
+  const showProgrammeAgenda = content.programmeAgendaVisible !== false;
 
   return (
     <>
@@ -133,65 +141,114 @@ export function AppSummitClient({
         </div>
       </section>
 
-      <section className="page-section-warm border-t border-stone-200/60 py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl">
-            {content.programmeEyebrow?.trim() ? (
-              <p className="text-sm font-medium text-accent-800">{content.programmeEyebrow}</p>
+      {showPurposeImpact && pi ? (
+        <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            {pi.eyebrow?.trim() ? (
+              <p className="text-sm font-medium text-accent-800">{pi.eyebrow}</p>
             ) : null}
-            <h2 className="page-heading mt-1 text-2xl sm:text-3xl">{agenda.title}</h2>
-            <p className="page-prose mt-2">{agenda.subtitle}</p>
-          </div>
-
-          <div className="mt-10 flex flex-wrap gap-0 border-b border-stone-300/80">
-            {agenda.days.map((d, i) => (
-              <button
-                key={d.day}
-                type="button"
-                onClick={() => setActiveDay(i)}
-                className={`relative px-5 py-3 text-sm font-medium transition-colors ${
-                  activeDay === i
-                    ? "text-accent-900 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-accent-600"
-                    : "text-stone-500 hover:text-stone-800"
-                }`}
+            {pi.heading?.trim() ? (
+              <h2 className={`page-heading text-2xl sm:text-3xl ${pi.eyebrow?.trim() ? "mt-2" : ""}`}>
+                {pi.heading}
+              </h2>
+            ) : null}
+            {pi.intro?.trim() ? (
+              <p
+                className={`page-prose max-w-3xl text-lg leading-relaxed ${pi.heading?.trim() || pi.eyebrow?.trim() ? "mt-4" : ""}`}
               >
-                {[content.dayTabPrefix?.trim(), String(d.day)].filter(Boolean).join(" ") || String(d.day)}
-              </button>
-            ))}
+                {pi.intro}
+              </p>
+            ) : null}
+            {pi.pillars && pi.pillars.length > 0 ? (
+              <ul className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
+                {pi.pillars.map((pillar, idx) => {
+                  const Icon = pillarIcons[idx] ?? Scale;
+                  const hasText = pillar.title?.trim() || pillar.description?.trim();
+                  if (!hasText) return null;
+                  return (
+                    <li
+                      key={`${pillar.title}-${idx}`}
+                      className="rounded-2xl border border-stone-200/80 bg-[#fffcf7] p-7 shadow-sm transition-all hover:border-accent-200/50 hover:shadow-md sm:p-8"
+                    >
+                      <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                        <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden />
+                      </div>
+                      {pillar.title?.trim() ? (
+                        <h3 className="mt-5 font-sans text-lg font-semibold text-stone-900">{pillar.title}</h3>
+                      ) : null}
+                      {pillar.description?.trim() ? (
+                        <p className="page-prose-tight mt-2 text-sm leading-relaxed">{pillar.description}</p>
+                      ) : null}
+                    </li>
+                  );
+                })}
+              </ul>
+            ) : null}
           </div>
+        </section>
+      ) : null}
 
-          <div className="mt-12">
-            <h3 className="mb-8 text-sm font-semibold uppercase tracking-wide text-stone-500">{activeAgenda.date}</h3>
-            <div className="space-y-4">
-              {activeAgenda.sessions.map((session, i) => (
-                <article
-                  key={i}
-                  className="flex gap-4 rounded-2xl border border-stone-200/80 bg-[#fffcf7] p-6 transition-all hover:border-accent-200/50 hover:shadow-sm sm:gap-6"
+      {showProgrammeAgenda && agenda?.days?.length ? (
+        <section className="page-section-warm border-t border-stone-200/60 py-16 sm:py-20 lg:py-24">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="max-w-2xl">
+              {content.programmeEyebrow?.trim() ? (
+                <p className="text-sm font-medium text-accent-800">{content.programmeEyebrow}</p>
+              ) : null}
+              <h2 className="page-heading mt-1 text-2xl sm:text-3xl">{agenda.title}</h2>
+              <p className="page-prose mt-2">{agenda.subtitle}</p>
+            </div>
+
+            <div className="mt-10 flex flex-wrap gap-0 border-b border-stone-300/80">
+              {agenda.days.map((d, i) => (
+                <button
+                  key={d.day}
+                  type="button"
+                  onClick={() => setActiveDay(i)}
+                  className={`relative px-5 py-3 text-sm font-medium transition-colors ${
+                    activeDay === i
+                      ? "text-accent-900 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-accent-600"
+                      : "text-stone-500 hover:text-stone-800"
+                  }`}
                 >
-                  <span className="mt-1.5 flex h-2 w-2 shrink-0 rounded-full bg-accent-600" />
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm font-semibold text-accent-800">{session.time}</p>
-                    <h4 className="mt-1 font-sans text-lg font-semibold text-stone-900">{session.title}</h4>
-                    {session.topic && (
-                      <p className="page-prose-tight mt-2 text-sm">{session.topic}</p>
-                    )}
-                    {session.topics && (
-                      <ul className="page-prose-tight mt-2 space-y-1 text-sm">
-                        {session.topics.map((t, j) => (
-                          <li key={j} className="flex gap-2">
-                            <span className="text-accent-600">•</span>
-                            {t}
-                          </li>
-                        ))}
-                      </ul>
-                    )}
-                  </div>
-                </article>
+                  {[content.dayTabPrefix?.trim(), String(d.day)].filter(Boolean).join(" ") || String(d.day)}
+                </button>
               ))}
             </div>
+
+            <div className="mt-12">
+              <h3 className="mb-8 text-sm font-semibold uppercase tracking-wide text-stone-500">{activeAgenda.date}</h3>
+              <div className="space-y-4">
+                {activeAgenda.sessions.map((session, i) => (
+                  <article
+                    key={i}
+                    className="flex gap-4 rounded-2xl border border-stone-200/80 bg-[#fffcf7] p-6 transition-all hover:border-accent-200/50 hover:shadow-sm sm:gap-6"
+                  >
+                    <span className="mt-1.5 flex h-2 w-2 shrink-0 rounded-full bg-accent-600" />
+                    <div className="min-w-0 flex-1">
+                      <p className="text-sm font-semibold text-accent-800">{session.time}</p>
+                      <h4 className="mt-1 font-sans text-lg font-semibold text-stone-900">{session.title}</h4>
+                      {session.topic && (
+                        <p className="page-prose-tight mt-2 text-sm">{session.topic}</p>
+                      )}
+                      {session.topics && (
+                        <ul className="page-prose-tight mt-2 space-y-1 text-sm">
+                          {session.topics.map((t, j) => (
+                            <li key={j} className="flex gap-2">
+                              <span className="text-accent-600">•</span>
+                              {t}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      ) : null}
 
       <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20">
         <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">

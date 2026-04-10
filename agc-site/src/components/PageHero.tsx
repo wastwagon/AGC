@@ -69,7 +69,7 @@ export function PageHero({
     const src = image ?? "";
     const alt = imageAlt ?? "";
     return (
-      <section className="relative flex min-h-[220px] flex-col justify-center sm:min-h-[280px] lg:min-h-[320px]">
+      <section className="relative flex min-h-[min(38vh,320px)] flex-col justify-center sm:min-h-[min(42vh,380px)] lg:min-h-[min(46vh,440px)]">
         <div className="absolute inset-0">
           {src ? (
             <Image
@@ -89,7 +89,7 @@ export function PageHero({
             aria-hidden
           />
         </div>
-        <div className="container relative z-10 mx-auto w-full px-4 py-10 text-left sm:px-6 lg:px-8 lg:py-12">
+        <div className="container relative z-10 mx-auto w-full px-4 py-12 text-left sm:px-6 sm:py-14 lg:px-8 lg:py-16">
           <nav aria-label="Breadcrumb" className="text-sm text-white/75">
             <ol className="flex flex-wrap items-center gap-1.5">
               {items.map((item, i) => (
@@ -122,7 +122,7 @@ export function PageHero({
   const src = image ?? "";
   const alt = imageAlt ?? "";
   return (
-    <section className="relative flex min-h-[220px] flex-col justify-center sm:min-h-[280px] lg:min-h-[340px]">
+    <section className="relative flex min-h-[min(44vh,380px)] flex-col justify-center sm:min-h-[min(48vh,440px)] lg:min-h-[min(52vh,520px)]">
       <div className="absolute inset-0">
         {src ? (
           <Image
@@ -143,7 +143,7 @@ export function PageHero({
         />
       </div>
 
-      <div className="container relative z-10 mx-auto w-full px-4 py-14 text-center sm:px-6 sm:py-16 lg:px-8 lg:py-20">
+      <div className="container relative z-10 mx-auto w-full px-4 py-16 text-center sm:px-6 sm:py-20 lg:px-8 lg:py-24">
         <div className="mx-auto max-w-3xl">
           <h1 className="font-serif text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl xl:text-[3.25rem] xl:leading-tight">
             {title}

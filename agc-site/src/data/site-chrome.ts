@@ -91,9 +91,17 @@ export const defaultSiteNav: SiteNavItem[] = [
   {
     href: "/about",
     label: "About Us",
+    subLinks: [{ href: "/aypf", label: "AYPF" }],
+  },
+  {
+    href: "/get-involved",
+    label: "Get Involved",
     subLinks: [
-      { href: "/get-involved", label: "Get Involved" },
-      { href: "/aypf", label: "AYPF" },
+      { href: "/get-involved/join-us", label: "Careers & Opportunities" },
+      { href: "/get-involved/partnership", label: "Partner / Sponsor" },
+      { href: "/contact", label: "Donate" },
+      { href: "/get-involved/volunteer", label: "Volunteer" },
+      { href: "/#newsletter", label: "Subscribe to our newsletter" },
     ],
   },
   { href: "/our-work", label: "Our Work" },

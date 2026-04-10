@@ -3,6 +3,40 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
+
+function parseNewsDownloadResourcesFromForm(
+  formData: FormData
+): { ok: true; value: Prisma.InputJsonValue | null } | { ok: false; message: string } {
+  const raw = formData.get("downloadResourcesJson");
+  if (typeof raw !== "string") return { ok: true, value: null };
+  const trimmed = raw.trim();
+  if (trimmed === "" || trimmed === "[]") return { ok: true, value: null };
+  try {
+    const parsed = JSON.parse(trimmed) as unknown;
+    if (!Array.isArray(parsed)) {
+      return { ok: false, message: "Document downloads must be a JSON array, e.g. [{ \"label\": \"…\", \"href\": \"/uploads/…\" }]." };
+    }
+    const cleaned: { label: string; href: string; description?: string }[] = [];
+    for (const x of parsed) {
+      if (!x || typeof x !== "object") continue;
+      const o = x as Record<string, unknown>;
+      const label = typeof o.label === "string" ? o.label.trim().slice(0, 500) : "";
+      const href = typeof o.href === "string" ? o.href.trim().slice(0, 2000) : "";
+      if (!label || !href) continue;
+      const row: { label: string; href: string; description?: string } = { label, href };
+      if (typeof o.description === "string" && o.description.trim()) {
+        row.description = o.description.trim().slice(0, 2000);
+      }
+      cleaned.push(row);
+    }
+    return { ok: true, value: cleaned.length ? cleaned : null };
+  } catch {
+    return {
+      ok: false,
+      message: "Document downloads must be valid JSON (array of objects with label and href).",
+    };
+  }
+}
 import { prisma } from "@/lib/db";
 import { auth } from "@/auth";
 import { newsFormSchema } from "@/lib/validations";
@@ -63,6 +97,11 @@ export async function createNews(formData: FormData) {
     redirect(`/admin/news/new?error=${encodeURIComponent(parsed.error.issues[0]?.message ?? "Invalid input")}`);
   }
 
+  const dr = parseNewsDownloadResourcesFromForm(formData);
+  if (!dr.ok) {
+    redirect(`/admin/news/new?error=${encodeURIComponent(dr.message)}`);
+  }
+
   const { title, slug, image, excerpt, content, author, categories: rawCats, tags, status, datePublished } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
   if (!finalSlug) {
@@ -85,6 +124,7 @@ export async function createNews(formData: FormData) {
         author: author || null,
         categories: categories?.length ? categories : [],
         tags: tags?.length ? tags : [],
+        downloadResources: dr.value === null ? Prisma.JsonNull : dr.value,
         status,
         datePublished: datePublished ? new Date(datePublished) : null,
       },
@@ -125,6 +165,11 @@ export async function updateNews(id: number, formData: FormData) {
     redirect(`/admin/news/${id}/edit?error=${encodeURIComponent(parsed.error.issues[0]?.message ?? "Invalid input")}`);
   }
 
+  const dr = parseNewsDownloadResourcesFromForm(formData);
+  if (!dr.ok) {
+    redirect(`/admin/news/${id}/edit?error=${encodeURIComponent(dr.message)}`);
+  }
+
   const { title, slug, image, excerpt, content, author, categories: rawCats, tags, status, datePublished } = parsed.data;
   const finalSlug = slug?.trim() || slugify(title);
   if (!finalSlug) {
@@ -147,6 +192,7 @@ export async function updateNews(id: number, formData: FormData) {
         author: author || null,
         categories: categories?.length ? categories : [],
         tags: tags?.length ? tags : [],
+        downloadResources: dr.value === null ? Prisma.JsonNull : dr.value,
         status,
         datePublished: datePublished ? new Date(datePublished) : null,
       },

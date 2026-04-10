@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, FileText } from "lucide-react";
+import { normalizeNewsDownloads } from "@/lib/news-downloads";
 import { placeholderImages } from "@/data/images";
 import type { CmsNews } from "@/lib/content";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
@@ -22,6 +23,7 @@ export function NewsCard({ item, imageUrl = placeholderImages.news, href = "/new
   const dateStr = date ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" }) : "";
   const excerpt = (item.excerpt || item.content || "").replace(/<[^>]*>/g, "").slice(0, 150);
   const linkHref = item.slug ? `${href.replace(/\/$/, "")}/${item.slug}` : href;
+  const hasDownloads = normalizeNewsDownloads(item).length > 0;
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md">
@@ -50,8 +52,17 @@ export function NewsCard({ item, imageUrl = placeholderImages.news, href = "/new
             </p>
           )}
           <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-accent-600 transition-colors group-hover:text-accent-700">
-            Read More
-            <ArrowRight className="h-4 w-4" />
+            {hasDownloads ? (
+              <>
+                <FileText className="h-4 w-4 shrink-0" aria-hidden />
+                Read more · Documents
+              </>
+            ) : (
+              <>
+                Read More
+                <ArrowRight className="h-4 w-4" />
+              </>
+            )}
           </span>
         </div>
       </Link>
