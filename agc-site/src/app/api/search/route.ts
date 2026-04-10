@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getEvents, getNews, getPublications } from "@/lib/content";
 import { fallbackEvents, fallbackNews, fallbackPublications } from "@/data/content";
 import type { CmsEvent, CmsNews, CmsPublication } from "@/lib/content";
+import { shouldSkipPrismaCalls } from "@/lib/skip-db";
 
 export type SearchItem = {
   id: string;
@@ -18,7 +19,7 @@ export async function GET() {
       getNews(50),
       getPublications(50),
     ]);
-    const useFallback = process.env.BUILD_WITHOUT_DB === "1";
+    const useFallback = shouldSkipPrismaCalls();
 
     const events: CmsEvent[] = useFallback ? (fallbackEvents as CmsEvent[]) : cmsEvents;
     const news: CmsNews[] = useFallback ? (fallbackNews as CmsNews[]) : cmsNews;
