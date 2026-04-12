@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
@@ -282,6 +282,7 @@ export async function updateSiteSettings(formData: FormData) {
     redirect(`/admin/site-settings?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
   }
 
+  updateTag("site-settings");
   revalidatePath("/");
   revalidatePath("/admin");
   revalidatePath("/admin/site-settings");

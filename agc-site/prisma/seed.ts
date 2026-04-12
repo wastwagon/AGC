@@ -19,8 +19,14 @@ import {
 import { privacyPolicy, termsOfService } from "../src/data/legal";
 import { getBootstrapHomePageCms } from "../src/lib/cms-bootstrap";
 import { applicationsPageUiDefaults } from "../src/data/applications-page";
+import { DEFAULT_SITE_CHROME } from "../src/data/site-chrome";
 
 const prisma = new PrismaClient();
+
+/** Deep-clone so Prisma JSON is plain objects (seed row matches what Admin saves after mergeSiteChrome). */
+function cloneDefaultChrome(): Record<string, unknown> {
+  return JSON.parse(JSON.stringify(DEFAULT_SITE_CHROME)) as Record<string, unknown>;
+}
 
 /** When "1" or "true", seed overwrites existing PageContent rows from repo defaults (destructive). Default: only create missing slugs. */
 const resetPageContent =
@@ -115,7 +121,7 @@ async function main() {
       slug: "site-settings",
       title: "Site Settings",
       status: "published",
-      contentJson: siteConfig,
+      contentJson: { ...siteConfig, chrome: cloneDefaultChrome() },
     },
     {
       slug: "app-summit",
