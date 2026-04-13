@@ -112,7 +112,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
         role="dialog"
         aria-modal="true"
         aria-label={chrome.mobileDrawerAriaLabel}
-        className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,20rem)] max-w-[22rem] flex-col bg-gradient-to-b from-accent-900 via-[#152a32] to-accent-950 shadow-[8px_0_40px_-12px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden ${
+        className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,22rem)] max-w-[23rem] flex-col bg-gradient-to-b from-accent-900 via-[#152a32] to-accent-950 shadow-[8px_0_40px_-12px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
         }`}
         inert={!mobileOpen ? true : undefined}
@@ -133,106 +133,105 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
           </button>
         </div>
 
-        {/* Scrollable nav — all items visible */}
-        <nav
-          className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-3 py-3 [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.25)_transparent]"
-          aria-label="Primary navigation"
-        >
-          <ul className="space-y-0.5">
-            {primaryNav.map((item) => {
-              const Icon = drawerIconForHref(item.href);
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    onClick={() => setMobileOpen(false)}
-                    className="group flex items-center gap-3 rounded-xl px-3 py-3 text-[0.9375rem] font-medium text-white transition-colors hover:bg-white/10 active:bg-white/15"
-                  >
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-accent-100 ring-1 ring-white/10">
-                      <Icon className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
-                    </span>
-                    <span className="min-w-0 flex-1 font-serif text-base tracking-tight">
-                      {item.label}
-                    </span>
-                    <ChevronRight className="h-4 w-4 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5 group-hover:text-white/60" aria-hidden />
-                  </Link>
-                  {item.subLinks && item.subLinks.length > 0 ? (
-                    <ul className="ml-[3.25rem] mt-1 space-y-0.5 border-l border-white/15 pl-3 pb-2">
-                      {item.subLinks.map((sub) => (
-                        <li key={sub.href}>
-                          <Link
-                            href={sub.href}
-                            onClick={() => setMobileOpen(false)}
-                            className="flex items-center gap-2 rounded-lg py-2.5 pl-1 text-sm text-white/80 transition-colors hover:text-white"
-                          >
-                            <BookOpen className="h-3.5 w-3.5 shrink-0 text-accent-200/80" aria-hidden />
-                            {sub.label}
-                          </Link>
-                        </li>
-                      ))}
-                    </ul>
-                  ) : null}
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-
-        {/* Mobile: email, search, contact, socials (desktop: header top bar) */}
-        <div className="shrink-0 border-t border-white/10 px-3 py-4">
-          <p className="mb-3 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">
-            Get in touch
-          </p>
-          <div className="space-y-2">
-            <a
-              href={`mailto:${siteSettings.email.programs}`}
-              onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 rounded-xl bg-white/5 px-3 py-3 text-left ring-1 ring-white/10 transition-colors hover:bg-white/10"
-            >
-              <span className={`${topbarDarkIconButtonClass} !h-10 !w-10`} aria-hidden>
-                <Mail className="h-[18px] w-[18px]" strokeWidth={2} />
-              </span>
-              <span className="min-w-0 flex-1 break-words text-sm font-medium leading-snug text-white">
-                {siteSettings.email.programs}
-              </span>
-            </a>
-            <button
-              type="button"
-              onClick={() => {
-                setMobileOpen(false);
-                setSearchOpen(true);
-              }}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#dadffb] px-4 py-3.5 text-sm font-medium text-accent-800 transition-colors hover:bg-accent-100"
-            >
-              <Search className="h-5 w-5 shrink-0" aria-hidden />
-              {chrome.headerSearchAriaLabel}
-            </button>
-            <Link
-              href="/contact"
-              onClick={() => setMobileOpen(false)}
-              className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 px-4 py-3.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-95"
-            >
-              {chrome.headerContactCta}
-            </Link>
-          </div>
-          <nav className="mt-4" aria-label="Social media">
-            <p className="sr-only">Follow us on social media</p>
-            <ul className="flex flex-wrap gap-2">
-              {TOPBAR_SOCIAL_LINKS.map(({ href, icon: Icon, label }) => (
-                <li key={href}>
-                  <a
-                    href={href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className={`${topbarDarkIconButtonClass} !h-10 !w-10`}
-                    aria-label={label}
-                  >
-                    <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
-                  </a>
-                </li>
-              ))}
+        <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain [scrollbar-width:thin] [scrollbar-color:rgba(255,255,255,0.25)_transparent]">
+          {/* Scrollable nav — all items visible */}
+          <nav className="px-3 py-3" aria-label="Primary navigation">
+            <ul className="space-y-1">
+              {primaryNav.map((item) => {
+                const Icon = drawerIconForHref(item.href);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className="group flex items-center gap-3 rounded-xl px-3 py-3 text-[0.9375rem] font-medium text-white transition-colors hover:bg-white/10 active:bg-white/15"
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-accent-100 ring-1 ring-white/10">
+                        <Icon className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
+                      </span>
+                      <span className="min-w-0 flex-1 font-serif text-base tracking-tight">
+                        {item.label}
+                      </span>
+                      <ChevronRight className="h-4 w-4 shrink-0 text-white/35 transition-transform group-hover:translate-x-0.5 group-hover:text-white/60" aria-hidden />
+                    </Link>
+                    {item.subLinks && item.subLinks.length > 0 ? (
+                      <ul className="ml-[3.25rem] mt-1 space-y-0.5 border-l border-white/15 pl-3 pb-2">
+                        {item.subLinks.map((sub) => (
+                          <li key={sub.href}>
+                            <Link
+                              href={sub.href}
+                              onClick={() => setMobileOpen(false)}
+                              className="flex items-center gap-2 rounded-lg py-2.5 pl-1 text-sm text-white/80 transition-colors hover:text-white"
+                            >
+                              <BookOpen className="h-3.5 w-3.5 shrink-0 text-accent-200/80" aria-hidden />
+                              {sub.label}
+                            </Link>
+                          </li>
+                        ))}
+                      </ul>
+                    ) : null}
+                  </li>
+                );
+              })}
             </ul>
           </nav>
+
+          {/* Mobile: email, search, contact, socials (desktop: header top bar) */}
+          <section className="mx-3 mb-4 mt-2 rounded-2xl border border-white/10 bg-white/[0.04] p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]">
+            <p className="mb-3 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">
+              Get in touch
+            </p>
+            <div className="space-y-2.5">
+              <a
+                href={`mailto:${siteSettings.email.programs}`}
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-3 rounded-xl bg-white/5 px-3 py-3 text-left ring-1 ring-white/10 transition-colors hover:bg-white/10"
+              >
+                <span className={`${topbarDarkIconButtonClass} !h-10 !w-10`} aria-hidden>
+                  <Mail className="h-[18px] w-[18px]" strokeWidth={2} />
+                </span>
+                <span className="min-w-0 flex-1 break-words text-sm font-medium leading-snug text-white">
+                  {siteSettings.email.programs}
+                </span>
+              </a>
+              <button
+                type="button"
+                onClick={() => {
+                  setMobileOpen(false);
+                  setSearchOpen(true);
+                }}
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#dadffb] px-4 py-3.5 text-sm font-medium text-accent-800 transition-colors hover:bg-accent-100"
+              >
+                <Search className="h-5 w-5 shrink-0" aria-hidden />
+                {chrome.headerSearchAriaLabel}
+              </button>
+              <Link
+                href="/contact"
+                onClick={() => setMobileOpen(false)}
+                className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 px-4 py-3.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-95"
+              >
+                {chrome.headerContactCta}
+              </Link>
+            </div>
+            <nav className="mt-4 border-t border-white/10 pt-3" aria-label="Social media">
+              <p className="sr-only">Follow us on social media</p>
+              <ul className="flex flex-wrap gap-2">
+                {TOPBAR_SOCIAL_LINKS.map(({ href, icon: Icon, label }) => (
+                  <li key={href}>
+                    <a
+                      href={href}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className={`${topbarDarkIconButtonClass} !h-10 !w-10`}
+                      aria-label={label}
+                    >
+                      <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </nav>
+          </section>
         </div>
 
         {/* Footer strip — language */}
