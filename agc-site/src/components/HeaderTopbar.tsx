@@ -2,42 +2,11 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Mail, Search, Twitter, Linkedin, Instagram } from "lucide-react";
+import { Mail, Search } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
+import { TOPBAR_SOCIAL_LINKS, topbarDarkIconButtonClass } from "@/data/topbar-social";
 import { useOptionalMobileNav } from "./mobile/MobileNavContext";
 import { SearchModal } from "./SearchModal";
-
-const iconBtnClass =
-  "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/[0.11] ring-1 ring-white/[0.1] text-white/90 transition-[background-color,box-shadow,color] hover:bg-white/[0.2] hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white/50";
-
-/** Top bar socials (fixed URLs; distinct LinkedIn showcase pages use the same icon with unique labels). */
-const TOPBAR_SOCIAL_LINKS = [
-  {
-    href: "https://www.linkedin.com/company/africa-governance-centre-agc/",
-    icon: Linkedin,
-    label: "Africa Governance Centre on LinkedIn",
-  },
-  {
-    href: "https://www.linkedin.com/showcase/african-youth-in-politics-forum/",
-    icon: Linkedin,
-    label: "African Youth in Politics Forum on LinkedIn",
-  },
-  {
-    href: "https://x.com/AfricaGovCentre",
-    icon: Twitter,
-    label: "Africa Governance Centre on X",
-  },
-  {
-    href: "https://www.instagram.com/africa_gov_centre/",
-    icon: Instagram,
-    label: "Africa Governance Centre on Instagram",
-  },
-  {
-    href: "https://www.linkedin.com/showcase/africa-women-political-leadership-summit/",
-    icon: Linkedin,
-    label: "Africa Women Political Leadership Summit on LinkedIn",
-  },
-] as const;
 
 export function HeaderTopbar({ siteSettings }: { siteSettings: SiteSettings }) {
   const mobileNav = useOptionalMobileNav();
@@ -50,7 +19,7 @@ export function HeaderTopbar({ siteSettings }: { siteSettings: SiteSettings }) {
   }
 
   return (
-    <div className="relative border-b border-black/[0.14] bg-gradient-to-b from-[#1a3555] via-[#1e3a5f] to-[#182f4d] shadow-[inset_0_1px_0_rgba(255,255,255,0.07)]">
+    <div className="relative hidden border-b border-black/[0.14] bg-gradient-to-b from-[#1a3555] via-[#1e3a5f] to-[#182f4d] shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] lg:block">
       {!mobileNav ? (
         <SearchModal
           isOpen={standaloneSearchOpen}
@@ -66,7 +35,7 @@ export function HeaderTopbar({ siteSettings }: { siteSettings: SiteSettings }) {
               href={`mailto:${siteSettings.email.programs}`}
               className="group flex min-h-[44px] max-w-full gap-3 text-left sm:gap-3.5 lg:min-h-0"
             >
-              <span className={`${iconBtnClass} group-hover:bg-white/[0.17]`} aria-hidden>
+              <span className={`${topbarDarkIconButtonClass} group-hover:bg-white/[0.17]`} aria-hidden>
                 <Mail className="h-[18px] w-[18px]" strokeWidth={2} />
               </span>
               <span className="min-w-0 flex-1 self-center break-words text-[0.8125rem] font-medium leading-snug tracking-[0.01em] text-white underline-offset-2 transition-colors group-hover:text-accent-300 group-hover:underline sm:text-sm">
@@ -107,7 +76,7 @@ export function HeaderTopbar({ siteSettings }: { siteSettings: SiteSettings }) {
                       href={href}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={iconBtnClass}
+                      className={topbarDarkIconButtonClass}
                       aria-label={label}
                     >
                       <Icon className="h-[18px] w-[18px]" strokeWidth={2} />

@@ -1,5 +1,4 @@
 import { cache } from "react";
-import { unstable_cache } from "next/cache";
 import { Prisma } from "@prisma/client";
 import { siteConfig } from "@/data/content";
 import { DEFAULT_SITE_CHROME, type SiteChrome, type SiteNavItem } from "@/data/site-chrome";
@@ -247,8 +246,8 @@ function isRetryablePrismaError(e: unknown): boolean {
 }
 
 /**
- * Loads settings from DB (retries). Throws on failure so `unstable_cache` does not cache bundled defaults
- * (avoids sticky “wrong nav” after a transient DB blip).
+ * Loads settings from DB (retries). No cross-request `unstable_cache` here — that layer could serve
+ * stale nav/chrome after deploy or behind CDNs while HTML looked “fresh” on first navigation.
  */
 async function loadSiteSettingsFromDatabase(): Promise<SiteSettings> {
   const maxAttempts = 3;
@@ -272,14 +271,9 @@ async function loadSiteSettingsFromDatabase(): Promise<SiteSettings> {
   throw new Error("getSiteSettings: exhausted retries");
 }
 
-const getSiteSettingsCached = unstable_cache(loadSiteSettingsFromDatabase, ["agc-site-settings-v1"], {
-  revalidate: 60,
-  tags: ["site-settings"],
-});
-
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   try {
-    return await getSiteSettingsCached();
+    return await loadSiteSettingsFromDatabase();
   } catch (e) {
     console.error("[getSiteSettings] Database read failed; using bundled defaults. Nav/chrome will match repo until DB is reachable.", e);
     return DEFAULT_SITE_SETTINGS;

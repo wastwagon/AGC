@@ -14,9 +14,12 @@ import {
   X,
   ChevronRight,
   BookOpen,
+  Mail,
+  Search,
 } from "lucide-react";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import type { SiteSettings } from "@/lib/site-settings";
+import { TOPBAR_SOCIAL_LINKS, topbarDarkIconButtonClass } from "@/data/topbar-social";
 import { useMobileNav } from "./MobileNavContext";
 
 const drawerIconByHref: Record<string, LucideIcon> = {
@@ -37,7 +40,7 @@ function drawerIconForHref(href: string): LucideIcon {
 export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
   const primaryNav = siteSettings.chrome.nav;
   const chrome = siteSettings.chrome;
-  const { mobileOpen, setMobileOpen, menuTriggerRef } = useMobileNav();
+  const { mobileOpen, setMobileOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
 
   // Escape closes; Tab cycles focus inside drawer (WCAG-friendly)
@@ -112,7 +115,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
         className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,20rem)] max-w-[22rem] flex-col bg-gradient-to-b from-accent-900 via-[#152a32] to-accent-950 shadow-[8px_0_40px_-12px_rgba(0,0,0,0.45)] transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
         }`}
-        aria-hidden={!mobileOpen}
+        inert={!mobileOpen ? true : undefined}
       >
         {/* Header — close */}
         <div className="flex shrink-0 items-center justify-end gap-2 border-b border-white/10 px-4 py-3.5">
@@ -175,7 +178,64 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
           </ul>
         </nav>
 
-        {/* Footer strip — language (search & contact live in the top bar) */}
+        {/* Mobile: email, search, contact, socials (desktop: header top bar) */}
+        <div className="shrink-0 border-t border-white/10 px-3 py-4">
+          <p className="mb-3 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">
+            Get in touch
+          </p>
+          <div className="space-y-2">
+            <a
+              href={`mailto:${siteSettings.email.programs}`}
+              onClick={() => setMobileOpen(false)}
+              className="flex items-center gap-3 rounded-xl bg-white/5 px-3 py-3 text-left ring-1 ring-white/10 transition-colors hover:bg-white/10"
+            >
+              <span className={`${topbarDarkIconButtonClass} !h-10 !w-10`} aria-hidden>
+                <Mail className="h-[18px] w-[18px]" strokeWidth={2} />
+              </span>
+              <span className="min-w-0 flex-1 break-words text-sm font-medium leading-snug text-white">
+                {siteSettings.email.programs}
+              </span>
+            </a>
+            <button
+              type="button"
+              onClick={() => {
+                setMobileOpen(false);
+                setSearchOpen(true);
+              }}
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#dadffb] px-4 py-3.5 text-sm font-medium text-accent-800 transition-colors hover:bg-accent-100"
+            >
+              <Search className="h-5 w-5 shrink-0" aria-hidden />
+              {chrome.headerSearchAriaLabel}
+            </button>
+            <Link
+              href="/contact"
+              onClick={() => setMobileOpen(false)}
+              className="flex w-full items-center justify-center rounded-xl bg-gradient-to-r from-accent-600 to-accent-500 px-4 py-3.5 text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-95"
+            >
+              {chrome.headerContactCta}
+            </Link>
+          </div>
+          <nav className="mt-4" aria-label="Social media">
+            <p className="sr-only">Follow us on social media</p>
+            <ul className="flex flex-wrap gap-2">
+              {TOPBAR_SOCIAL_LINKS.map(({ href, icon: Icon, label }) => (
+                <li key={href}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className={`${topbarDarkIconButtonClass} !h-10 !w-10`}
+                    aria-label={label}
+                  >
+                    <Icon className="h-[18px] w-[18px]" strokeWidth={2} />
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </div>
+
+        {/* Footer strip — language */}
         <div className="shrink-0 border-t border-white/10 bg-accent-950/80 px-3 py-4 backdrop-blur-sm">
           <div className="rounded-xl bg-white/5 px-2 py-2 ring-1 ring-white/10">
             <p className="mb-2 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-200/90">
