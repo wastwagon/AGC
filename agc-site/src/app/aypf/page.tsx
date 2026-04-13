@@ -4,7 +4,8 @@ import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 import { AypfClient } from "./AypfClient";
 
-export const revalidate = 60;
+/** Match root layout: header/nav/footer come from DB — avoid ISR snapshotting old chrome after deploy or on refresh. */
+export const dynamic = "force-dynamic";
 
 const PLACEHOLDER_HERO = "/uploads/placeholder.svg";
 

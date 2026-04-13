@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useMemo, useRef, useState } from "react";
+import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 type MobileNavContextValue = {
   mobileOpen: boolean;
@@ -19,6 +19,20 @@ export function MobileNavProvider({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const menuTriggerRef = useRef<HTMLButtonElement>(null);
+  const wasOpenRef = useRef(false);
+
+  /** Before paint: never leave focus inside the drawer when it closes (avoids aria-hidden / inert + focus warnings). */
+  useLayoutEffect(() => {
+    if (wasOpenRef.current && !mobileOpen) {
+      const panel = document.getElementById("site-mobile-drawer");
+      const active = document.activeElement;
+      if (panel && active instanceof HTMLElement && panel.contains(active)) {
+        active.blur();
+      }
+      menuTriggerRef.current?.focus();
+    }
+    wasOpenRef.current = mobileOpen;
+  }, [mobileOpen]);
 
   const openMenu = useCallback(() => setMobileOpen(true), []);
   const openSearch = useCallback(() => setSearchOpen(true), []);
