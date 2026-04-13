@@ -35,7 +35,8 @@ export function EventBentoCard({
     (event as CmsEvent & { category?: string }).category ||
     "event";
   const eventSlug = (event as CmsEvent & { slug?: string }).slug;
-  const eventLink = !isPast && eventSlug ? `/events/register/${eventSlug}` : event.link || "#";
+  /** Past events should still open the event detail page when a slug exists. */
+  const eventLink = eventSlug ? `/events/register/${eventSlug}` : event.link || "#";
 
   return (
     <Link

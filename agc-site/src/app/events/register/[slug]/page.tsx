@@ -19,7 +19,10 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const cmsEvent = await getEventBySlug(slug);
   const event = cmsEvent ?? (fallbackEvents as CmsEvent[]).find((e) => e.slug === slug);
-  const title = event ? `Register – ${event.title}` : "Event Registration";
+  const isPastEvent = event
+    ? new Date(event.end_date || event.start_date).getTime() < Date.now()
+    : false;
+  const title = event ? `${isPastEvent ? "Event details" : "Register"} – ${event.title}` : "Event Registration";
   return { title, description: event?.description?.replace(/<[^>]*>/g, "").slice(0, 160) };
 }
 
@@ -63,11 +66,12 @@ export default async function EventRegisterPage({ params }: Props) {
   const agenda = parseAgenda((event as { agenda?: unknown }).agenda);
   const venue = event.venue_name || event.location;
   const venueFull = event.venue_address || event.location;
+  const isPastEvent = new Date(event.end_date || event.start_date).getTime() < Date.now();
   const isPastDeadline = event.registration_deadline && new Date(event.registration_deadline) < new Date();
   const isFull = typeof event.capacity === "number" && confirmedCount >= event.capacity;
   const allowWaitlist = Boolean(event.allow_waitlist);
-  const canRegister = !isPastDeadline && (!isFull || allowWaitlist);
-  const registeringWaitlist = isFull && allowWaitlist && !isPastDeadline;
+  const canRegister = !isPastEvent && !isPastDeadline && (!isFull || allowWaitlist);
+  const registeringWaitlist = !isPastEvent && isFull && allowWaitlist && !isPastDeadline;
 
   const heroImage =
     (await resolveImageUrl(event.image)) ||
@@ -77,7 +81,7 @@ export default async function EventRegisterPage({ params }: Props) {
   return (
     <>
       <PageHero
-        title={`Register for ${event.title}`}
+        title={isPastEvent ? event.title : `Register for ${event.title}`}
         subtitle={venue || pageCopy.subtitle}
         image={heroImage}
         imageAlt={event.title}
@@ -85,14 +89,14 @@ export default async function EventRegisterPage({ params }: Props) {
           { label: bc.home, href: "/" },
           { label: bc.events, href: "/events" },
           { label: event.title, href: "/events" },
-          { label: bc.eventRegister },
+          { label: isPastEvent ? "Details" : bc.eventRegister },
         ]}
       />
 
       <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <p className="mb-8 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">
-            Registration
+            {isPastEvent ? "Event details" : "Registration"}
           </p>
           <div className="grid gap-8 lg:grid-cols-[1fr_minmax(280px,320px)] lg:gap-10">
             <div className="space-y-8">
@@ -207,7 +211,9 @@ export default async function EventRegisterPage({ params }: Props) {
                 <div className="page-card border-l-[4px] border-l-accent-600 p-8">
                   <h2 className="page-heading text-xl text-stone-900">{event.title}</h2>
                   <p className="mt-3 page-prose">
-                    {isPastDeadline
+                    {isPastEvent
+                      ? "This event has ended. Registration is no longer available."
+                      : isPastDeadline
                       ? "Registration for this event has closed. Thank you for your interest."
                       : "This event has reached maximum capacity and the waitlist is not open for this event."}
                   </p>
