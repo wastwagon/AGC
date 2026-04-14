@@ -21,6 +21,7 @@ type AboutSettings = {
     agenda2063: string;
   };
   heroImage?: string;
+  whoWeAreImage?: string;
   sectionImage?: string;
   teamPage?: { title: string; subtitle: string; heroImage?: string };
 };
@@ -45,10 +46,15 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
   const [sectionImage, setSectionImage] = useState(
     initialDraft?.sectionImage ?? content.sectionImage ?? ""
   );
+  const [whoWeAreImage, setWhoWeAreImage] = useState(
+    initialDraft?.whoWeAreImage ?? content.whoWeAreImage ?? ""
+  );
   const [teamHeroImage, setTeamHeroImage] = useState(
     initialDraft?.teamHeroImage ?? content.teamPage?.heroImage?.trim() ?? ""
   );
-  const [pickerTarget, setPickerTarget] = useState<"heroImage" | "sectionImage" | "teamHeroImage" | null>(null);
+  const [pickerTarget, setPickerTarget] = useState<
+    "heroImage" | "whoWeAreImage" | "sectionImage" | "teamHeroImage" | null
+  >(null);
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({});
   const [draftRestored] = useState(!!initialDraft);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
@@ -88,6 +94,13 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
     return raw;
   }, [sectionImage, mediaMap]);
 
+  const whoWeArePreview = useMemo(() => {
+    const raw = whoWeAreImage.trim();
+    if (!raw) return "";
+    if (raw.startsWith("media-")) return mediaMap[raw] || "";
+    return raw;
+  }, [whoWeAreImage, mediaMap]);
+
   const teamHeroPreview = useMemo(() => {
     const raw = teamHeroImage.trim();
     if (!raw) return "";
@@ -97,6 +110,7 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
 
   function onSelectMedia(media: MediaItem) {
     if (pickerTarget === "heroImage") setHeroImage(media.id);
+    if (pickerTarget === "whoWeAreImage") setWhoWeAreImage(media.id);
     if (pickerTarget === "sectionImage") setSectionImage(media.id);
     if (pickerTarget === "teamHeroImage") setTeamHeroImage(media.id);
   }
@@ -224,6 +238,36 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
                   fill
                   className="object-cover"
                   unoptimized={preferUnoptimizedImage(heroPreview)}
+                />
+              </div>
+            ) : null}
+          </div>
+          <div>
+            <div className="flex gap-2">
+              <input
+                name="whoWeAreImage"
+                value={whoWeAreImage}
+                onChange={(e) => setWhoWeAreImage(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2"
+                placeholder="Who we are image media-id/url/path"
+              />
+              <button
+                type="button"
+                onClick={() => setPickerTarget("whoWeAreImage")}
+                className="inline-flex items-center rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-50"
+                title="Pick from Media Library"
+              >
+                <ImagePlus className="h-4 w-4" />
+              </button>
+            </div>
+            {whoWeArePreview ? (
+              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                <Image
+                  src={whoWeArePreview}
+                  alt="Who we are section preview"
+                  fill
+                  className="object-cover"
+                  unoptimized={preferUnoptimizedImage(whoWeArePreview)}
                 />
               </div>
             ) : null}

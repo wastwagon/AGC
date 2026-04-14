@@ -311,18 +311,13 @@ export default async function HomePage() {
       {showAppSummitTeaser && (
         <section className="border-t border-slate-200 bg-slate-50 py-16 sm:py-20 lg:py-24">
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-start gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-col items-start gap-6">
               <div>
                 <h2 className="font-serif text-2xl font-bold text-slate-900">{home.homeAppSummitTeaser.title}</h2>
                 {home.homeAppSummitTeaser.description?.trim() ? (
                   <p className="mt-2 text-slate-600">{home.homeAppSummitTeaser.description}</p>
                 ) : null}
               </div>
-              {home.homeAppSummitTeaser.ctaLabel?.trim() ? (
-                <Button asChild href={home.homeAppSummitTeaser.ctaHref || "/app-summit"} variant="outline">
-                  {home.homeAppSummitTeaser.ctaLabel}
-                </Button>
-              ) : null}
             </div>
           </div>
         </section>

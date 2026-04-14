@@ -23,6 +23,9 @@ export default async function AboutPage() {
     getBreadcrumbLabels(),
   ]);
   const heroImage = (await resolveImageUrl((content as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.about;
+  const whoWeAreImage =
+    (await resolveImageUrl((content as Record<string, unknown>).whoWeAreImage as string | undefined)) ||
+    placeholderImages.about;
   const sectionImage = (await resolveImageUrl((content as Record<string, unknown>).sectionImage as string | undefined)) || placeholderImages.about;
   const teamForTabs = cmsTeam.map((m) => ({
     id: m.id,
@@ -42,9 +45,9 @@ export default async function AboutPage() {
         breadcrumbs={[{ label: bc.home, href: "/" }, { label: bc.about }]}
       />
 
-      <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
-          <div className="lg:col-span-7">
+      <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-20">
+        <div className="mx-auto grid max-w-7xl gap-8 px-3 sm:px-4 lg:grid-cols-12 lg:gap-20 lg:px-6">
+          <div className="lg:col-span-6">
             <p className="text-sm font-medium text-accent-800">Who we are</p>
             <h2 className="page-heading mt-2 text-2xl sm:text-3xl">{content.title}</h2>
             <p className="page-prose mt-6 border-l-4 border-accent-600 pl-6 text-lg text-stone-700">
@@ -53,13 +56,24 @@ export default async function AboutPage() {
             <p className="page-prose mt-8">{content.description}</p>
             <p className="page-prose mt-6">{content.mission}</p>
           </div>
-          <aside className="lg:col-span-5">
-            <div className="sticky top-28 rounded-2xl border border-stone-200/80 bg-[#faf6ef] p-8">
-              <p className="font-serif text-lg italic leading-snug text-stone-800">
-                &ldquo;Governance is not abstract—it is the bridge between policy and the lives people actually
-                lead.&rdquo;
-              </p>
-              <p className="mt-4 text-sm text-stone-500">How we frame our work with partners</p>
+          <aside className="lg:col-span-6">
+            <div className="sticky top-28 space-y-3">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg ring-1 ring-stone-200/60 lg:aspect-auto lg:min-h-[360px]">
+                <Image
+                  src={whoWeAreImage}
+                  alt="Who we are section image"
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1024px) 100vw, 45vw"
+                />
+              </div>
+              <div className="rounded-2xl border border-stone-200/80 bg-[#faf6ef] p-6">
+                <p className="font-serif text-lg italic leading-snug text-stone-800">
+                  &ldquo;Governance is not abstract—it is the bridge between policy and the lives people actually
+                  lead.&rdquo;
+                </p>
+                <p className="mt-4 text-sm text-stone-500">How we frame our work with partners</p>
+              </div>
             </div>
           </aside>
         </div>

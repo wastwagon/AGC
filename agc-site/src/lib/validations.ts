@@ -302,6 +302,7 @@ export const aboutSettingsFormSchema = z.object({
   strategicPrinciples: z.string().min(1).max(10000),
   strategicAgenda2063: z.string().min(1).max(10000),
   heroImage: z.string().max(500).optional(),
+  whoWeAreImage: z.string().max(500).optional(),
   sectionImage: z.string().max(500).optional(),
   teamPageTitle: z.string().min(1).max(255),
   teamPageSubtitle: z.string().min(1).max(1000),

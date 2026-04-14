@@ -37,6 +37,7 @@ function normalizeAboutFormContent(merged: unknown) {
       agenda2063: typeof strat.agenda2063 === "string" ? strat.agenda2063 : aboutDefaults.strategicObjectives.agenda2063,
     },
     ...(typeof m.heroImage === "string" ? { heroImage: m.heroImage } : {}),
+    ...(typeof m.whoWeAreImage === "string" ? { whoWeAreImage: m.whoWeAreImage } : {}),
     ...(typeof m.sectionImage === "string" ? { sectionImage: m.sectionImage } : {}),
     teamPage: teamRaw
       ? {
