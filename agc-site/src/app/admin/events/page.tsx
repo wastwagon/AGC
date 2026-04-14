@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export default async function AdminEventsPage() {
   await requireAdminSession();
   const dbEvents = await prisma.event.findMany({
-    orderBy: { startDate: "desc" },
+    orderBy: { startDate: "asc" },
   });
   const slugs = dbEvents.map((e) => e.slug).filter(Boolean) as string[];
 
