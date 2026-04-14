@@ -22,7 +22,7 @@ export default async function JoinUsPage() {
   return (
     <>
       <PageHero
-        variant="compact"
+        variant="immersive"
         title={c.title}
         subtitle={c.subtitle}
         image={heroImage}

@@ -22,7 +22,7 @@ export default async function VolunteerPage() {
   return (
     <>
       <PageHero
-        variant="compact"
+        variant="immersive"
         title={c.title}
         subtitle={c.subtitle}
         image={heroImage}
