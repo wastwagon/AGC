@@ -168,7 +168,6 @@ export default async function HomePage() {
   const showReach = Boolean(home.homeReach.title?.trim());
   const showMethodology = Boolean(home.homeImpactMethodology?.trim());
   const showCtaBand = Boolean(home.homeCtaBand.title?.trim());
-  const showAppSummitTeaser = Boolean(home.homeAppSummitTeaser.title?.trim());
   const showNewsHead = Boolean(home.homeNewsTeaser.title?.trim() || home.homeNewsTeaser.subtitle?.trim());
 
   return (
@@ -301,21 +300,6 @@ export default async function HomePage() {
                   >
                     {home.homeCtaBand.secondaryCta}
                   </Button>
-                ) : null}
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {showAppSummitTeaser && (
-        <section className="border-t border-slate-200 bg-slate-50 py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col items-start gap-6">
-              <div>
-                <h2 className="font-serif text-2xl font-bold text-slate-900">{home.homeAppSummitTeaser.title}</h2>
-                {home.homeAppSummitTeaser.description?.trim() ? (
-                  <p className="mt-2 text-slate-600">{home.homeAppSummitTeaser.description}</p>
                 ) : null}
               </div>
             </div>
