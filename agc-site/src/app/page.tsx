@@ -97,8 +97,18 @@ export default async function HomePage() {
   );
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  const pastEvents = allEvents.filter((e) => new Date(e.end_date || e.start_date) < today).slice(0, 3);
-  const upcomingEvents = allEvents.filter((e) => new Date(e.end_date || e.start_date) >= today).slice(0, 3);
+  const pastEvents = allEvents
+    .filter((e) => new Date(e.end_date || e.start_date) < today)
+    .sort(
+      (a, b) =>
+        new Date(a.end_date || a.start_date).getTime() -
+        new Date(b.end_date || b.start_date).getTime()
+    )
+    .slice(0, 3);
+  const upcomingEvents = allEvents
+    .filter((e) => new Date(e.end_date || e.start_date) >= today)
+    .sort((a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime())
+    .slice(0, 3);
   const latestNewsRaw: CmsNews[] = newsList.slice(0, 3);
   const latestNews = await Promise.all(
     latestNewsRaw.map(async (n) => ({

@@ -16,8 +16,8 @@ function sortUpcoming(events: CmsEvent[]) {
 function sortPast(events: CmsEvent[]) {
   return [...events].sort(
     (a, b) =>
-      new Date(b.end_date || b.start_date).getTime() -
-      new Date(a.end_date || a.start_date).getTime()
+      new Date(a.end_date || a.start_date).getTime() -
+      new Date(b.end_date || b.start_date).getTime()
   );
 }
 
