@@ -40,6 +40,7 @@ export async function updateAboutSettings(formData: FormData) {
       agenda2063: d.strategicAgenda2063,
     },
     heroImage: d.heroImage || undefined,
+    whoWeAreImage: d.whoWeAreImage || undefined,
     sectionImage: d.sectionImage || undefined,
     teamPage: {
       title: d.teamPageTitle,
@@ -51,8 +52,32 @@ export async function updateAboutSettings(formData: FormData) {
   try {
     await prisma.pageContent.upsert({
       where: { slug: "about" },
-      create: { slug: "about", title: "About Us", status: "published", contentJson: payload as Prisma.InputJsonValue },
-      update: { title: "About Us", contentJson: payload as Prisma.InputJsonValue },
+      create: {
+        slug: "about",
+        title: d.title,
+        status: "published",
+        heroSubtitle: d.heroSubtitle,
+        intro: d.intro,
+        description: d.description,
+        mission: d.mission,
+        objectivesTitle: d.strategicTitle,
+        objectivesContent: d.strategicContent,
+        objectivesPrinciples: d.strategicPrinciples,
+        objectivesAgenda2063: d.strategicAgenda2063,
+        contentJson: payload as Prisma.InputJsonValue,
+      },
+      update: {
+        title: d.title,
+        heroSubtitle: d.heroSubtitle,
+        intro: d.intro,
+        description: d.description,
+        mission: d.mission,
+        objectivesTitle: d.strategicTitle,
+        objectivesContent: d.strategicContent,
+        objectivesPrinciples: d.strategicPrinciples,
+        objectivesAgenda2063: d.strategicAgenda2063,
+        contentJson: payload as Prisma.InputJsonValue,
+      },
     });
   } catch (err) {
     console.error("updateAboutSettings:", err);
