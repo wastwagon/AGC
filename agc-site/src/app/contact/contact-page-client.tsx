@@ -21,6 +21,8 @@ type ContactPageClientProps = { contactContent: ContactContent; heroImage: strin
 
 export function ContactPageClient({ contactContent, heroImage, siteSettings }: ContactPageClientProps) {
   const divisions = Array.isArray(contactContent.divisions) ? contactContent.divisions : [];
+  const mapQuery = encodeURIComponent(siteSettings.address);
+  const mapEmbedSrc = `https://www.google.com/maps?q=${mapQuery}&output=embed`;
   const [status, setStatus] = useState<"idle" | "sending" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
   const [emailNotifyWarning, setEmailNotifyWarning] = useState(false);
@@ -205,6 +207,24 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                 </button>
               </form>
             </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="border-t border-stone-200/80 bg-[#fffcf7] py-14 sm:py-16 lg:py-20">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <h2 className="text-center font-serif text-2xl font-semibold text-stone-900 sm:text-3xl">Find Us</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-stone-600 sm:text-base">
+            {siteSettings.address}
+          </p>
+          <div className="mt-6 overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm">
+            <iframe
+              title="Africa Governance Centre location map"
+              src={mapEmbedSrc}
+              className="h-[420px] w-full sm:h-[500px]"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+            />
           </div>
         </div>
       </section>
