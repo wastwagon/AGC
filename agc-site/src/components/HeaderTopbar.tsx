@@ -19,7 +19,7 @@ export function HeaderTopbar({ siteSettings }: { siteSettings: SiteSettings }) {
   }
 
   return (
-    <div className="relative hidden border-b border-black/[0.14] bg-gradient-to-b from-[#1a3555] via-[#1e3a5f] to-[#182f4d] shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] lg:block">
+    <div className="relative hidden border-b border-black/10 bg-accent-600 shadow-[inset_0_1px_0_rgba(255,255,255,0.07)] lg:block">
       {!mobileNav ? (
         <SearchModal
           isOpen={standaloneSearchOpen}
@@ -58,7 +58,7 @@ export function HeaderTopbar({ siteSettings }: { siteSettings: SiteSettings }) {
               </button>
               <Link
                 href="/contact"
-                className="inline-flex min-h-[44px] min-w-0 flex-1 items-center justify-center rounded-lg bg-gradient-to-r from-accent-600 to-accent-500 px-4 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-95 sm:px-5 lg:flex-initial"
+                className="inline-flex min-h-[44px] min-w-0 flex-1 items-center justify-center rounded-lg bg-accent-500 px-4 py-2.5 text-center text-sm font-medium text-white shadow-sm transition-opacity hover:opacity-95 sm:px-5 lg:flex-initial"
               >
                 {chrome.headerContactCta}
               </Link>

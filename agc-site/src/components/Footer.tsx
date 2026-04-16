@@ -45,7 +45,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
     { href: siteSettings.social.facebook, icon: Facebook, label: "Facebook" },
   ].filter((s) => s.href && s.href !== "#");
   return (
-    <footer className="relative overflow-hidden border-t border-accent-500/30 bg-accent-900 pb-[calc(4.25rem+env(safe-area-inset-bottom,0px))] text-white xl:pb-0">
+    <footer className="relative overflow-hidden border-t border-accent-500/30 bg-accent-600 pb-[calc(4.25rem+env(safe-area-inset-bottom,0px))] text-white xl:pb-0">
       {/* Upper footer - 4 columns */}
       <div className="px-4 py-12 sm:px-6 sm:py-16 lg:px-8 lg:py-[60px] xl:py-[90px]">
         <div className="mx-auto w-full max-w-6xl">
@@ -177,7 +177,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
       </div>
 
       {/* Lower footer - copyright */}
-      <div className="border-t border-white/10 bg-black/25 py-6 text-center">
+      <div className="border-t border-white/10 bg-accent-700 py-6 text-center">
         <div className="px-4 sm:px-6 lg:px-8">
           <p className="text-[14px] text-white/80">
             © {new Date().getFullYear()}{" "}

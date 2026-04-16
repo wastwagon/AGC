@@ -138,7 +138,7 @@ export function PageHero({
           <div className="h-full w-full bg-gradient-to-br from-stone-950 via-accent-900 to-accent-800" aria-hidden />
         )}
         <div
-          className="absolute inset-0 bg-gradient-to-br from-stone-950/92 via-accent-900/80 to-accent-600/30"
+          className="absolute inset-0 bg-gradient-to-br from-accent-900/50 to-accent-800/30"
           aria-hidden
         />
       </div>

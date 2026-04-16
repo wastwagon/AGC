@@ -41,13 +41,13 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
 
       <div className="wpo-site-header">
         <nav className="w-full px-4 py-0 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          <div className="flex h-20 items-center justify-between gap-4">
-            <Link href="/" className="shrink-0">
+          <div className="flex h-20 items-center justify-between gap-4 lg:h-20">
+            <Link href="/" className="flex border w-[200px] shrink-0 items-center lg:w-[220px]">
               <Image
                 src={brandLogoSrc}
                 alt={siteSettings.name}
-                width={160}
-                height={48}
+                width={200}
+                height={60}
                 className="h-10 w-auto object-contain lg:h-11"
                 priority
                 unoptimized={preferUnoptimizedImage(brandLogoSrc)}
