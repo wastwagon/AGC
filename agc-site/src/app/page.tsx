@@ -259,7 +259,7 @@ export default async function HomePage() {
       ) : null}
 
       {showCtaBand && (
-        <section className="relative overflow-hidden bg-accent-900 py-16 sm:py-20 lg:py-24">
+        <section className="relative overflow-hidden bg-accent-600 py-16 sm:py-20 lg:py-24">
           <div
             className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-accent-600/20 blur-3xl"
             aria-hidden
