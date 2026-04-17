@@ -195,7 +195,7 @@ export default async function HomePage() {
       <HomePartnerStrip blurb={home.homePartnerBlurb} partners={stripPartners} />
 
       {(showReach || impactStats.length > 0 || showMethodology) && (
-        <section className="border-y border-stone-200/80 bg-[#f2ebe3]/60 py-14 sm:py-20">
+        <section className="border-y border-stone-200/80 bg-page-section-paper py-14 sm:py-20">
           <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
             {showReach && (
               <div className="mb-12 max-w-2xl lg:max-w-xl">
