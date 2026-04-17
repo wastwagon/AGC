@@ -82,15 +82,15 @@ export function PageHero({
               unoptimized={preferUnoptimizedImage(src)}
             />
           ) : (
-            <div className="h-full w-full bg-gradient-to-br from-stone-900 to-accent-900" aria-hidden />
+            <div className="h-full w-full bg-gradient-to-br from-accent-700 to-accent-600" aria-hidden />
           )}
           <div
-            className="absolute inset-0 bg-gradient-to-r from-stone-950/90 via-accent-900/78 to-accent-700/35"
+            className="absolute inset-0 bg-gradient-to-r from-accent-700/58 via-accent-600/42 to-accent-700/55"
             aria-hidden
           />
         </div>
-        <div className="container relative z-10 mx-auto w-full px-4 py-12 text-left sm:px-6 sm:py-14 lg:px-8 lg:py-16">
-          <nav aria-label="Breadcrumb" className="text-sm text-white/75">
+        <div className="container relative z-10 mx-auto w-full px-4 py-12 text-left sm:px-6 sm:py-14 lg:px-8 lg:py-16 [text-shadow:0_1px_2px_rgba(0,0,0,0.18),0_2px_14px_rgba(0,0,0,0.22)]">
+          <nav aria-label="Breadcrumb" className="text-sm text-white/90">
             <ol className="flex flex-wrap items-center gap-1.5">
               {items.map((item, i) => (
                 <li key={i} className="flex items-center gap-1.5">
@@ -112,7 +112,7 @@ export function PageHero({
           <h1 className="mt-3 font-serif text-3xl font-semibold text-white sm:text-4xl lg:text-[2.75rem] lg:leading-tight">
             {title}
           </h1>
-          {subtitle && <p className="mt-2 max-w-2xl text-base text-white/85 sm:text-lg">{subtitle}</p>}
+          {subtitle && <p className="mt-2 max-w-2xl text-base text-white sm:text-lg">{subtitle}</p>}
         </div>
       </section>
     );
@@ -135,22 +135,23 @@ export function PageHero({
             unoptimized={preferUnoptimizedImage(src)}
           />
         ) : (
-          <div className="h-full w-full bg-gradient-to-br from-stone-950 via-accent-900 to-accent-800" aria-hidden />
+          <div className="h-full w-full bg-gradient-to-br from-accent-700 to-accent-600" aria-hidden />
         )}
+        {/* Tint: accent-600/700 only — lighter so the photo stays visible; text shadow helps contrast. */}
         <div
-          className="absolute inset-0 bg-gradient-to-br from-accent-900/50 to-accent-800/30"
+          className="absolute inset-0 bg-gradient-to-br from-accent-700/60 via-accent-600/44 to-accent-700/58"
           aria-hidden
         />
       </div>
 
       <div className="container relative z-10 mx-auto w-full px-4 py-16 text-center sm:px-6 sm:py-20 lg:px-8 lg:py-24">
-        <div className="mx-auto max-w-3xl">
-          <h1 className="font-serif text-3xl font-semibold leading-tight text-white sm:text-4xl lg:text-5xl xl:text-[3.25rem] xl:leading-tight">
+        <div className="mx-auto max-w-3xl [text-shadow:0_1px_2px_rgba(0,0,0,0.2),0_2px_16px_rgba(0,0,0,0.28)]">
+          <h1 className="font-serif text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[3.75rem] xl:leading-tight">
             {title}
           </h1>
-          {subtitle && <p className="mt-4 text-lg text-white/90 sm:text-xl">{subtitle}</p>}
+          {subtitle && <p className="mt-4 text-lg text-white sm:text-xl lg:text-2xl">{subtitle}</p>}
           <nav aria-label="Breadcrumb" className="mt-8">
-            <ol className="flex flex-wrap items-center justify-center gap-1.5 text-sm text-white/80 sm:gap-2 sm:text-base">
+            <ol className="flex flex-wrap items-center justify-center gap-1.5 text-sm text-white sm:gap-2 sm:text-base">
               {items.map((item, i) => (
                 <li key={i} className="flex items-center gap-1 sm:gap-2">
                   {item.href ? (

@@ -89,10 +89,10 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
           >
             <source src={backgroundVideoSrc} type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-gradient-to-br from-stone-950/88 via-accent-900/75 to-accent-600/32" />
+          <div className="absolute inset-0 bg-gradient-to-br from-accent-700/60 via-accent-600/44 to-accent-700/58" />
         </div>
       ) : slides.length === 0 ? (
-        <div className="absolute inset-0 z-0 bg-gradient-to-br from-stone-900 via-accent-900 to-accent-700" aria-hidden />
+        <div className="absolute inset-0 z-0 bg-gradient-to-br from-accent-700 to-accent-600" aria-hidden />
       ) : (
         slides.map((src, i) => (
           <div
@@ -109,7 +109,7 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
               aria-hidden
             />
             <div
-              className="absolute inset-0 bg-gradient-to-br from-stone-950/88 via-accent-900/75 to-accent-600/32"
+              className="absolute inset-0 bg-gradient-to-br from-accent-700/60 via-accent-600/44 to-accent-700/58"
               aria-hidden
             />
           </div>
@@ -118,14 +118,14 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
 
       {/* Main copy — left column, top-aligned */}
       <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-start px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 lg:px-8 lg:pb-14 lg:pt-24">
-        <div className="max-w-2xl">
+        <div className="max-w-2xl [text-shadow:0_1px_2px_rgba(0,0,0,0.18),0_2px_16px_rgba(0,0,0,0.26)]">
           <p className="mb-4 max-w-lg text-sm font-medium leading-snug text-accent-100 sm:text-base">
             {heroContent.eyebrow}
           </p>
-          <h1 className="font-serif text-4xl font-semibold leading-[1.12] tracking-tight text-white sm:text-5xl lg:text-6xl xl:text-[3.5rem]">
+          <h1 className="font-serif text-5xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-[4.25rem]">
             {heroContent.title}
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-[1.65] text-white/90 sm:text-lg lg:text-xl">
+          <p className="mt-6 max-w-xl text-base leading-[1.65] text-white/90 sm:text-lg lg:text-xl xl:text-2xl">
             {heroContent.subtitle}
           </p>
           <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
