@@ -89,7 +89,8 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
           >
             <source src={backgroundVideoSrc} type="video/mp4" />
           </video>
-          <div className="absolute inset-0 bg-gradient-to-br from-accent-700/60 via-accent-600/44 to-accent-700/58" />
+          {/* Stronger on the left where type sits; lighter toward the right so the photo reads. */}
+          <div className="absolute inset-0 bg-gradient-to-r from-accent-700/72 via-accent-600/48 to-accent-600/12" />
         </div>
       ) : slides.length === 0 ? (
         <div className="absolute inset-0 z-0 bg-gradient-to-br from-accent-700 to-accent-600" aria-hidden />
@@ -109,7 +110,7 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
               aria-hidden
             />
             <div
-              className="absolute inset-0 bg-gradient-to-br from-accent-700/60 via-accent-600/44 to-accent-700/58"
+              className="absolute inset-0 bg-gradient-to-r from-accent-700/72 via-accent-600/48 to-accent-600/12"
               aria-hidden
             />
           </div>
@@ -117,27 +118,29 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
       )}
 
       {/* Main copy — left column, top-aligned */}
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-start px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 lg:px-8 lg:pb-14 lg:pt-24">
-        <div className="max-w-2xl [text-shadow:0_1px_2px_rgba(0,0,0,0.18),0_2px_16px_rgba(0,0,0,0.26)]">
-          <p className="mb-4 max-w-lg text-sm font-medium leading-snug text-accent-100 sm:text-base">
-            {heroContent.eyebrow}
-          </p>
-          <h1 className="font-serif text-5xl font-semibold leading-[1.1] tracking-tight text-white sm:text-6xl lg:text-7xl xl:text-[4.25rem]">
+      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-start px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 lg:px-8 lg:pb-14 lg:pt-28">
+        <div className="max-w-2xl lg:max-w-[34rem] [text-shadow:0_1px_2px_rgba(0,0,0,0.22),0_3px_20px_rgba(0,0,0,0.28)]">
+          {heroContent.eyebrow?.trim() ? (
+            <p className="mb-5 max-w-xl text-[0.6875rem] font-semibold uppercase leading-relaxed tracking-[0.14em] text-white/90 sm:text-xs">
+              {heroContent.eyebrow}
+            </p>
+          ) : null}
+          <h1 className="text-balance font-serif text-3xl font-semibold leading-[1.12] tracking-tight text-white sm:text-4xl sm:leading-[1.1] lg:text-[2.35rem] lg:leading-[1.08] xl:text-[2.65rem] xl:leading-[1.06]">
             {heroContent.title}
           </h1>
-          <p className="mt-6 max-w-xl text-base leading-[1.65] text-white/90 sm:text-lg lg:text-xl xl:text-2xl">
+          <p className="mt-6 max-w-2xl text-pretty text-base font-normal leading-[1.72] text-white/95 sm:text-lg sm:leading-[1.7] lg:mt-7 lg:text-xl lg:leading-[1.68]">
             {heroContent.subtitle}
           </p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center">
+          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:mt-12">
             <Link
               href={heroContent.ctaHref}
-              className="inline-flex items-center justify-center rounded-xl bg-white px-8 py-3.5 text-base font-semibold text-accent-900 shadow-md transition hover:bg-accent-50"
+              className="inline-flex min-h-[48px] min-w-[44px] items-center justify-center rounded-xl bg-white px-8 py-3.5 text-[0.9375rem] font-semibold text-accent-900 shadow-md ring-1 ring-white/20 transition hover:bg-[#fffcf7] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               {heroContent.cta}
             </Link>
             <Link
               href={heroContent.ctaSecondaryHref}
-              className="inline-flex items-center justify-center rounded-xl border border-white/50 bg-white/10 px-8 py-3.5 text-base font-semibold text-white backdrop-blur-sm transition hover:bg-white/20"
+              className="inline-flex min-h-[48px] min-w-[44px] items-center justify-center rounded-xl border-2 border-white/70 bg-white/12 px-8 py-3.5 text-[0.9375rem] font-semibold text-white shadow-sm backdrop-blur-sm transition hover:border-white hover:bg-white/22 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
             >
               {heroContent.ctaSecondary}
             </Link>
