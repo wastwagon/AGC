@@ -45,7 +45,7 @@ export default async function AboutPage() {
         breadcrumbs={[{ label: bc.home, href: "/" }, { label: bc.about }]}
       />
 
-      <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-20">
+      <section className="bg-white border-b border-stone-200/80 py-16 sm:py-20 lg:py-20">
         <div className="mx-auto grid max-w-7xl gap-8 px-3 sm:px-4 lg:grid-cols-12 lg:gap-20 lg:px-6">
           <div className="lg:col-span-6">
             <p className="text-sm font-medium text-accent-800">Who we are</p>
@@ -102,7 +102,7 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <section className="bg-white border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <TeamSectionTabs cmsTeam={teamForTabs} />
           <div className="mt-14 flex justify-center">
