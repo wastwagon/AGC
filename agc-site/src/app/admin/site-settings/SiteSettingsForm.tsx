@@ -287,7 +287,10 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
             <input id="footerRightsReserved" name="footerRightsReserved" defaultValue={settings.chrome.footer.rightsReserved} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
           <div>
-            <label htmlFor="footerAdminLabel" className="block text-sm font-medium text-slate-700">Footer: CMS link label</label>
+            <label htmlFor="footerAdminLabel" className="block text-sm font-medium text-slate-700">
+              Footer: home shortcut label
+            </label>
+            <p className="mt-0.5 text-xs text-slate-500">Copyright bar; links to home (scrolls to top if already on home).</p>
             <input id="footerAdminLabel" name="footerAdminLabel" defaultValue={settings.chrome.footer.adminLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
         </div>

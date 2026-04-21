@@ -106,13 +106,14 @@ export function ApplicationsClient({
   }
 
   const inputClass =
-    "mt-1.5 w-full rounded-lg border border-stone-300/90 bg-white px-4 py-2.5 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
+    "mt-1.5 w-full rounded-none border border-stone-300/90 bg-white px-4 py-2.5 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
   const labelClass = "block text-sm font-medium text-stone-700";
 
   return (
     <>
       <PageHero
         variant={hero.image ? "compact" : "minimal"}
+        compactTall={Boolean(hero.image)}
         title={hero.title}
         subtitle={hero.subtitle}
         image={hero.image}
@@ -224,7 +225,7 @@ export function ApplicationsClient({
                 <p className="rounded-lg border border-red-200/80 bg-red-50/80 px-4 py-3 text-sm text-red-900">{errorMessage}</p>
               )}
 
-              <Button type="submit" disabled={status === "sending"}>
+              <Button type="submit" disabled={status === "sending"} className="rounded-none">
                 {status === "sending" ? submitSending : submitIdle}
               </Button>
             </form>
