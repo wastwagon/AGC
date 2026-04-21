@@ -87,7 +87,7 @@ export function SearchModal({ isOpen, onClose, copy }: SearchModalProps) {
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 pt-[15vh] px-4">
       <div
-        className="w-full max-w-xl rounded-2xl border border-slate-200 bg-white shadow-2xl"
+        className="w-full max-w-xl border border-slate-200 bg-white shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-label={copy.dialogAriaLabel}
@@ -106,7 +106,7 @@ export function SearchModal({ isOpen, onClose, copy }: SearchModalProps) {
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
+            className="p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-700"
             aria-label={copy.closeAriaLabel}
           >
             <X className="h-5 w-5" />
@@ -128,9 +128,9 @@ export function SearchModal({ isOpen, onClose, copy }: SearchModalProps) {
                     <Link
                       href={item.href}
                       onClick={onClose}
-                      className="flex items-start gap-3 rounded-lg px-3 py-3 transition-colors hover:bg-slate-50"
+                      className="flex items-start gap-3 px-3 py-3 transition-colors hover:bg-slate-50"
                     >
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-50 text-accent-600">
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center bg-accent-50 text-accent-600">
                         <Icon className="h-4 w-4" />
                       </span>
                       <div className="min-w-0 flex-1">

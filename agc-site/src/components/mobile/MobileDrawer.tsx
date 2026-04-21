@@ -151,8 +151,14 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
         }`}
         inert={!mobileOpen ? true : undefined}
       >
-        {/* Header — matches light chrome */}
-        <div className="flex shrink-0 items-center justify-end gap-2 border-b border-stone-200/90 bg-white px-4 py-3.5">
+        {/* Header — language / translator + close (matches light chrome strip) */}
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-stone-200/90 bg-white px-4 py-3.5">
+          <div className="min-w-0 flex-1 pt-0.5">
+            <p className="mb-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-stone-500">
+              {chrome.mobileLanguageEyebrow}
+            </p>
+            <LanguageSelector variant="light" languages={siteSettings.languages} />
+          </div>
           <button
             ref={closeBtnRef}
             type="button"
@@ -306,16 +312,6 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
               </ul>
             </nav>
           </section>
-        </div>
-
-        {/* Footer — language (light variant to match drawer) */}
-        <div className="shrink-0 border-t border-stone-200/90 bg-stone-50/95 px-3 py-4 backdrop-blur-sm">
-          <div className="rounded-none border border-stone-200/80 bg-white px-2 py-2 shadow-sm">
-            <p className="mb-2 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-stone-500">
-              {chrome.mobileLanguageEyebrow}
-            </p>
-            <LanguageSelector variant="light" languages={siteSettings.languages} />
-          </div>
         </div>
       </aside>
     </>

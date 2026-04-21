@@ -60,7 +60,7 @@ export default async function AboutPage() {
           </div>
           <aside className="lg:col-span-6">
             <div className="sticky top-28 space-y-3">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg ring-1 ring-stone-200/60 lg:aspect-auto lg:min-h-[360px]">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-none shadow-lg ring-1 ring-stone-200/60 lg:aspect-auto lg:min-h-[360px]">
                 <Image
                   src={whoWeAreImage}
                   alt="Who we are section image"
@@ -93,7 +93,7 @@ export default async function AboutPage() {
               <p className="page-prose mt-6">{content.strategicObjectives.principles}</p>
               <p className="page-prose mt-6 text-stone-700">{content.strategicObjectives.agenda2063}</p>
             </div>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-2xl shadow-lg ring-1 ring-stone-200/60 lg:aspect-auto lg:min-h-[420px]">
+            <div className="relative aspect-[4/3] overflow-hidden rounded-none shadow-lg ring-1 ring-stone-200/60 lg:aspect-auto lg:min-h-[420px]">
               <Image
                 src={sectionImage}
                 alt="Governance conference and summit"
