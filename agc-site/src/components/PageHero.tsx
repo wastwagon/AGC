@@ -46,6 +46,10 @@ type PageHeroProps = {
   /** Immersive only — taller min-height so more of the hero image shows (default on). */
   immersiveTall?: boolean;
   /**
+   * Compact only — min-heights aligned with the home hero (`HeroConsultar`) for a full-viewport image strip.
+   */
+  compactTall?: boolean;
+  /**
    * Immersive + compact: staggered fade-up intro on hero copy (home-hero style). Default on; set `false` to disable.
    */
   animateTextIntro?: boolean;
@@ -63,6 +67,7 @@ export function PageHero({
   variant = "immersive",
   immersiveOverlay = "dark",
   immersiveTall = true,
+  compactTall = false,
   animateTextIntro = true,
 }: PageHeroProps) {
   const items = breadcrumbs ?? [{ label: "Home", href: "/" }, { label: title }];
@@ -173,8 +178,11 @@ export function PageHero({
   if (variant === "compact") {
     const src = image ?? "";
     const alt = imageAlt ?? "";
+    const compactMinH = compactTall
+      ? "min-h-[min(64vh,480px)] sm:min-h-[min(68vh,520px)] lg:min-h-[min(72vh,560px)] xl:min-h-[min(84vh,620px)]"
+      : "min-h-[min(50vh,360px)] sm:min-h-[min(56vh,420px)] lg:min-h-[min(60vh,480px)]";
     return (
-      <section className="relative flex min-h-[min(50vh,360px)] flex-col justify-center sm:min-h-[min(56vh,420px)] lg:min-h-[min(60vh,480px)]">
+      <section className={`relative flex ${compactMinH} flex-col justify-center`}>
         <div className="absolute inset-0">
           {src ? (
             <Image

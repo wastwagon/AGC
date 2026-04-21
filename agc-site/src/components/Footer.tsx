@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { MapPin, Phone, Mail } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
@@ -18,6 +19,7 @@ const iconBoxLightClass =
  * tagline, Donate, tel | email, social row — then link columns and contact + legal.
  */
 export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSettings; brandLogoSrc: string }) {
+  const pathname = usePathname();
   const { footer: footerChrome, newsletter: newsletterCopy } = siteSettings.chrome;
   const socialRow = publicSocialSlots(siteSettings);
   const phoneClean = siteSettings.phone.replace(/\s/g, "");
@@ -189,7 +191,18 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                 {siteSettings.name}
               </Link>. {footerChrome.rightsReserved}
             </p>
-            <Link href="/admin/login" className="text-white transition-colors hover:text-accent-100">
+            <Link
+              href="/"
+              className="text-white transition-colors hover:text-accent-100"
+              onClick={(e) => {
+                if (pathname !== "/") return;
+                e.preventDefault();
+                const instant =
+                  typeof window !== "undefined" &&
+                  window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                window.scrollTo({ top: 0, behavior: instant ? "instant" : "smooth" });
+              }}
+            >
               {footerChrome.adminLabel}
             </Link>
           </div>
