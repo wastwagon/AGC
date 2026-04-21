@@ -7,8 +7,8 @@ export default function AboutLoading() {
         <div className="mt-4 h-4 w-full max-w-2xl rounded bg-stone-100" />
         <div className="mt-2 h-4 w-full max-w-xl rounded bg-stone-100" />
         <div className="mt-10 space-y-4">
-          <div className="h-32 rounded-2xl bg-stone-100" />
-          <div className="h-32 rounded-2xl bg-stone-100" />
+          <div className="h-32 rounded-none bg-stone-100" />
+          <div className="h-32 rounded-none bg-stone-100" />
         </div>
       </div>
     </div>

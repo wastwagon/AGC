@@ -201,7 +201,7 @@ export const fallbackTeam = [
 
 export const workContent = {
   hero: {
-    title: "Our Work & Impact",
+    title: "Our Work",
     subtitle: "Making a Difference",
   },
   approach: {

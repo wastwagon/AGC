@@ -1,5 +1,5 @@
 /**
- * Brand-style social glyphs (monochrome, `currentColor`) for footer / chrome.
+ * Brand-style social glyphs (`currentColor`; Facebook uses accent tile + white glyph).
  * Paths follow commonly published simple-icon shapes; URLs still come from Site settings.
  */
 export type SocialBrand = "twitter" | "facebook" | "linkedin" | "instagram";
@@ -20,7 +20,12 @@ export function SocialBrandIcon({ brand, className = "h-[18px] w-[18px]" }: Prop
       );
     case "facebook":
       return (
-        <svg className={common} viewBox="0 0 24 24" fill="currentColor" aria-hidden>
+        <svg
+          className={`shrink-0 rounded-sm bg-accent-600 text-white ${className}`}
+          viewBox="0 0 24 24"
+          fill="currentColor"
+          aria-hidden
+        >
           <path d="M9.101 23.691v-9.7H6.627v-3.625h2.474v-2.724c0-2.445 1.238-6.259 6.259-6.259l3.307.012v3.488H17.2c-1.222 0-1.634.789-1.634 1.972v2.511h3.727l-.487 3.625h-3.24v9.7H9.101z" />
         </svg>
       );

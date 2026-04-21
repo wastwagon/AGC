@@ -470,6 +470,9 @@ export function PageContentForm({ item }: PageContentFormProps) {
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-medium text-slate-600">Hero title</label>
+                <p className="mt-0.5 text-[11px] text-slate-500">
+                  Large heading on the hero image (defaults to the breadcrumb “Our Work” label if left empty).
+                </p>
                 <input
                   type="text"
                   value={getNestedString(["hero", "title"])}

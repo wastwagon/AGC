@@ -107,12 +107,14 @@ export function OurWorkClient({
 
   const activeContent = content[activeTab];
   const cards = cardsByTab[activeTab];
+  const heroTitle = (content.hero.title || "").trim() || breadcrumbLabels.ourWork;
+  const heroSubtitle = (content.hero.subtitle || "").trim();
 
   return (
     <>
       <PageHero
-        title={content.hero.title}
-        subtitle={content.hero.subtitle}
+        title={heroTitle}
+        subtitle={heroSubtitle}
         image={heroImage}
         imageAlt="Our Work"
         breadcrumbs={[{ label: breadcrumbLabels.home, href: "/" }, { label: breadcrumbLabels.ourWork }]}
