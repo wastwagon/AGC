@@ -96,9 +96,9 @@ export const HEADER_PRIMARY_NAV_SLOTS: readonly SiteNavItem[] = [
     href: "/about",
     label: "About",
     subLinks: [
-      { href: "/get-involved/join-us", label: "Careers & Opportunities" },
-      { href: "/get-involved/partnership", label: "Partner / Sponsor" },
-      { href: "/#newsletter", label: "Subscribe to our newsletter" },
+      { href: "/get-involved/join-us", label: "CAREERS & OPPORTUNITIES" },
+      { href: "/get-involved/partnership", label: "PARTNER / SPONSOR" },
+      { href: "/#newsletter", label: "SUBSCRIBE TO OUR NEWSLETTER" },
     ],
   },
   { href: "/our-work", label: "Our Work" },
