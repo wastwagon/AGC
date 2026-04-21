@@ -206,7 +206,7 @@ export function PastEventDetailView({
                 />
               </div>
             ) : heroImage ? (
-              <div className="relative aspect-video w-full overflow-hidden bg-stone-100">
+              <div className="relative aspect-video w-full overflow-hidden bg-white">
                 <Image
                   src={heroImage}
                   alt={event.title}

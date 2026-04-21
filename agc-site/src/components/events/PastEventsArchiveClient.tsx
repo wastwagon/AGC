@@ -319,7 +319,7 @@ export function PastEventsArchiveClient({
 
       <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-14">
         <aside className="min-w-0 lg:col-span-4">
-          <div className="rounded-none border border-stone-200/90 bg-stone-50/60 p-6">
+          <div className="rounded-none border border-stone-200/90 bg-white p-6">
             <div className="relative">
               <label htmlFor="past-ev-search" className="sr-only">
                 {copy.searchPlaceholder}
@@ -404,7 +404,7 @@ export function PastEventsArchiveClient({
 
           <div className="mt-6">
             {visible.length === 0 ? (
-              <p className="border border-stone-200/90 bg-stone-50/50 px-6 py-12 text-center text-stone-600">
+              <p className="border border-stone-200/90 bg-white px-6 py-12 text-center text-stone-600">
                 {emptyPastMessage}
               </p>
             ) : (
