@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight, FileText } from "lucide-react";
 import { placeholderImages } from "@/data/images";
 import type { CmsPublication } from "@/lib/content";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { labelForPublicationTypeSlug } from "@/lib/site-taxonomy";
 import type { TaxonomyOption } from "@/data/taxonomy-defaults";
 
@@ -12,6 +13,11 @@ type PublicationCardProps = {
   href?: string;
   /** From `getSiteTaxonomy().publicationTypes` for badge labels */
   publicationTypes?: TaxonomyOption[];
+  /**
+   * `listing` = news index style (square image, date line, title).
+   * `related` = detail page grid (image + title).
+   */
+  variant?: "default" | "listing" | "related";
 };
 
 export function PublicationCard({
@@ -19,6 +25,7 @@ export function PublicationCard({
   imageUrl = placeholderImages.publications,
   href = "/publications",
   publicationTypes = [],
+  variant = "default",
 }: PublicationCardProps) {
   const date = item.date_published || item.date_created;
   const dateStr = date ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" }) : "";
@@ -31,6 +38,65 @@ export function PublicationCard({
     slugs.length > 0
       ? slugs.map((s) => labelForPublicationTypeSlug(s, publicationTypes)).join(" · ")
       : "Publication";
+
+  function formatDateListing(iso: string | undefined): string {
+    if (!iso) return "";
+    const d = new Date(iso);
+    if (Number.isNaN(d.getTime())) return "";
+    return d
+      .toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })
+      .toUpperCase();
+  }
+
+  if (variant === "listing") {
+    const dateListing = formatDateListing(date);
+    return (
+      <article className="group flex flex-col">
+        <Link href={linkHref} className="flex flex-col">
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-stone-100 ring-1 ring-stone-200/80">
+            <Image
+              src={imageUrl}
+              alt={item.title}
+              fill
+              unoptimized={preferUnoptimizedImage(imageUrl)}
+              className="object-cover transition-opacity duration-200 group-hover:opacity-95"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
+          </div>
+          {dateListing ? (
+            <p className="mt-3 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-accent-600">
+              {dateListing}
+            </p>
+          ) : null}
+          <h2 className="mt-2 font-sans text-lg font-semibold leading-snug text-accent-800 transition-colors group-hover:text-accent-950 sm:text-xl">
+            {item.title}
+          </h2>
+        </Link>
+      </article>
+    );
+  }
+
+  if (variant === "related") {
+    return (
+      <article className="group flex flex-col">
+        <Link href={linkHref} className="flex flex-col">
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-stone-100 ring-1 ring-stone-200/80">
+            <Image
+              src={imageUrl}
+              alt={item.title}
+              fill
+              unoptimized={preferUnoptimizedImage(imageUrl)}
+              className="object-cover transition-opacity duration-200 group-hover:opacity-95"
+              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            />
+          </div>
+          <h2 className="mt-3 font-sans text-base font-semibold leading-snug text-accent-800 transition-colors group-hover:text-accent-950 sm:text-lg">
+            {item.title}
+          </h2>
+        </Link>
+      </article>
+    );
+  }
 
   return (
     <article className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md">

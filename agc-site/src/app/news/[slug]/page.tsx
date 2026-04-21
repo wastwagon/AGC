@@ -16,6 +16,7 @@ import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { normalizeNewsDownloads } from "@/lib/news-downloads";
 import { resolveNewsForPublic } from "@/lib/cms-fallback";
+import { HeroDarkScrim } from "@/components/HeroDarkScrim";
 import { NewsArticleShareLinks } from "@/components/NewsArticleShareLinks";
 import { NewsCard } from "@/components/NewsCard";
 
@@ -129,19 +130,19 @@ export default async function NewsDetailPage({ params }: Props) {
 
   return (
     <article className="min-h-screen bg-white">
-      <div className="relative aspect-[21/9] min-h-[220px] w-full overflow-hidden bg-accent-900">
+      <div className="relative aspect-[21/9] min-h-[220px] w-full overflow-hidden bg-slate-950">
         <Image
           src={imageUrl}
           alt={item.title}
           fill
           unoptimized={preferUnoptimizedImage(imageUrl)}
-          className="object-cover opacity-[0.72]"
+          className="object-cover object-center"
           sizes="100vw"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-accent-900/95 via-accent-800/45 to-accent-900/25" />
+        <HeroDarkScrim />
         <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 lg:p-16">
-          <div className="mx-auto w-full max-w-3xl">
+          <div className="mx-auto w-full max-w-3xl [text-shadow:0_1px_2px_rgba(0,0,0,0.2),0_2px_14px_rgba(0,0,0,0.22)]">
             <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white">{pageCopy.title}</p>
             <h1 className="font-serif text-3xl font-semibold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-[2.35rem]">
               {item.title}
