@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import { ArrowDown, ArrowUp, ImagePlus, Trash2 } from "lucide-react";
@@ -7,6 +8,7 @@ import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 import type { HomePageCms } from "@/lib/home-page-data";
 import { updateHomeSettings } from "./actions";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
+import { useImageFieldPreview } from "@/hooks/useImageFieldPreview";
 
 function textAreaLines(arr: string[]) {
   return arr.join("\n");
@@ -18,6 +20,8 @@ function parseLines(text: string): string[] {
     .map((x) => x.trim())
     .filter(Boolean);
 }
+
+type MediaPickerTarget = "heroSlider" | "spotlightPortrait";
 
 export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; saved?: boolean }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -34,7 +38,12 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
     }
   }, []);
   const [heroSliderImages, setHeroSliderImages] = useState(initialDraft?.heroSliderImages ?? textAreaLines(home.heroSliderImages));
+  const [spotlightImage, setSpotlightImage] = useState(
+    initialDraft?.spotlightImage ?? home.homeSpotlightStory.image ?? ""
+  );
   const [pickerOpen, setPickerOpen] = useState(false);
+  const [pickerTarget, setPickerTarget] = useState<MediaPickerTarget | null>(null);
+  const { previewUrl: spotlightPreviewUrl, loading: spotlightPreviewLoading } = useImageFieldPreview(spotlightImage);
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({});
   const [dragFrom, setDragFrom] = useState<number | null>(null);
   const [dragOver, setDragOver] = useState<number | null>(null);
@@ -63,7 +72,13 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
   }, []);
 
   function onSelectMedia(media: MediaItem) {
-    setHeroSliderImages((prev) => (prev.trim() ? `${prev}\n${media.id}` : media.id));
+    if (pickerTarget === "heroSlider") {
+      setHeroSliderImages((prev) => (prev.trim() ? `${prev}\n${media.id}` : media.id));
+    } else if (pickerTarget === "spotlightPortrait") {
+      setSpotlightImage(media.id);
+    }
+    setPickerOpen(false);
+    setPickerTarget(null);
   }
 
   function setLines(next: string[]) {
@@ -176,7 +191,10 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
               />
               <button
                 type="button"
-                onClick={() => setPickerOpen(true)}
+                onClick={() => {
+                  setPickerTarget("heroSlider");
+                  setPickerOpen(true);
+                }}
                 className="inline-flex h-fit items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
                 title="Pick from Media Library"
               >
@@ -257,14 +275,14 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
       </section>
 
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
-        <h2 className="font-serif text-lg font-semibold text-slate-900">Impact and partners</h2>
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Impact and newsletter band</h2>
         <div className="mt-4 grid gap-4">
           <input name="homeReachTitle" defaultValue={initialDraft?.homeReachTitle ?? home.homeReach.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Section title" />
           <textarea name="homeReachIntro" defaultValue={initialDraft?.homeReachIntro ?? home.homeReach.intro} rows={2} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Section intro" />
           <textarea name="homeImpactMethodology" defaultValue={initialDraft?.homeImpactMethodology ?? home.homeImpactMethodology} rows={2} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Impact methodology" />
           <textarea name="impactStats" defaultValue={initialDraft?.impactStats ?? home.homeImpactStats.map((s) => `${s.value}|${s.label}|${s.note}`).join("\n")} rows={5} className="rounded-lg border border-slate-300 px-4 py-2 font-mono text-sm" placeholder="Impact stats lines: value|label|note" />
-          <textarea name="heroPartnerStrip" defaultValue={initialDraft?.heroPartnerStrip ?? textAreaLines(home.heroPartnerStrip)} rows={4} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Partner strip labels (one per line)" />
-          <textarea name="homePartnerBlurb" defaultValue={initialDraft?.homePartnerBlurb ?? home.homePartnerBlurb} rows={2} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Partner blurb" />
+          <textarea name="heroPartnerStrip" defaultValue={initialDraft?.heroPartnerStrip ?? textAreaLines(home.heroPartnerStrip)} rows={4} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Partner lines (archival; not shown on homepage band)" />
+          <textarea name="homePartnerBlurb" defaultValue={initialDraft?.homePartnerBlurb ?? home.homePartnerBlurb} rows={2} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="e.g. Stay up to date with our research and events >" />
         </div>
       </section>
 
@@ -281,7 +299,66 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
           <textarea name="spotlightParagraphs" defaultValue={initialDraft?.spotlightParagraphs ?? textAreaLines(home.homeSpotlightStory.paragraphs)} rows={4} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight paragraphs (one per line)" />
           <input name="spotlightName" defaultValue={initialDraft?.spotlightName ?? home.homeSpotlightStory.name} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight name" />
           <input name="spotlightRole" defaultValue={initialDraft?.spotlightRole ?? home.homeSpotlightStory.role} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight role" />
-          <input name="spotlightInitials" defaultValue={initialDraft?.spotlightInitials ?? home.homeSpotlightStory.initials} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight initials" />
+          <div className="sm:col-span-2">
+            <label htmlFor="spotlightImage" className="mb-1 block text-sm font-medium text-slate-700">
+              Spotlight portrait
+            </label>
+            <div className="flex gap-2">
+              <input
+                id="spotlightImage"
+                name="spotlightImage"
+                value={spotlightImage}
+                onChange={(e) => setSpotlightImage(e.target.value)}
+                className="w-full rounded-lg border border-slate-300 px-4 py-2"
+                placeholder="media-… or /uploads/… (square)"
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setPickerTarget("spotlightPortrait");
+                  setPickerOpen(true);
+                }}
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                title="Pick or upload from Media Library"
+              >
+                <ImagePlus className="h-4 w-4" />
+                Library
+              </button>
+            </div>
+            <p className="mt-1 text-xs text-slate-500">
+              Use <strong>Library</strong> to pick or upload. You can still paste a path manually.
+            </p>
+            {spotlightPreviewLoading ? (
+              <p className="mt-2 text-xs text-slate-500">Loading preview…</p>
+            ) : spotlightPreviewUrl ? (
+              <div className="mt-3">
+                <p className="text-xs font-medium text-slate-600">Preview</p>
+                <div className="relative mt-1 h-40 w-40 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                  <Image
+                    src={spotlightPreviewUrl}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    unoptimized={preferUnoptimizedImage(spotlightPreviewUrl)}
+                  />
+                </div>
+              </div>
+            ) : spotlightImage.trim() ? (
+              <p className="mt-2 text-xs text-amber-800">
+                No preview — for <code className="rounded bg-amber-100 px-1">media-…</code> IDs the file must exist in{" "}
+                <Link href="/admin/media" className="font-medium underline">
+                  Media Library
+                </Link>
+                .
+              </p>
+            ) : null}
+          </div>
+          <input
+            name="spotlightInitials"
+            defaultValue={initialDraft?.spotlightInitials ?? home.homeSpotlightStory.initials}
+            className="rounded-lg border border-slate-300 px-4 py-2"
+            placeholder="Initials (optional, legacy — not shown if image set)"
+          />
           <input name="spotlightCtaLabel" defaultValue={initialDraft?.spotlightCtaLabel ?? home.homeSpotlightStory.ctaLabel} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight CTA label" />
           <input name="spotlightCtaHref" defaultValue={initialDraft?.spotlightCtaHref ?? home.homeSpotlightStory.ctaHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight CTA href" />
         </div>
@@ -321,7 +398,14 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
 
       <button type="submit" className="rounded-lg bg-accent-600 px-6 py-2 font-medium text-white hover:bg-accent-700">Save Home Settings</button>
 
-      <ImagePicker open={pickerOpen} onClose={() => setPickerOpen(false)} onSelect={onSelectMedia} />
+      <ImagePicker
+        open={pickerOpen}
+        onClose={() => {
+          setPickerOpen(false);
+          setPickerTarget(null);
+        }}
+        onSelect={onSelectMedia}
+      />
     </form>
   );
 }

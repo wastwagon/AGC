@@ -1,17 +1,18 @@
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { Calendar, MapPin, Users, Clock } from "lucide-react";
 import { getEventBySlug, getTeam } from "@/lib/content";
 import { eventsContent, fallbackEvents } from "@/data/content";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import type { CmsEvent, CmsEventAgendaItem } from "@/lib/content";
-import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { placeholderImages } from "@/data/images";
 import { resolveImageUrl } from "@/lib/media";
 import { EventRegistrationForm } from "@/components/EventRegistrationForm";
+import { PastEventDetailView } from "@/components/events/PastEventDetailView";
 import { prisma } from "@/lib/db";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 import { DEFAULT_SITE_CHROME } from "@/data/site-chrome";
+import { eventLocationSentence, formatRegistrationScheduleLine } from "@/lib/event-display";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: Props) {
   const isPastEvent = event
     ? new Date(event.end_date || event.start_date).getTime() < Date.now()
     : false;
-  const title = event ? `${isPastEvent ? "Event details" : "Register"} – ${event.title}` : "Event Registration";
+  const title = event ? `${isPastEvent ? "Past event" : "Register"} – ${event.title}` : "Event Registration";
   return { title, description: event?.description?.replace(/<[^>]*>/g, "").slice(0, 160) };
 }
 
@@ -41,232 +42,210 @@ export default async function EventRegisterPage({ params }: Props) {
 
   if (!event) notFound();
 
-  const [team, bc, eventsPage] = await Promise.all([
+  const [team, bc] = await Promise.all([
     getTeam().catch(() => [] as Awaited<ReturnType<typeof getTeam>>),
     getBreadcrumbLabels().catch(() => DEFAULT_SITE_CHROME.breadcrumbs),
-    getMergedPageContent<typeof eventsContent>("events", cmsStaticOrEmpty(eventsContent)),
   ]);
-  const pageCopy = eventsPage as unknown as typeof eventsContent & { heroImage?: string };
+
+  const isPastEvent = new Date(event.end_date || event.start_date).getTime() < Date.now();
 
   let confirmedCount = 0;
   let waitlistCount = 0;
-  try {
-    const [c, w] = await Promise.all([
-      prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: false } }),
-      prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: true } }),
-    ]);
-    confirmedCount = c;
-    waitlistCount = w;
-  } catch {
-    /* DB unavailable (e.g. dev / CI without Postgres) — treat as zero registrations */
+  if (!isPastEvent) {
+    try {
+      const [c, w] = await Promise.all([
+        prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: false } }),
+        prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: true } }),
+      ]);
+      confirmedCount = c;
+      waitlistCount = w;
+    } catch {
+      /* DB unavailable (e.g. dev / CI without Postgres) — treat as zero registrations */
+    }
   }
 
   const speakerIds = Array.isArray(event.speaker_ids) ? event.speaker_ids : [];
   const speakers = speakerIds.length > 0 ? team.filter((t) => speakerIds.includes(t.id)) : [];
   const agenda = parseAgenda((event as { agenda?: unknown }).agenda);
-  const venue = event.venue_name || event.location;
-  const venueFull = event.venue_address || event.location;
-  const isPastEvent = new Date(event.end_date || event.start_date).getTime() < Date.now();
+  const locationBody = eventLocationSentence(event);
   const isPastDeadline = event.registration_deadline && new Date(event.registration_deadline) < new Date();
   const isFull = typeof event.capacity === "number" && confirmedCount >= event.capacity;
   const allowWaitlist = Boolean(event.allow_waitlist);
   const canRegister = !isPastEvent && !isPastDeadline && (!isFull || allowWaitlist);
   const registeringWaitlist = !isPastEvent && isFull && allowWaitlist && !isPastDeadline;
 
-  const heroImage =
-    (await resolveImageUrl(event.image)) ||
-    (await resolveImageUrl(pageCopy.heroImage)) ||
-    placeholderImages.events;
+  if (isPastEvent) {
+    const eventsPage = await getMergedPageContent<typeof eventsContent>("events", cmsStaticOrEmpty(eventsContent));
+    const pageCopy = eventsPage as unknown as typeof eventsContent & { heroImage?: string };
+    const heroImage =
+      (await resolveImageUrl(event.image)) ||
+      (await resolveImageUrl(pageCopy.heroImage)) ||
+      placeholderImages.events;
+    return (
+      <PastEventDetailView
+        event={event}
+        slug={slug}
+        breadcrumbs={{
+          home: bc.home,
+          events: bc.events,
+          current: eventsContent.gridBadges.past,
+        }}
+        speakers={speakers}
+        agenda={agenda}
+        heroImage={heroImage}
+      />
+    );
+  }
+
+  const scheduleLine = formatRegistrationScheduleLine(event.start_date, event.end_date);
 
   return (
     <>
-      <PageHero
-        title={isPastEvent ? event.title : `Register for ${event.title}`}
-        subtitle={venue || pageCopy.subtitle}
-        image={heroImage}
-        imageAlt={event.title}
-        breadcrumbs={[
-          { label: bc.home, href: "/" },
-          { label: bc.events, href: "/events" },
-          { label: event.title, href: "/events" },
-          { label: isPastEvent ? "Details" : bc.eventRegister },
-        ]}
-      />
+      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-12 sm:py-16 lg:py-20">
+          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+            <nav aria-label="Breadcrumb" className="text-sm text-stone-500">
+              <ol className="flex flex-wrap items-center gap-1.5">
+                <li>
+                  <Link href="/" className="font-medium text-stone-600 transition-colors hover:text-accent-700">
+                    {bc.home}
+                  </Link>
+                </li>
+                <span className="text-stone-300/90">/</span>
+                <li>
+                  <Link href="/events" className="font-medium text-stone-600 transition-colors hover:text-accent-700">
+                    {bc.events}
+                  </Link>
+                </li>
+                <span className="text-stone-300/90">/</span>
+                <li>
+                  <Link
+                    href={`/events/${encodeURIComponent(slug)}`}
+                    className="font-medium text-stone-600 transition-colors hover:text-accent-700"
+                  >
+                    {event.title}
+                  </Link>
+                </li>
+                <span className="text-stone-300/90">/</span>
+                <li>
+                  <span className="font-semibold text-accent-800">{bc.eventRegister}</span>
+                </li>
+              </ol>
+            </nav>
 
-      <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
-          <p className="mb-8 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">
-            {isPastEvent ? "Event details" : "Registration"}
-          </p>
-          <div className="grid gap-8 lg:grid-cols-[1fr_minmax(280px,320px)] lg:gap-10">
-            <div className="space-y-8">
-              {(event.event_type || venueFull || speakers.length > 0 || agenda.length > 0) && (
-                <div className="rounded-2xl border border-stone-200/90 bg-white p-6 shadow-md shadow-stone-900/5 sm:p-8">
-                  <h3 className="page-heading text-lg text-stone-900">Event details</h3>
-                  <dl className="mt-5 space-y-4">
-                    {event.event_type && (
+            <h1 className="page-heading mt-8 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">{event.title}</h1>
+            {scheduleLine ? <p className="mt-5 text-base font-semibold text-stone-900">{scheduleLine}</p> : null}
+            {locationBody ? (
+              <p className="mt-5 text-base leading-relaxed text-stone-800">
+                <span className="font-bold">{eventsContent.locationLabel}</span> {locationBody}
+              </p>
+            ) : null}
+
+            {event.description ? (
+              <div
+                className="prose prose-stone prose-lg mt-10 max-w-none text-stone-800 prose-headings:font-semibold prose-a:text-accent-700"
+                dangerouslySetInnerHTML={{ __html: event.description }}
+              />
+            ) : null}
+
+            {event.event_type ? (
+              <p className="mt-10 text-sm text-stone-700">
+                <span className="font-semibold uppercase tracking-wider text-stone-500">Type </span>
+                <span className="capitalize">{event.event_type.replace(/_/g, " ")}</span>
+              </p>
+            ) : null}
+
+            {speakers.length > 0 ? (
+              <div className="mt-10">
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-500">Speakers</h2>
+                <ul className="mt-3 space-y-2 text-stone-800">
+                  {speakers.map((s) => (
+                    <li key={s.id}>
+                      <span className="font-medium">{s.name}</span>
+                      {s.role ? <span className="text-stone-500"> · {s.role}</span> : null}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            {agenda.length > 0 ? (
+              <div className="mt-10">
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-500">Agenda</h2>
+                <ul className="mt-4 space-y-4 text-stone-800">
+                  {agenda.map((item, i) => (
+                    <li key={i} className="flex gap-4">
+                      {item.time ? <span className="shrink-0 text-sm font-semibold text-accent-800">{item.time}</span> : null}
                       <div>
-                        <dt className="text-xs font-semibold uppercase tracking-wider text-stone-500">Type</dt>
-                        <dd className="mt-1 capitalize text-stone-800">{event.event_type.replace(/_/g, " ")}</dd>
+                        <span className="font-medium">{item.title}</span>
+                        {item.description ? <p className="mt-1 text-sm text-stone-600">{item.description}</p> : null}
                       </div>
-                    )}
-                    {venueFull && (
-                      <div>
-                        <dt className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-stone-500">
-                          <MapPin className="h-3.5 w-3.5" aria-hidden />
-                          Venue
-                        </dt>
-                        <dd className="mt-1 page-prose text-[0.95rem] text-stone-700">{venueFull}</dd>
-                      </div>
-                    )}
-                    {event.capacity && (
-                      <div>
-                        <dt className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-stone-500">
-                          <Users className="h-3.5 w-3.5" aria-hidden />
-                          Capacity
-                        </dt>
-                        <dd className="mt-1 text-stone-800">
-                          {confirmedCount} / {event.capacity} confirmed
-                          {waitlistCount > 0 ? (
-                            <span className="text-stone-500"> · {waitlistCount} waitlist</span>
-                          ) : null}
-                        </dd>
-                      </div>
-                    )}
-                    {event.registration_deadline && (
-                      <div>
-                        <dt className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-stone-500">
-                          <Clock className="h-3.5 w-3.5" aria-hidden />
-                          Registration deadline
-                        </dt>
-                        <dd className="mt-1 text-stone-800">
-                          {new Date(event.registration_deadline).toLocaleDateString("en-GB", {
-                            weekday: "long",
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </dd>
-                      </div>
-                    )}
-                  </dl>
-                  {speakers.length > 0 && (
-                    <div className="mt-8 border-t border-stone-200/80 pt-6">
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Speakers</h4>
-                      <ul className="mt-3 space-y-2">
-                        {speakers.map((s) => (
-                          <li key={s.id} className="text-stone-800">
-                            {s.name}
-                            {s.role && <span className="text-stone-500"> · {s.role}</span>}
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                  {agenda.length > 0 && (
-                    <div className="mt-8 border-t border-stone-200/80 pt-6">
-                      <h4 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Agenda</h4>
-                      <ul className="mt-3 space-y-4">
-                        {agenda.map((item, i) => (
-                          <li key={i} className="flex gap-4">
-                            {item.time && (
-                              <span className="shrink-0 text-sm font-semibold text-accent-800">{item.time}</span>
-                            )}
-                            <div>
-                              <span className="font-medium text-stone-800">{item.title}</span>
-                              {item.description && (
-                                <p className="mt-1 text-sm page-prose-tight">{item.description}</p>
-                              )}
-                            </div>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  )}
-                </div>
-              )}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ) : null}
+
+            <div className="mt-16 border-t border-stone-200 pt-14">
+              <h2 className="text-center text-xl font-bold tracking-tight text-stone-950 sm:text-2xl">
+                {eventsContent.registerToAttendHeading}
+              </h2>
 
               {canRegister ? (
-                <div className="space-y-6">
+                <div>
                   {registeringWaitlist ? (
-                    <div className="rounded-xl border border-amber-200 bg-amber-50/90 px-4 py-3 text-sm text-amber-950">
+                    <div className="mx-auto mt-6 max-w-xl rounded-none border border-amber-200 bg-amber-50/90 px-4 py-3 text-sm text-amber-950">
                       <p className="font-medium">Capacity is full — you’re joining the waitlist</p>
                       <p className="mt-1 text-amber-900/90">
                         You’ll receive a badge for reference; check-in stays blocked until organisers confirm a spot.
                       </p>
                     </div>
                   ) : null}
-                  <div className="flex flex-wrap gap-3">
+                  <p className="mt-6 text-center">
                     <a
                       href={`/api/events/ics?slug=${encodeURIComponent(slug)}`}
                       download
-                      className="inline-flex items-center text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-2 hover:text-accent-950"
+                      className="text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-2 hover:text-accent-950"
                     >
                       Add to calendar (.ics)
                     </a>
-                  </div>
-                  <EventRegistrationForm event={event} />
+                  </p>
+                  <EventRegistrationForm event={event} embedded />
                 </div>
               ) : (
-                <div className="page-card border-l-[4px] border-l-accent-600 p-8">
-                  <h2 className="page-heading text-xl text-stone-900">{event.title}</h2>
-                  <p className="mt-3 page-prose">
-                    {isPastEvent
-                      ? "This event has ended. Registration is no longer available."
-                      : isPastDeadline
+                <div className="mx-auto mt-8 max-w-xl border border-stone-200 bg-stone-50/80 px-6 py-8 text-center">
+                  <p className="page-prose text-stone-800">
+                    {isPastDeadline
                       ? "Registration for this event has closed. Thank you for your interest."
                       : "This event has reached maximum capacity and the waitlist is not open for this event."}
                   </p>
                   <Link
-                    href="/events"
-                    className="mt-6 inline-flex text-sm font-medium text-accent-800 transition-colors hover:text-accent-950"
+                    href={`/events/${encodeURIComponent(slug)}`}
+                    className="mt-6 inline-flex text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-2 hover:text-accent-950"
                   >
-                    ← Back to events
+                    ← Event details
+                  </Link>
+                  <Link
+                    href="/events"
+                    className="mt-3 block text-sm font-medium text-stone-600 underline-offset-2 hover:text-stone-900"
+                  >
+                    All events
                   </Link>
                 </div>
               )}
             </div>
-            <aside className="lg:sticky lg:top-24 lg:self-start">
-              {/* Do not combine with .page-card — globals force a cream bg and wipe bg-accent-900. */}
-              <div className="rounded-2xl border border-accent-800/40 bg-gradient-to-b from-accent-950 to-accent-900 p-6 text-white shadow-lg shadow-stone-900/20 ring-1 ring-white/10 sm:p-7">
-                <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-teal-200/90">At a glance</p>
-                <h3 className="mt-2 font-serif text-xl font-semibold leading-snug tracking-tight text-white">
-                  {event.title}
-                </h3>
-                <div className="mt-6 space-y-4 border-t border-white/15 pt-5">
-                  <p className="flex items-start gap-3 text-sm leading-relaxed text-white">
-                    <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-teal-200">
-                      <Calendar className="h-4 w-4" strokeWidth={2} aria-hidden />
-                    </span>
-                    <span>
-                      {new Date(event.start_date).toLocaleDateString("en-GB", {
-                        weekday: "long",
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                      {event.end_date && event.end_date !== event.start_date && (
-                        <>
-                          {" "}
-                          – {new Date(event.end_date).toLocaleDateString("en-GB", { month: "long", day: "numeric", year: "numeric" })}
-                        </>
-                      )}
-                    </span>
-                  </p>
-                  {venue ? (
-                    <p className="flex items-start gap-3 text-sm leading-relaxed text-white">
-                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-teal-200">
-                        <MapPin className="h-4 w-4" strokeWidth={2} aria-hidden />
-                      </span>
-                      <span>{venue}</span>
-                    </p>
-                  ) : null}
-                </div>
-              </div>
-            </aside>
+
+            <p className="mt-12 text-sm">
+              <Link
+                href={`/events/${encodeURIComponent(slug)}`}
+                className="font-medium text-accent-800 underline decoration-accent-300 underline-offset-2 hover:text-accent-950"
+              >
+                ← Back to event details
+              </Link>
+            </p>
           </div>
-        </div>
-      </section>
+        </section>
+      </HomeScrollReveal>
     </>
   );
 }

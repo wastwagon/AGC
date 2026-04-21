@@ -39,8 +39,8 @@ describe("site-chrome-parse", () => {
 
   it("serializeNavForSettings round-trips with parseNavList", () => {
     const rows = [
-      { href: "/", label: "Home", subLinks: [] },
-      { href: "/w", label: "Work", subLinks: [{ href: "/w/p", label: "Programs" }] },
+      { href: "/", label: "Home" },
+      { href: "/w", label: "Work" },
     ];
     const json = serializeNavForSettings(rows);
     expect(parseNavList(JSON.parse(json) as unknown)).toEqual(buildNavPayloadForSettings(rows));

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Mail, MapPin, Phone, Clock, Send } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import type { SiteSettings } from "@/lib/site-settings";
 
 type ContactContent = {
@@ -69,7 +70,8 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
         ]}
       />
 
-      <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
             <div>
@@ -79,7 +81,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
               <ul className="mt-10 space-y-6">
                 {divisions.map((div) => (
                   <li key={div.name} className="flex gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-stone-200/60">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
@@ -94,7 +96,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                   </li>
                 ))}
                 <li className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-stone-200/60">
                     <Phone className="h-5 w-5" />
                   </div>
                   <div>
@@ -108,7 +110,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-stone-200/60">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
@@ -119,7 +121,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-stone-200/60">
                     <Clock className="h-5 w-5" />
                   </div>
                   <div>
@@ -130,7 +132,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
               </ul>
             </div>
 
-            <div className="rounded-2xl border border-stone-200/90 bg-[#faf6ef] p-6 shadow-sm sm:p-8">
+            <div className="rounded-none border border-stone-200/90 bg-white p-6 shadow-sm sm:p-8">
               <h2 className="page-heading text-xl sm:text-2xl">{contactContent.formTitle}</h2>
               <p className="page-prose mt-2 text-sm">{contactContent.formDescription}</p>
               <form onSubmit={handleSubmit} className="mt-6 space-y-4">
@@ -147,7 +149,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                       name="name"
                       required
                       placeholder={contactContent.formPlaceholders.name}
-                      className="w-full rounded-xl border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+                      className="w-full rounded-none border border-stone-300/90 bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
                     />
                   </div>
                   <div>
@@ -158,7 +160,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                       name="email"
                       required
                       placeholder={contactContent.formPlaceholders.email}
-                      className="w-full rounded-xl border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+                      className="w-full rounded-none border border-stone-300/90 bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
                     />
                   </div>
                 </div>
@@ -169,7 +171,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                     id="subject"
                     name="subject"
                     placeholder={contactContent.formPlaceholders.subject}
-                    className="w-full rounded-xl border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+                    className="w-full rounded-none border border-stone-300/90 bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
                   />
                 </div>
                 <div>
@@ -180,14 +182,14 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                     rows={5}
                     required
                     placeholder={contactContent.formPlaceholders.message}
-                    className="w-full rounded-xl border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+                    className="w-full rounded-none border border-stone-300/90 bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
                   />
                 </div>
                 {status === "success" && (
                   <div className="space-y-2 text-sm">
                     <p className="text-green-700">Thank you! Your message was received.</p>
                     {emailNotifyWarning && (
-                      <p className="rounded-lg border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900">
+                      <p className="rounded-none border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900">
                         We could not send the notification email automatically; your message is still saved. If you need an
                         urgent reply, email us directly at {siteSettings.email.programs}.
                       </p>
@@ -200,7 +202,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                 <button
                   type="submit"
                   disabled={status === "sending"}
-                  className="flex w-full items-center justify-center gap-2 rounded-xl bg-accent-700 px-6 py-4 font-semibold text-white transition-colors hover:bg-accent-800 disabled:opacity-70"
+                  className="flex w-full items-center justify-center gap-2 rounded-none bg-accent-700 px-6 py-4 font-semibold text-white transition-colors hover:bg-accent-800 disabled:opacity-70"
                 >
                   <Send className="h-5 w-5" />
                   {status === "sending" ? "Sending..." : contactContent.submitLabel}
@@ -210,8 +212,10 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
 
-      <section className="border-t border-stone-200/80 bg-[#fffcf7] py-14 sm:py-16 lg:py-20">
+      <HomeScrollReveal variant="clipOpen" start="top 90%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-14 sm:py-16 lg:py-20">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <h2 className="text-center font-serif text-2xl font-semibold text-stone-900 sm:text-3xl">Find Us</h2>
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-stone-600 sm:text-base">
@@ -228,6 +232,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

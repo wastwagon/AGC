@@ -1,7 +1,7 @@
 import { cache } from "react";
 import { Prisma } from "@prisma/client";
 import { siteConfig } from "@/data/content";
-import { DEFAULT_SITE_CHROME, type SiteChrome, type SiteNavItem } from "@/data/site-chrome";
+import { DEFAULT_SITE_CHROME, type SiteChrome, type SiteNavItem, type SiteNavLink } from "@/data/site-chrome";
 import { prisma } from "@/lib/db";
 import { resolveImageUrl } from "@/lib/media";
 import { parseBottomNav, parseLinkList, parseNavList, parseWorkThumbs } from "@/lib/site-chrome-parse";
@@ -26,6 +26,7 @@ export type SiteSettings = {
     linkedin: string;
     instagram: string;
     facebook: string;
+    youtube: string;
   };
   languages: { code: string; label: string }[];
   /** Header, footer, and mobile navigation copy (Admin → Site settings). */
@@ -38,18 +39,30 @@ const DEFAULT_SITE_SETTINGS: SiteSettings = {
 };
 
 /**
- * Legacy CMS rows often keep Programs/Projects/Advisory under Our Work.
- * Strip submenus from `/our-work` (in-page tabs); omit `/publications` from the header.
+ * Keeps `subLinks` on parents (e.g. About → careers / partner / newsletter) for mobile + admin;
+ * skips duplicate `href` values across parents and children.
  */
-function normalizeHeaderNav(nav: SiteNavItem[]): SiteNavItem[] {
-  const stripped = nav.map((item) => {
-    if (item.href === "/our-work") {
-      const { subLinks: _, ...rest } = item;
-      return rest;
+function normalizeSiteNav(nav: SiteNavItem[]): SiteNavItem[] {
+  const seen = new Set<string>();
+  const out: SiteNavItem[] = [];
+  for (const item of nav) {
+    const h = item.href.trim();
+    if (!h || seen.has(h)) continue;
+    seen.add(h);
+    const copy: SiteNavItem = { href: h, label: (item.label || h).trim() };
+    if (item.subLinks?.length) {
+      const subs: SiteNavLink[] = [];
+      for (const s of item.subLinks) {
+        const sh = s.href.trim();
+        if (!sh || seen.has(sh)) continue;
+        seen.add(sh);
+        subs.push({ href: sh, label: (s.label || sh).trim() });
+      }
+      if (subs.length) copy.subLinks = subs;
     }
-    return item;
-  });
-  return stripped.filter((i) => i.href !== "/publications");
+    out.push(copy);
+  }
+  return out;
 }
 
 export function mergeSiteChrome(patch: unknown): SiteChrome {
@@ -77,7 +90,7 @@ export function mergeSiteChrome(patch: unknown): SiteChrome {
 
   const rawNav =
     parseNavList(p.nav) ?? base.nav.map((i) => ({ ...i, subLinks: i.subLinks?.map((s) => ({ ...s })) }));
-  const nav = normalizeHeaderNav(rawNav);
+  const nav = normalizeSiteNav(rawNav);
   const bottomNav = parseBottomNav(p.bottomNav) ?? [...base.bottomNav];
   const quickLinks = parseLinkList(footerPatch.quickLinks);
   const legal = parseLinkList(footerPatch.legal);
@@ -201,6 +214,7 @@ function sanitizeSiteSettings(value: unknown): SiteSettings {
       linkedin: coalesceSocialUrl(social.linkedin, DEFAULT_SITE_SETTINGS.social.linkedin),
       instagram: coalesceSocialUrl(social.instagram, DEFAULT_SITE_SETTINGS.social.instagram),
       facebook: coalesceSocialUrl(social.facebook, DEFAULT_SITE_SETTINGS.social.facebook),
+      youtube: coalesceSocialUrl(social.youtube, DEFAULT_SITE_SETTINGS.social.youtube),
     },
     languages,
     chrome: mergeSiteChrome(src.chrome),

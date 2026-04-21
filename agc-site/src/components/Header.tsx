@@ -3,9 +3,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { ChevronDown, Menu, Search, X } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
-import { NavDropdown } from "./NavDropdown";
+import { resolveHeaderPrimaryNav } from "@/data/site-chrome";
 import { LanguageSelector } from "./LanguageSelector";
 import { HeaderTopbar } from "./HeaderTopbar";
 import { SearchModal } from "./SearchModal";
@@ -13,7 +13,7 @@ import { useMobileNav } from "./mobile/MobileNavContext";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSettings; brandLogoSrc: string }) {
-  const navWithDropdowns = siteSettings.chrome.nav;
+  const mainNav = resolveHeaderPrimaryNav(siteSettings.chrome.nav);
   const { mobileOpen, setMobileOpen, searchOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
   const [scrolled, setScrolled] = useState(false);
   const showTopbar = true;
@@ -33,69 +33,117 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
 
   return (
     <header
-      className={`sticky top-0 z-50 w-full bg-white transition-shadow duration-300 ${
+      className={`sticky top-0 z-50 w-full overflow-visible bg-white transition-shadow duration-300 ${
         scrolled ? "shadow-[0_4px_24px_-8px_rgba(28,25,23,0.08)]" : "border-b border-stone-200/90"
       }`}
     >
       {showTopbar && <HeaderTopbar siteSettings={siteSettings} />}
 
-      <div className="wpo-site-header">
-        <nav className="w-full px-4 py-0 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          <div className="flex h-20 items-center justify-between gap-4 lg:h-20">
-            <Link href="/" className="flex shrink-0 items-center py-1 pr-2">
+      <div className="wpo-site-header overflow-visible border-b border-stone-200/80 bg-white">
+        <nav className="w-full overflow-visible px-4 py-0 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="flex min-h-[5.25rem] flex-wrap items-center justify-between gap-x-3 gap-y-3 overflow-visible py-3 lg:min-h-[5.5rem] lg:flex-nowrap lg:gap-x-4 lg:py-2">
+            <Link href="/" className="flex shrink-0 items-center py-1 pr-1 lg:pr-2">
               <Image
                 src={brandLogoSrc}
                 alt={siteSettings.name}
-                width={280}
-                height={84}
-                className="h-12 w-auto max-h-14 max-w-[min(280px,46vw)] object-contain object-left sm:h-14 lg:h-16 lg:max-h-[4.25rem] lg:max-w-[320px]"
+                width={480}
+                height={148}
+                className="h-16 w-auto max-h-[5.25rem] max-w-[min(420px,58vw)] object-contain object-left sm:h-[4.5rem] sm:max-h-[5.5rem] md:h-20 md:max-h-[6rem] lg:h-[5.75rem] lg:max-h-[6.5rem] lg:max-w-[min(520px,44vw)]"
                 priority
                 unoptimized={preferUnoptimizedImage(brandLogoSrc)}
               />
             </Link>
 
-            <nav className="hidden shrink-0 items-center justify-center lg:flex" style={{ flex: "1 1 auto", minWidth: 0 }}>
-              <ul className="flex items-center justify-center gap-1 whitespace-nowrap">
-                {navWithDropdowns.map((item) =>
-                  item.subLinks && item.subLinks.length > 0 ? (
-                    <li key={item.href} className="group relative">
-                      <NavDropdown label={item.label} href={item.href} items={item.subLinks} />
-                    </li>
-                  ) : (
-                    <li key={item.href} className="group">
-                      <Link
-                        href={item.href}
-                        className="relative block px-3 py-4 text-base font-medium text-[#232f4b] transition-colors hover:text-accent-600 lg:px-4"
-                      >
-                        <span className="absolute left-1/2 top-0 h-1 w-0 -translate-x-1/2 rounded-sm bg-accent-500 opacity-0 transition-all duration-300 group-hover:w-3/4 group-hover:opacity-100" />
-                        {item.label}
-                      </Link>
-                    </li>
-                  )
-                )}
-              </ul>
-            </nav>
+            {/* One row: primary links sit just left of language / tools (not stretched across the bar). */}
+            <div className="flex min-w-0 flex-1 items-center justify-end gap-x-2 overflow-visible sm:gap-x-3 lg:min-w-0 lg:gap-x-3">
+              <nav className="hidden min-w-0 overflow-visible lg:block" aria-label="Primary">
+                {/* No overflow-x-auto here — it clips absolutely-positioned dropdowns in most browsers. */}
+                <ul className="inline-flex max-w-[min(100%,52rem)] flex-nowrap items-center justify-end gap-x-0.5 overflow-visible xl:max-w-[min(100%,60rem)] xl:gap-x-1">
+                  {mainNav.map((item) => {
+                    const linkClass =
+                      "relative flex items-center gap-0.5 whitespace-nowrap px-1.5 py-2.5 text-[0.8125rem] font-medium uppercase tracking-wide text-[#1a365d] transition-colors hover:text-accent-600 xl:px-2 xl:text-sm [&:focus-visible]:outline [&:focus-visible]:outline-2 [&:focus-visible]:outline-offset-2 [&:focus-visible]:outline-accent-500";
+                    const bar = (
+                      <span className="absolute left-1/2 top-0 h-0.5 w-0 -translate-x-1/2 rounded-sm bg-accent-500 opacity-0 transition-all duration-300 group-hover:w-2/3 group-hover:opacity-100" />
+                    );
+                    if (item.subLinks?.length) {
+                      return (
+                        <li
+                          key={`${item.href}-${item.label}`}
+                          className="group relative shrink-0 hover:z-[80] focus-within:z-[80]"
+                        >
+                          <Link
+                            href={item.href}
+                            className={linkClass}
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                          >
+                            {bar}
+                            {item.label}
+                            <ChevronDown className="h-3 w-3 shrink-0 opacity-55" strokeWidth={2.5} aria-hidden />
+                          </Link>
+                          {/* Hover bridge so moving to the panel does not close the menu */}
+                          <span className="pointer-events-none absolute left-0 top-full z-[99] h-2 w-full" aria-hidden />
+                          <ul
+                            role="menu"
+                            aria-label={`${item.label} submenu`}
+                            className="pointer-events-none invisible absolute left-0 top-[calc(100%+0.25rem)] z-[200] min-w-[18rem] border border-stone-200/95 bg-white py-2 opacity-0 shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] transition-[opacity,visibility] duration-150 ease-out group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:opacity-100"
+                          >
+                            {item.subLinks.map((sub) => (
+                              <li key={sub.href} role="none">
+                                <Link
+                                  role="menuitem"
+                                  href={sub.href}
+                                  className="block px-4 py-3 text-sm font-medium normal-case tracking-normal text-stone-900 transition-colors hover:bg-stone-50"
+                                >
+                                  {sub.label}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </li>
+                      );
+                    }
+                    return (
+                      <li key={`${item.href}-${item.label}`} className="group shrink-0">
+                        <Link href={item.href} className={linkClass}>
+                          {bar}
+                          {item.label}
+                        </Link>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </nav>
 
-            <div className="flex items-center gap-3">
-              <div className="hidden sm:block">
-                <LanguageSelector languages={siteSettings.languages} />
+              <div className="flex shrink-0 items-center gap-2 sm:gap-3">
+                <SearchModal
+                  isOpen={searchOpen}
+                  onClose={() => setSearchOpen(false)}
+                  copy={siteSettings.chrome.search}
+                />
+                <button
+                  type="button"
+                  onClick={() => setSearchOpen(true)}
+                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-md border-0 bg-transparent p-2 text-[rgb(65,130,163)] transition-colors hover:bg-stone-100/90 hover:text-[rgb(45,105,135)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[rgb(65,130,163)] lg:hidden"
+                  aria-label={siteSettings.chrome.headerSearchAriaLabel}
+                >
+                  <Search className="h-5 w-5 shrink-0" aria-hidden />
+                </button>
+                <div className="hidden sm:block">
+                  <LanguageSelector languages={siteSettings.languages} />
+                </div>
+                <button
+                  ref={menuTriggerRef}
+                  type="button"
+                  className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
+                  onClick={() => setMobileOpen(!mobileOpen)}
+                  aria-label={mobileOpen ? "Close menu" : "Open menu"}
+                  aria-expanded={mobileOpen}
+                  aria-controls="site-mobile-drawer"
+                >
+                  {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+                </button>
               </div>
-              <SearchModal
-                isOpen={searchOpen}
-                onClose={() => setSearchOpen(false)}
-                copy={siteSettings.chrome.search}
-              />
-              <button
-                ref={menuTriggerRef}
-                type="button"
-                className="inline-flex min-h-[44px] min-w-[44px] items-center justify-center rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden"
-                onClick={() => setMobileOpen(!mobileOpen)}
-                aria-label={mobileOpen ? "Close menu" : "Open menu"}
-                aria-expanded={mobileOpen}
-                aria-controls="site-mobile-drawer"
-              >
-                {mobileOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-              </button>
             </div>
           </div>
         </nav>

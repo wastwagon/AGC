@@ -5,6 +5,7 @@ import { placeholderImages } from "@/data/images";
 import { getNews } from "@/lib/content";
 import type { CmsNews } from "@/lib/content";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { NewsCard } from "@/components/NewsCard";
 import { NewsFilters } from "@/components/NewsFilters";
 import { Button } from "@/components/Button";
@@ -75,7 +76,8 @@ export default async function NewsTagPage({ params }: Props) {
         ]}
       />
 
-      <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4">
             <div>
@@ -119,6 +121,7 @@ export default async function NewsTagPage({ params }: Props) {
           )}
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

@@ -5,6 +5,7 @@ import { getTeam } from "@/lib/content";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 import { Button } from "@/components/Button";
 
@@ -64,7 +65,8 @@ export default async function TeamPage() {
         ]}
       />
 
-      <section className="py-16 sm:py-20">
+      <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full">
+        <section className="bg-white py-16 sm:py-20">
         <div className="container mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
 
           {membersWithImages.length > 0 ? (
@@ -128,6 +130,7 @@ export default async function TeamPage() {
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

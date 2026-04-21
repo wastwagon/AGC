@@ -20,24 +20,12 @@ const btn =
 const input = "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900";
 const dangerBtn = "rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600";
 
-function cloneNav(items: SiteNavItem[]): SiteNavItem[] {
-  return items.map((i) => ({
-    href: i.href,
-    label: i.label,
-    subLinks: i.subLinks?.map((s) => ({ ...s })),
-  }));
-}
-
-type NavEdit = { href: string; label: string; subLinks: { href: string; label: string }[] };
 type LinkEdit = { href: string; label: string };
 type ThumbEdit = { href: string; alt: string; image: string };
 
-function navToEdit(nav: SiteNavItem[]): NavEdit[] {
-  return nav.map((i) => ({
-    href: i.href,
-    label: i.label,
-    subLinks: i.subLinks?.map((s) => ({ href: s.href, label: s.label })) ?? [],
-  }));
+/** Flat top-level links only (submenus are not shown on the public site). */
+function navListToRows(nav: SiteNavItem[]): LinkEdit[] {
+  return nav.map((i) => ({ href: i.href, label: i.label }));
 }
 
 function parseJsonField<T>(raw: string | undefined, parse: (v: unknown) => T | null, fallback: T): T {
@@ -69,8 +57,8 @@ type Props = {
 export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }: Props) {
   const [thumbPickerIndex, setThumbPickerIndex] = useState<number | null>(null);
 
-  const [navRows, setNavRows] = useState<NavEdit[]>(() =>
-    navToEdit(cloneNav(parseJsonField(initialDraft?.chromeNavJson, parseNavList, chrome.nav)))
+  const [navRows, setNavRows] = useState<LinkEdit[]>(() =>
+    cloneLinks(navListToRows(parseJsonField(initialDraft?.chromeNavJson, parseNavList, chrome.nav)))
   );
 
   const [bottomRows, setBottomRows] = useState<LinkEdit[]>(() =>
@@ -111,9 +99,11 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-semibold text-slate-900">Main navigation</h3>
-            <p className="mt-0.5 text-xs text-slate-600">Top header and mobile drawer. Add sub-links for dropdown-style sections (e.g. Our Work).</p>
+            <p className="mt-0.5 text-xs text-slate-600">
+              Top header and mobile drawer — one row per link. Legacy items saved with sub-menus are merged into this flat list on the live site.
+            </p>
           </div>
-          <button type="button" className={btn} onClick={() => setNavRows((prev) => [...prev, { href: "", label: "", subLinks: [] }])}>
+          <button type="button" className={btn} onClick={() => setNavRows((prev) => [...prev, { href: "", label: "" }])}>
             <Plus className="h-4 w-4" />
             Add item
           </button>
@@ -165,101 +155,17 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
                   onClick={() =>
                     setNavRows((prev) => {
                       const next = prev.filter((_, j) => j !== i);
-                      return next.length === 0 ? [{ href: "", label: "", subLinks: [] }] : next;
+                      return next.length === 0 ? [{ href: "", label: "" }] : next;
                     })
                   }
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>
               </div>
-              <div className="mt-3 border-t border-slate-100 pt-3">
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs font-medium text-slate-600">Sub-links (optional)</span>
-                  <button
-                    type="button"
-                    className="text-xs font-medium text-accent-600 hover:text-accent-700"
-                    onClick={() => {
-                      setNavRows((prev) => {
-                        const next = [...prev];
-                        const cur = next[i];
-                        if (cur) next[i] = { ...cur, subLinks: [...cur.subLinks, { href: "", label: "" }] };
-                        return next;
-                      });
-                    }}
-                  >
-                    + Add sub-link
-                  </button>
-                </div>
-                <ul className="mt-2 space-y-2 pl-2 sm:pl-4">
-                  {row.subLinks.map((sub, si) => (
-                    <li key={si} className="flex flex-wrap items-end gap-2 border-l-2 border-accent-200/60 pl-3">
-                      <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-2">
-                        <div>
-                          <label className="text-[0.65rem] uppercase tracking-wide text-slate-500">Path</label>
-                          <input
-                            className={`${input} mt-0.5`}
-                            value={sub.href}
-                            onChange={(e) => {
-                              const v = e.target.value;
-                              setNavRows((prev) => {
-                                const next = [...prev];
-                                const cur = next[i];
-                                if (!cur) return prev;
-                                const sl = [...cur.subLinks];
-                                const s = sl[si];
-                                if (s) sl[si] = { ...s, href: v };
-                                next[i] = { ...cur, subLinks: sl };
-                                return next;
-                              });
-                            }}
-                            placeholder="/our-work/programs"
-                          />
-                        </div>
-                        <div>
-                          <label className="text-[0.65rem] uppercase tracking-wide text-slate-500">Label</label>
-                          <input
-                            className={`${input} mt-0.5`}
-                            value={sub.label}
-                            onChange={(e) => {
-                              const v = e.target.value;
-                              setNavRows((prev) => {
-                                const next = [...prev];
-                                const cur = next[i];
-                                if (!cur) return prev;
-                                const sl = [...cur.subLinks];
-                                const s = sl[si];
-                                if (s) sl[si] = { ...s, label: v };
-                                next[i] = { ...cur, subLinks: sl };
-                                return next;
-                              });
-                            }}
-                            placeholder="Programs"
-                          />
-                        </div>
-                      </div>
-                      <button
-                        type="button"
-                        className={dangerBtn}
-                        aria-label="Remove sub-link"
-                        onClick={() =>
-                          setNavRows((prev) => {
-                            const next = [...prev];
-                            const cur = next[i];
-                            if (cur) next[i] = { ...cur, subLinks: cur.subLinks.filter((_, j) => j !== si) };
-                            return next;
-                          })
-                        }
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
             </li>
           ))}
         </ul>
-        <button type="button" className="mt-3 text-xs text-slate-500 underline hover:text-slate-700" onClick={() => setNavRows(navToEdit(cloneNav(DEFAULT_SITE_CHROME.nav)))}>
+        <button type="button" className="mt-3 text-xs text-slate-500 underline hover:text-slate-700" onClick={() => setNavRows(navListToRows(DEFAULT_SITE_CHROME.nav))}>
           Reset main nav to site defaults
         </button>
       </div>

@@ -96,5 +96,9 @@ function revalidatePublicRouteForPageSlug(slug: string) {
     "our-work-projects": "/our-work/projects",
     "our-work-advisory": "/our-work/advisory",
   };
-  revalidatePath(pathBySlug[slug] ?? `/${slug}`);
+  const primary = pathBySlug[slug] ?? `/${slug}`;
+  revalidatePath(primary);
+  if (slug === "events") {
+    revalidatePath("/events/past");
+  }
 }

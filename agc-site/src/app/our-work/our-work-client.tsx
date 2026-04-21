@@ -5,6 +5,7 @@ import Image from "next/image";
 import { LayoutGrid, Target, Users } from "lucide-react";
 import type { OurWorkPageContent } from "@/data/content";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import type { SiteBreadcrumbChrome } from "@/data/site-chrome";
 
@@ -117,7 +118,8 @@ export function OurWorkClient({
         breadcrumbs={[{ label: breadcrumbLabels.home, href: "/" }, { label: breadcrumbLabels.ourWork }]}
       />
 
-      <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
+        <section className="border-b border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
           <p className="text-sm font-medium text-accent-800">How we work</p>
           <h2 className="page-heading mt-2 text-2xl sm:text-3xl lg:text-4xl">{content.approach.title}</h2>
@@ -127,8 +129,8 @@ export function OurWorkClient({
           </p>
           <ul className="mt-6 space-y-5">
             {content.approach.objectives.map((obj, i) => (
-              <li key={i} className="page-card flex gap-4 p-5 sm:gap-5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-accent-100 font-sans text-sm font-bold tabular-nums text-accent-800">
+              <li key={i} className="page-card flex gap-4 !rounded-none p-5 sm:gap-5">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-accent-600 font-sans text-sm font-bold tabular-nums text-white">
                   {i + 1}
                 </span>
                 <span className="page-prose-tight pt-0.5">{obj}</span>
@@ -137,11 +139,13 @@ export function OurWorkClient({
           </ul>
         </div>
       </section>
+      </HomeScrollReveal>
 
-      <section
-        id="our-work-areas"
-        className="page-section-warm border-t border-stone-200/60 py-20 sm:py-24 lg:py-28"
-      >
+      <HomeScrollReveal variant="tiltUp" start="top 86%" className="block w-full">
+        <section
+          id="our-work-areas"
+          className="border-t border-stone-200/80 bg-white py-20 sm:py-24 lg:py-28"
+        >
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-xl lg:text-left">
             <p className="text-sm font-medium text-accent-800">Programmes & projects</p>
@@ -188,7 +192,7 @@ export function OurWorkClient({
                   return (
                     <article
                       key={card.key}
-                      className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md"
+                      className="group flex flex-col overflow-hidden rounded-none border border-stone-200/90 bg-white shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md"
                     >
                       {hasImage ? (
                         <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-stone-200/60">
@@ -213,13 +217,14 @@ export function OurWorkClient({
                 })}
               </div>
             ) : (
-              <div className="rounded-2xl border border-dashed border-stone-300 bg-[#fffcf7] py-14 text-center">
+              <div className="rounded-none border border-dashed border-stone-300 bg-white py-14 text-center">
                 <p className="text-stone-600">Nothing listed here yet—check back soon.</p>
               </div>
             )}
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

@@ -1,3 +1,5 @@
+import { placeholderImages } from "@/data/images";
+
 /**
  * Africa Governance Centre - Content Data
  * Scraped and structured from africagovernancecentre.org
@@ -22,6 +24,7 @@ export const siteConfig = {
     linkedin: process.env.NEXT_PUBLIC_LINKEDIN_URL || "",
     instagram: process.env.NEXT_PUBLIC_INSTAGRAM_URL || "",
     facebook: process.env.NEXT_PUBLIC_FACEBOOK_URL || "",
+    youtube: process.env.NEXT_PUBLIC_YOUTUBE_URL || "",
   },
   languages: [
     { code: "en", label: "English" },
@@ -34,11 +37,27 @@ export const siteConfig = {
   ],
 };
 
+/**
+ * Header top bar “Donate” link target.
+ * Set `NEXT_PUBLIC_DONATE_HREF` in `.env` (e.g. `/your-page` or `https://…`). Defaults to `/contact`.
+ */
+export const donateHref =
+  typeof process.env.NEXT_PUBLIC_DONATE_HREF === "string" && process.env.NEXT_PUBLIC_DONATE_HREF.trim() !== ""
+    ? process.env.NEXT_PUBLIC_DONATE_HREF.trim()
+    : "/contact";
+
+/** Default hero backdrop when no CMS images are set (Earth from space — subtle black scrim applied in `HeroConsultar`). */
+export const defaultHomeHeroBackgroundImage =
+  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2400&q=80";
+
+/** Home hero headline and tagline (fixed on the public hero; CMS fields kept for admin/bootstrap compatibility). */
+export const HOME_HERO_DISPLAY_TITLE = "Welcome to AGC";
+export const HOME_HERO_DISPLAY_TAGLINE = "When governance works, people can thrive";
+
 export const heroContent = {
-  eyebrow: "Based in Accra — working with policy communities across Africa",
-  title: "When governance works, people can thrive",
-  subtitle:
-    "We sit with governments, civil society, and institutions: research, training, and honest dialogue—so public services reach people fairly and economies can grow for everyone, not just a few.",
+  eyebrow: "",
+  title: HOME_HERO_DISPLAY_TITLE,
+  subtitle: HOME_HERO_DISPLAY_TAGLINE,
   cta: "See what we do",
   ctaHref: "/our-work" as const,
   ctaSecondary: "Work with us",
@@ -53,7 +72,7 @@ export const heroPartnerStrip = [
   "Civil society networks",
 ];
 
-/** Home impact row — figures should be verified; methodology note builds trust */
+/** Home impact stats — figures should be verified in admin. */
 export const homeImpactStats = [
   {
     value: "50+",
@@ -77,8 +96,8 @@ export const homeImpactStats = [
   },
 ] as const;
 
-export const homeImpactMethodology =
-  "Numbers describe our reach, not our worth. We report in full in our annual updates—ask us if you want the detail behind a figure.";
+/** Optional italic note below impact stats — empty by default. */
+export const homeImpactMethodology = "";
 
 /** Homepage testimonial — edit live copy under Admin → Home settings (seed/bootstrap supplies initial text). */
 export const homeTestimonial = {
@@ -100,7 +119,8 @@ export const homeSpotlightStory = {
   ],
   name: "Dr. Ibrahim Danladi",
   role: "Research & Policy Fellow (Governance Review & APPI support)",
-  initials: "ID",
+  initials: "",
+  image: placeholderImages.hero,
   ctaLabel: "Fellowships & summit coverage",
   ctaHref: "/news/category/fellowships" as const,
 };
@@ -343,6 +363,42 @@ export const eventsContent = {
   intro: "Discover upcoming events, conferences, and workshops that advance governance excellence across Africa.",
   emptyContact: "For event inquiries, contact our Programs Division at programs@africagovernancecentre.org.",
   sections: { upcoming: "Upcoming Events", past: "Past Events" },
+  /** Schedule grid (Brookings-style) */
+  gridHeadings: { upcoming: "Upcoming", past: "Recent Past Events" },
+  gridBadges: { upcoming: "Upcoming event", past: "Past event" },
+  gridEmpty: {
+    upcoming: "No upcoming events are scheduled right now. Check back soon or contact our Programs team.",
+    past: "Past event summaries will appear here when available.",
+  },
+  seeAllPastEvents: "See all past events",
+  /** Full past-events archive (`/events/past`) */
+  pastArchive: {
+    title: "Past Events",
+    subtitle: "Search and browse our archive of workshops, dialogues, and convenings.",
+    searchPlaceholder: "Search",
+    filterBy: "Filter by",
+    eventCheckboxLabel: "Event",
+    topicLabel: "Topic",
+    regionLabel: "Region",
+    expertLabel: "Expert",
+    researchLabel: "Research Program",
+    dateHeading: "Date",
+    dateAll: "All dates",
+    date30d: "Past 30 days",
+    date6m: "Past 6 months",
+    date1y: "Last year",
+    resultsFoundSuffix: "results found",
+    showMore: "Show More",
+    resultsAtATime: "results at a time",
+    topicEmpty: "No topic categories on these events yet.",
+    /** Placeholder for the small search inside Topic / Region dropdowns (Admin → Pages → events). */
+    listFilterPlaceholder: "Filter list…",
+    filterComingSoon:
+      "No location or venue text was found on these archived events. Add location or venue fields on events in Admin to build the region list.",
+  },
+  /** Public registration page (`/events/register/[slug]`) — Brookings-style stack */
+  registerToAttendHeading: "Register to attend in person",
+  locationLabel: "Location:",
   buttons: {
     registerNow: "Register Now",
     viewMore: "View More",
@@ -445,6 +501,24 @@ export const newsContent = {
     category: "Category",
     tag: "Tag",
     noResults: "No news found for this filter.",
+    /** News index toolbar (listing layout) */
+    filterLabel: "Filter:",
+    textSearch: "Text search",
+    theme: "Theme",
+    region: "Region",
+    country: "Country",
+    programme: "Programme",
+    reset: "Reset",
+    previous: "Previous",
+    next: "Next",
+    allOption: "All",
+    noMatchesFiltered: "No news matches these filters. Try adjusting or reset.",
+  },
+  /** Article detail page (sidebar + related grid) */
+  articleDetail: {
+    relatedHeading: "Related News",
+    programmeLabel: "Programme",
+    tagsLabel: "Tags",
   },
 };
 

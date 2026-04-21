@@ -16,9 +16,7 @@ export default function Error({
   }, [error]);
 
   return (
-    <div className="relative min-h-[65vh] overflow-hidden bg-[#f7f4ef] px-4 py-20">
-      <div className="pointer-events-none absolute right-1/4 top-20 h-48 w-48 rounded-full bg-stone-300/30 blur-3xl" aria-hidden />
-
+    <div className="relative min-h-[65vh] overflow-hidden bg-white px-4 py-20">
       <div className="relative mx-auto max-w-lg text-center">
         <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Something slipped</p>
         <h1 className="page-heading mt-4 text-3xl tracking-tight text-stone-900 sm:text-4xl">
@@ -29,10 +27,10 @@ export default function Error({
           moment.
         </p>
         <div className="mt-10 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
-          <Button onClick={reset} variant="primary">
+          <Button onClick={reset} variant="primary" className="!rounded-none">
             Try again
           </Button>
-          <Button asChild href="/" variant="outline">
+          <Button asChild href="/" variant="outline" className="!rounded-none">
             Home
           </Button>
         </div>

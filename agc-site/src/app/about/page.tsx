@@ -4,6 +4,7 @@ import { placeholderImages } from "@/data/images";
 import { getTeam } from "@/lib/content";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { TeamSectionTabs } from "@/components/TeamSectionTabs";
 import { Button } from "@/components/Button";
 import { resolveImageUrl } from "@/lib/media";
@@ -45,14 +46,15 @@ export default async function AboutPage() {
         breadcrumbs={[{ label: bc.home, href: "/" }, { label: bc.about }]}
       />
 
-      <section className="bg-white border-b border-stone-200/80 py-16 sm:py-20 lg:py-20">
+      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+        <section className="border-b border-stone-200/80 bg-white py-16 sm:py-20 lg:py-20">
         <div className="mx-auto grid max-w-7xl gap-8 px-3 sm:px-4 lg:grid-cols-12 lg:gap-20 lg:px-6">
           <div className="lg:col-span-6">
             <p className="text-sm font-medium text-accent-800">Who we are</p>
             <h2 className="page-heading mt-2 text-2xl sm:text-3xl">{content.title}</h2>
-            <p className="page-prose mt-6 border-l-4 border-accent-600 pl-6 text-lg text-stone-700">
-              {content.intro}
-            </p>
+              <p className="page-prose mt-6 border-l-4 border-accent-600 pl-6 text-lg text-stone-700">
+                {content.intro}
+              </p>
             <p className="page-prose mt-8">{content.description}</p>
             <p className="page-prose mt-6">{content.mission}</p>
           </div>
@@ -67,7 +69,7 @@ export default async function AboutPage() {
                   sizes="(max-width: 1024px) 100vw, 45vw"
                 />
               </div>
-              <div className="rounded-2xl border border-stone-200/80 bg-[#faf6ef] p-6">
+              <div className="rounded-none border border-stone-200/80 bg-white p-6">
                 <p className="font-serif text-lg italic leading-snug text-stone-800">
                   &ldquo;Governance is not abstract—it is the bridge between policy and the lives people actually
                   lead.&rdquo;
@@ -78,8 +80,10 @@ export default async function AboutPage() {
           </aside>
         </div>
       </section>
+      </HomeScrollReveal>
 
-      <section className="border-b border-stone-200/80 py-16 sm:py-20 lg:py-24 page-section-warm">
+      <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
+        <section className="border-b border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 lg:items-start">
             <div>
@@ -101,17 +105,20 @@ export default async function AboutPage() {
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
 
-      <section className="bg-white border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <TeamSectionTabs cmsTeam={teamForTabs} />
           <div className="mt-14 flex justify-center">
-            <Button asChild href="/get-involved" variant="primary" className="rounded-xl px-8">
+            <Button asChild href="/get-involved" variant="primary" className="rounded-none px-8">
               Get involved
             </Button>
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

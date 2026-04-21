@@ -1,5 +1,25 @@
 [
   {
+    "id": "media-4ec46a22-3668-4b31-a714-819a47365d71",
+    "filename": "media-4ec46a22-3668-4b31-a714-819a47365d71.png",
+    "url": "/uploads/media-4ec46a22-3668-4b31-a714-819a47365d71.png",
+    "size": 212698,
+    "mimeType": "image/png",
+    "uploadedAt": "2026-04-19T00:29:33.786Z",
+    "width": 1951,
+    "height": 1097
+  },
+  {
+    "id": "media-a54a5f6e-f5fc-49a6-a101-6bbebc4da303",
+    "filename": "media-a54a5f6e-f5fc-49a6-a101-6bbebc4da303.png",
+    "url": "/uploads/media-a54a5f6e-f5fc-49a6-a101-6bbebc4da303.png",
+    "size": 219154,
+    "mimeType": "image/png",
+    "uploadedAt": "2026-04-19T00:23:05.778Z",
+    "width": 2480,
+    "height": 1395
+  },
+  {
     "id": "media-05d1ca45-4a42-4e21-8f50-9ce25d0fd4c1",
     "filename": "media-05d1ca45-4a42-4e21-8f50-9ce25d0fd4c1.png",
     "url": "/uploads/media-05d1ca45-4a42-4e21-8f50-9ce25d0fd4c1.png",

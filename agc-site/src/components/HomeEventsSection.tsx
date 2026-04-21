@@ -1,87 +1,59 @@
-"use client";
-
-import { useState } from "react";
 import type { CmsEvent } from "@/lib/content";
 import { Button } from "@/components/Button";
-import { EventCard } from "@/components/EventCard";
+import { HomeHorizontalEventBand } from "@/components/home/HomeHorizontalEventBand";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 
 type HomeEventsSectionProps = {
   pastEvents: CmsEvent[];
   upcomingEvents: CmsEvent[];
 };
 
+const EVENTS_TITLE = "Events";
+const EVENTS_DESCRIPTION =
+  "Discover conferences and workshops that advance governance excellence across Africa.";
+
+/**
+ * Homepage events: white intro (title + blurb), then **Upcoming** band,
+ * then **Past** band — each shows up to three items and a “See all events” CTA.
+ */
 export function HomeEventsSection({ pastEvents, upcomingEvents }: HomeEventsSectionProps) {
-  const [showPast, setShowPast] = useState(true);
-  const displayEvents = showPast ? pastEvents : upcomingEvents;
-  const emptyMessage = showPast
-    ? "No past events at the moment."
-    : "No upcoming events at the moment. Check back soon.";
+  const upcoming = upcomingEvents.slice(0, 3);
+  const past = pastEvents.slice(0, 3);
+  const hasAny = upcoming.length > 0 || past.length > 0;
 
   return (
-    <section className="border-t border-slate-200 bg-white py-16 sm:py-20 lg:py-24">
-      <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center">
-          <h2 className="font-serif text-3xl font-bold text-slate-900 sm:text-4xl">Events</h2>
-          <p className="mx-auto mt-4 max-w-2xl text-lg text-slate-600">
-            Discover conferences and workshops that advance governance excellence across Africa.
-          </p>
-        </div>
+    <>
+      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+        <section className="border-t border-stone-200 bg-white pt-8 pb-2 sm:pt-10 sm:pb-3 lg:pt-12 lg:pb-3">
+          <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+            <div className="border-b border-stone-200 pb-3">
+              <h2 className="font-sans text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{EVENTS_TITLE}</h2>
+            </div>
+            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 sm:text-[15px]">{EVENTS_DESCRIPTION}</p>
 
-        {/* Premium toggle - Past Events first (left), Upcoming Events (right) */}
-        <div className="mt-10 flex justify-center">
-          <div
-            role="tablist"
-            aria-label="Event type"
-            className="inline-flex rounded-full border border-slate-200/80 bg-slate-100/80 p-1"
-          >
-            <button
-              role="tab"
-              aria-selected={showPast}
-              onClick={() => setShowPast(true)}
-              className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all duration-300 ${
-                showPast
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Past Events
-            </button>
-            <button
-              role="tab"
-              aria-selected={!showPast}
-              onClick={() => setShowPast(false)}
-              className={`rounded-full px-6 py-2.5 text-sm font-medium transition-all duration-300 ${
-                !showPast
-                  ? "bg-white text-slate-900 shadow-sm"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Upcoming Events
-            </button>
+            {!hasAny ? (
+              <div className="mt-10 border border-stone-200 bg-stone-50/90 p-8 text-center">
+                <p className="text-slate-600">No published events yet.</p>
+                <Button asChild href="/events" variant="outline" className="mt-6 rounded-none">
+                  Browse events
+                </Button>
+              </div>
+            ) : null}
           </div>
-        </div>
+        </section>
+      </HomeScrollReveal>
 
-        {displayEvents.length > 0 ? (
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {displayEvents.map((event) => (
-              <EventCard key={event.id} event={event} />
-            ))}
-          </div>
-        ) : (
-          <div className="mt-12 rounded-2xl border border-slate-200 bg-slate-50 p-8 text-center">
-            <p className="text-slate-600">{emptyMessage}</p>
-            <Button asChild href="/events" variant="outline" className="mt-6">
-              View Events
-            </Button>
-          </div>
-        )}
+      {upcoming.length > 0 ? (
+        <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
+          <HomeHorizontalEventBand title="Upcoming Events" events={upcoming} />
+        </HomeScrollReveal>
+      ) : null}
 
-        <div className="mt-12 text-center">
-          <Button asChild href="/events" variant="outline">
-            View All Events
-          </Button>
-        </div>
-      </div>
-    </section>
+      {past.length > 0 ? (
+        <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
+          <HomeHorizontalEventBand title="Past Events" events={past} isPastBand />
+        </HomeScrollReveal>
+      ) : null}
+    </>
   );
 }

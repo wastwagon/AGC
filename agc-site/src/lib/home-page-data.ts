@@ -5,6 +5,33 @@ import { devPublicRead, shouldSkipPrismaCalls } from "@/lib/skip-db";
 
 export type { HomePageCms } from "@/lib/home-page-types";
 
+/** Former default intro; strip from merged CMS so the line no longer appears for existing DB rows. */
+const LEGACY_HOME_REACH_INTRO =
+  "We measure ourselves by relationships and depth as much as by scale. Here is a snapshot—always happy to share more in conversation.";
+
+const LEGACY_HOME_REACH_TITLE = "The shape of our work";
+
+const LEGACY_HOME_IMPACT_METHODOLOGY =
+  "Numbers describe our reach, not our worth. We report in full in our annual updates—ask us if you want the detail behind a figure.";
+
+function normalizeRetiredHomeReachFields(home: HomePageCms) {
+  if (home.homeReach.intro === LEGACY_HOME_REACH_INTRO) {
+    home.homeReach.intro = "";
+  }
+  if (home.homeReach.title === LEGACY_HOME_REACH_TITLE) {
+    home.homeReach.title = "The Scope of Our Work";
+  }
+  if (
+    home.homeReach.title === "The score of our work" ||
+    home.homeReach.title === "The Score of Our Work"
+  ) {
+    home.homeReach.title = "The Scope of Our Work";
+  }
+  if (home.homeImpactMethodology === LEGACY_HOME_IMPACT_METHODOLOGY) {
+    home.homeImpactMethodology = "";
+  }
+}
+
 /** Merge base for the public site when CMS fields are missing — no marketing defaults. */
 export function emptyHomePageCms(): HomePageCms {
   const emptyStat = { value: "", label: "", note: "" };
@@ -27,6 +54,7 @@ export function emptyHomePageCms(): HomePageCms {
       name: "",
       role: "",
       initials: "",
+      image: "",
       ctaLabel: "",
       ctaHref: "/",
     },
@@ -94,6 +122,7 @@ function deepMergeHome(base: HomePageCms, patch: Record<string, unknown>): HomeP
       if (typeof sp.name === "string") out.homeSpotlightStory.name = sp.name;
       if (typeof sp.role === "string") out.homeSpotlightStory.role = sp.role;
       if (typeof sp.initials === "string") out.homeSpotlightStory.initials = sp.initials;
+      if (typeof sp.image === "string") out.homeSpotlightStory.image = sp.image;
       if (typeof sp.ctaLabel === "string") out.homeSpotlightStory.ctaLabel = sp.ctaLabel;
       if (typeof sp.ctaHref === "string") out.homeSpotlightStory.ctaHref = sp.ctaHref;
       continue;
@@ -147,7 +176,9 @@ export async function getHomePageCms(): Promise<HomePageCms> {
     if (row?.status !== "published" || !row.contentJson || typeof row.contentJson !== "object") {
       return emptyHomePageCms();
     }
-    return deepMergeHome(getBootstrapHomePageCms(), row.contentJson as Record<string, unknown>);
+    const merged = deepMergeHome(getBootstrapHomePageCms(), row.contentJson as Record<string, unknown>);
+    normalizeRetiredHomeReachFields(merged);
+    return merged;
   });
 }
 
@@ -158,5 +189,7 @@ export async function getHomePageCmsForEdit(): Promise<HomePageCms> {
   if (!row?.contentJson || typeof row.contentJson !== "object") {
     return bootstrap;
   }
-  return deepMergeHome(bootstrap, row.contentJson as Record<string, unknown>);
+  const merged = deepMergeHome(bootstrap, row.contentJson as Record<string, unknown>);
+  normalizeRetiredHomeReachFields(merged);
+  return merged;
 }

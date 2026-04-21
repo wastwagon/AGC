@@ -71,6 +71,7 @@ export async function updateHomePageContent(formData: FormData) {
       name: String(formData.get("spot_name") ?? "").slice(0, 200),
       role: String(formData.get("spot_role") ?? "").slice(0, 300),
       initials: String(formData.get("spot_initials") ?? "").slice(0, 6).toUpperCase(),
+      image: String(formData.get("spot_image") ?? "").slice(0, 500),
       ctaLabel: String(formData.get("spot_ctaLabel") ?? "").slice(0, 120),
       ctaHref: String(formData.get("spot_ctaHref") ?? "/news").slice(0, 200),
     },

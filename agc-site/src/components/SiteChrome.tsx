@@ -32,8 +32,8 @@ function PublicLayoutWithInert({
         {...(mobileOpen ? { inert: true as boolean } : {})}
         aria-hidden={mobileOpen}
       >
-        {/* Bottom padding on <xl so fixed tab bar + safe area don’t cover content */}
-        <div className="flex min-h-0 flex-1 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] xl:pb-0">
+        {/* Bottom padding below md so fixed tab bar + safe area don’t cover content */}
+        <div className="flex min-h-0 flex-1 flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
           {children}
         </div>
         <Footer siteSettings={siteSettings} brandLogoSrc={footerLogoSrc} />
@@ -48,7 +48,7 @@ function PublicLayoutWithInert({
 export function SiteChrome({
   children,
   siteSettings,
-  brandLogoSrc = "/agc-logo.png",
+  brandLogoSrc = "/logo.png",
   footerLogoSrc: footerLogoSrcProp,
 }: {
   children: React.ReactNode;

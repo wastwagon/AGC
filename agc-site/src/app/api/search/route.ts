@@ -31,7 +31,11 @@ export async function GET() {
         type: "event" as const,
         title: e.title,
         excerpt: (e.description || "").replace(/<[^>]*>/g, "").slice(0, 200),
-        href: e.slug ? `/events/register/${e.slug}` : "/events",
+        href: e.slug
+          ? new Date(e.end_date || e.start_date).getTime() < Date.now()
+            ? `/events/register/${e.slug}`
+            : `/events/${e.slug}`
+          : "/events",
       })),
       ...news.map((n) => ({
         id: `news-${n.id}`,

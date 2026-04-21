@@ -473,7 +473,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
       <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
         {isEdit && item?.slug ? (
-          <AdminFormPreviewLink href={`/events/register/${encodeURIComponent(item.slug)}`}>
+          <AdminFormPreviewLink href={`/events/${encodeURIComponent(item.slug)}`}>
             Preview on site
           </AdminFormPreviewLink>
         ) : null}

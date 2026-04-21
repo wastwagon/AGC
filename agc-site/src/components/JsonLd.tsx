@@ -20,7 +20,7 @@ export function JsonLd({ siteSettings }: { siteSettings: SiteSettings }) {
       siteSettings.social.linkedin,
       siteSettings.social.instagram,
       siteSettings.social.facebook,
-    ].filter((url) => url !== "#"),
+    ].filter((url) => typeof url === "string" && url.trim() !== "" && url !== "#"),
   };
 
   return (

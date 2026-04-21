@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { termsOfService } from "@/data/legal";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { getMergedPageContent } from "@/lib/page-content";
 import { cardImageUrlOrNull } from "@/lib/image-delivery";
 import { resolveImageUrl } from "@/lib/media";
@@ -44,7 +45,8 @@ export default async function TermsOfServicePage() {
         ]}
       />
 
-      <section className="page-section-paper border-t border-stone-200/80 py-14 sm:py-16 lg:py-20">
+      <HomeScrollReveal variant="fadeUp" start="top 90%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-14 sm:py-16 lg:py-20">
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
           <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
             By using this site you agree to these terms. They govern access to our content, events registration, and
@@ -70,17 +72,19 @@ export default async function TermsOfServicePage() {
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
 
-      <section className="border-t border-stone-200/80 bg-accent-900 py-14 text-[#fffcf7] sm:py-16">
+      <HomeScrollReveal variant="fadeIn" start="top 92%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-14 text-stone-900 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-300">Legal</p>
-          <h2 className="page-heading mt-3 text-2xl text-[#fffcf7]">Contact</h2>
-          <p className="mt-4 text-sm leading-relaxed text-stone-200/95">Questions about these terms:</p>
-          <ul className="mt-6 space-y-2 text-sm text-stone-200/90">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-800">Legal</p>
+          <h2 className="page-heading mt-3 text-2xl text-stone-900">Contact</h2>
+          <p className="mt-4 text-sm leading-relaxed text-stone-600">Questions about these terms:</p>
+          <ul className="mt-6 space-y-2 text-sm text-stone-700">
             <li>
               <a
                 href={`mailto:${siteSettings.email.info}`}
-                className="font-medium underline decoration-accent-400/50 underline-offset-4 hover:decoration-accent-300"
+                className="font-medium text-accent-700 underline decoration-accent-300/70 underline-offset-4 hover:text-accent-900 hover:decoration-accent-600"
               >
                 {siteSettings.email.info}
               </a>
@@ -88,17 +92,18 @@ export default async function TermsOfServicePage() {
             <li>{siteSettings.address}</li>
             <li>{siteSettings.phone}</li>
           </ul>
-          <p className="mt-10 text-xs text-stone-400">
-            <Link href="/privacy-policy" className="text-accent-300/90 hover:text-accent-100">
+          <p className="mt-10 text-xs text-stone-500">
+            <Link href="/privacy-policy" className="text-accent-700 hover:text-accent-900">
               Privacy policy
             </Link>
             {" · "}
-            <Link href="/" className="text-accent-300/90 hover:text-accent-100">
+            <Link href="/" className="text-accent-700 hover:text-accent-900">
               Home
             </Link>
           </p>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

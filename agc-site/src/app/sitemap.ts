@@ -7,7 +7,7 @@ const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernanc
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let news: { slug: string | null; datePublished: Date | null }[] = [];
   let publications: { slug: string | null; datePublished: Date | null }[] = [];
-  let events: { slug: string | null; startDate: Date }[] = [];
+  let events: { slug: string | null; startDate: Date; endDate: Date | null }[] = [];
 
   if (!shouldSkipPrismaCalls()) {
     try {
@@ -22,7 +22,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
         }),
         prisma.event.findMany({
           where: { status: "published" },
-          select: { slug: true, startDate: true },
+          select: { slug: true, startDate: true, endDate: true },
         }),
       ]);
     } catch {
@@ -41,6 +41,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${baseUrl}/app-summit`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/aypf`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.85 },
     { url: `${baseUrl}/events`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${baseUrl}/events/past`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.75 },
     { url: `${baseUrl}/news`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${baseUrl}/publications`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${baseUrl}/get-involved`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
@@ -73,12 +74,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const eventEntries: MetadataRoute.Sitemap = events
     .filter((e) => e.slug)
-    .map((e) => ({
-      url: `${baseUrl}/events/register/${e.slug}`,
-      lastModified: new Date(e.startDate),
-      changeFrequency: "weekly" as const,
-      priority: 0.7,
-    }));
+    .map((e) => {
+      const end = e.endDate ?? e.startDate;
+      const isPast = end.getTime() < Date.now();
+      return {
+        url: `${baseUrl}${isPast ? "/events/register/" : "/events/"}${e.slug}`,
+        lastModified: new Date(e.startDate),
+        changeFrequency: "weekly" as const,
+        priority: 0.7,
+      };
+    });
 
   return [...staticEntries, ...newsEntries, ...publicationEntries, ...eventEntries];
 }

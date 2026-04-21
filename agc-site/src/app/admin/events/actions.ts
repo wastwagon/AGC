@@ -114,6 +114,7 @@ export async function createEvent(formData: FormData) {
   revalidatePath("/admin/events");
   revalidatePath("/events");
   revalidatePath(`/events/register/${finalSlug}`);
+  revalidatePath(`/events/${finalSlug}`);
   redirect(`/admin/events/edit/${created.id}?saved=created`);
 }
 
@@ -198,6 +199,7 @@ export async function updateEvent(id: number, formData: FormData) {
   revalidatePath("/events");
   revalidatePath("/");
   revalidatePath(`/events/register/${finalSlug}`);
+  revalidatePath(`/events/${finalSlug}`);
   redirect(`/admin/events/edit/${id}?saved=1`);
 }
 

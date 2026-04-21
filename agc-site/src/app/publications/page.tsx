@@ -3,6 +3,7 @@ import { placeholderImages } from "@/data/images";
 import { getPublications } from "@/lib/content";
 import type { CmsPublication } from "@/lib/content";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { PublicationCard } from "@/components/PublicationCard";
 import { Button } from "@/components/Button";
 import { resolveImageUrl } from "@/lib/media";
@@ -52,7 +53,8 @@ export default async function PublicationsPage() {
         ]}
       />
 
-      <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <HomeScrollReveal variant="clipOpen" start="top 88%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-12 max-w-2xl space-y-4">
             <p className="text-sm font-medium text-accent-800">Library</p>
@@ -90,6 +92,7 @@ export default async function PublicationsPage() {
           )}
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }
