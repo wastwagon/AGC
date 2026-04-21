@@ -213,7 +213,7 @@ export default async function EventRegisterPage({ params }: Props) {
                   <EventRegistrationForm event={event} embedded />
                 </div>
               ) : (
-                <div className="mx-auto mt-8 max-w-xl border border-stone-200 bg-stone-50/80 px-6 py-8 text-center">
+                <div className="mx-auto mt-8 max-w-xl border border-stone-200 bg-white px-6 py-8 text-center">
                   <p className="page-prose text-stone-800">
                     {isPastDeadline
                       ? "Registration for this event has closed. Thank you for your interest."
