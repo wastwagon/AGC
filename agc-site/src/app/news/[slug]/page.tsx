@@ -2,25 +2,58 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { Calendar, Download, FolderOpen } from "lucide-react";
+import { Calendar, Download } from "lucide-react";
 import { newsContent, fallbackNews } from "@/data/content";
 import { placeholderImages } from "@/data/images";
-import { getNewsBySlug } from "@/lib/content";
+import { getNews, getNewsBySlug } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
-import { getNewsCategorySlugs, getCategoryLabel } from "@/lib/news";
+import { getNewsCategorySlugs, getCategoryLabel, getNewsTagSlugs, getTagLabel } from "@/lib/news";
 import type { CmsNews } from "@/lib/content";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import { getSiteTaxonomy } from "@/lib/site-taxonomy";
 import { normalizeNewsDownloads } from "@/lib/news-downloads";
+import { resolveNewsForPublic } from "@/lib/cms-fallback";
+import { NewsArticleShareLinks } from "@/components/NewsArticleShareLinks";
+import { NewsCard } from "@/components/NewsCard";
 
 export const revalidate = 60;
 
 type Props = { params: Promise<{ slug: string }> };
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernancecentre.org";
+
+function pickRelatedNews(pool: CmsNews[], current: CmsNews, limit: number): CmsNews[] {
+  const currentSlug = current.slug;
+  const catSet = new Set(getNewsCategorySlugs(current));
+  return pool
+    .filter((n) => n.id !== current.id && n.slug && n.slug !== currentSlug)
+    .map((n) => ({
+      n,
+      score: getNewsCategorySlugs(n).filter((c) => catSet.has(c)).length,
+      t: new Date(n.date_published || n.date_created).getTime(),
+    }))
+    .sort((a, b) => (b.score !== a.score ? b.score - a.score : b.t - a.t))
+    .slice(0, limit)
+    .map((x) => x.n);
+}
+
+function formatArticleDateShort(iso: string | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function excerptToLeadHtml(excerpt: string | undefined): string {
+  const raw = excerpt?.trim();
+  if (!raw) return "";
+  if (raw.includes("<")) return sanitizeHtml(raw);
+  const escaped = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return sanitizeHtml(`<p>${escaped}</p>`);
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -52,28 +85,50 @@ async function getNewsItem(slug: string): Promise<CmsNews | null> {
 
 export default async function NewsDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [item, taxonomy, merged, siteSettings] = await Promise.all([
+  const [item, taxonomy, merged, siteSettings, cmsNewsList] = await Promise.all([
     getNewsItem(slug),
     getSiteTaxonomy(),
     getMergedPageContent<typeof newsContent>("news", cmsStaticOrEmpty(newsContent)),
     getSiteSettings(),
+    getNews(80),
   ]);
   if (!item) notFound();
 
   const pageCopy = merged as unknown as typeof newsContent & { heroImage?: string };
+  const detailCopy = pageCopy.articleDetail ?? newsContent.articleDetail;
   const imageUrl =
     (await resolveImageUrl(item.image)) ||
     (await resolveImageUrl(pageCopy.heroImage)) ||
     placeholderImages.news;
   const bc = siteSettings.chrome.breadcrumbs;
   const date = item.date_published || item.date_created;
-  const dateStr = date
+  const dateStrHero = date
     ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })
     : "";
+  const dateStrSidebar = formatArticleDateShort(date);
   const documentDownloads = normalizeNewsDownloads(item);
 
+  const { items: newsPool } = await resolveNewsForPublic(cmsNewsList, fallbackNews as CmsNews[]);
+  const related = pickRelatedNews(newsPool, item, 6);
+  const relatedWithImages = await Promise.all(
+    related.map(async (n) => ({
+      item: n,
+      imageUrl: (await resolveImageUrl(n.image)) || placeholderImages.news,
+    }))
+  );
+
+  const canonicalUrl = `${baseUrl.replace(/\/$/, "")}/news/${encodeURIComponent(slug)}`;
+  const leadHtml = excerptToLeadHtml(item.excerpt);
+  const bodyHtml = sanitizeHtml(
+    item.content ||
+      `<p>${(item.excerpt || "Full content coming soon.").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>`
+  );
+
+  const categorySlugs = getNewsCategorySlugs(item);
+  const tagSlugs = getNewsTagSlugs(item);
+
   return (
-    <article className="min-h-screen bg-[#f7f4ef]">
+    <article className="min-h-screen bg-white">
       <div className="relative aspect-[21/9] min-h-[220px] w-full overflow-hidden bg-accent-900">
         <Image
           src={imageUrl}
@@ -87,105 +142,155 @@ export default async function NewsDetailPage({ params }: Props) {
         <div className="absolute inset-0 bg-gradient-to-t from-accent-900/95 via-accent-800/45 to-accent-900/25" />
         <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 lg:p-16">
           <div className="mx-auto w-full max-w-3xl">
-            <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white">
-              {pageCopy.title}
-            </p>
+            <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white">{pageCopy.title}</p>
             <h1 className="font-serif text-3xl font-semibold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-[2.35rem]">
               {item.title}
             </h1>
-            <p className="mt-4 flex items-center gap-2 text-sm text-white">
-              <Calendar className="h-4 w-4 shrink-0 text-white" aria-hidden />
-              {dateStr}
-            </p>
-          </div>
-        </div>
-      </div>
-
-      <div className="relative z-[1] -mt-6 sm:-mt-10">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <div className="page-card rounded-2xl border border-stone-200/90 px-5 py-8 shadow-[0_12px_40px_-12px_rgba(28,25,23,0.12)] sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-            <nav aria-label="Breadcrumb" className="mb-8 border-b border-stone-200/80 pb-6 text-sm text-stone-500">
-              <Link href="/" className="transition-colors hover:text-accent-700">
-                {bc.home}
-              </Link>
-              <span className="mx-2 text-stone-300">/</span>
-              <Link href="/news" className="transition-colors hover:text-accent-700">
-                {bc.news}
-              </Link>
-              <span className="mx-2 text-stone-300">/</span>
-              <span className="line-clamp-1 text-stone-700">{item.title}</span>
-            </nav>
-
-            {getNewsCategorySlugs(item).length > 0 && (
-              <div className="mb-10 flex flex-col gap-4 border-l-[3px] border-accent-600 bg-accent-50/40 py-4 pl-5 pr-4">
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-2">
-                  <span className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-stone-500">
-                    <FolderOpen className="h-3.5 w-3.5" aria-hidden />
-                    Topics
-                  </span>
-                  <span className="flex flex-wrap gap-x-4 gap-y-1">
-                    {getNewsCategorySlugs(item).map((catSlug) => (
-                      <Link
-                        key={catSlug}
-                        href={`/news/category/${catSlug}`}
-                        className="text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-4 transition-colors hover:text-accent-950 hover:decoration-accent-600"
-                      >
-                        {getCategoryLabel(catSlug, taxonomy.newsCategories)}
-                      </Link>
-                    ))}
-                  </span>
-                </div>
-              </div>
-            )}
-
-            <div
-              className="prose prose-lg max-w-none
-                prose-headings:page-heading prose-headings:mt-10 prose-headings:mb-4 prose-headings:text-stone-900
-                prose-p:page-prose prose-p:mb-5
-                prose-a:text-accent-700 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-a:decoration-accent-400
-                prose-strong:text-stone-900 prose-li:text-stone-600
-                prose-blockquote:border-l-accent-600 prose-blockquote:bg-accent-50/30 prose-blockquote:py-1 prose-blockquote:not-italic prose-blockquote:text-stone-700"
-              dangerouslySetInnerHTML={{
-                __html: sanitizeHtml(
-                  item.content ||
-                    `<p>${(item.excerpt || "Full content coming soon.").replace(/</g, "&lt;").replace(/>/g, "&gt;")}</p>`
-                ),
-              }}
-            />
-
-            {documentDownloads.length > 0 ? (
-              <div className="mt-14 border-t border-stone-200 pt-10">
-                <h3 className="page-heading text-lg text-stone-900">Documents</h3>
-                <p className="mt-1 text-sm text-stone-600">Download PDFs and resources linked to this article.</p>
-                <ul className="mt-6 space-y-4">
-                  {documentDownloads.map((doc) => (
-                    <li key={`${doc.label}-${doc.href}`}>
-                      <div className="page-card border-l-[4px] border-l-accent-600 p-6 sm:p-8">
-                        <h4 className="page-heading text-xl text-stone-900">{doc.label}</h4>
-                        {doc.description ? (
-                          <p className="mt-2 page-prose text-[0.98rem] text-stone-700">{doc.description}</p>
-                        ) : null}
-                        <a
-                          href={doc.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="mt-5 inline-flex items-center gap-2 rounded-lg bg-accent-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-800"
-                        >
-                          <Download className="h-4 w-4" aria-hidden />
-                          Download
-                        </a>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+            {dateStrHero ? (
+              <p className="mt-4 flex items-center gap-2 text-sm text-white/95">
+                <Calendar className="h-4 w-4 shrink-0 text-white" aria-hidden />
+                {dateStrHero}
+              </p>
             ) : null}
-
           </div>
         </div>
       </div>
 
-      <div className="h-16 bg-[#f7f4ef]" aria-hidden />
+      <div className="relative z-[1] -mt-6 bg-white sm:-mt-10">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
+            <div className="min-w-0 lg:col-span-8">
+              <nav aria-label="Breadcrumb" className="mb-10 border-b border-stone-200/90 pb-6 text-sm text-stone-500">
+                <Link href="/" className="transition-colors hover:text-accent-700">
+                  {bc.home}
+                </Link>
+                <span className="mx-2 text-stone-300">/</span>
+                <Link href="/news" className="transition-colors hover:text-accent-700">
+                  {bc.news}
+                </Link>
+                <span className="mx-2 text-stone-300">/</span>
+                <span className="line-clamp-1 text-stone-700">{item.title}</span>
+              </nav>
+
+              {leadHtml ? (
+                <>
+                  <div
+                    className="article-lead text-xl font-medium leading-relaxed text-accent-950 [&_p]:mb-0"
+                    dangerouslySetInnerHTML={{ __html: leadHtml }}
+                  />
+                  <hr className="my-10 border-0 border-t border-stone-200" />
+                </>
+              ) : null}
+
+              <div
+                className="prose prose-lg max-w-none
+                  prose-headings:page-heading prose-headings:mt-10 prose-headings:mb-4 prose-headings:text-stone-900
+                  prose-p:page-prose prose-p:mb-5 prose-p:text-stone-700
+                  prose-a:text-accent-800 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-a:decoration-accent-400
+                  prose-strong:text-stone-900 prose-li:text-stone-600
+                  prose-blockquote:border-l-accent-600 prose-blockquote:bg-stone-50/80 prose-blockquote:py-1 prose-blockquote:not-italic prose-blockquote:text-stone-700"
+                dangerouslySetInnerHTML={{ __html: bodyHtml }}
+              />
+
+              {documentDownloads.length > 0 ? (
+                <div className="mt-14 border-t border-stone-200 pt-10">
+                  <h3 className="page-heading text-lg text-stone-900">Documents</h3>
+                  <p className="mt-1 text-sm text-stone-600">Download PDFs and resources linked to this article.</p>
+                  <ul className="mt-6 space-y-4">
+                    {documentDownloads.map((doc) => (
+                      <li key={`${doc.label}-${doc.href}`}>
+                        <div className="rounded-none border border-stone-200/90 bg-white p-6 shadow-sm sm:p-8">
+                          <h4 className="page-heading text-xl text-stone-900">{doc.label}</h4>
+                          {doc.description ? (
+                            <p className="mt-2 page-prose text-[0.98rem] text-stone-700">{doc.description}</p>
+                          ) : null}
+                          <a
+                            href={doc.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="mt-5 inline-flex items-center gap-2 rounded-none bg-accent-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-800"
+                          >
+                            <Download className="h-4 w-4" aria-hidden />
+                            Download
+                          </a>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null}
+            </div>
+
+            <aside className="min-w-0 border-t border-stone-200 pt-10 lg:col-span-4 lg:border-l lg:border-t-0 lg:border-stone-200 lg:pl-10 lg:pt-0">
+              <div className="lg:sticky lg:top-28">
+                {dateStrSidebar ? (
+                  <p className="text-lg font-bold text-accent-600">{dateStrSidebar}</p>
+                ) : null}
+
+                {categorySlugs.length > 0 ? (
+                  <div className="mt-10">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-600">
+                      {detailCopy.programmeLabel}
+                    </p>
+                    <div className="mt-3 flex flex-col gap-2">
+                      {categorySlugs.map((catSlug) => (
+                        <Link
+                          key={catSlug}
+                          href={`/news/category/${catSlug}`}
+                          className="text-sm font-semibold text-accent-800 underline decoration-accent-300 underline-offset-4 transition-colors hover:text-accent-950"
+                        >
+                          {getCategoryLabel(catSlug, taxonomy.newsCategories)}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+
+                {tagSlugs.length > 0 ? (
+                  <div className="mt-10">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-600">
+                      {detailCopy.tagsLabel}
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-stone-700">
+                      {tagSlugs.map((tagSlug, i) => (
+                        <span key={tagSlug}>
+                          {i > 0 ? ", " : null}
+                          <Link
+                            href={`/news/tag/${tagSlug}`}
+                            className="font-semibold text-accent-800 underline decoration-accent-300 underline-offset-4 transition-colors hover:text-accent-950"
+                          >
+                            {getTagLabel(tagSlug, taxonomy.newsTags)}
+                          </Link>
+                        </span>
+                      ))}
+                    </p>
+                  </div>
+                ) : null}
+
+                <NewsArticleShareLinks url={canonicalUrl} title={item.title} />
+              </div>
+            </aside>
+          </div>
+
+          {relatedWithImages.length > 0 ? (
+            <section className="mt-20 lg:mt-24" aria-labelledby="related-news-heading">
+              <div className="border-t border-b border-stone-200 py-4">
+                <h2
+                  id="related-news-heading"
+                  className="font-sans text-2xl font-semibold tracking-tight text-accent-800 sm:text-3xl"
+                >
+                  {detailCopy.relatedHeading}
+                </h2>
+              </div>
+              <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {relatedWithImages.map(({ item: rel, imageUrl }) => (
+                  <NewsCard key={rel.id} item={rel} imageUrl={imageUrl} href="/news" variant="related" />
+                ))}
+              </div>
+            </section>
+          ) : null}
+        </div>
+      </div>
     </article>
   );
 }

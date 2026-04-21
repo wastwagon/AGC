@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Manrope } from "next/font/google";
+import { Manrope, Source_Serif_4 } from "next/font/google";
 import "./globals.css";
 import { SiteChrome } from "@/components/SiteChrome";
 import { JsonLd } from "@/components/JsonLd";
@@ -13,6 +13,13 @@ export const dynamic = "force-dynamic";
 /** Body / UI — geometric sans, strong at small sizes */
 const manrope = Manrope({
   variable: "--font-manrope",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+/** Editorial serif for hero / headings (TBI-style contrast with Manrope UI). */
+const sourceSerif = Source_Serif_4({
+  variable: "--font-source-serif",
   subsets: ["latin"],
   display: "swap",
 });
@@ -46,14 +53,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   const siteSettings = await getSiteSettings();
-  const brandLogoSrc = (await resolveImageUrl(siteSettings.logo || undefined)) || "/agc-logo.png";
+  const brandLogoSrc = (await resolveImageUrl(siteSettings.logo || undefined)) || "/logo.png";
   const footerLogoResolved =
     siteSettings.footerLogo?.trim() !== ""
       ? await resolveImageUrl(siteSettings.footerLogo)
       : null;
   const footerLogoSrc = footerLogoResolved || brandLogoSrc;
   return (
-    <html lang="en" className={manrope.variable}>
+    <html lang="en" className={`${manrope.variable} ${sourceSerif.variable}`}>
       <body className={`min-h-screen flex flex-col antialiased ${manrope.className}`}>
         <a
           href="#main-content"

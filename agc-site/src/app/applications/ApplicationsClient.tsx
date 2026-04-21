@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { Button } from "@/components/Button";
 import type { ApplicationsFormFields } from "@/data/applications-page";
 
@@ -105,7 +106,7 @@ export function ApplicationsClient({
   }
 
   const inputClass =
-    "mt-1.5 w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-4 py-2.5 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
+    "mt-1.5 w-full rounded-lg border border-stone-300/90 bg-white px-4 py-2.5 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
   const labelClass = "block text-sm font-medium text-stone-700";
 
   return (
@@ -119,7 +120,8 @@ export function ApplicationsClient({
         breadcrumbs={breadcrumbs}
       />
 
-      <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 border-l-[3px] border-accent-600 py-2 pl-5">
             <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">{formEyebrow}</p>
@@ -229,6 +231,7 @@ export function ApplicationsClient({
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

@@ -24,7 +24,10 @@ export type HomePageCms = {
     paragraphs: string[];
     name: string;
     role: string;
+    /** Legacy; no longer shown when `image` is set. */
     initials: string;
+    /** Portrait for the spotlight tile (`/uploads/…` or media id resolved upstream). */
+    image: string;
     ctaLabel: string;
     ctaHref: string;
   };

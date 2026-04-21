@@ -3,6 +3,7 @@ import { User, Mail, Briefcase, MapPin, Phone, ArrowUpRight } from "lucide-react
 import { getInvolvedContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
@@ -47,7 +48,8 @@ export default async function GetInvolvedPage() {
         ]}
       />
 
-      <section className="page-section-paper border-b border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+        <section className="border-b border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="max-w-2xl">
             <p className="text-sm font-medium text-accent-800">Ways to connect</p>
@@ -58,7 +60,7 @@ export default async function GetInvolvedPage() {
           <div className="mt-14 grid gap-6 lg:grid-cols-3 lg:gap-8">
             <Link
               href={volunteerCardHref}
-              className="group relative overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] p-8 shadow-sm transition-all duration-300 hover:border-accent-300/60 hover:shadow-lg sm:p-10 lg:col-span-2 lg:flex lg:flex-col lg:justify-between"
+              className="group relative overflow-hidden rounded-none border border-stone-200/90 bg-white p-8 shadow-sm transition-all duration-300 hover:border-accent-300/60 hover:shadow-lg sm:p-10 lg:col-span-2 lg:flex lg:flex-col lg:justify-between"
             >
               <div className="absolute right-0 top-0 h-40 w-40 translate-x-10 -translate-y-10 rounded-full bg-accent-100/60 opacity-80 transition-opacity group-hover:opacity-100" />
               <div className="relative">
@@ -99,9 +101,9 @@ export default async function GetInvolvedPage() {
                   <Link
                     key={opp.id}
                     href={cardHref}
-                    className="group page-card flex flex-1 flex-col p-7 transition-all duration-300 hover:border-accent-200/50 hover:shadow-md sm:p-8"
+                    className="group page-card rounded-none flex flex-1 flex-col p-7 transition-all duration-300 hover:border-accent-200/50 hover:shadow-md sm:p-8"
                   >
-                    <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700 transition-colors group-hover:bg-accent-200/80">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-none bg-accent-100 text-accent-700 transition-colors group-hover:bg-accent-200/80">
                       <Icon className="h-6 w-6" strokeWidth={1.75} />
                     </div>
                     <h3 className="mt-4 font-sans text-xl font-semibold text-stone-900">{opp.title}</h3>
@@ -125,14 +127,14 @@ export default async function GetInvolvedPage() {
           </div>
 
           {/* Bottom section: bento-style two columns */}
-          <section className="mt-20 rounded-2xl border border-stone-200/80 bg-[#f2ebe3]/40 p-8 sm:p-10 lg:p-12">
+          <section className="mt-20 rounded-none border border-stone-200/80 bg-white p-8 sm:p-10 lg:p-12">
             <div className="grid gap-10 lg:grid-cols-2 lg:gap-16">
               <div>
                 <h2 className="page-heading text-xl sm:text-2xl">{bottomSection.getInTouch.title}</h2>
                 <p className="page-prose mt-3">{bottomSection.getInTouch.text}</p>
                 <ul className="mt-6 space-y-4">
                   <li className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffcf7] shadow-sm ring-1 ring-stone-200/60">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white shadow-sm ring-1 ring-stone-200/60">
                       <Mail className="h-5 w-5 text-accent-700" />
                     </div>
                     <a
@@ -143,7 +145,7 @@ export default async function GetInvolvedPage() {
                     </a>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffcf7] shadow-sm ring-1 ring-stone-200/60">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white shadow-sm ring-1 ring-stone-200/60">
                       <Phone className="h-5 w-5 text-accent-700" />
                     </div>
                     <a
@@ -154,7 +156,7 @@ export default async function GetInvolvedPage() {
                     </a>
                   </li>
                   <li className="flex items-start gap-3">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-[#fffcf7] shadow-sm ring-1 ring-stone-200/60">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white shadow-sm ring-1 ring-stone-200/60">
                       <MapPin className="h-5 w-5 text-accent-700" />
                     </div>
                     <span className="text-stone-600">{siteSettings.address}</span>
@@ -169,10 +171,10 @@ export default async function GetInvolvedPage() {
                     <li key={evt.label}>
                       <Link
                         href={evt.registerHref}
-                        className="group flex flex-wrap items-center justify-between gap-3 rounded-xl border border-stone-200/80 bg-[#fffcf7] p-4 transition-all hover:border-accent-300/60 hover:shadow-sm"
+                        className="group flex flex-wrap items-center justify-between gap-3 rounded-none border border-stone-200/80 bg-white p-4 transition-all hover:border-accent-300/60 hover:shadow-sm"
                       >
                         <span className="text-stone-700">{evt.label}</span>
-                        <span className="inline-flex items-center gap-1.5 rounded-lg bg-accent-700 px-4 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-accent-800">
+                        <span className="inline-flex items-center gap-1.5 rounded-none bg-accent-700 px-4 py-2 text-sm font-semibold text-white transition-colors group-hover:bg-accent-800">
                           Register
                           <ArrowUpRight className="h-3.5 w-3.5" />
                         </span>
@@ -185,6 +187,7 @@ export default async function GetInvolvedPage() {
           </section>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

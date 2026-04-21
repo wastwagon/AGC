@@ -1131,6 +1131,83 @@ export function PageContentForm({ item }: PageContentFormProps) {
             </div>
           </div>
         )}
+        {item.slug === "events" && (
+          <div className="mb-3 grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">
+              Past events archive (public /events/past)
+            </p>
+            <p className="text-xs text-slate-600">
+              Copy for the archive filters, search, and list UI. Stored in{" "}
+              <code className="rounded bg-white px-1 ring-1 ring-slate-200">content_json.pastArchive</code> and the
+              empty-state line in{" "}
+              <code className="rounded bg-white px-1 ring-1 ring-slate-200">content_json.gridEmpty.past</code>. The
+              route hero uses the main Hero fields on this page when set.
+            </p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              {(
+                [
+                  ["title", "In-page archive heading"],
+                  ["subtitle", "In-page archive intro"],
+                  ["searchPlaceholder", "Search placeholder"],
+                  ["filterBy", "Filter section title"],
+                  ["eventCheckboxLabel", "Event checkbox label"],
+                  ["topicLabel", "Topic filter (dropdown label)"],
+                  ["regionLabel", "Region filter (dropdown label)"],
+                  ["listFilterPlaceholder", "Placeholder: topic/region list filter"],
+                  ["dateHeading", "Date filter heading"],
+                  ["dateAll", "Date option: All dates"],
+                  ["date30d", "Date option: Past 30 days"],
+                  ["date6m", "Date option: Past 6 months"],
+                  ["date1y", "Date option: Last year"],
+                  ["resultsFoundSuffix", "Suffix after result count"],
+                  ["showMore", "“Show more” button label"],
+                  ["resultsAtATime", "Pagination helper (e.g. results at a time)"],
+                ] as const
+              ).map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-slate-600">{label}</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["pastArchive", key])}
+                    onChange={(e) => updateNestedString(["pastArchive", key], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Topic empty state</label>
+                <textarea
+                  value={getNestedString(["pastArchive", "topicEmpty"])}
+                  onChange={(e) => updateNestedString(["pastArchive", "topicEmpty"], e.target.value)}
+                  rows={2}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">
+                  Region modal empty state (no location/venue on events)
+                </label>
+                <textarea
+                  value={getNestedString(["pastArchive", "filterComingSoon"])}
+                  onChange={(e) => updateNestedString(["pastArchive", "filterComingSoon"], e.target.value)}
+                  rows={2}
+                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Empty results (no matching past events)</label>
+              <textarea
+                value={getNestedString(["gridEmpty", "past"])}
+                onChange={(e) => updateNestedString(["gridEmpty", "past"], e.target.value)}
+                rows={3}
+                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+        )}
         {item.slug === "app-summit" && (
           <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">APP Summit helper</p>

@@ -62,6 +62,7 @@ export async function updateHomeSettings(formData: FormData) {
       name: d.spotlightName,
       role: d.spotlightRole,
       initials: d.spotlightInitials,
+      image: d.spotlightImage?.trim() ?? "",
       ctaLabel: d.spotlightCtaLabel,
       ctaHref: d.spotlightCtaHref,
     },

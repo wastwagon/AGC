@@ -1,9 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import type { HomePageCms } from "@/lib/home-page-data";
+import { HOME_HERO_DISPLAY_TAGLINE, HOME_HERO_DISPLAY_TITLE } from "@/data/content";
+import gsap from "gsap";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import { useState, useEffect, useCallback, useSyncExternalStore } from "react";
+import { useState, useEffect, useCallback, useLayoutEffect, useRef, useSyncExternalStore } from "react";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
 
@@ -21,11 +22,9 @@ function getPrefersReducedMotionServerSnapshot() {
   return false;
 }
 
-/**
- * Editorial home hero: headline hierarchy, dual CTAs.
- * Slider images from CMS (home.heroSliderImages) or default; auto-advances when reduced motion is off.
- */
+/** Home hero: headline + tagline only; slider/video from CMS. */
 type HeroProps = {
+  /** Retained for callers; copy is fixed in `content.ts` (`HOME_HERO_DISPLAY_*`). */
   hero?: HomePageCms["heroContent"];
   /** Hero carousel image URLs. From CMS when set; otherwise pass default from page. */
   sliderImages: string[];
@@ -36,18 +35,20 @@ type HeroProps = {
   backgroundVideoSrc?: string;
 };
 
-const EMPTY_HERO: HomePageCms["heroContent"] = {
-  eyebrow: "",
-  title: "",
-  subtitle: "",
-  cta: "",
-  ctaHref: "/",
-  ctaSecondary: "",
-  ctaSecondaryHref: "/",
-};
+/** Readable white type over photos — subtle black only (no brand tint). */
+function HeroImageScrim() {
+  return (
+    <div
+      className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/38 to-black/28"
+      aria-hidden
+    />
+  );
+}
 
-export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc }: HeroProps) {
-  const heroContent = heroProp ?? EMPTY_HERO;
+export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }: HeroProps) {
+  void _hero; // prop kept so `page.tsx` can pass CMS draft without refactors
+  const eyebrowRef = useRef<HTMLParagraphElement>(null);
+  const titleRef = useRef<HTMLHeadingElement>(null);
   const [current, setCurrent] = useState(0);
   const reducedMotion = useSyncExternalStore(
     subscribePrefersReducedMotion,
@@ -74,13 +75,35 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
     return () => clearInterval(id);
   }, [next, reducedMotion, slides.length, useVideoBackground]);
 
+  useLayoutEffect(() => {
+    const eyebrow = eyebrowRef.current;
+    const title = titleRef.current;
+    if (!eyebrow || !title) return;
+
+    if (reducedMotion) {
+      gsap.set([eyebrow, title], { autoAlpha: 1, y: 0, clearProps: "transform" });
+      return;
+    }
+
+    const ctx = gsap.context(() => {
+      gsap.set(eyebrow, { autoAlpha: 0, y: 20 });
+      gsap.set(title, { autoAlpha: 0, y: 36 });
+
+      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
+      tl.to(eyebrow, { autoAlpha: 1, y: 0, duration: 1.05 });
+      tl.to(title, { autoAlpha: 1, y: 0, duration: 1.35 }, "+=0.32");
+    });
+
+    return () => ctx.revert();
+  }, [reducedMotion]);
+
   return (
-    <section className="group relative flex min-h-[380px] w-full flex-col overflow-hidden sm:min-h-[440px] lg:min-h-[min(68vh,560px)]">
-      {/* Video (preferred when configured), else CMS slides, else gradient */}
+    <section className="group relative flex min-h-[min(64vh,480px)] w-full flex-col overflow-hidden sm:min-h-[min(68vh,520px)] lg:min-h-[min(72vh,560px)] xl:min-h-[min(84vh,620px)]">
+      {/* Video (preferred when configured), else CMS slides, else dark neutral fallback */}
       {useVideoBackground && backgroundVideoSrc ? (
         <div className="absolute inset-0 z-0" aria-hidden>
           <video
-            className="h-full w-full object-cover"
+            className="h-full w-full object-cover object-center"
             autoPlay
             muted
             loop
@@ -89,11 +112,13 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
           >
             <source src={backgroundVideoSrc} type="video/mp4" />
           </video>
-          {/* Stronger on the left where type sits; lighter toward the right so the photo reads. */}
-          <div className="absolute inset-0 bg-gradient-to-r from-accent-700/72 via-accent-600/48 to-accent-600/12" />
+          <HeroImageScrim />
         </div>
       ) : slides.length === 0 ? (
-        <div className="absolute inset-0 z-0 bg-gradient-to-br from-accent-700 to-accent-600" aria-hidden />
+        <div className="absolute inset-0 z-0 bg-slate-950" aria-hidden>
+          <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-black" />
+          <HeroImageScrim />
+        </div>
       ) : (
         slides.map((src, i) => (
           <div
@@ -109,44 +134,28 @@ export function HeroConsultar({ hero: heroProp, sliderImages, backgroundVideoSrc
               style={{ backgroundImage: `url(${src})` }}
               aria-hidden
             />
-            <div
-              className="absolute inset-0 bg-gradient-to-r from-accent-700/72 via-accent-600/48 to-accent-600/12"
-              aria-hidden
-            />
+            <HeroImageScrim />
           </div>
         ))
       )}
 
-      {/* Main copy — left column, top-aligned */}
-      <div className="relative z-10 mx-auto flex w-full max-w-6xl flex-1 flex-col justify-start px-4 pb-10 pt-20 sm:px-6 sm:pb-12 sm:pt-24 lg:px-8 lg:pb-14 lg:pt-28">
-        <div className="max-w-2xl lg:max-w-[34rem] [text-shadow:0_1px_2px_rgba(0,0,0,0.22),0_3px_20px_rgba(0,0,0,0.28)]">
-          {heroContent.eyebrow?.trim() ? (
-            <p className="mb-5 max-w-xl text-[0.6875rem] font-semibold uppercase leading-relaxed tracking-[0.14em] text-white/90 sm:text-xs">
-              {heroContent.eyebrow}
-            </p>
-          ) : null}
-          <h1 className="text-balance font-serif text-3xl font-semibold leading-[1.12] tracking-tight text-white sm:text-4xl sm:leading-[1.1] lg:text-[2.35rem] lg:leading-[1.08] xl:text-[2.65rem] xl:leading-[1.06]">
-            {heroContent.title}
-          </h1>
-          <p className="mt-6 max-w-2xl text-pretty text-base font-normal leading-[1.72] text-white/95 sm:text-lg sm:leading-[1.7] lg:mt-7 lg:text-xl lg:leading-[1.68]">
-            {heroContent.subtitle}
+      {/* Main copy — TBI-style: small caps sans eyebrow + large serif headline */}
+      <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-4 py-24 text-center sm:px-6 sm:py-28 lg:px-8 lg:py-32 xl:py-36">
+        <div className="max-w-4xl [text-shadow:0_2px_24px_rgba(0,0,0,0.45)]">
+          <p
+            ref={eyebrowRef}
+            className="mb-3 font-sans text-[0.6875rem] font-bold uppercase leading-normal tracking-[0.22em] text-white sm:mb-4 sm:text-xs sm:tracking-[0.24em]"
+          >
+            {HOME_HERO_DISPLAY_TITLE}
           </p>
-          <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-center lg:mt-12">
-            <Link
-              href={heroContent.ctaHref}
-              className="inline-flex min-h-[48px] min-w-[44px] items-center justify-center rounded-xl bg-white px-8 py-3.5 text-[0.9375rem] font-semibold text-accent-900 shadow-md ring-1 ring-white/20 transition hover:bg-[#fffcf7] hover:shadow-lg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              {heroContent.cta}
-            </Link>
-            <Link
-              href={heroContent.ctaSecondaryHref}
-              className="inline-flex min-h-[48px] min-w-[44px] items-center justify-center rounded-xl border-2 border-white/70 bg-white/12 px-8 py-3.5 text-[0.9375rem] font-semibold text-white shadow-sm backdrop-blur-sm transition hover:border-white hover:bg-white/22 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-            >
-              {heroContent.ctaSecondary}
-            </Link>
-          </div>
+          <h1
+            ref={titleRef}
+            className="text-balance font-serif text-[clamp(2.125rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-tight text-white sm:leading-[1.08] lg:text-[clamp(2.625rem,5vw,4.75rem)] lg:leading-[1.06] xl:text-[clamp(2.875rem,4.75vw,5.25rem)]"
+          >
+            {HOME_HERO_DISPLAY_TAGLINE}
+          </h1>
           {!useVideoBackground && slides.length > 1 && (
-            <div className="mt-10 flex gap-1.5" role="tablist" aria-label="Hero slides">
+            <div className="mt-6 flex justify-center gap-1.5 sm:mt-8" role="tablist" aria-label="Hero slides">
               {slides.map((_, i) => (
                 <button
                   key={i}

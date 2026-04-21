@@ -52,6 +52,7 @@ const nextConfig: NextConfig = {
     localPatterns: [
       { pathname: "/uploads/**", search: "" },
       { pathname: "/agc-logo.png", search: "" },
+      { pathname: "/logo.png", search: "" },
     ],
     /**
      * Allows the optimizer to fetch same-origin URLs that resolve to loopback/private IPs (dev)

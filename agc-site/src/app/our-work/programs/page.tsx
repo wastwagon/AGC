@@ -1,5 +1,6 @@
 import { workContent } from "@/data/content";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { cardImageUrlOrNull } from "@/lib/image-delivery";
 import { resolveImageUrl } from "@/lib/media";
@@ -40,7 +41,8 @@ export default async function ProgramsPage() {
         ]}
       />
 
-      <section className="py-16 sm:py-20 lg:py-[80px] xl:py-[120px]">
+      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+        <section className="bg-white py-16 sm:py-20 lg:py-[80px] xl:py-[120px]">
         <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
 
           <div className="prose prose-slate prose-lg max-w-none">
@@ -57,6 +59,7 @@ export default async function ProgramsPage() {
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }

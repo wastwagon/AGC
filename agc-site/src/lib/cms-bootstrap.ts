@@ -5,6 +5,7 @@
  */
 import {
   heroContent,
+  defaultHomeHeroBackgroundImage,
   homeTestimonial,
   homeSpotlightStory,
   homeImpactStats,
@@ -14,12 +15,13 @@ import {
 import type { HomePageCms } from "@/lib/home-page-types";
 
 const DEFAULT_PARTNER_BLURB =
-  "Our work is always collaborative—we don't arrive with ready-made answers.";
+  "Stay up to date with our research and events >";
 
 export function getBootstrapHomePageCms(): HomePageCms {
   return {
-    heroSliderImages: [],
-    heroBackgroundVideoSrc: "/media/hero-video-background.mp4",
+    heroSliderImages: [defaultHomeHeroBackgroundImage],
+    /** Empty = image carousel; set to `/media/…mp4` in Admin → Home settings to use video instead. */
+    heroBackgroundVideoSrc: "",
     heroContent: {
       eyebrow: heroContent.eyebrow,
       title: heroContent.title,
@@ -35,9 +37,8 @@ export function getBootstrapHomePageCms(): HomePageCms {
       paragraphs: [...homeSpotlightStory.paragraphs],
     },
     homeReach: {
-      title: "The shape of our work",
-      intro:
-        "We measure ourselves by relationships and depth as much as by scale. Here is a snapshot—always happy to share more in conversation.",
+      title: "The Scope of Our Work",
+      intro: "",
     },
     homeImpactMethodology,
     homeImpactStats: homeImpactStats.map((s) => ({ ...s })),

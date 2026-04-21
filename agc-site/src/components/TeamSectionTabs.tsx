@@ -63,7 +63,7 @@ export function TeamSectionTabs({ cmsTeam }: { cmsTeam: TeamMember[] }) {
             {members.map((member) => (
               <li
                 key={member.id}
-                className="page-card flex gap-4 p-6 transition-shadow hover:shadow-md sm:flex-col sm:p-7"
+                className="bg-white border border-stone-200/80 flex gap-4 p-6 transition-shadow hover:shadow-md sm:flex-col sm:p-7"
               >
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-100 text-accent-800">
                   <User className="h-6 w-6" strokeWidth={1.5} />

@@ -22,9 +22,11 @@ test.describe("Event registration (public)", () => {
       });
     });
 
-    await page.goto("/events/register/our-programs-description");
-
-    await expect(page.getByRole("heading", { level: 1, name: /Register for/i })).toBeVisible();
+    await page.goto("/events/our-programs-description");
+    await expect(page.getByRole("heading", { level: 1, name: /Our Programs Description/i })).toBeVisible();
+    await page.getByRole("link", { name: /^Register$/i }).click();
+    await expect(page).toHaveURL(/\/events\/register\/our-programs-description/);
+    await expect(page.getByRole("heading", { name: /Register to attend in person/i })).toBeVisible();
 
     await page.locator("#fullName").fill("E2E Event Guest");
     await page.locator("#email").fill("e2e-event@example.com");

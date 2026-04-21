@@ -86,29 +86,76 @@ function cloneLinks(links: readonly { href: string; label: string }[]): SiteNavL
   return links.map((l) => ({ href: l.href, label: l.label }));
 }
 
-export const defaultSiteNav: SiteNavItem[] = [
-  { href: "/", label: "Home" },
+/**
+ * Desktop header primary row — fixed order and labels (independent of full `chrome.nav` order).
+ * `About` uses `subLinks` for the hover panel; newsletter opens the footer signup (`/#newsletter`).
+ */
+export const HEADER_PRIMARY_NAV_SLOTS: readonly SiteNavItem[] = [
+  { href: "/app-summit", label: "App Summit" },
   {
     href: "/about",
-    label: "About Us",
-    subLinks: [{ href: "/aypf", label: "AYPF" }],
-  },
-  {
-    href: "/get-involved",
-    label: "Get Involved",
+    label: "About",
     subLinks: [
       { href: "/get-involved/join-us", label: "Careers & Opportunities" },
       { href: "/get-involved/partnership", label: "Partner / Sponsor" },
-      { href: "/contact", label: "Donate" },
-      { href: "/get-involved/volunteer", label: "Volunteer" },
       { href: "/#newsletter", label: "Subscribe to our newsletter" },
     ],
   },
   { href: "/our-work", label: "Our Work" },
-  { href: "/app-summit", label: "APP Summit" },
+  { href: "/get-involved", label: "Get Involved" },
+  { href: "/events", label: "Events" },
+  { href: "/contact", label: "Contact" },
+];
+
+/** Public header (lg+): always the slots above; `nav` is unused but kept for API stability. */
+export function resolveHeaderPrimaryNav(_nav: SiteNavItem[]): SiteNavItem[] {
+  return HEADER_PRIMARY_NAV_SLOTS.map((s) => ({
+    href: s.href,
+    label: s.label,
+    ...(s.subLinks?.length ? { subLinks: s.subLinks.map((l) => ({ ...l })) } : {}),
+  }));
+}
+
+/** Additional destinations after the primary row (mobile drawer, defaults, etc.). */
+const DEFAULT_SITE_NAV_TAIL: SiteNavItem[] = [
+  { href: "/about", label: "About Us" },
+  { href: "/about/team", label: "Team" },
+  { href: "/get-involved/volunteer", label: "Volunteer" },
+  { href: "/our-work/programs", label: "Programs" },
+  { href: "/our-work/projects", label: "Projects" },
+  { href: "/our-work/advisory", label: "Advisory" },
+  { href: "/aypf", label: "AYPF" },
   { href: "/events", label: "Events" },
   { href: "/news", label: "News" },
+  { href: "/publications", label: "Publications" },
 ];
+
+/** Header + drawer menu: primary row order with optional `subLinks` (e.g. About); tail adds secondary pages without duplicating hrefs. */
+export const defaultSiteNav: SiteNavItem[] = (() => {
+  const seen = new Set<string>();
+  const out: SiteNavItem[] = [];
+  const mark = (href: string) => {
+    seen.add(href);
+  };
+  for (const item of HEADER_PRIMARY_NAV_SLOTS) {
+    if (seen.has(item.href)) continue;
+    mark(item.href);
+    if (item.subLinks) {
+      for (const sub of item.subLinks) mark(sub.href);
+    }
+    out.push({
+      href: item.href,
+      label: item.label,
+      ...(item.subLinks?.length ? { subLinks: item.subLinks.map((l) => ({ ...l })) } : {}),
+    });
+  }
+  for (const item of DEFAULT_SITE_NAV_TAIL) {
+    if (seen.has(item.href)) continue;
+    mark(item.href);
+    out.push({ href: item.href, label: item.label });
+  }
+  return out;
+})();
 
 export const DEFAULT_SITE_CHROME: SiteChrome = {
   skipToContentLabel: "Skip to content",
@@ -119,11 +166,7 @@ export const DEFAULT_SITE_CHROME: SiteChrome = {
   mobileSearchButtonLabel: "Search the site",
   mobileDrawerContactCta: "Contact us",
   mobileLanguageEyebrow: "Language",
-  nav: defaultSiteNav.map((item) => ({
-    href: item.href,
-    label: item.label,
-    subLinks: item.subLinks ? cloneLinks(item.subLinks) : undefined,
-  })),
+  nav: defaultSiteNav.map((item) => ({ href: item.href, label: item.label })),
   bottomNav: [
     { href: "/", label: "Home" },
     { href: "/our-work", label: "Work" },
@@ -137,7 +180,7 @@ export const DEFAULT_SITE_CHROME: SiteChrome = {
     ourWorkHeading: "Our Work",
     getInvolvedLabel: "Get Involved",
     rightsReserved: "All rights reserved.",
-    adminLabel: "Admin",
+    adminLabel: "AGC",
     quickLinks: cloneLinks(footerLinks.quickLinks),
     legal: cloneLinks(footerLinks.legal),
     workThumbnails: [

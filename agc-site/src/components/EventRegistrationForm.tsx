@@ -4,9 +4,19 @@ import { useState } from "react";
 import { Button } from "@/components/Button";
 import type { CmsEvent } from "@/lib/content";
 
-type EventRegistrationFormProps = { event: CmsEvent };
+type EventRegistrationFormProps = {
+  event: CmsEvent;
+  /** Brookings-style registration page: no duplicate title block; flat bordered fields. */
+  embedded?: boolean;
+};
 
-export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
+const embeddedFieldClass =
+  "mt-1.5 block w-full rounded-none border border-stone-300 bg-white px-3 py-2.5 text-stone-900 shadow-none placeholder:text-stone-400 focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500";
+const defaultFieldClass =
+  "mt-1 block w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
+
+export function EventRegistrationForm({ event, embedded = false }: EventRegistrationFormProps) {
+  const inputClass = embedded ? embeddedFieldClass : defaultFieldClass;
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const [badgeUrl, setBadgeUrl] = useState("");
@@ -98,75 +108,69 @@ export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
     );
   }
 
-  return (
-    <form onSubmit={handleSubmit} className="page-card p-6 sm:p-8">
-      <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-stone-500">Your details</p>
-      <h2 className="page-heading mt-2 text-xl text-stone-900">{event.title}</h2>
-      <p className="mt-2 text-sm text-stone-600">
-        {new Date(event.start_date).toLocaleDateString("en-GB", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
-        {event.location && ` • ${event.location}`}
-      </p>
+  const formShell = embedded
+    ? "mx-auto mt-10 max-w-xl border border-stone-200 bg-white px-5 py-8 sm:px-8"
+    : "page-card p-6 sm:p-8";
 
-      <div className="mt-8 space-y-6">
+  return (
+    <form onSubmit={handleSubmit} className={formShell}>
+      {!embedded ? (
+        <>
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-stone-500">Your details</p>
+          <h2 className="page-heading mt-2 text-xl text-stone-900">{event.title}</h2>
+          <p className="mt-2 text-sm text-stone-600">
+            {new Date(event.start_date).toLocaleDateString("en-GB", {
+              weekday: "long",
+              year: "numeric",
+              month: "long",
+              day: "numeric",
+            })}
+            {event.location && ` • ${event.location}`}
+          </p>
+        </>
+      ) : null}
+
+      <div className={embedded ? "space-y-5" : "mt-8 space-y-6"}>
         <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-stone-700">
-            Full Name <span className="text-red-500">*</span>
+          <label htmlFor="fullName" className="block text-sm font-medium text-stone-800">
+            Full Name <span className="text-red-600">*</span>
           </label>
           <input
             id="fullName"
             name="fullName"
             type="text"
             required
-            className="mt-1 block w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+            className={inputClass}
             placeholder="Your full name"
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-stone-700">
-            Email <span className="text-red-500">*</span>
+          <label htmlFor="email" className="block text-sm font-medium text-stone-800">
+            Email <span className="text-red-600">*</span>
           </label>
-          <input
-            id="email"
-            name="email"
-            type="email"
-            required
-            className="mt-1 block w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
-            placeholder="you@example.com"
-          />
+          <input id="email" name="email" type="email" required className={inputClass} placeholder="you@example.com" />
         </div>
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-stone-700">
+          <label htmlFor="phone" className="block text-sm font-medium text-stone-800">
             Phone
           </label>
-          <input
-            id="phone"
-            name="phone"
-            type="tel"
-            className="mt-1 block w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
-            placeholder="+233 XX XXX XXXX"
-          />
+          <input id="phone" name="phone" type="tel" className={inputClass} placeholder="+233 XX XXX XXXX" />
         </div>
         <div>
-          <label htmlFor="organization" className="block text-sm font-medium text-stone-700">
+          <label htmlFor="organization" className="block text-sm font-medium text-stone-800">
             Organization
           </label>
-          <input
-            id="organization"
-            name="organization"
-            type="text"
-            className="mt-1 block w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
-            placeholder="Your organization"
-          />
+          <input id="organization" name="organization" type="text" className={inputClass} placeholder="Your organization" />
         </div>
         <div>
-          <label htmlFor="dietaryReqs" className="block text-sm font-medium text-stone-700">
+          <label htmlFor="dietaryReqs" className="block text-sm font-medium text-stone-800">
             Dietary Requirements
           </label>
           <input
             id="dietaryReqs"
             name="dietaryReqs"
             type="text"
-            className="mt-1 block w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+            className={inputClass}
             placeholder="e.g. Vegetarian, allergies"
           />
         </div>
@@ -176,11 +180,16 @@ export function EventRegistrationForm({ event }: EventRegistrationFormProps) {
         <p className={`mt-4 text-sm ${status === "error" ? "text-red-700" : "text-stone-600"}`}>{message}</p>
       )}
 
-      <div className="mt-8 flex gap-4">
-        <Button type="submit" variant="primary" disabled={status === "loading"}>
+      <div className={`mt-8 flex flex-wrap gap-3 ${embedded ? "justify-center sm:justify-start" : ""}`}>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={status === "loading"}
+          className={embedded ? "!rounded-none !bg-accent-600 hover:!bg-accent-700" : undefined}
+        >
           {status === "loading" ? "Registering…" : "Register"}
         </Button>
-        <Button asChild href="/events" variant="outline">
+        <Button asChild href="/events" variant="outline" className={embedded ? "!rounded-none" : undefined}>
           Cancel
         </Button>
       </div>

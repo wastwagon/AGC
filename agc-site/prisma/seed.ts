@@ -112,10 +112,7 @@ async function main() {
       slug: "home",
       title: "Homepage",
       status: "published",
-      contentJson: {
-        ...getBootstrapHomePageCms(),
-        heroSliderImages: ["/uploads/placeholder.svg"],
-      },
+      contentJson: getBootstrapHomePageCms(),
     },
     {
       slug: "site-settings",

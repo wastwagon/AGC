@@ -257,6 +257,7 @@ export async function updateSiteSettings(formData: FormData) {
       linkedin: data.socialLinkedin || "",
       instagram: data.socialInstagram || "",
       facebook: data.socialFacebook || "",
+      youtube: "",
     },
     languages: parseLanguages(data.languages),
     chrome,

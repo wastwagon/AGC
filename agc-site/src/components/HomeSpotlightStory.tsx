@@ -1,23 +1,36 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { HomePageCms } from "@/lib/home-page-data";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
-export function HomeSpotlightStory({ story }: { story: HomePageCms["homeSpotlightStory"] }) {
+export function HomeSpotlightStory({
+  story,
+  portraitSrc,
+}: {
+  story: HomePageCms["homeSpotlightStory"];
+  /** Resolved URL (e.g. after `resolveImageUrl` for media ids). */
+  portraitSrc: string;
+}) {
   const s = story;
   if (!s.headline?.trim()) return null;
 
   return (
-    <section className="border-y border-stone-200/80 bg-[#fffcf7] py-14 sm:py-20">
+    <section className="border-y border-stone-200/80 bg-white py-14 sm:py-20">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-14 lg:items-start">
-          <div className="flex flex-col items-center gap-4 lg:col-span-4 lg:items-start">
-            <div
-              className="flex h-28 w-28 shrink-0 items-center justify-center rounded-2xl bg-accent-600 font-sans text-3xl font-semibold text-white shadow-md sm:h-32 sm:w-32 sm:text-4xl"
-              aria-hidden
-            >
-              {s.initials}
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-12 lg:items-start xl:gap-14">
+          <div className="flex flex-col items-center gap-4 lg:col-span-5 lg:items-start">
+            <div className="relative aspect-[4/5] w-full max-w-[min(100%,280px)] shrink-0 overflow-hidden shadow-md sm:max-w-[min(100%,320px)] lg:max-w-[min(100%,400px)]">
+              <Image
+                src={portraitSrc}
+                alt={s.name?.trim() ? `Portrait: ${s.name}` : "Fellow spotlight portrait"}
+                fill
+                sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 400px"
+                className="object-cover object-center"
+                unoptimized={preferUnoptimizedImage(portraitSrc)}
+              />
             </div>
           </div>
-          <div className="lg:col-span-8">
+          <div className="lg:col-span-7">
             <p className="text-sm font-medium text-accent-800">{s.label}</p>
             <h2 className="mt-2 font-serif text-2xl font-semibold leading-snug tracking-tight text-stone-900 sm:text-3xl">
               {s.headline}

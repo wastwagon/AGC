@@ -197,25 +197,25 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
       <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Social links</h2>
         <p className="mt-1 text-sm text-slate-600">
-          Full URLs for each platform. Icons show in the <strong>header top bar</strong> (right) and footer when a URL is set. Leave a field empty to use the matching{" "}
+          Full URLs for each platform. The <strong>footer</strong> shows brand-style icons for X, Facebook, LinkedIn, and Instagram in a fixed row (with built-in fallbacks for AGC when a field is empty). The <strong>header top bar</strong> uses its own compact set of links. Leave a field empty to use the matching{" "}
           <code className="rounded bg-slate-100 px-1 text-xs">NEXT_PUBLIC_*_URL</code> build-time env var if configured.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <div>
-            <label htmlFor="socialLinkedin" className="block text-sm font-medium text-slate-700">LinkedIn</label>
-            <input id="socialLinkedin" type="url" name="socialLinkedin" defaultValue={initialDraft?.socialLinkedin ?? settings.social.linkedin} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
-          </div>
           <div>
             <label htmlFor="socialTwitter" className="block text-sm font-medium text-slate-700">Twitter / X</label>
             <input id="socialTwitter" type="url" name="socialTwitter" defaultValue={initialDraft?.socialTwitter ?? settings.social.twitter} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
           <div>
-            <label htmlFor="socialInstagram" className="block text-sm font-medium text-slate-700">Instagram</label>
-            <input id="socialInstagram" type="url" name="socialInstagram" defaultValue={initialDraft?.socialInstagram ?? settings.social.instagram} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
-          </div>
-          <div>
             <label htmlFor="socialFacebook" className="block text-sm font-medium text-slate-700">Facebook</label>
             <input id="socialFacebook" type="url" name="socialFacebook" defaultValue={initialDraft?.socialFacebook ?? settings.social.facebook} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="socialLinkedin" className="block text-sm font-medium text-slate-700">LinkedIn</label>
+            <input id="socialLinkedin" type="url" name="socialLinkedin" defaultValue={initialDraft?.socialLinkedin ?? settings.social.linkedin} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
+          </div>
+          <div>
+            <label htmlFor="socialInstagram" className="block text-sm font-medium text-slate-700">Instagram</label>
+            <input id="socialInstagram" type="url" name="socialInstagram" defaultValue={initialDraft?.socialInstagram ?? settings.social.instagram} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
         </div>
       </section>
@@ -287,7 +287,7 @@ export function SiteSettingsForm({ settings, saved = false }: { settings: SiteSe
             <input id="footerRightsReserved" name="footerRightsReserved" defaultValue={settings.chrome.footer.rightsReserved} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
           <div>
-            <label htmlFor="footerAdminLabel" className="block text-sm font-medium text-slate-700">Footer: Admin link</label>
+            <label htmlFor="footerAdminLabel" className="block text-sm font-medium text-slate-700">Footer: CMS link label</label>
             <input id="footerAdminLabel" name="footerAdminLabel" defaultValue={settings.chrome.footer.adminLabel} className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2" />
           </div>
         </div>

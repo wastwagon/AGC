@@ -66,21 +66,12 @@ export function parseBottomNav(v: unknown): { href: string; label: string }[] | 
   return out.length > 0 ? out : null;
 }
 
-/** Editor row shape for main nav (matches SiteSettingsChromeLists). */
-export type NavEditorRow = { href: string; label: string; subLinks: { href: string; label: string }[] };
+/** Editor row shape for main nav (flat top-level links only). */
+export type NavEditorRow = { href: string; label: string };
 
-/** Payload for `chromeNavJson` — same structure `mergeSiteChrome` expects after `parseNavList`. */
+/** Payload for `chromeNavJson` — top-level rows (flat). Hierarchical items with `subLinks` are preserved when stored in full JSON nav. */
 export function buildNavPayloadForSettings(rows: NavEditorRow[]): SiteNavItem[] {
-  return rows
-    .filter((r) => r.href.trim() && r.label.trim())
-    .map((r) => {
-      const sub = r.subLinks
-        .filter((s) => s.href.trim() && s.label.trim())
-        .map((s) => ({ href: s.href.trim(), label: s.label.trim() }));
-      const item: SiteNavItem = { href: r.href.trim(), label: r.label.trim() };
-      if (sub.length > 0) item.subLinks = sub;
-      return item;
-    });
+  return rows.filter((r) => r.href.trim() && r.label.trim()).map((r) => ({ href: r.href.trim(), label: r.label.trim() }));
 }
 
 export function serializeNavForSettings(rows: NavEditorRow[]): string {

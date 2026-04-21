@@ -1,6 +1,11 @@
 "use client";
 
+import Link from "next/link";
+import { useState } from "react";
 import { useFormStatus } from "react-dom";
+import { ImagePlus } from "lucide-react";
+import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
+import { useImageFieldPreview } from "@/hooks/useImageFieldPreview";
 import { AdminFormStickyActions } from "../_components/AdminFormStickyActions";
 import { AdminFormPreviewLink } from "../_components/AdminFormPreviewLink";
 import { updateHomePageContent } from "./actions-home";
@@ -28,6 +33,9 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
   const s = data.homeSpotlightStory;
   const p0 = s.paragraphs[0] ?? "";
   const p1 = s.paragraphs[1] ?? "";
+  const [spotlightImage, setSpotlightImage] = useState(s.image ?? "");
+  const [spotPickerOpen, setSpotPickerOpen] = useState(false);
+  const { previewUrl: spotPreviewUrl, loading: spotPreviewLoading } = useImageFieldPreview(spotlightImage);
 
   return (
     <form action={updateHomePageContent} className="space-y-10">
@@ -131,15 +139,58 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
       <fieldset className="rounded-xl border border-slate-200 p-6">
         <legend className="px-2 text-lg font-semibold text-slate-900">Fellow / programme spotlight</legend>
         <div className="mt-4 space-y-4">
-          <div className="grid gap-4 sm:grid-cols-2">
-            <div>
-              <label className={label}>Section label</label>
-              <input name="spot_label" defaultValue={s.label} className={input} />
-            </div>
-            <div>
-              <label className={label}>Initials</label>
-              <input name="spot_initials" defaultValue={s.initials} className={input} maxLength={6} />
-            </div>
+          <div>
+            <label className={label}>Section label</label>
+            <input name="spot_label" defaultValue={s.label} className={input} />
+          </div>
+          <div>
+              <label className={label} htmlFor="spot_image">
+                Portrait image
+              </label>
+              <div className="mt-1 flex gap-2">
+                <input
+                  id="spot_image"
+                  name="spot_image"
+                  value={spotlightImage}
+                  onChange={(e) => setSpotlightImage(e.target.value)}
+                  className={input}
+                  placeholder="media-… or /uploads/…"
+                />
+                <button
+                  type="button"
+                  onClick={() => setSpotPickerOpen(true)}
+                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                  title="Pick or upload from Media Library"
+                >
+                  <ImagePlus className="h-4 w-4" />
+                  Library
+                </button>
+              </div>
+              <p className="mt-1 text-xs text-slate-500">
+                Square crop recommended. Choose <strong>Library</strong> to pick or upload; you can still paste a path
+                manually. Leave empty for the site default placeholder.
+              </p>
+              {spotPreviewLoading ? (
+                <p className="mt-2 text-xs text-slate-500">Loading preview…</p>
+              ) : spotPreviewUrl ? (
+                <div className="mt-3">
+                  <p className="text-xs font-medium text-slate-600">Preview</p>
+                  {/* eslint-disable-next-line @next/next/no-img-element -- Admin preview; bypass optimizer for /uploads */}
+                  <img
+                    src={spotPreviewUrl}
+                    alt=""
+                    className="mt-1 max-h-48 max-w-[200px] rounded-lg border border-slate-200 bg-slate-50 object-cover object-center"
+                  />
+                </div>
+              ) : spotlightImage.trim() ? (
+                <p className="mt-2 text-xs text-amber-800">
+                  No preview — for <code className="rounded bg-amber-100 px-1">media-…</code> IDs the file must exist in{" "}
+                  <Link href="/admin/media" className="font-medium underline">
+                    Media Library
+                  </Link>
+                  . You can also paste a <code className="rounded bg-amber-100 px-1">/uploads/…</code> URL.
+                </p>
+              ) : null}
           </div>
           <div>
             <label className={label}>Headline</label>
@@ -215,14 +266,24 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
       </fieldset>
 
       <fieldset className="rounded-xl border border-slate-200 p-6">
-        <legend className="px-2 text-lg font-semibold text-slate-900">Partner strip</legend>
+        <legend className="px-2 text-lg font-semibold text-slate-900">Newsletter band (home)</legend>
+        <p className="mb-3 text-sm text-slate-600">
+          Logo blue bar with centered copy and a Subscribe button. Partner lines below are kept in data for other uses;
+          the public homepage band no longer lists them.
+        </p>
         <div className="mt-4 space-y-4">
           <div>
-            <label className={label}>Intro blurb (left column)</label>
-            <textarea name="partner_blurb" defaultValue={data.homePartnerBlurb} rows={3} className={ta} />
+            <label className={label}>Band copy (next to Subscribe)</label>
+            <textarea
+              name="partner_blurb"
+              defaultValue={data.homePartnerBlurb}
+              rows={3}
+              className={ta}
+              placeholder="e.g. Stay up to date with our research and events >"
+            />
           </div>
           <div>
-            <label className={label}>Partner lines (one per line)</label>
+            <label className={label}>Partner lines (one per line) — optional / archival</label>
             <textarea
               name="partners"
               defaultValue={data.heroPartnerStrip.join("\n")}
@@ -238,6 +299,15 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
         <SubmitButton />
         <AdminFormPreviewLink href="/">Preview on site</AdminFormPreviewLink>
       </AdminFormStickyActions>
+
+      <ImagePicker
+        open={spotPickerOpen}
+        onClose={() => setSpotPickerOpen(false)}
+        onSelect={(m: MediaItem) => {
+          setSpotlightImage(m.id);
+          setSpotPickerOpen(false);
+        }}
+      />
     </form>
   );
 }

@@ -39,7 +39,7 @@ export function MobileBottomNav({ bottomNav }: { bottomNav: { href: string; labe
 
   return (
     <nav
-      className="fixed bottom-0 left-0 right-0 z-[55] border-t border-white/20 bg-[#f7f4ef]/92 backdrop-blur-xl shadow-[0_-8px_32px_-12px_rgba(14,31,38,0.18)] xl:hidden"
+      className="fixed bottom-0 left-0 right-0 z-[55] border-t border-white/20 bg-white backdrop-blur-xl shadow-[0_-8px_32px_-12px_rgba(14,31,38,0.18)] md:hidden"
       style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
       aria-label="Quick navigation"
     >

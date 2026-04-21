@@ -1,6 +1,7 @@
 import { getInvolvedContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
+import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { Button } from "@/components/Button";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
@@ -34,7 +35,8 @@ export default async function VolunteerPage() {
         ]}
       />
 
-      <section className="page-section-paper border-t border-stone-200/80 py-16 sm:py-20 lg:py-24">
+      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Volunteering</p>
           <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
@@ -55,8 +57,10 @@ export default async function VolunteerPage() {
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
 
-      <section className="page-section-warm border-y border-stone-200/80 py-14 sm:py-16">
+      <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
+        <section className="border-y border-stone-200/80 bg-white py-14 sm:py-16">
         <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
           <div className="page-card border-l-[4px] border-l-accent-600 p-8 sm:p-10">
             <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-stone-500">Ready?</p>
@@ -66,10 +70,10 @@ export default async function VolunteerPage() {
               research.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Button asChild href={c.applicationHref} variant="primary">
+              <Button asChild href={c.applicationHref} variant="primary" className="!rounded-none">
                 {c.cta}
               </Button>
-              <Button asChild href="/get-involved" variant="outline">
+              <Button asChild href="/get-involved" variant="outline" className="!rounded-none">
                 Back to Get Involved
               </Button>
             </div>
@@ -82,6 +86,7 @@ export default async function VolunteerPage() {
           </div>
         </div>
       </section>
+      </HomeScrollReveal>
     </>
   );
 }
