@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import gsap from "gsap";
 import { useLayoutEffect, useRef, useSyncExternalStore } from "react";
+import { HeroDarkScrim } from "@/components/HeroDarkScrim";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 const REDUCED_MOTION_QUERY = "(prefers-reduced-motion: reduce)";
@@ -39,7 +40,7 @@ type PageHeroProps = {
   /** immersive = full-bleed image; compact = shorter bar; minimal = editorial strip, no hero image */
   variant?: PageHeroVariant;
   /**
-   * Immersive only. `dark` (default) = black vertical scrim like the home hero. `brand` = legacy accent wash.
+   * Immersive only. `dark` (default) = uniform black veil like the home hero. `brand` = legacy accent wash.
    */
   immersiveOverlay?: "brand" | "dark";
   /** Immersive only — taller min-height so more of the hero image shows (default on). */
@@ -53,13 +54,6 @@ type PageHeroProps = {
 /**
  * Inner page headers — use `minimal` for legal/long-form, `compact` for dense sections.
  */
-/** Readable white type over photos — subtle black only (matches `HeroConsultar` scrim). */
-function ImmersiveDarkScrim() {
-  return (
-    <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/38 to-black/28" aria-hidden />
-  );
-}
-
 export function PageHero({
   title,
   subtitle,
@@ -197,7 +191,7 @@ export function PageHero({
               <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-black" aria-hidden />
             </div>
           )}
-          <ImmersiveDarkScrim />
+          <HeroDarkScrim />
         </div>
         <div className="container relative z-10 mx-auto w-full px-4 py-12 text-left sm:px-6 sm:py-14 lg:px-8 lg:py-16 [text-shadow:0_1px_2px_rgba(0,0,0,0.18),0_2px_14px_rgba(0,0,0,0.22)]">
           <nav ref={compactNavRef} aria-label="Breadcrumb" className="text-sm text-white/90">
@@ -263,7 +257,7 @@ export function PageHero({
           <div className="h-full w-full bg-gradient-to-br from-accent-700 to-accent-600" aria-hidden />
         )}
         {immersiveOverlay === "dark" ? (
-          <ImmersiveDarkScrim />
+          <HeroDarkScrim />
         ) : (
           <div
             className="absolute inset-0 bg-gradient-to-br from-accent-700/60 via-accent-600/44 to-accent-700/58"

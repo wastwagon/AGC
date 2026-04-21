@@ -2,21 +2,63 @@ import Image from "next/image";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 import type { Metadata } from "next";
-import { ArrowLeft, Calendar, Download } from "lucide-react";
+import { Calendar, Download } from "lucide-react";
 import { publicationsContent, fallbackPublications } from "@/data/content";
 import { placeholderImages } from "@/data/images";
-import { getPublicationBySlug, getContentFileUrl } from "@/lib/content";
+import { getPublicationBySlug, getContentFileUrl, getPublications } from "@/lib/content";
+import type { CmsPublication } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { getSiteSettings } from "@/lib/site-settings";
-import type { CmsPublication } from "@/lib/content";
 import { getSiteTaxonomy, labelForPublicationTypeSlug } from "@/lib/site-taxonomy";
+import { sanitizeHtml } from "@/lib/sanitize";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
+import { resolvePublicationsForPublic } from "@/lib/cms-fallback";
+import { HeroDarkScrim } from "@/components/HeroDarkScrim";
+import { NewsArticleShareLinks } from "@/components/NewsArticleShareLinks";
+import { PublicationCard } from "@/components/PublicationCard";
 
 export const revalidate = 60;
 
 type Props = { params: Promise<{ slug: string }> };
 
 const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://www.africagovernancecentre.org";
+
+function publicationTypeSlugs(p: CmsPublication): string[] {
+  if (p.types?.length) return p.types;
+  if (p.type) return [p.type];
+  return [];
+}
+
+function pickRelatedPublications(pool: CmsPublication[], current: CmsPublication, limit: number): CmsPublication[] {
+  const currentSlug = current.slug;
+  const typeSet = new Set(publicationTypeSlugs(current));
+  return pool
+    .filter((pub) => pub.id !== current.id && pub.slug && pub.slug !== currentSlug)
+    .map((pub) => ({
+      pub,
+      score: publicationTypeSlugs(pub).filter((t) => typeSet.has(t)).length,
+      t: new Date(pub.date_published || pub.date_created || 0).getTime(),
+    }))
+    .sort((a, b) => (b.score !== a.score ? b.score - a.score : b.t - a.t))
+    .slice(0, limit)
+    .map((x) => x.pub);
+}
+
+function formatArticleDateShort(iso: string | undefined): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+function excerptToLeadHtml(excerpt: string | undefined): string {
+  const raw = excerpt?.trim();
+  if (!raw) return "";
+  if (raw.includes("<")) return sanitizeHtml(raw);
+  const escaped = raw.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  return sanitizeHtml(`<p>${escaped}</p>`);
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
@@ -48,123 +90,194 @@ async function getPublicationItem(slug: string): Promise<CmsPublication | null> 
 
 export default async function PublicationDetailPage({ params }: Props) {
   const { slug } = await params;
-  const [item, taxonomy, merged, siteSettings] = await Promise.all([
+  const [item, taxonomy, merged, siteSettings, cmsPublications] = await Promise.all([
     getPublicationItem(slug),
     getSiteTaxonomy(),
     getMergedPageContent<typeof publicationsContent>("publications", cmsStaticOrEmpty(publicationsContent)),
     getSiteSettings(),
+    getPublications(80),
   ]);
   if (!item) notFound();
 
   const pageCopy = merged as unknown as typeof publicationsContent & { heroImage?: string };
+  const detailCopy = pageCopy.articleDetail ?? publicationsContent.articleDetail;
   const imageUrl =
     (await resolveImageUrl(item.image)) ||
     (await resolveImageUrl(pageCopy.heroImage)) ||
     placeholderImages.publications;
   const bc = siteSettings.chrome.breadcrumbs;
   const date = item.date_published || item.date_created;
-  const dateStr = date
+  const dateStrHero = date
     ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" })
     : "";
+  const dateStrSidebar = formatArticleDateShort(date);
   const fileUrl = getContentFileUrl(item.file ?? undefined);
-  const typeSlugs =
-    item.types?.length ? item.types : item.type ? [item.type] : [];
+  const typeSlugs = publicationTypeSlugs(item);
   const typeLabel =
     typeSlugs.length > 0
       ? typeSlugs.map((s) => labelForPublicationTypeSlug(s, taxonomy.publicationTypes)).join(" · ")
       : "Publication";
 
+  const { items: publicationPool } = await resolvePublicationsForPublic(
+    cmsPublications,
+    fallbackPublications as CmsPublication[]
+  );
+  const related = pickRelatedPublications(publicationPool, item, 6);
+  const relatedWithImages = await Promise.all(
+    related.map(async (p) => ({
+      item: p,
+      imageUrl: (await resolveImageUrl(p.image)) || placeholderImages.publications,
+    }))
+  );
+
+  const canonicalUrl = `${baseUrl.replace(/\/$/, "")}/publications/${encodeURIComponent(slug)}`;
+  const leadHtml = excerptToLeadHtml(item.excerpt);
+
   return (
-    <article className="min-h-screen bg-[#f7f4ef]">
-      <div className="relative aspect-[21/9] min-h-[220px] w-full overflow-hidden bg-accent-900">
+    <article className="min-h-screen bg-white">
+      <div className="relative aspect-[21/9] min-h-[220px] w-full overflow-hidden bg-slate-950">
         <Image
           src={imageUrl}
           alt={item.title}
           fill
-          className="object-cover opacity-[0.72]"
+          unoptimized={preferUnoptimizedImage(imageUrl)}
+          className="object-cover object-center"
           sizes="100vw"
           priority
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-accent-900/95 via-accent-800/45 to-accent-900/25" />
+        <HeroDarkScrim />
         <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 lg:p-16">
-          <div className="mx-auto w-full max-w-3xl">
-            <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-accent-200">
-              {typeLabel}
-            </p>
-            <h1 className="page-heading text-3xl leading-[1.15] text-[#fffcf7] sm:text-4xl lg:text-[2.35rem]">
+          <div className="mx-auto w-full max-w-3xl [text-shadow:0_1px_2px_rgba(0,0,0,0.2),0_2px_14px_rgba(0,0,0,0.22)]">
+            <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white">{pageCopy.title}</p>
+            <h1 className="font-serif text-3xl font-semibold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-[2.35rem]">
               {item.title}
             </h1>
-            <p className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-sm text-stone-200/95">
-              <span className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-accent-300" aria-hidden />
-                {dateStr}
-              </span>
-              {item.author && (
-                <>
-                  <span className="text-stone-500">·</span>
-                  <span>{item.author}</span>
-                </>
-              )}
-            </p>
+            {dateStrHero ? (
+              <p className="mt-4 flex items-center gap-2 text-sm text-white/95">
+                <Calendar className="h-4 w-4 shrink-0 text-white" aria-hidden />
+                {dateStrHero}
+              </p>
+            ) : null}
           </div>
         </div>
       </div>
 
-      <div className="relative z-[1] -mt-6 sm:-mt-10">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <div className="page-card rounded-2xl border border-stone-200/90 px-5 py-8 shadow-[0_12px_40px_-12px_rgba(28,25,23,0.12)] sm:px-8 sm:py-10 lg:px-10 lg:py-12">
-            <nav aria-label="Breadcrumb" className="mb-8 border-b border-stone-200/80 pb-6 text-sm text-stone-500">
-              <Link href="/" className="transition-colors hover:text-accent-700">
-                {bc.home}
-              </Link>
-              <span className="mx-2 text-stone-300">/</span>
-              <Link href="/publications" className="transition-colors hover:text-accent-700">
-                {bc.publications}
-              </Link>
-              <span className="mx-2 text-stone-300">/</span>
-              <span className="line-clamp-1 text-stone-700">{item.title}</span>
-            </nav>
+      <div className="relative z-[1] -mt-6 bg-white sm:-mt-10">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+          <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
+            <div className="min-w-0 lg:col-span-8">
+              <nav aria-label="Breadcrumb" className="mb-10 border-b border-stone-200/90 pb-6 text-sm text-stone-500">
+                <Link href="/" className="transition-colors hover:text-accent-700">
+                  {bc.home}
+                </Link>
+                <span className="mx-2 text-stone-300">/</span>
+                <Link href="/publications" className="transition-colors hover:text-accent-700">
+                  {bc.publications}
+                </Link>
+                <span className="mx-2 text-stone-300">/</span>
+                <span className="line-clamp-1 text-stone-700">{item.title}</span>
+              </nav>
 
-            {item.excerpt && (
-              <p className="page-prose border-l-[3px] border-accent-600 bg-accent-50/40 py-3 pl-5 pr-4 text-lg leading-relaxed text-stone-700">
-                {item.excerpt.replace(/<[^>]*>/g, "")}
-              </p>
-            )}
+              {leadHtml ? (
+                <>
+                  <div
+                    className="article-lead text-xl font-medium leading-relaxed text-accent-950 [&_p]:mb-0"
+                    dangerouslySetInnerHTML={{ __html: leadHtml }}
+                  />
+                  <hr className="my-10 border-0 border-t border-stone-200" />
+                </>
+              ) : null}
 
-            {fileUrl && (
-              <div className="mt-10">
-                <div className="page-card border-l-[4px] border-l-accent-600 p-6 sm:p-8">
-                  <h3 className="page-heading text-xl text-stone-900">Download</h3>
-                  <p className="mt-2 page-prose text-[0.98rem]">
+              {fileUrl ? (
+                <div className={leadHtml ? "mt-14 border-t border-stone-200 pt-10" : ""}>
+                  <h3 className="page-heading text-lg text-stone-900">Download</h3>
+                  <p className="mt-1 text-sm text-stone-600">
                     Full text as PDF — for research, teaching, and policy use.
                   </p>
-                  <a
-                    href={fileUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-5 inline-flex items-center gap-2 rounded-lg bg-accent-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-800"
-                  >
-                    <Download className="h-4 w-4" aria-hidden />
-                    Download PDF
-                  </a>
+                  <ul className="mt-6 space-y-4">
+                    <li>
+                      <div className="rounded-none border border-stone-200/90 bg-white p-6 shadow-sm sm:p-8">
+                        <h4 className="page-heading text-xl text-stone-900">{item.title}</h4>
+                        <a
+                          href={fileUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="mt-5 inline-flex items-center gap-2 rounded-none bg-accent-700 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-accent-800"
+                        >
+                          <Download className="h-4 w-4" aria-hidden />
+                          Download PDF
+                        </a>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
-              </div>
-            )}
-
-            <div className="mt-14 border-t border-stone-200 pt-8">
-              <Link
-                href="/publications"
-                className="inline-flex items-center gap-2 text-sm font-medium text-accent-800 transition-colors hover:text-accent-950"
-              >
-                <ArrowLeft className="h-4 w-4" aria-hidden />
-                Back to publications
-              </Link>
+              ) : (
+                <p className="page-prose text-stone-600">
+                  A downloadable file is not linked for this publication yet. For a copy, please{" "}
+                  <Link
+                    href="/contact"
+                    className="font-medium text-accent-800 underline decoration-accent-300 underline-offset-4 hover:text-accent-950"
+                  >
+                    contact us
+                  </Link>
+                  .
+                </p>
+              )}
             </div>
+
+            <aside className="min-w-0 border-t border-stone-200 pt-10 lg:col-span-4 lg:border-l lg:border-t-0 lg:border-stone-200 lg:pl-10 lg:pt-0">
+              <div className="lg:sticky lg:top-28">
+                {dateStrSidebar ? <p className="text-lg font-bold text-accent-600">{dateStrSidebar}</p> : null}
+
+                {typeSlugs.length > 0 ? (
+                  <div className="mt-10">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-600">
+                      {detailCopy.typeLabel}
+                    </p>
+                    <p className="mt-3 text-sm font-semibold leading-relaxed text-stone-800">{typeLabel}</p>
+                  </div>
+                ) : null}
+
+                {item.author ? (
+                  <div className="mt-10">
+                    <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-600">
+                      {detailCopy.authorLabel}
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-stone-700">{item.author}</p>
+                  </div>
+                ) : null}
+
+                <NewsArticleShareLinks url={canonicalUrl} title={item.title} />
+              </div>
+            </aside>
           </div>
+
+          {relatedWithImages.length > 0 ? (
+            <section className="mt-20 lg:mt-24" aria-labelledby="related-publications-heading">
+              <div className="border-t border-b border-stone-200 py-4">
+                <h2
+                  id="related-publications-heading"
+                  className="font-sans text-2xl font-semibold tracking-tight text-accent-800 sm:text-3xl"
+                >
+                  {detailCopy.relatedHeading}
+                </h2>
+              </div>
+              <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+                {relatedWithImages.map(({ item: rel, imageUrl: relImage }) => (
+                  <PublicationCard
+                    key={rel.id}
+                    item={rel}
+                    imageUrl={relImage}
+                    href="/publications"
+                    publicationTypes={taxonomy.publicationTypes}
+                    variant="related"
+                  />
+                ))}
+              </div>
+            </section>
+          ) : null}
         </div>
       </div>
-
-      <div className="h-16 bg-[#f7f4ef]" aria-hidden />
     </article>
   );
 }

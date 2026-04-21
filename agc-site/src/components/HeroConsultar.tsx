@@ -3,6 +3,7 @@
 import type { HomePageCms } from "@/lib/home-page-data";
 import { HOME_HERO_DISPLAY_TAGLINE, HOME_HERO_DISPLAY_TITLE } from "@/data/content";
 import gsap from "gsap";
+import { HeroDarkScrim } from "@/components/HeroDarkScrim";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useState, useEffect, useCallback, useLayoutEffect, useRef, useSyncExternalStore } from "react";
 
@@ -34,16 +35,6 @@ type HeroProps = {
    */
   backgroundVideoSrc?: string;
 };
-
-/** Readable white type over photos — subtle black only (no brand tint). */
-function HeroImageScrim() {
-  return (
-    <div
-      className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/38 to-black/28"
-      aria-hidden
-    />
-  );
-}
 
 export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }: HeroProps) {
   void _hero; // prop kept so `page.tsx` can pass CMS draft without refactors
@@ -112,12 +103,12 @@ export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }:
           >
             <source src={backgroundVideoSrc} type="video/mp4" />
           </video>
-          <HeroImageScrim />
+          <HeroDarkScrim />
         </div>
       ) : slides.length === 0 ? (
         <div className="absolute inset-0 z-0 bg-slate-950" aria-hidden>
           <div className="absolute inset-0 bg-gradient-to-b from-slate-900 via-slate-950 to-black" />
-          <HeroImageScrim />
+          <HeroDarkScrim />
         </div>
       ) : (
         slides.map((src, i) => (
@@ -134,7 +125,7 @@ export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }:
               style={{ backgroundImage: `url(${src})` }}
               aria-hidden
             />
-            <HeroImageScrim />
+            <HeroDarkScrim />
           </div>
         ))
       )}

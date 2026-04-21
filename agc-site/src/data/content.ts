@@ -656,6 +656,24 @@ export const publicationsContent = {
   title: "Publications",
   subtitle: "Reports, policy briefs, and research from the Africa Governance Centre.",
   intro: "Our publications contribute to evidence-based policymaking and governance dialogue across Africa.",
+  /** Publication detail page (sidebar + related grid), aligned with `newsContent.articleDetail` */
+  articleDetail: {
+    relatedHeading: "Related publications",
+    typeLabel: "Publication type",
+    authorLabel: "Author",
+  },
+  /** Index listing toolbar (aligned with `newsContent.filters`) */
+  filters: {
+    filterLabel: "Filter:",
+    textSearch: "Text search",
+    publicationType: "Publication type",
+    reset: "Reset",
+    previous: "Previous",
+    next: "Next",
+    allOption: "All",
+    noMatchesFiltered: "No publications match these filters. Try adjusting or reset.",
+    noResults: "No publications found for this filter.",
+  },
 };
 
 export const volunteerFormFields = {
