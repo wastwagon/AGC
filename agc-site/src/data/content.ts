@@ -257,6 +257,25 @@ export const workContent = {
       { title: "Institutional Strengthening", description: "We support the development and strengthening of institutions to improve their effectiveness, accountability, and responsiveness." },
     ],
   },
+  /** Homepage pillar + `/our-work/research` — placeholder until expanded in Admin → Pages. */
+  research: {
+    title: "Research",
+    subtitle: "Evidence and inquiry",
+    description:
+      "Placeholder copy for Research. Edit this section in Admin → Pages → our-work-research (or the main Our Work JSON for titles). Describe flagship studies, fellows, and knowledge products.",
+  },
+  training: {
+    title: "Training",
+    subtitle: "Capacity building",
+    description:
+      "Placeholder copy for Training. Edit in Admin → Pages → our-work-training. Highlight workshops, fellowships, and tailored learning for practitioners.",
+  },
+  partnership: {
+    title: "Partnership",
+    subtitle: "Collaborate with us",
+    description:
+      "Placeholder copy for Partnership. Edit in Admin → Pages → our-work-partnership. Outline how institutions, donors, and peers co-create programmes with AGC.",
+  },
 };
 
 export type OurWorkPageContent = typeof workContent;
@@ -360,7 +379,8 @@ export const contactContent = {
 export const eventsContent = {
   title: "Upcoming Events",
   subtitle: "Discover upcoming events, conferences, and workshops that advance governance excellence across Africa.",
-  intro: "Discover upcoming events, conferences, and workshops that advance governance excellence across Africa.",
+  intro:
+    "We convene high-level summits, policy dialogues, workshops, and roundtable discussions. These engagements serve as strategic platforms for policymakers, development partners, civil society, and the public to engage with our research, exchange ideas, and contribute to shaping governance outcomes across the continent.\n\nOur events are designed to foster evidence-based dialogue on critical issues including democratic governance, institutional reform, public policy, and Africa's economic transformation.\n\nOur events feature distinguished speakers and thought leaders from across Africa and beyond, bringing deep expertise and diverse perspectives to the conversations we host.",
   emptyContact: "For event inquiries, contact our Programs Division at programs@africagovernancecentre.org.",
   sections: { upcoming: "Upcoming Events", past: "Past Events" },
   /** Schedule grid (Brookings-style) */
@@ -371,6 +391,18 @@ export const eventsContent = {
     past: "Past event summaries will appear here when available.",
   },
   seeAllPastEvents: "See all past events",
+  /** `/events` category chips (substring match on event `category` / `event_type`; edit labels in Admin → Pages → events JSON). */
+  filterAriaLabel: "Filter events by type",
+  eventCategoryFilters: [
+    { id: "all", label: "All" },
+    { id: "summits", label: "Summits" },
+    { id: "high_level_dialogues", label: "High-level dialogues" },
+    { id: "roundtable", label: "Roundtable discussion" },
+    { id: "seminar", label: "Seminar" },
+    { id: "media_engagement", label: "Media engagement" },
+    { id: "workshop", label: "Workshop" },
+    { id: "webinar", label: "Webinar" },
+  ],
   /** Full past-events archive (`/events/past`) */
   pastArchive: {
     title: "Past Events",

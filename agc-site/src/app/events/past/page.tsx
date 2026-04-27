@@ -67,7 +67,12 @@ export default async function PastEventsPage() {
         <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             {eventsDraftsOnly && <CmsDraftNotice entityLabel="events" adminHref="/admin/events" />}
-            <PastEventsArchiveClient events={past} copy={archive} emptyPastMessage={gridEmpty.past} />
+            <PastEventsArchiveClient
+              events={past}
+              copy={archive}
+              emptyPastMessage={gridEmpty.past}
+              categoryFilters={content.eventCategoryFilters ?? eventsContent.eventCategoryFilters}
+            />
           </div>
         </section>
       </HomeScrollReveal>

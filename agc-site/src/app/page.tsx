@@ -24,7 +24,14 @@ type OurWorkCms = typeof workContent & {
   heroImage?: string;
   homePillarIntro?: string;
   pillarReadMoreLabel?: string;
-  pillarCardImages?: { programs?: string; projects?: string; advisory?: string };
+  pillarCardImages?: {
+    programs?: string;
+    projects?: string;
+    advisory?: string;
+    research?: string;
+    training?: string;
+    partnership?: string;
+  };
 };
 
 /** CMS fields on Our Work — Programs / Projects / Advisory page records (slug `our-work-*`). */
@@ -62,6 +69,9 @@ export default async function HomePage() {
     programsSectionMerged,
     projectsSectionMerged,
     advisorySectionMerged,
+    researchSectionMerged,
+    trainingSectionMerged,
+    partnershipSectionMerged,
   ] = await Promise.all([
     getEvents(),
     getNews(6),
@@ -78,6 +88,18 @@ export default async function HomePage() {
     getMergedPageContent<typeof workContent.advisory & WorkSectionPageMerged>(
       "our-work-advisory",
       cmsStaticOrEmpty(workContent.advisory as typeof workContent.advisory & WorkSectionPageMerged)
+    ),
+    getMergedPageContent<typeof workContent.research & WorkSectionPageMerged>(
+      "our-work-research",
+      cmsStaticOrEmpty(workContent.research as typeof workContent.research & WorkSectionPageMerged)
+    ),
+    getMergedPageContent<typeof workContent.training & WorkSectionPageMerged>(
+      "our-work-training",
+      cmsStaticOrEmpty(workContent.training as typeof workContent.training & WorkSectionPageMerged)
+    ),
+    getMergedPageContent<typeof workContent.partnership & WorkSectionPageMerged>(
+      "our-work-partnership",
+      cmsStaticOrEmpty(workContent.partnership as typeof workContent.partnership & WorkSectionPageMerged)
     ),
   ]);
 
@@ -127,27 +149,70 @@ export default async function HomePage() {
         ? undefined
         : rawHeroVideo.trim();
   const pillarImages = workMerged.pillarCardImages ?? {};
-  const [imgPrograms, imgProjects, imgAdvisory] = await Promise.all([
+  const [
+    imgPrograms,
+    imgProjects,
+    imgAdvisory,
+    imgResearch,
+    imgTraining,
+    imgPartnership,
+  ] = await Promise.all([
     resolveHomePillarImage(pillarImages.programs, programsSectionMerged),
     resolveHomePillarImage(pillarImages.projects, projectsSectionMerged),
     resolveHomePillarImage(pillarImages.advisory, advisorySectionMerged),
+    resolveHomePillarImage(pillarImages.research, researchSectionMerged),
+    resolveHomePillarImage(pillarImages.training, trainingSectionMerged),
+    resolveHomePillarImage(pillarImages.partnership, partnershipSectionMerged),
   ]);
 
   const pillarCards = [
     {
-      title: workMerged.programs?.title?.trim() || programsSectionMerged.title || "",
+      title:
+        workMerged.programs?.title?.trim() ||
+        programsSectionMerged.title?.trim() ||
+        workContent.programs.title,
       href: "/our-work/programs",
       image: imgPrograms,
     },
     {
-      title: workMerged.projects?.title?.trim() || projectsSectionMerged.title || "",
+      title:
+        workMerged.projects?.title?.trim() ||
+        projectsSectionMerged.title?.trim() ||
+        workContent.projects.title,
       href: "/our-work/projects",
       image: imgProjects,
     },
     {
-      title: workMerged.advisory?.title?.trim() || advisorySectionMerged.title || "",
+      title:
+        workMerged.advisory?.title?.trim() ||
+        advisorySectionMerged.title?.trim() ||
+        workContent.advisory.title,
       href: "/our-work/advisory",
       image: imgAdvisory,
+    },
+    {
+      title:
+        workMerged.research?.title?.trim() ||
+        researchSectionMerged.title?.trim() ||
+        workContent.research.title,
+      href: "/our-work/research",
+      image: imgResearch,
+    },
+    {
+      title:
+        workMerged.training?.title?.trim() ||
+        trainingSectionMerged.title?.trim() ||
+        workContent.training.title,
+      href: "/our-work/training",
+      image: imgTraining,
+    },
+    {
+      title:
+        workMerged.partnership?.title?.trim() ||
+        partnershipSectionMerged.title?.trim() ||
+        workContent.partnership.title,
+      href: "/our-work/partnership",
+      image: imgPartnership,
     },
   ].filter((c) => c.title.trim());
 

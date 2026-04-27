@@ -5,6 +5,10 @@ import Link from "next/link";
 import { ChevronDown, Globe, List, Plus, Search } from "lucide-react";
 import type { CmsEvent } from "@/lib/content";
 import { eventsContent } from "@/data/content";
+import {
+  EVENT_CATEGORY_TAB_IDS,
+  eventMatchesCategoryTab,
+} from "@/lib/event-category-filter";
 
 type DateFilter = "all" | "30d" | "6m" | "1y";
 
@@ -98,6 +102,8 @@ function FilterDropdown({
   emptyMessage,
   filterInputId,
   listPlaceholder,
+  rowChecked,
+  preserveLabelCase,
 }: {
   summaryLabel: string;
   icon: ReactNode;
@@ -109,6 +115,10 @@ function FilterDropdown({
   emptyMessage: string;
   filterInputId: string;
   listPlaceholder: string;
+  /** When set, controls checkbox state (e.g. “All” when selection is empty). */
+  rowChecked?: (row: PickerRow) => boolean;
+  /** Disable `capitalize` on labels (canonical tab titles). */
+  preserveLabelCase?: boolean;
 }) {
   const q = listFilter.trim().toLowerCase();
   const visibleRows = q
@@ -159,12 +169,16 @@ function FilterDropdown({
                     <label className="flex cursor-pointer items-center gap-2 px-2 py-2.5 text-sm text-stone-800 hover:bg-stone-50">
                       <input
                         type="checkbox"
-                        checked={selected.has(row.id)}
+                        checked={rowChecked ? rowChecked(row) : selected.has(row.id)}
                         onChange={() => onToggle(row.id)}
                         className="h-4 w-4 shrink-0 rounded border-stone-400 text-accent-600 focus:ring-accent-500"
                         onClick={(e) => e.stopPropagation()}
                       />
-                      <span className="min-w-0 flex-1 capitalize leading-snug">{row.label}</span>
+                      <span
+                        className={`min-w-0 flex-1 leading-snug ${preserveLabelCase ? "" : "capitalize"}`}
+                      >
+                        {row.label}
+                      </span>
                       <span className="shrink-0 tabular-nums text-xs text-stone-500">({row.count})</span>
                     </label>
                   </li>
@@ -217,16 +231,20 @@ function PastEventRow({ event }: { event: CmsEvent }) {
 /**
  * Past events archive filters.
  * - **Copy** (`title`, `topicLabel`, `regionLabel`, …): from Admin → Pages → **events** → `content_json.pastArchive` (merged on the server).
- * - **Topic / region options**: derived from **`events`** (published past events from the database).
+ * - **Topic**: fixed taxonomy like `/events` (`eventCategoryFilters`); counts and matching use `event-category-filter` (not raw DB tokens).
+ * - **Region**: derived from **`events`** locations (published past events from the database).
  */
 export function PastEventsArchiveClient({
   events,
   copy = eventsContent.pastArchive,
   emptyPastMessage = eventsContent.gridEmpty.past,
+  categoryFilters = eventsContent.eventCategoryFilters,
 }: {
   events: CmsEvent[];
   copy?: PastEventsArchiveCopy;
   emptyPastMessage?: string;
+  /** Same labels as `/events` category tabs (Admin → Pages → events `eventCategoryFilters`). */
+  categoryFilters?: { id: string; label: string }[];
 }) {
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState<DateFilter>("all");
@@ -238,20 +256,15 @@ export function PastEventsArchiveClient({
   const [regionListFilter, setRegionListFilter] = useState("");
 
   const topicRows: PickerRow[] = useMemo(() => {
-    const counts = new Map<string, number>();
-    events.forEach((e) => {
-      const k = categoryKey(e);
-      if (!k) return;
-      counts.set(k, (counts.get(k) ?? 0) + 1);
-    });
-    return Array.from(counts.entries())
-      .map(([id, count]) => ({
-        id,
-        label: id.replace(/_/g, " "),
-        count,
-      }))
-      .sort((a, b) => a.label.localeCompare(b.label));
-  }, [events]);
+    const labelById = new Map(categoryFilters.map((t) => [t.id, t.label]));
+    const tabIds = EVENT_CATEGORY_TAB_IDS.filter((id): id is string => id !== "all");
+    const rows = tabIds.map((id) => ({
+      id,
+      label: labelById.get(id) ?? id.replace(/_/g, " "),
+      count: events.filter((e) => eventMatchesCategoryTab(id, e)).length,
+    }));
+    return [{ id: "__all__", label: "All", count: events.length }, ...rows];
+  }, [events, categoryFilters]);
 
   const regionRows: PickerRow[] = useMemo(() => {
     const counts = new Map<string, number>();
@@ -270,8 +283,8 @@ export function PastEventsArchiveClient({
       if (!eventMatchesSearch(e, search)) return false;
       if (!eventMatchesDateFilter(e, dateFilter)) return false;
       if (selectedTopics.size > 0) {
-        const k = categoryKey(e);
-        if (!k || !selectedTopics.has(k)) return false;
+        const matchesAnyTopic = [...selectedTopics].some((tid) => eventMatchesCategoryTab(tid, e));
+        if (!matchesAnyTopic) return false;
       }
       if (selectedRegions.size > 0) {
         const rk = regionKey(e);
@@ -292,6 +305,10 @@ export function PastEventsArchiveClient({
   const canShowMore = visibleCount < filtered.length;
 
   function toggleTopic(key: string) {
+    if (key === "__all__") {
+      setSelectedTopics(new Set());
+      return;
+    }
     setSelectedTopics((prev) => {
       const next = new Set(prev);
       if (next.has(key)) next.delete(key);
@@ -355,6 +372,10 @@ export function PastEventsArchiveClient({
               emptyMessage={copy.topicEmpty}
               filterInputId="past-archive-topic-filter"
               listPlaceholder={copy.listFilterPlaceholder?.trim() || "Filter list…"}
+              rowChecked={(row) =>
+                row.id === "__all__" ? selectedTopics.size === 0 : selectedTopics.has(row.id)
+              }
+              preserveLabelCase
             />
 
             <FilterDropdown
