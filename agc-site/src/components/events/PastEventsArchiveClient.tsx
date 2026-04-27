@@ -7,6 +7,7 @@ import type { CmsEvent } from "@/lib/content";
 import { eventsContent } from "@/data/content";
 import {
   EVENT_CATEGORY_TAB_IDS,
+  type EventCategoryTabId,
   eventMatchesCategoryTab,
 } from "@/lib/event-category-filter";
 
@@ -257,7 +258,9 @@ export function PastEventsArchiveClient({
 
   const topicRows: PickerRow[] = useMemo(() => {
     const labelById = new Map(categoryFilters.map((t) => [t.id, t.label]));
-    const tabIds = EVENT_CATEGORY_TAB_IDS.filter((id): id is string => id !== "all");
+    const tabIds = EVENT_CATEGORY_TAB_IDS.filter(
+      (id): id is Exclude<EventCategoryTabId, "all"> => id !== "all"
+    );
     const rows = tabIds.map((id) => ({
       id,
       label: labelById.get(id) ?? id.replace(/_/g, " "),
