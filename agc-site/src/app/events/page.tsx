@@ -4,7 +4,7 @@ import { getEvents } from "@/lib/content";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { PageHero } from "@/components/PageHero";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
-import { EventsPageGrids } from "@/components/events/EventsPageGrids";
+import { EventsPageCategoryFilters } from "@/components/events/EventsPageCategoryFilters";
 import type { CmsEvent } from "@/lib/content";
 import { resolveImageUrl } from "@/lib/media";
 import { resolveEventsForPublic } from "@/lib/cms-fallback";
@@ -17,6 +17,23 @@ export const metadata = {
 };
 
 export const revalidate = 30;
+
+function EventsPageIntro({ intro }: { intro: string }) {
+  const paragraphs = intro
+    .split(/\n\n+/)
+    .map((p) => p.trim())
+    .filter(Boolean);
+  if (paragraphs.length === 0) return null;
+  return (
+    <div className="space-y-4">
+      {paragraphs.map((para, i) => (
+        <p key={i} className="page-prose text-lg text-stone-800">
+          {para}
+        </p>
+      ))}
+    </div>
+  );
+}
 
 export default async function EventsPage() {
   const [cmsEvents, merged, bc] = await Promise.all([
@@ -43,11 +60,13 @@ export default async function EventsPage() {
   const upcoming = eventsWithDisplayImages.filter((e) => new Date(e.end_date || e.start_date) >= today);
   const past = eventsWithDisplayImages.filter((e) => new Date(e.end_date || e.start_date) < today);
 
+  const introBody = String(content.intro ?? "").trim() || eventsContent.intro;
+
   return (
     <>
       <PageHero
-        title={content.title}
-        subtitle={content.subtitle}
+        title={content.title ?? eventsContent.title}
+        subtitle={content.subtitle ?? eventsContent.subtitle}
         image={heroImage}
         imageAlt="Events"
         breadcrumbs={[{ label: bc.home, href: "/" }, { label: bc.events }]}
@@ -56,18 +75,27 @@ export default async function EventsPage() {
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
         <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-2xl space-y-4">
+          <div className="max-w-3xl space-y-4">
             <p className="text-sm font-medium text-accent-800">Convenings</p>
-            <p className="page-prose mt-2 text-lg">{content.intro}</p>
+            <EventsPageIntro intro={introBody} />
             {eventsDraftsOnly && <CmsDraftNotice entityLabel="events" adminHref="/admin/events" />}
           </div>
 
-          {events.length > 0 && <EventsPageGrids upcoming={upcoming} past={past} />}
+          {events.length > 0 && (
+            <EventsPageCategoryFilters
+              upcoming={upcoming}
+              past={past}
+              tabs={content.eventCategoryFilters ?? eventsContent.eventCategoryFilters}
+              filterAriaLabel={content.filterAriaLabel ?? eventsContent.filterAriaLabel}
+            />
+          )}
 
           {events.length === 0 && (
             <div className="mt-16 page-card p-12 text-center">
-              <p className="page-prose">{content.intro}</p>
-              <p className="page-prose mt-6">{content.emptyContact}</p>
+              <div className="mx-auto max-w-3xl text-left">
+                <EventsPageIntro intro={introBody} />
+              </div>
+              <p className="page-prose mt-6">{content.emptyContact ?? eventsContent.emptyContact}</p>
               <a
                 href="mailto:programs@africagovernancecentre.org"
                 className="mt-6 inline-block font-medium text-accent-600 transition-colors hover:text-accent-700"

@@ -522,9 +522,10 @@ export function PageContentForm({ item }: PageContentFormProps) {
             <div className="mt-4 rounded-md border border-amber-200 bg-amber-50/40 p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Homepage pillar cards</p>
               <p className="mt-1 text-[11px] text-slate-500">
-                Three cards under the hero overlap the hero visually (higher z-index). Titles and descriptions come from the{" "}
-                <strong className="font-medium text-slate-700">programs</strong>, <strong className="font-medium text-slate-700">projects</strong>, and{" "}
-                <strong className="font-medium text-slate-700">advisory</strong> blocks on this page. Use Media Library IDs or{" "}
+                Six cards under the hero. Titles default from the <strong className="font-medium text-slate-700">programs</strong>,{" "}
+                <strong className="font-medium text-slate-700">projects</strong>, <strong className="font-medium text-slate-700">advisory</strong>,{" "}
+                <strong className="font-medium text-slate-700">research</strong>, <strong className="font-medium text-slate-700">training</strong>, and{" "}
+                <strong className="font-medium text-slate-700">partnership</strong> blocks on this page (or each section’s CMS page). Use Media Library IDs or{" "}
                 <code className="rounded bg-white px-0.5">/uploads/…</code> paths for images.
               </p>
               <label className="mt-2 block text-xs font-medium text-slate-600">Intro line (optional)</label>
@@ -543,7 +544,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
                 placeholder="e.g. Read more"
               />
-              <div className="mt-3 grid gap-3 sm:grid-cols-3">
+              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                 <div>
                   <label className="block text-xs font-medium text-slate-600">Programs card image</label>
                   <input
@@ -570,6 +571,36 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["pillarCardImages", "advisory"])}
                     onChange={(e) => updateNestedString(["pillarCardImages", "advisory"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    placeholder="media-… or /uploads/…"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Research card image</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["pillarCardImages", "research"])}
+                    onChange={(e) => updateNestedString(["pillarCardImages", "research"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    placeholder="media-… or /uploads/…"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Training card image</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["pillarCardImages", "training"])}
+                    onChange={(e) => updateNestedString(["pillarCardImages", "training"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    placeholder="media-… or /uploads/…"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Partnership card image</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["pillarCardImages", "partnership"])}
+                    onChange={(e) => updateNestedString(["pillarCardImages", "partnership"], e.target.value)}
                     className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
                     placeholder="media-… or /uploads/…"
                   />
@@ -1135,7 +1166,21 @@ export function PageContentForm({ item }: PageContentFormProps) {
           </div>
         )}
         {item.slug === "events" && (
-          <div className="mb-3 grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+          <div className="mb-3 grid gap-4">
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">Main listing (/events)</p>
+              <p className="mt-1 text-xs text-slate-600">
+                Body copy above the filters uses the <strong className="font-medium text-slate-800">Intro</strong> field at
+                the top of this form (stored as{" "}
+                <code className="rounded bg-white px-1 ring-1 ring-slate-200">intro</code> in page JSON). Blank lines create
+                separate paragraphs. Category tabs read labels from{" "}
+                <code className="rounded bg-white px-1 ring-1 ring-slate-200">eventCategoryFilters</code>; matching uses the
+                event’s Category / event type strings (e.g. <code className="text-[0.65rem]">summit</code>,{" "}
+                <code className="text-[0.65rem]">webinar</code>, <code className="text-[0.65rem]">roundtable</code>
+                ).
+              </p>
+            </div>
+            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">
               Past events archive (public /events/past)
             </p>
@@ -1208,6 +1253,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 rows={3}
                 className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
               />
+            </div>
             </div>
           </div>
         )}
