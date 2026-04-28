@@ -221,7 +221,6 @@ export default async function HomePage() {
 
   const impactStats = home.homeImpactStats.filter((s) => s.value?.trim() || s.label?.trim() || s.note?.trim());
   const showReach = Boolean(home.homeReach.title?.trim());
-  const showMethodology = Boolean(home.homeImpactMethodology?.trim());
   const showCtaBand = Boolean(home.homeCtaBand.title?.trim());
   const newsSectionTitle = home.homeNewsTeaser.title?.trim() || "Latest News";
   const eventsSectionTitle = home.homeEventsTitle?.trim() || "Events";
@@ -257,7 +256,7 @@ export default async function HomePage() {
         />
       </HomeScrollReveal>
 
-      {(showReach || impactStats.length > 0 || showMethodology) && (
+      {(showReach || impactStats.length > 0) && (
         <HomeScrollReveal variant="clipOpen" className="block w-full">
           <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
             {/* Match site header (`Header.tsx` nav): same horizontal inset as logo row */}
@@ -268,9 +267,6 @@ export default async function HomePage() {
                     <h2 className="font-serif text-2xl font-semibold tracking-tight text-black sm:text-3xl">
                       {home.homeReach.title}
                     </h2>
-                    {home.homeReach.intro?.trim() ? (
-                      <p className="mt-3 text-[17px] leading-relaxed text-black">{home.homeReach.intro}</p>
-                    ) : null}
                   </div>
                 </HomeScrollReveal>
               )}
@@ -294,11 +290,6 @@ export default async function HomePage() {
                       <p className="mt-2 text-xs leading-relaxed text-black">{stat.note}</p>
                     </div>
                   ))}
-                </HomeScrollReveal>
-              )}
-              {showMethodology && (
-                <HomeScrollReveal variant="fadeIn" start="top 92%" className="mt-10 block max-w-4xl">
-                  <p className="text-sm italic leading-relaxed text-black">{home.homeImpactMethodology}</p>
                 </HomeScrollReveal>
               )}
             </div>
