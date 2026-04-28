@@ -8,6 +8,24 @@ import { prisma } from "@/lib/db";
 import { aboutSettingsFormSchema } from "@/lib/validations";
 import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
+function parseTeamTabsConfig(input: string | undefined): { key: string; label: string }[] {
+  const lines = (input ?? "")
+    .split("\n")
+    .map((x) => x.trim())
+    .filter(Boolean);
+  const out: { key: string; label: string }[] = [];
+  const seen = new Set<string>();
+  for (const line of lines) {
+    const [rawKey = "", ...rest] = line.split("|");
+    const key = rawKey.trim().toLowerCase().replace(/\s+/g, "_");
+    const label = rest.join("|").trim();
+    if (!key || !label || seen.has(key)) continue;
+    seen.add(key);
+    out.push({ key, label });
+  }
+  return out;
+}
+
 export async function updateAboutSettings(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
@@ -26,6 +44,7 @@ export async function updateAboutSettings(formData: FormData) {
       : {};
 
   const teamHero = d.teamHeroImage?.trim();
+  const teamTabsList = parseTeamTabsConfig(d.teamTabsConfig);
   const payload = {
     ...prevJson,
     title: d.title,
@@ -40,13 +59,12 @@ export async function updateAboutSettings(formData: FormData) {
       agenda2063: d.strategicAgenda2063,
     },
     heroImage: d.heroImage || undefined,
-    whoWeAreImage: d.whoWeAreImage || undefined,
-    sectionImage: d.sectionImage || undefined,
     teamPage: {
       title: d.teamPageTitle,
       subtitle: d.teamPageSubtitle,
       ...(teamHero ? { heroImage: teamHero } : {}),
     },
+    ...(teamTabsList.length > 0 ? { teamTabsList } : {}),
   };
 
   try {

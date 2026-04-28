@@ -10,21 +10,11 @@ import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
+import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 
 export const revalidate = 60;
 
 type Props = { params: Promise<{ id: string }> };
-
-function programmeLabel(section: string | undefined): string | null {
-  if (!section) return null;
-  const map: Record<string, string> = {
-    advisory_board: aboutContent.teamTabs.advisoryBoard,
-    management_team: aboutContent.teamTabs.managementTeam,
-    fellows: aboutContent.teamTabs.fellows,
-    associate_fellows: aboutContent.teamTabs.associateFellows,
-  };
-  return map[section] ?? null;
-}
 
 function profileSummary(member: Pick<CmsTeamMemberPublic, "name" | "role" | "bio">, orgName: string): string {
   if (member.role?.trim()) {
@@ -59,16 +49,34 @@ export default async function TeamMemberProfilePage({ params }: Props) {
   const num = Number.parseInt(id, 10);
   if (!Number.isFinite(num)) notFound();
 
-  const [member, siteSettings, bc] = await Promise.all([
+  const [member, siteSettings, bc, aboutMerged] = await Promise.all([
     getPublishedTeamMember(num),
     getSiteSettings(),
     getBreadcrumbLabels(),
+    getMergedPageContent<typeof aboutContent & { teamTabsList?: { key: string; label: string }[] }>(
+      "about",
+      cmsStaticOrEmpty(aboutContent as typeof aboutContent & { teamTabsList?: { key: string; label: string }[] })
+    ),
   ]);
   if (!member) notFound();
 
   const imageResolved = cardImageUrlOrNull(await resolveImageUrl(member.image ?? undefined));
   const orgName = siteSettings.name;
-  const programme = programmeLabel(member.section);
+  const configuredTabs = Array.isArray((aboutMerged as { teamTabsList?: { key: string; label: string }[] }).teamTabsList)
+    ? (aboutMerged as { teamTabsList?: { key: string; label: string }[] }).teamTabsList!
+    : [];
+  const tabMap = new Map(
+    (configuredTabs.length > 0
+      ? configuredTabs
+      : [
+          { key: "advisory_board", label: aboutContent.teamTabs.advisoryBoard },
+          { key: "management_team", label: aboutContent.teamTabs.managementTeam },
+          { key: "fellows", label: aboutContent.teamTabs.fellows },
+          { key: "associate_fellows", label: aboutContent.teamTabs.associateFellows },
+        ]
+    ).map((t) => [String(t.key).trim().toLowerCase(), String(t.label).trim()])
+  );
+  const programme = member.section ? tabMap.get(member.section) ?? null : null;
   const summary = profileSummary(member, orgName);
 
   const categoryLine = programme != null ? `Team | ${programme}` : "Our team";

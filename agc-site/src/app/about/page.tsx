@@ -16,6 +16,23 @@ export const metadata = {
 
 export const revalidate = 60;
 
+function resolveTeamTabs(content: typeof aboutContent & { teamTabsList?: { key: string; label: string }[] }) {
+  const configured = Array.isArray(content.teamTabsList) ? content.teamTabsList : [];
+  const cleaned = configured
+    .map((x) => ({
+      key: String(x?.key ?? "").trim().toLowerCase().replace(/\s+/g, "_"),
+      label: String(x?.label ?? "").trim(),
+    }))
+    .filter((x) => x.key && x.label);
+  if (cleaned.length > 0) return cleaned;
+  return [
+    { key: "advisory_board", label: aboutContent.teamTabs.advisoryBoard },
+    { key: "management_team", label: aboutContent.teamTabs.managementTeam },
+    { key: "fellows", label: aboutContent.teamTabs.fellows },
+    { key: "associate_fellows", label: aboutContent.teamTabs.associateFellows },
+  ];
+}
+
 export default async function AboutPage() {
   const [cmsTeam, content, bc] = await Promise.all([
     getTeam(),
@@ -33,6 +50,7 @@ export default async function AboutPage() {
       section: (m as { section?: string }).section || "advisory_board",
     }))
   );
+  const teamTabs = resolveTeamTabs(content as typeof aboutContent & { teamTabsList?: { key: string; label: string }[] });
 
   return (
     <>
@@ -78,7 +96,7 @@ export default async function AboutPage() {
       <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full bg-[#ffffff]">
         <section id="team" className="w-full border-t border-border/80 bg-[#ffffff] py-16 sm:py-20 lg:py-24">
         <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          <TeamSectionTabs cmsTeam={teamForTabs} />
+          <TeamSectionTabs cmsTeam={teamForTabs} tabs={teamTabs} />
           <div className="mt-14 flex justify-center">
             <Button asChild href="/get-involved" variant="primary" className="rounded-none px-8">
               Get involved

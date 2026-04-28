@@ -261,7 +261,6 @@ export const homeSettingsFormSchema = z.object({
   homeReachIntro: z.string().max(2000),
   homeImpactMethodology: z.string().max(2000),
   homePartnerBlurb: z.string().min(1).max(1000),
-  heroPartnerStrip: z.string().max(4000).optional(),
   impactStats: z.string().max(20000).optional(),
   testimonialQuote: z.string().min(1).max(4000),
   testimonialName: z.string().min(1).max(255),
@@ -284,12 +283,18 @@ export const homeSettingsFormSchema = z.object({
   ctaBandPrimaryHref: z.string().max(255).optional(),
   ctaBandSecondaryCta: z.string().max(120).optional(),
   ctaBandSecondaryHref: z.string().max(255).optional(),
+  homeEventsTitle: z.string().max(255).optional(),
   homeNewsTitle: z.string().max(255).optional(),
   homeNewsSubtitle: z.string().max(500).optional(),
-  homeAppSummitTitle: z.string().max(255).optional(),
-  homeAppSummitDescription: z.string().max(500).optional(),
-  homeAppSummitCtaLabel: z.string().max(120).optional(),
-  homeAppSummitCtaHref: z.string().max(255).optional(),
+  pillarRowTitlePrimary: z.string().max(255).optional(),
+  pillarRowTitleSecondary: z.string().max(255).optional(),
+  pillarReadMoreLabel: z.string().max(120).optional(),
+  pillarImagePrograms: z.string().max(500).optional(),
+  pillarImageProjects: z.string().max(500).optional(),
+  pillarImageAdvisory: z.string().max(500).optional(),
+  pillarImageResearch: z.string().max(500).optional(),
+  pillarImageTraining: z.string().max(500).optional(),
+  pillarImagePartnership: z.string().max(500).optional(),
 });
 
 export const aboutSettingsFormSchema = z.object({
@@ -303,11 +308,10 @@ export const aboutSettingsFormSchema = z.object({
   strategicPrinciples: z.string().min(1).max(10000),
   strategicAgenda2063: z.string().min(1).max(10000),
   heroImage: z.string().max(500).optional(),
-  whoWeAreImage: z.string().max(500).optional(),
-  sectionImage: z.string().max(500).optional(),
   teamPageTitle: z.string().min(1).max(255),
   teamPageSubtitle: z.string().min(1).max(1000),
   teamHeroImage: z.string().max(500).optional(),
+  teamTabsConfig: z.string().max(5000).optional(),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;

@@ -34,7 +34,6 @@ export type HomePageCms = {
   homeReach: { title: string; intro: string };
   homeImpactMethodology: string;
   homeImpactStats: { value: string; label: string; note: string }[];
-  heroPartnerStrip: string[];
   homePartnerBlurb: string;
   /** Accent band above footer-style sections */
   homeCtaBand: {
@@ -46,11 +45,6 @@ export type HomePageCms = {
     secondaryCta: string;
     secondaryHref: string;
   };
+  homeEventsTitle: string;
   homeNewsTeaser: { title: string; subtitle: string };
-  homeAppSummitTeaser: {
-    title: string;
-    description: string;
-    ctaLabel: string;
-    ctaHref: string;
-  };
 };

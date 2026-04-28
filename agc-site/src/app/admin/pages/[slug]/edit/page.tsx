@@ -5,8 +5,6 @@ import { AdminFormErrorSuspense } from "../../../_components/AdminFormErrorSuspe
 import { AdminFormSuccessSuspense } from "../../../_components/AdminFormSuccessSuspense";
 import { AdminPageHeader } from "../../../_components/AdminPageHeader";
 import { PageContentForm } from "../../PageContentForm";
-import { HomePageContentForm } from "../../HomePageContentForm";
-import { getHomePageCmsForEdit } from "@/lib/home-page-data";
 import { requireAdminSession } from "@/lib/require-admin";
 import { ensureMissingBaselinePageRows } from "@/lib/ensure-missing-page-rows";
 import { isPrismaUnreachable, markDevDatabaseUnreachable } from "@/lib/skip-db";
@@ -25,49 +23,7 @@ export default async function AdminPagesEditPage({ params }: Props) {
   }
 
   if (decodedSlug === "home") {
-    try {
-      await prisma.pageContent.upsert({
-        where: { slug: "home" },
-        create: { slug: "home", title: "Homepage", status: "published" },
-        update: {},
-      });
-      const item = await prisma.pageContent.findUnique({ where: { slug: "home" } });
-      const merged = await getHomePageCmsForEdit();
-      return (
-        <div>
-          <AdminPageHeader
-            title="Edit homepage"
-            description={
-              <>
-                Controls the hero, testimonial, fellow spotlight, reach/stats, and partner strip on{" "}
-                <strong>/</strong>. Set to <em>Draft</em> to show code defaults on the live site.
-              </>
-            }
-          />
-          <AdminFormErrorSuspense />
-          <AdminFormSuccessSuspense />
-          <div className="rounded-xl border border-border bg-white p-4 shadow-sm sm:p-8">
-            <HomePageContentForm data={merged} status={item?.status ?? "published"} />
-          </div>
-        </div>
-      );
-    } catch (e) {
-      if (process.env.NODE_ENV === "development" && isPrismaUnreachable(e)) {
-        markDevDatabaseUnreachable();
-        return (
-          <div>
-            <AdminPageHeader
-              title="Edit homepage"
-              description="Homepage content is stored in the database when Postgres is available."
-            />
-            <div className="mt-6">
-              <AdminDatabaseUnavailable />
-            </div>
-          </div>
-        );
-      }
-      throw e;
-    }
+    redirect("/admin/home-settings");
   }
 
   try {

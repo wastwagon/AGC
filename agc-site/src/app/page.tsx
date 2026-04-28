@@ -224,6 +224,7 @@ export default async function HomePage() {
   const showMethodology = Boolean(home.homeImpactMethodology?.trim());
   const showCtaBand = Boolean(home.homeCtaBand.title?.trim());
   const newsSectionTitle = home.homeNewsTeaser.title?.trim() || "Latest News";
+  const eventsSectionTitle = home.homeEventsTitle?.trim() || "Events";
 
   const spotlightImageRef = home.homeSpotlightStory.image?.trim() || placeholderImages.hero;
   const spotlightPortraitSrc =
@@ -394,7 +395,7 @@ export default async function HomePage() {
         </section>
       )}
 
-      <HomeEventsSection pastEvents={pastEvents} upcomingEvents={upcomingEvents} />
+      <HomeEventsSection pastEvents={pastEvents} upcomingEvents={upcomingEvents} title={eventsSectionTitle} />
 
       <section className="border-t border-border bg-white py-10 sm:py-12 lg:py-14">
         <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">

@@ -37,7 +37,7 @@ type HeroProps = {
 };
 
 export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }: HeroProps) {
-  void _hero; // prop kept so `page.tsx` can pass CMS draft without refactors
+  const heroHeadline = _hero?.title?.trim() || HOME_HERO_DISPLAY_TAGLINE;
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [current, setCurrent] = useState(0);
   const reducedMotion = useSyncExternalStore(
@@ -131,7 +131,7 @@ export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }:
             ref={titleRef}
             className="text-balance font-serif text-[clamp(2.125rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-tight text-white sm:leading-[1.08] lg:text-[clamp(2.625rem,5vw,4.75rem)] lg:leading-[1.06] xl:text-[clamp(2.875rem,4.75vw,5.25rem)]"
           >
-            {HOME_HERO_DISPLAY_TAGLINE}
+            {heroHeadline}
           </h1>
           {!useVideoBackground && slides.length > 1 && (
             <div className="mt-6 flex justify-center gap-1.5 sm:mt-8" role="tablist" aria-label="Hero slides">

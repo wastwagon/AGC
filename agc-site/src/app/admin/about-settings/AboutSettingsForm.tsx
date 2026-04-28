@@ -21,10 +21,22 @@ type AboutSettings = {
     agenda2063: string;
   };
   heroImage?: string;
-  whoWeAreImage?: string;
-  sectionImage?: string;
   teamPage?: { title: string; subtitle: string; heroImage?: string };
+  teamTabsList?: { key: string; label: string }[];
 };
+
+function defaultTeamTabsConfig(content: AboutSettings): string {
+  const configured = content.teamTabsList ?? [];
+  if (configured.length > 0) {
+    return configured.map((x) => `${x.key}|${x.label}`).join("\n");
+  }
+  return [
+    `advisory_board|${aboutDefaults.teamTabs.advisoryBoard}`,
+    `management_team|${aboutDefaults.teamTabs.managementTeam}`,
+    `fellows|${aboutDefaults.teamTabs.fellows}`,
+    `associate_fellows|${aboutDefaults.teamTabs.associateFellows}`,
+  ].join("\n");
+}
 
 export function AboutSettingsForm({ content, saved = false }: { content: AboutSettings; saved?: boolean }) {
   const formRef = useRef<HTMLFormElement>(null);
@@ -43,18 +55,10 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
   const [heroImage, setHeroImage] = useState(
     initialDraft?.heroImage ?? content.heroImage ?? ""
   );
-  const [sectionImage, setSectionImage] = useState(
-    initialDraft?.sectionImage ?? content.sectionImage ?? ""
-  );
-  const [whoWeAreImage, setWhoWeAreImage] = useState(
-    initialDraft?.whoWeAreImage ?? content.whoWeAreImage ?? ""
-  );
   const [teamHeroImage, setTeamHeroImage] = useState(
     initialDraft?.teamHeroImage ?? content.teamPage?.heroImage?.trim() ?? ""
   );
-  const [pickerTarget, setPickerTarget] = useState<
-    "heroImage" | "whoWeAreImage" | "sectionImage" | "teamHeroImage" | null
-  >(null);
+  const [pickerTarget, setPickerTarget] = useState<"heroImage" | "teamHeroImage" | null>(null);
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({});
   const [draftRestored] = useState(!!initialDraft);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
@@ -87,20 +91,6 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
     return raw;
   }, [heroImage, mediaMap]);
 
-  const sectionPreview = useMemo(() => {
-    const raw = sectionImage.trim();
-    if (!raw) return "";
-    if (raw.startsWith("media-")) return mediaMap[raw] || "";
-    return raw;
-  }, [sectionImage, mediaMap]);
-
-  const whoWeArePreview = useMemo(() => {
-    const raw = whoWeAreImage.trim();
-    if (!raw) return "";
-    if (raw.startsWith("media-")) return mediaMap[raw] || "";
-    return raw;
-  }, [whoWeAreImage, mediaMap]);
-
   const teamHeroPreview = useMemo(() => {
     const raw = teamHeroImage.trim();
     if (!raw) return "";
@@ -110,8 +100,6 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
 
   function onSelectMedia(media: MediaItem) {
     if (pickerTarget === "heroImage") setHeroImage(media.id);
-    if (pickerTarget === "whoWeAreImage") setWhoWeAreImage(media.id);
-    if (pickerTarget === "sectionImage") setSectionImage(media.id);
     if (pickerTarget === "teamHeroImage") setTeamHeroImage(media.id);
   }
 
@@ -149,10 +137,57 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
         </button>
       </div>
       <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
+        <h2 className="font-serif text-lg font-semibold text-slate-900">About hero</h2>
+        <p className="mt-1 text-sm text-slate-600">Controls the About page hero title, subtitle, and background image.</p>
+        <div className="mt-4 grid gap-4">
+          <input
+            name="title"
+            defaultValue={initialDraft?.title ?? content.title}
+            className="rounded-lg border border-border px-4 py-2"
+            placeholder="Page title"
+          />
+          <input
+            name="heroSubtitle"
+            defaultValue={initialDraft?.heroSubtitle ?? content.hero.subtitle}
+            className="rounded-lg border border-border px-4 py-2"
+            placeholder="Hero subtitle"
+          />
+          <div>
+            <div className="flex gap-2">
+              <input
+                name="heroImage"
+                value={heroImage}
+                onChange={(e) => setHeroImage(e.target.value)}
+                className="w-full rounded-lg border border-border px-4 py-2"
+                placeholder="Hero image media-id/url/path"
+              />
+              <button
+                type="button"
+                onClick={() => setPickerTarget("heroImage")}
+                className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50"
+                title="Pick from Media Library"
+              >
+                <ImagePlus className="h-4 w-4" />
+              </button>
+            </div>
+            {heroPreview ? (
+              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
+                <Image
+                  src={heroPreview}
+                  alt="Hero preview"
+                  fill
+                  className="object-cover"
+                  unoptimized={preferUnoptimizedImage(heroPreview)}
+                />
+              </div>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Core copy</h2>
         <div className="mt-4 grid gap-4">
-          <input name="title" defaultValue={initialDraft?.title ?? content.title} className="rounded-lg border border-border px-4 py-2" placeholder="Page title" />
-          <input name="heroSubtitle" defaultValue={initialDraft?.heroSubtitle ?? content.hero.subtitle} className="rounded-lg border border-border px-4 py-2" placeholder="Hero subtitle" />
           <textarea name="intro" defaultValue={initialDraft?.intro ?? content.intro} rows={3} className="rounded-lg border border-border px-4 py-2" placeholder="Intro" />
           <textarea name="description" defaultValue={initialDraft?.description ?? content.description} rows={5} className="rounded-lg border border-border px-4 py-2" placeholder="Description" />
           <textarea name="mission" defaultValue={initialDraft?.mission ?? content.mission} rows={4} className="rounded-lg border border-border px-4 py-2" placeholder="Mission" />
@@ -188,6 +223,23 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
             placeholder="Team page subtitle"
           />
           <div>
+            <label htmlFor="teamTabsConfig" className="mb-1 block text-sm font-medium text-slate-700">
+              Team tabs
+            </label>
+            <textarea
+              id="teamTabsConfig"
+              name="teamTabsConfig"
+              defaultValue={initialDraft?.teamTabsConfig ?? defaultTeamTabsConfig(content)}
+              rows={5}
+              className="w-full rounded-lg border border-border px-4 py-2 font-mono text-sm"
+              placeholder="section_key|Tab label"
+            />
+            <p className="mt-1 text-xs text-slate-500">
+              One per line: <code className="rounded bg-slate-100 px-1">section_key|Tab label</code>. Example:
+              <code className="ml-1 rounded bg-slate-100 px-1">fellows|Fellows</code>
+            </p>
+          </div>
+          <div>
             <div className="flex gap-2">
               <input
                 name="teamHeroImage"
@@ -213,80 +265,6 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
                   fill
                   className="object-cover"
                   unoptimized={preferUnoptimizedImage(teamHeroPreview)}
-                />
-              </div>
-            ) : null}
-          </div>
-        </div>
-      </section>
-
-      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-        <h2 className="font-serif text-lg font-semibold text-slate-900">Images</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <div>
-            <div className="flex gap-2">
-              <input name="heroImage" value={heroImage} onChange={(e) => setHeroImage(e.target.value)} className="w-full rounded-lg border border-border px-4 py-2" placeholder="Hero image media-id/url/path" />
-              <button type="button" onClick={() => setPickerTarget("heroImage")} className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50" title="Pick from Media Library">
-                <ImagePlus className="h-4 w-4" />
-              </button>
-            </div>
-            {heroPreview ? (
-              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
-                <Image
-                  src={heroPreview}
-                  alt="Hero preview"
-                  fill
-                  className="object-cover"
-                  unoptimized={preferUnoptimizedImage(heroPreview)}
-                />
-              </div>
-            ) : null}
-          </div>
-          <div>
-            <div className="flex gap-2">
-              <input
-                name="whoWeAreImage"
-                value={whoWeAreImage}
-                onChange={(e) => setWhoWeAreImage(e.target.value)}
-                className="w-full rounded-lg border border-border px-4 py-2"
-                placeholder="Who we are image media-id/url/path"
-              />
-              <button
-                type="button"
-                onClick={() => setPickerTarget("whoWeAreImage")}
-                className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50"
-                title="Pick from Media Library"
-              >
-                <ImagePlus className="h-4 w-4" />
-              </button>
-            </div>
-            {whoWeArePreview ? (
-              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
-                <Image
-                  src={whoWeArePreview}
-                  alt="Who we are section preview"
-                  fill
-                  className="object-cover"
-                  unoptimized={preferUnoptimizedImage(whoWeArePreview)}
-                />
-              </div>
-            ) : null}
-          </div>
-          <div>
-            <div className="flex gap-2">
-              <input name="sectionImage" value={sectionImage} onChange={(e) => setSectionImage(e.target.value)} className="w-full rounded-lg border border-border px-4 py-2" placeholder="Section image media-id/url/path" />
-              <button type="button" onClick={() => setPickerTarget("sectionImage")} className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50" title="Pick from Media Library">
-                <ImagePlus className="h-4 w-4" />
-              </button>
-            </div>
-            {sectionPreview ? (
-              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
-                <Image
-                  src={sectionPreview}
-                  alt="Section preview"
-                  fill
-                  className="object-cover"
-                  unoptimized={preferUnoptimizedImage(sectionPreview)}
                 />
               </div>
             ) : null}

@@ -12,6 +12,10 @@ function splitLines(input: string | undefined): string[] {
   return (input || "").split("\n").map((x) => x.trim()).filter(Boolean);
 }
 
+function trimOrEmpty(value: string | undefined): string {
+  return value?.trim() ?? "";
+}
+
 export async function updateHomeSettings(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
@@ -46,7 +50,6 @@ export async function updateHomeSettings(formData: FormData) {
     },
     homeImpactMethodology: d.homeImpactMethodology,
     homePartnerBlurb: d.homePartnerBlurb,
-    heroPartnerStrip: splitLines(d.heroPartnerStrip),
     homeImpactStats: impactStats,
     homeTestimonial: {
       quote: d.testimonialQuote,
@@ -79,19 +82,68 @@ export async function updateHomeSettings(formData: FormData) {
       title: d.homeNewsTitle ?? "",
       subtitle: d.homeNewsSubtitle ?? "",
     },
-    homeAppSummitTeaser: {
-      title: d.homeAppSummitTitle ?? "",
-      description: d.homeAppSummitDescription ?? "",
-      ctaLabel: d.homeAppSummitCtaLabel ?? "",
-      ctaHref: d.homeAppSummitCtaHref ?? "/app-summit",
+    homeEventsTitle: d.homeEventsTitle ?? "",
+  };
+
+  const workPillarPatch = {
+    pillarRowTitlePrimary: trimOrEmpty(d.pillarRowTitlePrimary),
+    pillarRowTitleSecondary: trimOrEmpty(d.pillarRowTitleSecondary),
+    pillarReadMoreLabel: trimOrEmpty(d.pillarReadMoreLabel),
+    pillarCardImages: {
+      programs: trimOrEmpty(d.pillarImagePrograms),
+      projects: trimOrEmpty(d.pillarImageProjects),
+      advisory: trimOrEmpty(d.pillarImageAdvisory),
+      research: trimOrEmpty(d.pillarImageResearch),
+      training: trimOrEmpty(d.pillarImageTraining),
+      partnership: trimOrEmpty(d.pillarImagePartnership),
     },
   };
 
   try {
-    await prisma.pageContent.upsert({
-      where: { slug: "home" },
-      create: { slug: "home", title: "Homepage", status: "published", contentJson: payload as Prisma.InputJsonValue },
-      update: { title: "Homepage", contentJson: payload as Prisma.InputJsonValue },
+    await prisma.$transaction(async (tx) => {
+      await tx.pageContent.upsert({
+        where: { slug: "home" },
+        create: { slug: "home", title: "Homepage", status: "published", contentJson: payload as Prisma.InputJsonValue },
+        update: { title: "Homepage", contentJson: payload as Prisma.InputJsonValue },
+      });
+
+      const existingOurWork = await tx.pageContent.findUnique({
+        where: { slug: "our-work" },
+        select: { contentJson: true },
+      });
+      const currentOurWorkJson =
+        existingOurWork?.contentJson && typeof existingOurWork.contentJson === "object" && !Array.isArray(existingOurWork.contentJson)
+          ? (existingOurWork.contentJson as Record<string, unknown>)
+          : {};
+      const currentPillarImages =
+        currentOurWorkJson.pillarCardImages &&
+        typeof currentOurWorkJson.pillarCardImages === "object" &&
+        !Array.isArray(currentOurWorkJson.pillarCardImages)
+          ? (currentOurWorkJson.pillarCardImages as Record<string, unknown>)
+          : {};
+
+      const mergedOurWork = {
+        ...currentOurWorkJson,
+        ...workPillarPatch,
+        pillarCardImages: {
+          ...currentPillarImages,
+          ...workPillarPatch.pillarCardImages,
+        },
+      };
+
+      await tx.pageContent.upsert({
+        where: { slug: "our-work" },
+        create: {
+          slug: "our-work",
+          title: "Our Work",
+          status: "published",
+          contentJson: mergedOurWork as Prisma.InputJsonValue,
+        },
+        update: {
+          title: "Our Work",
+          contentJson: mergedOurWork as Prisma.InputJsonValue,
+        },
+      });
     });
   } catch (err) {
     console.error("updateHomeSettings:", err);
@@ -99,6 +151,7 @@ export async function updateHomeSettings(formData: FormData) {
   }
 
   revalidatePath("/");
+  revalidatePath("/our-work");
   revalidatePath("/admin/home-settings");
   redirect("/admin/home-settings?saved=1");
 }

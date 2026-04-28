@@ -268,8 +268,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
       <fieldset className="rounded-xl border border-border p-6">
         <legend className="px-2 text-lg font-semibold text-slate-900">Newsletter band (home)</legend>
         <p className="mb-3 text-sm text-slate-600">
-          Logo blue bar with centered copy and a Subscribe button. Partner lines below are kept in data for other uses;
-          the public homepage band no longer lists them.
+          Logo blue bar with centered copy and a Subscribe button.
         </p>
         <div className="mt-4 space-y-4">
           <div>
@@ -280,16 +279,6 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
               rows={3}
               className={ta}
               placeholder="e.g. Stay up to date with our research and events >"
-            />
-          </div>
-          <div>
-            <label className={label}>Partner lines (one per line) — optional / archival</label>
-            <textarea
-              name="partners"
-              defaultValue={data.heroPartnerStrip.join("\n")}
-              rows={6}
-              className={ta}
-              placeholder="African Union frameworks&#10;National reform teams"
             />
           </div>
         </div>
