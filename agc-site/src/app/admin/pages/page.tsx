@@ -15,7 +15,7 @@ export default async function AdminPagesPage() {
   await ensureMissingBaselinePageRows();
   const items = (await prisma.pageContent.findMany({
     orderBy: { slug: "asc" },
-  })).filter((x) => x.slug !== "site-settings");
+  })).filter((x) => x.slug !== "site-settings" && x.slug !== "home");
 
   return (
     <div>

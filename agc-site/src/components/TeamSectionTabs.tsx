@@ -4,7 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { User } from "lucide-react";
-import { aboutContent, fallbackTeam } from "@/data/content";
+import { fallbackTeam } from "@/data/content";
 import { cardImageUrlOrNull, preferUnoptimizedImage } from "@/lib/image-delivery";
 
 type TeamMember = {
@@ -17,21 +17,20 @@ type TeamMember = {
   imageUrl?: string | null;
 };
 
-const sectionKeys = ["advisory_board", "management_team", "fellows", "associate_fellows"] as const;
-const tabLabels = [
-  aboutContent.teamTabs.advisoryBoard,
-  aboutContent.teamTabs.managementTeam,
-  aboutContent.teamTabs.fellows,
-  aboutContent.teamTabs.associateFellows,
-];
-
 /** Navy headline / outline control — Oxford-style institutional blue */
 const navy = "#002147";
 
-export function TeamSectionTabs({ cmsTeam }: { cmsTeam: TeamMember[] }) {
+export function TeamSectionTabs({
+  cmsTeam,
+  tabs,
+}: {
+  cmsTeam: TeamMember[];
+  tabs: { key: string; label: string }[];
+}) {
   const [activeTab, setActiveTab] = useState(0);
   const team = cmsTeam.length > 0 ? cmsTeam : (fallbackTeam as TeamMember[]);
-  const activeSection = sectionKeys[activeTab];
+  const sectionKeys = tabs.map((t) => t.key);
+  const activeSection = sectionKeys[activeTab] ?? sectionKeys[0] ?? "advisory_board";
   const members = team.filter((m) => (m.section || "advisory_board") === activeSection);
 
   return (
@@ -48,9 +47,9 @@ export function TeamSectionTabs({ cmsTeam }: { cmsTeam: TeamMember[] }) {
         role="tablist"
         aria-label="Team sections"
       >
-        {tabLabels.map((label, i) => (
+        {tabs.map((tab, i) => (
           <button
-            key={label}
+            key={`${tab.key}-${tab.label}`}
             type="button"
             role="tab"
             aria-selected={activeTab === i}
@@ -61,7 +60,7 @@ export function TeamSectionTabs({ cmsTeam }: { cmsTeam: TeamMember[] }) {
                 : "bg-[#f1f4f9] text-black hover:bg-[#e4eaf3]"
             }`}
           >
-            {label}
+            {tab.label}
           </button>
         ))}
       </div>

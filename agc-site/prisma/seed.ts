@@ -133,6 +133,18 @@ async function main() {
       contentJson: { ...aypfContent, heroImage: "/uploads/placeholder.svg" },
     },
     {
+      slug: "awpls",
+      title: "African Women Political Leadership Summit (AWPLS)",
+      status: "published",
+      contentJson: {
+        title: "African Women Political Leadership Summit",
+        subtitle: "AWPLS",
+        description:
+          "The African Women Political Leadership Summit (AWPLS) brings together women in and around political life to share evidence, build skills, and strengthen how parties and institutions govern. Programme details, dates, and registration will be announced here.",
+        heroImage: "/uploads/placeholder.svg",
+      },
+    },
+    {
       slug: "applications",
       title: "Applications",
       status: "published",

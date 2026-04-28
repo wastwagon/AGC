@@ -10,7 +10,6 @@ import {
   homeSpotlightStory,
   homeImpactStats,
   homeImpactMethodology,
-  heroPartnerStrip,
 } from "@/data/content";
 import type { HomePageCms } from "@/lib/home-page-types";
 
@@ -42,7 +41,6 @@ export function getBootstrapHomePageCms(): HomePageCms {
     },
     homeImpactMethodology,
     homeImpactStats: homeImpactStats.map((s) => ({ ...s })),
-    heroPartnerStrip: [...heroPartnerStrip],
     homePartnerBlurb: DEFAULT_PARTNER_BLURB,
     homeCtaBand: {
       eyebrow: "Why we exist",
@@ -54,15 +52,10 @@ export function getBootstrapHomePageCms(): HomePageCms {
       secondaryCta: "About the Centre",
       secondaryHref: "/about",
     },
+    homeEventsTitle: "Events",
     homeNewsTeaser: {
       title: "Latest News",
       subtitle: "",
-    },
-    homeAppSummitTeaser: {
-      title: "APP Summit",
-      description: "Forums and expert roundtables advancing governance excellence across Africa.",
-      ctaLabel: "Learn More",
-      ctaHref: "/app-summit",
     },
   };
 }

@@ -18,11 +18,6 @@ export async function updateHomePageContent(formData: FormData) {
       ? { ...(existingRow.contentJson as Record<string, unknown>) }
       : {};
 
-  const partnersRaw = String(formData.get("partners") ?? "")
-    .split("\n")
-    .map((s) => s.trim())
-    .filter(Boolean);
-
   const heroSliderRaw = String(formData.get("hero_slider_images") ?? "")
     .split("\n")
     .map((s) => s.trim())
@@ -81,8 +76,6 @@ export async function updateHomePageContent(formData: FormData) {
     },
     homeImpactMethodology: String(formData.get("methodology") ?? "").slice(0, 1500),
     homeImpactStats: stats,
-    heroPartnerStrip:
-      partnersRaw.length > 0 ? partnersRaw.slice(0, 12) : [...defaults.heroPartnerStrip],
     homePartnerBlurb: String(formData.get("partner_blurb") ?? "").slice(0, 500),
     status: formData.get("status") === "draft" ? "draft" : "published",
   };

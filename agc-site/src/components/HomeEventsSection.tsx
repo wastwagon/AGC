@@ -6,6 +6,7 @@ import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 type HomeEventsSectionProps = {
   pastEvents: CmsEvent[];
   upcomingEvents: CmsEvent[];
+  title?: string;
 };
 
 const EVENTS_TITLE = "Events";
@@ -14,10 +15,11 @@ const EVENTS_TITLE = "Events";
  * Homepage events: white intro (title + blurb), then **Upcoming** band,
  * then **Past** band — each shows up to three items and a “See all events” CTA.
  */
-export function HomeEventsSection({ pastEvents, upcomingEvents }: HomeEventsSectionProps) {
+export function HomeEventsSection({ pastEvents, upcomingEvents, title }: HomeEventsSectionProps) {
   const upcoming = upcomingEvents.slice(0, 3);
   const past = pastEvents.slice(0, 3);
   const hasAny = upcoming.length > 0 || past.length > 0;
+  const eventsTitle = title?.trim() || EVENTS_TITLE;
 
   return (
     <>
@@ -25,7 +27,7 @@ export function HomeEventsSection({ pastEvents, upcomingEvents }: HomeEventsSect
         <section className="border-t border-border bg-white pt-8 pb-2 sm:pt-10 sm:pb-3 lg:pt-12 lg:pb-3">
           <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
             <div className="border-b border-border pb-3">
-              <h2 className="font-sans text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{EVENTS_TITLE}</h2>
+              <h2 className="font-sans text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{eventsTitle}</h2>
             </div>
 
             {!hasAny ? (

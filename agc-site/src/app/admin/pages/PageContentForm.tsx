@@ -519,114 +519,69 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 />
               </div>
             </div>
-            <div className="mt-4 rounded-md border border-amber-200 bg-amber-50/40 p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Homepage pillar cards</p>
+            <div className="mt-4 rounded-md border border-border bg-white p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Work area tabs</p>
               <p className="mt-1 text-[11px] text-slate-500">
-                Six cards under the hero in two rows. Optional headings below replace the defaults (one title per row). Card titles come from the{" "}
-                <strong className="font-medium text-slate-700">programs</strong>, <strong className="font-medium text-slate-700">projects</strong>,{" "}
-                <strong className="font-medium text-slate-700">advisory</strong>, <strong className="font-medium text-slate-700">research</strong>,{" "}
-                <strong className="font-medium text-slate-700">training</strong>, and <strong className="font-medium text-slate-700">partnership</strong> blocks. Use Media Library IDs or{" "}
-                <code className="rounded bg-white px-0.5">/uploads/…</code> paths for images.
+                Labels and intro copy shown above the tabbed cards on the main <code className="rounded bg-slate-100 px-0.5">/our-work</code> page.
               </p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <p className="mt-1 text-[11px] text-slate-500">
+                Homepage pillar row headings and pillar image overrides are managed in <strong>Admin → Home Settings</strong>.
+              </p>
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-600">
-                    Heading — first row (default: Engagement and delivery)
-                  </label>
+                  <label className="block text-xs font-medium text-slate-600">Tab label: Programs</label>
                   <input
                     type="text"
-                    value={
-                      typeof parsedJson.pillarRowTitlePrimary === "string" ? parsedJson.pillarRowTitlePrimary : ""
-                    }
-                    onChange={(e) => updateJsonField("pillarRowTitlePrimary", e.target.value)}
+                    value={getNestedString(["tabs", "programs"])}
+                    onChange={(e) => updateNestedString(["tabs", "programs"], e.target.value)}
                     className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
-                    placeholder="Engagement and delivery"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-600">
-                    Heading — second row (default: Knowledge and partnerships)
-                  </label>
+                  <label className="block text-xs font-medium text-slate-600">Tab label: Projects</label>
                   <input
                     type="text"
-                    value={
-                      typeof parsedJson.pillarRowTitleSecondary === "string"
-                        ? parsedJson.pillarRowTitleSecondary
-                        : ""
-                    }
-                    onChange={(e) => updateJsonField("pillarRowTitleSecondary", e.target.value)}
+                    value={getNestedString(["tabs", "projects"])}
+                    onChange={(e) => updateNestedString(["tabs", "projects"], e.target.value)}
                     className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
-                    placeholder="Knowledge and partnerships"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">Tab label: Advisory</label>
+                  <input
+                    type="text"
+                    value={getNestedString(["tabs", "advisory"])}
+                    onChange={(e) => updateNestedString(["tabs", "advisory"], e.target.value)}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
               </div>
-              <label className="mt-2 block text-xs font-medium text-slate-600">Card link label (optional)</label>
-              <input
-                type="text"
-                value={typeof parsedJson.pillarReadMoreLabel === "string" ? parsedJson.pillarReadMoreLabel : ""}
-                onChange={(e) => updateJsonField("pillarReadMoreLabel", e.target.value)}
-                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
-                placeholder="e.g. Read more"
-              />
-              <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="mt-3 grid gap-3 sm:grid-cols-3">
                 <div>
-                  <label className="block text-xs font-medium text-slate-600">Programs card image</label>
-                  <input
-                    type="text"
-                    value={getNestedString(["pillarCardImages", "programs"])}
-                    onChange={(e) => updateNestedString(["pillarCardImages", "programs"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
-                    placeholder="media-… or /uploads/…"
+                  <label className="block text-xs font-medium text-slate-600">Programs intro text</label>
+                  <textarea
+                    value={getNestedString(["programs", "description"])}
+                    onChange={(e) => updateNestedString(["programs", "description"], e.target.value)}
+                    rows={3}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-600">Projects card image</label>
-                  <input
-                    type="text"
-                    value={getNestedString(["pillarCardImages", "projects"])}
-                    onChange={(e) => updateNestedString(["pillarCardImages", "projects"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
-                    placeholder="media-… or /uploads/…"
+                  <label className="block text-xs font-medium text-slate-600">Projects intro text</label>
+                  <textarea
+                    value={getNestedString(["projects", "description"])}
+                    onChange={(e) => updateNestedString(["projects", "description"], e.target.value)}
+                    rows={3}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-medium text-slate-600">Advisory card image</label>
-                  <input
-                    type="text"
-                    value={getNestedString(["pillarCardImages", "advisory"])}
-                    onChange={(e) => updateNestedString(["pillarCardImages", "advisory"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
-                    placeholder="media-… or /uploads/…"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-600">Research card image</label>
-                  <input
-                    type="text"
-                    value={getNestedString(["pillarCardImages", "research"])}
-                    onChange={(e) => updateNestedString(["pillarCardImages", "research"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
-                    placeholder="media-… or /uploads/…"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-600">Training card image</label>
-                  <input
-                    type="text"
-                    value={getNestedString(["pillarCardImages", "training"])}
-                    onChange={(e) => updateNestedString(["pillarCardImages", "training"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
-                    placeholder="media-… or /uploads/…"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-medium text-slate-600">Partnership card image</label>
-                  <input
-                    type="text"
-                    value={getNestedString(["pillarCardImages", "partnership"])}
-                    onChange={(e) => updateNestedString(["pillarCardImages", "partnership"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
-                    placeholder="media-… or /uploads/…"
+                  <label className="block text-xs font-medium text-slate-600">Advisory intro text</label>
+                  <textarea
+                    value={getNestedString(["advisory", "description"])}
+                    onChange={(e) => updateNestedString(["advisory", "description"], e.target.value)}
+                    rows={3}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
               </div>

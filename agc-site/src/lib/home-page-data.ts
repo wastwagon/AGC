@@ -67,7 +67,6 @@ export function emptyHomePageCms(): HomePageCms {
     homeReach: { title: "", intro: "" },
     homeImpactMethodology: "",
     homeImpactStats: [emptyStat, emptyStat, emptyStat, emptyStat],
-    heroPartnerStrip: [],
     homePartnerBlurb: "",
     homeCtaBand: {
       eyebrow: "",
@@ -78,13 +77,8 @@ export function emptyHomePageCms(): HomePageCms {
       secondaryCta: "",
       secondaryHref: "/",
     },
+    homeEventsTitle: "",
     homeNewsTeaser: { title: "", subtitle: "" },
-    homeAppSummitTeaser: {
-      title: "",
-      description: "",
-      ctaLabel: "",
-      ctaHref: "/app-summit",
-    },
   };
 }
 
@@ -141,20 +135,16 @@ function deepMergeHome(base: HomePageCms, patch: Record<string, unknown>): HomeP
       Object.assign(out.homeCtaBand, pv);
       continue;
     }
+    if (key === "homeEventsTitle" && typeof pv === "string") {
+      out.homeEventsTitle = pv;
+      continue;
+    }
     if (key === "homeNewsTeaser" && typeof pv === "object" && !Array.isArray(pv)) {
       Object.assign(out.homeNewsTeaser, pv);
       continue;
     }
-    if (key === "homeAppSummitTeaser" && typeof pv === "object" && !Array.isArray(pv)) {
-      Object.assign(out.homeAppSummitTeaser, pv);
-      continue;
-    }
     if (key === "homeImpactMethodology" && typeof pv === "string") {
       out.homeImpactMethodology = pv;
-      continue;
-    }
-    if (key === "heroPartnerStrip" && Array.isArray(pv)) {
-      out.heroPartnerStrip = pv.map(String);
       continue;
     }
     if (key === "heroBackgroundVideoSrc" && typeof pv === "string") {
