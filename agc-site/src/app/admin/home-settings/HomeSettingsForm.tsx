@@ -33,7 +33,9 @@ type MediaPickerTarget =
 
 type WorkPillarSettings = {
   pillarRowTitlePrimary?: string;
+  pillarRowDescriptionPrimary?: string;
   pillarRowTitleSecondary?: string;
+  pillarRowDescriptionSecondary?: string;
   pillarReadMoreLabel?: string;
   pillarCardImages?: {
     programs?: string;
@@ -404,6 +406,24 @@ export function HomeSettingsForm({
             defaultValue={initialDraft?.pillarRowTitleSecondary ?? workPillars.pillarRowTitleSecondary ?? ""}
             className="rounded-lg border border-border px-4 py-2"
             placeholder="Row 2 heading (Research / Training / Partnership)"
+          />
+          <textarea
+            name="pillarRowDescriptionPrimary"
+            defaultValue={
+              initialDraft?.pillarRowDescriptionPrimary ?? workPillars.pillarRowDescriptionPrimary ?? ""
+            }
+            rows={3}
+            className="sm:col-span-2 rounded-lg border border-border px-4 py-2"
+            placeholder="Row 1 description (appears below Row 1 heading)"
+          />
+          <textarea
+            name="pillarRowDescriptionSecondary"
+            defaultValue={
+              initialDraft?.pillarRowDescriptionSecondary ?? workPillars.pillarRowDescriptionSecondary ?? ""
+            }
+            rows={3}
+            className="sm:col-span-2 rounded-lg border border-border px-4 py-2"
+            placeholder="Row 2 description (appears below Row 2 heading)"
           />
           <input
             name="pillarReadMoreLabel"

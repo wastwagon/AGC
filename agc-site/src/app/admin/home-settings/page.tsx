@@ -9,7 +9,9 @@ export const dynamic = "force-dynamic";
 
 type HomePillarSettings = {
   pillarRowTitlePrimary?: string;
+  pillarRowDescriptionPrimary?: string;
   pillarRowTitleSecondary?: string;
+  pillarRowDescriptionSecondary?: string;
   pillarReadMoreLabel?: string;
   pillarCardImages?: {
     programs?: string;

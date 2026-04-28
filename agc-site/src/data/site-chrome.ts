@@ -91,6 +91,7 @@ function cloneLinks(links: readonly { href: string; label: string }[]): SiteNavL
  * `Get Involved` uses `subLinks` for the hover panel; newsletter opens the footer signup (`/#newsletter`).
  */
 export const HEADER_PRIMARY_NAV_SLOTS: readonly SiteNavItem[] = [
+  { href: "/", label: "Home" },
   { href: "/app-summit", label: "App Summit" },
   { href: "/about", label: "About" },
   { href: "/our-work", label: "Our Work" },
@@ -109,11 +110,24 @@ export const HEADER_PRIMARY_NAV_SLOTS: readonly SiteNavItem[] = [
 
 /** Public header (lg+): always the slots above; `nav` is unused but kept for API stability. */
 export function resolveHeaderPrimaryNav(_nav: SiteNavItem[]): SiteNavItem[] {
-  return HEADER_PRIMARY_NAV_SLOTS.map((s) => ({
-    href: s.href,
-    label: s.label,
-    ...(s.subLinks?.length ? { subLinks: s.subLinks.map((l) => ({ ...l })) } : {}),
-  }));
+  const byHref = new Map(_nav.map((item) => [item.href, item]));
+  return HEADER_PRIMARY_NAV_SLOTS.map((slot) => {
+    const configured = byHref.get(slot.href);
+    const label = configured?.label?.trim() || slot.label;
+    const subLinks =
+      slot.subLinks?.map((sub) => {
+        const configuredSub = configured?.subLinks?.find((x) => x.href === sub.href);
+        return {
+          href: sub.href,
+          label: configuredSub?.label?.trim() || sub.label,
+        };
+      }) ?? undefined;
+    return {
+      href: slot.href,
+      label,
+      ...(subLinks?.length ? { subLinks } : {}),
+    };
+  });
 }
 
 /** Additional destinations after the primary row (mobile drawer, defaults, etc.). */

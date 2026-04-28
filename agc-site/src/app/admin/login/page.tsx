@@ -42,7 +42,7 @@ export default function AdminLoginPage() {
   }
 
   const inputClass =
-    "mt-1.5 w-full rounded-lg border border-border/90 bg-[#fffcf7] px-3.5 py-2.5 text-black placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500";
+    "mt-1.5 w-full rounded-lg border border-border/90 bg-white px-3.5 py-2.5 text-black placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500";
 
   return (
     <div className="w-full max-w-[420px]">

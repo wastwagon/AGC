@@ -65,23 +65,6 @@ export function PageContentForm({ item }: PageContentFormProps) {
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
 
   useEffect(() => {
-    try {
-      const raw = window.localStorage.getItem(draftStorageKey);
-      if (!raw) return;
-      const parsed = JSON.parse(raw) as { value?: string; savedAt?: string };
-      if (typeof parsed.savedAt === "string") {
-        setLastSavedAt(parsed.savedAt);
-      }
-      if (typeof parsed.value === "string" && parsed.value !== initialJson) {
-        setJsonText(parsed.value);
-        setDraftRestored(true);
-      }
-    } catch {
-      // ignore invalid draft
-    }
-  }, [draftStorageKey, initialJson]);
-
-  useEffect(() => {
     const t = window.setTimeout(() => {
       try {
         const payload = JSON.stringify({
@@ -433,6 +416,40 @@ export function PageContentForm({ item }: PageContentFormProps) {
         {item.slug.startsWith("our-work-") && (
           <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Our Work helper</p>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Section title</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.title === "string" ? parsedJson.title : ""}
+                  onChange={(e) => updateJsonField("title", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Section subtitle</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.subtitle === "string" ? parsedJson.subtitle : ""}
+                  onChange={(e) => updateJsonField("subtitle", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Section description</label>
+              <textarea
+                value={typeof parsedJson.description === "string" ? parsedJson.description : ""}
+                onChange={(e) => updateJsonField("description", e.target.value)}
+                rows={3}
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+              />
+            </div>
+          </div>
+        )}
+        {item.slug === "awpls" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">AWPLS helper</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-medium text-slate-600">Section title</label>
