@@ -11,8 +11,7 @@ type Props = {
 };
 
 /**
- * Full-width band below the pillar cards — accent bar, centered copy + Subscribe
- * (sharp rectangle, white button). Partner logos are no longer shown in this band.
+ * Full-width accent band — CMS blurb + Subscribe (homepage: below Fellow spotlight).
  */
 export function HomePartnerStrip({
   blurb,
@@ -24,7 +23,7 @@ export function HomePartnerStrip({
 
   return (
     <section className="border-0 bg-accent-600 py-6 sm:py-7">
-      <div className="mx-auto flex max-w-6xl flex-col items-center justify-center gap-4 px-3 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-3 sm:px-4 md:px-5">
+      <div className="mx-auto flex w-full max-w-none flex-col items-center justify-center gap-4 px-4 sm:flex-row sm:flex-wrap sm:gap-x-8 sm:gap-y-3 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <p className="max-w-2xl text-center text-base font-normal leading-snug text-white sm:text-left sm:text-lg">
           {line}
         </p>

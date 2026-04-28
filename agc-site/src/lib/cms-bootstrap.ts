@@ -56,7 +56,7 @@ export function getBootstrapHomePageCms(): HomePageCms {
     },
     homeNewsTeaser: {
       title: "Latest News",
-      subtitle: "Stay updated with our latest research, events, and insights on governance across Africa.",
+      subtitle: "",
     },
     homeAppSummitTeaser: {
       title: "APP Summit",

@@ -50,14 +50,13 @@ export const donateHref =
 export const defaultHomeHeroBackgroundImage =
   "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2400&q=80";
 
-/** Home hero headline and tagline (fixed on the public hero; CMS fields kept for admin/bootstrap compatibility). */
-export const HOME_HERO_DISPLAY_TITLE = "Welcome to AGC";
+/** Main home hero headline (`HeroConsultar` `h1`; CMS Home Settings title aligns with this default). */
 export const HOME_HERO_DISPLAY_TAGLINE = "When governance works, people can thrive";
 
 export const heroContent = {
   eyebrow: "",
-  title: HOME_HERO_DISPLAY_TITLE,
-  subtitle: HOME_HERO_DISPLAY_TAGLINE,
+  title: HOME_HERO_DISPLAY_TAGLINE,
+  subtitle: "",
   cta: "See what we do",
   ctaHref: "/our-work" as const,
   ctaSecondary: "Work with us",

@@ -83,7 +83,7 @@ export default async function AdminDashboardPage() {
       <h1 className="font-serif text-2xl font-bold text-slate-900">Admin Dashboard</h1>
       <p className="mt-2 text-slate-600">Manage all site content from one place.</p>
 
-      <section className="mt-8 rounded-xl border border-slate-200 bg-white p-5 shadow-sm sm:p-6">
+      <section className="mt-8 rounded-xl border border-border bg-white p-5 shadow-sm sm:p-6">
         <div className="flex flex-wrap items-end justify-between gap-3">
           <div>
             <h2 className="font-semibold text-slate-900">Submission inbox</h2>
@@ -106,7 +106,7 @@ export default async function AdminDashboardPage() {
               <li key={item.key}>
                 <Link
                   href="/admin/submissions"
-                  className="flex items-center gap-3 rounded-lg border border-slate-100 bg-slate-50/80 px-3 py-3 transition-colors hover:border-accent-200 hover:bg-accent-50/50"
+                  className="flex items-center gap-3 rounded-lg border border-border bg-slate-50/80 px-3 py-3 transition-colors hover:border-accent-200 hover:bg-accent-50/50"
                 >
                   <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-accent-600 shadow-sm">
                     <Icon className="h-5 w-5" aria-hidden />
@@ -129,7 +129,7 @@ export default async function AdminDashboardPage() {
             <Link
               key={item.href}
               href={item.href}
-              className="group flex items-start gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm transition-all hover:border-accent-200 hover:shadow-md"
+              className="group flex items-start gap-4 rounded-xl border border-border bg-white p-6 shadow-sm transition-all hover:border-accent-200 hover:shadow-md"
             >
               <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600 transition-colors group-hover:bg-accent-100">
                 <Icon className="h-6 w-6" />

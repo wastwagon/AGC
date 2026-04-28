@@ -54,7 +54,7 @@ export function MobileBottomNav({ bottomNav }: { bottomNav: { href: string; labe
                 <button
                   type="button"
                   onClick={openMenu}
-                  className="flex w-full flex-col items-center gap-0.5 rounded-t-xl px-1 py-2 text-[0.65rem] font-semibold uppercase tracking-wide text-stone-500 transition-colors hover:text-accent-700"
+                  className="flex w-full flex-col items-center gap-0.5 rounded-t-xl px-1 py-2 text-[0.65rem] font-semibold uppercase tracking-wide text-black transition-colors hover:text-accent-700"
                 >
                   <span className="flex h-10 w-10 items-center justify-center rounded-2xl bg-accent-100/90 text-accent-800 ring-1 ring-accent-200/60 shadow-sm">
                     <Icon className="h-5 w-5" strokeWidth={2.25} aria-hidden />
@@ -72,14 +72,14 @@ export function MobileBottomNav({ bottomNav }: { bottomNav: { href: string; labe
                 className={`flex w-full flex-col items-center gap-0.5 rounded-t-xl px-1 py-2 text-[0.65rem] font-semibold uppercase tracking-wide transition-colors ${
                   active
                     ? "text-accent-800"
-                    : "text-stone-500 hover:text-accent-700"
+                    : "text-black hover:text-accent-700"
                 }`}
               >
                 <span
                   className={`flex h-10 w-10 items-center justify-center rounded-2xl transition-all ${
                     active
                       ? "bg-accent-600 text-white shadow-md shadow-accent-600/25 ring-2 ring-accent-400/30"
-                      : "bg-white/90 text-stone-600 ring-1 ring-stone-200/80 shadow-sm"
+                      : "bg-white/90 text-black ring-1 ring-border/80 shadow-sm"
                   }`}
                 >
                   <Icon className="h-[1.15rem] w-[1.15rem]" strokeWidth={active ? 2.5 : 2} aria-hidden />

@@ -22,7 +22,10 @@ export const revalidate = 30;
 
 type OurWorkCms = typeof workContent & {
   heroImage?: string;
-  homePillarIntro?: string;
+  /** Homepage pillar: heading above Programs / Projects / Advisory row */
+  pillarRowTitlePrimary?: string;
+  /** Homepage pillar: heading above Research / Training / Partnership row */
+  pillarRowTitleSecondary?: string;
   pillarReadMoreLabel?: string;
   pillarCardImages?: {
     programs?: string;
@@ -39,7 +42,7 @@ type WorkSectionPageMerged = { heroImage?: string; sectionImage?: string };
 
 /**
  * Homepage pillar image: optional override from main `our-work` (pillarCardImages), else the
- * matching section page hero, then section image — same assets as `/our-work/programs` etc.
+ * matching section page hero, then section image — same assets as each `/our-work/*` section page.
  */
 async function resolveHomePillarImage(
   pillarOverride: string | undefined,
@@ -171,7 +174,7 @@ export default async function HomePage() {
         workMerged.programs?.title?.trim() ||
         programsSectionMerged.title?.trim() ||
         workContent.programs.title,
-      href: "/our-work/programs",
+      href: "/our-work#programs",
       image: imgPrograms,
     },
     {
@@ -179,7 +182,7 @@ export default async function HomePage() {
         workMerged.projects?.title?.trim() ||
         projectsSectionMerged.title?.trim() ||
         workContent.projects.title,
-      href: "/our-work/projects",
+      href: "/our-work#projects",
       image: imgProjects,
     },
     {
@@ -187,7 +190,7 @@ export default async function HomePage() {
         workMerged.advisory?.title?.trim() ||
         advisorySectionMerged.title?.trim() ||
         workContent.advisory.title,
-      href: "/our-work/advisory",
+      href: "/our-work#advisory",
       image: imgAdvisory,
     },
     {
@@ -237,7 +240,7 @@ export default async function HomePage() {
       {(homeEventsDrafts || homeNewsDrafts) && (
         <HomeScrollReveal variant="fadeIn" className="block w-full">
           <div className="border-b border-amber-200/80 bg-amber-50/95">
-            <div className="mx-auto max-w-6xl px-4 py-3 sm:px-6 lg:px-8">
+            <div className="mx-auto w-full max-w-none px-4 py-3 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
               <CmsDraftNotice entityLabel="news or events" adminHref="/admin" />
             </div>
           </div>
@@ -247,26 +250,25 @@ export default async function HomePage() {
       <HomeScrollReveal variant="slideLeft" className="block w-full">
         <HeroFeaturesOverlap
           readMoreLabel={workMerged.pillarReadMoreLabel?.trim() ?? ""}
+          rowTitlePrimary={workMerged.pillarRowTitlePrimary}
+          rowTitleSecondary={workMerged.pillarRowTitleSecondary}
           cards={pillarCards}
         />
       </HomeScrollReveal>
 
-      <HomeScrollReveal variant="slideRight" className="block w-full">
-        <HomePartnerStrip blurb={home.homePartnerBlurb} />
-      </HomeScrollReveal>
-
       {(showReach || impactStats.length > 0 || showMethodology) && (
         <HomeScrollReveal variant="clipOpen" className="block w-full">
-          <section className="border-y border-stone-200/80 bg-white py-14 sm:py-20">
-            <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+          <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+            {/* Match site header (`Header.tsx` nav): same horizontal inset as logo row */}
+            <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
               {showReach && (
-                <HomeScrollReveal variant="fadeUp" start="top 90%" className="mb-12 block max-w-2xl lg:max-w-xl">
+                <HomeScrollReveal variant="fadeUp" start="top 90%" className="mb-10 block w-full sm:mb-11">
                   <div>
-                    <h2 className="font-serif text-2xl font-semibold tracking-tight text-stone-900 sm:text-3xl">
+                    <h2 className="font-serif text-2xl font-semibold tracking-tight text-black sm:text-3xl">
                       {home.homeReach.title}
                     </h2>
                     {home.homeReach.intro?.trim() ? (
-                      <p className="mt-3 text-[17px] leading-relaxed text-stone-600">{home.homeReach.intro}</p>
+                      <p className="mt-3 text-[17px] leading-relaxed text-black">{home.homeReach.intro}</p>
                     ) : null}
                   </div>
                 </HomeScrollReveal>
@@ -277,25 +279,25 @@ export default async function HomePage() {
                   staggerSelector="> *"
                   stagger={0.12}
                   start="top 86%"
-                  className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4"
+                  className="grid w-full gap-4 sm:grid-cols-2 sm:gap-5 lg:grid-cols-4 lg:gap-6"
                 >
                   {impactStats.map((stat, i) => (
                     <div
                       key={`${stat.label}-${i}`}
-                      className="border border-stone-200/70 bg-white p-6 shadow-sm"
+                      className="bg-white p-5 shadow-[0_6px_24px_-6px_rgba(15,23,42,0.14)] sm:p-6"
                     >
                       <p className="font-sans text-3xl font-semibold tabular-nums tracking-tight text-accent-800">
                         {stat.value}
                       </p>
-                      <p className="mt-2 text-sm font-medium text-stone-900">{stat.label}</p>
-                      <p className="mt-2 text-xs leading-relaxed text-stone-500">{stat.note}</p>
+                      <p className="mt-2 text-sm font-medium text-black">{stat.label}</p>
+                      <p className="mt-2 text-xs leading-relaxed text-black">{stat.note}</p>
                     </div>
                   ))}
                 </HomeScrollReveal>
               )}
               {showMethodology && (
-                <HomeScrollReveal variant="fadeIn" start="top 92%" className="mt-10 block max-w-2xl">
-                  <p className="text-sm italic leading-relaxed text-stone-600">{home.homeImpactMethodology}</p>
+                <HomeScrollReveal variant="fadeIn" start="top 92%" className="mt-10 block max-w-4xl">
+                  <p className="text-sm italic leading-relaxed text-black">{home.homeImpactMethodology}</p>
                 </HomeScrollReveal>
               )}
             </div>
@@ -307,11 +309,15 @@ export default async function HomePage() {
         <HomeSpotlightStory story={home.homeSpotlightStory} portraitSrc={spotlightPortraitSrc} />
       </HomeScrollReveal>
 
+      <HomeScrollReveal variant="slideRight" className="block w-full">
+        <HomePartnerStrip blurb={home.homePartnerBlurb} />
+      </HomeScrollReveal>
+
       {home.homeTestimonial.quote?.trim() ? (
         <HomeScrollReveal variant="scaleUp" start="top 84%" className="block w-full">
           <section className="bg-white py-14 sm:py-20">
-            <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-              <div className="mx-auto grid max-w-4xl gap-8 rounded-none border border-stone-200/80 bg-white p-8 sm:grid-cols-[auto_1fr] sm:gap-10 sm:p-10">
+            <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+              <div className="mx-auto grid max-w-4xl gap-8 rounded-none bg-white p-8 shadow-[0_6px_24px_-6px_rgba(15,23,42,0.14)] sm:grid-cols-[auto_1fr] sm:gap-10 sm:p-10">
               <div
                 className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-accent-100 font-sans text-2xl font-semibold text-accent-900 sm:mx-0"
                 aria-hidden
@@ -319,13 +325,13 @@ export default async function HomePage() {
                 {home.homeTestimonial.initials}
               </div>
               <blockquote className="min-w-0">
-                <p className="font-serif text-lg leading-relaxed text-stone-800 sm:text-xl sm:leading-relaxed">
+                <p className="font-serif text-lg leading-relaxed text-black sm:text-xl sm:leading-relaxed">
                   &ldquo;{home.homeTestimonial.quote}&rdquo;
                 </p>
-                <footer className="mt-8 border-t border-stone-300/60 pt-6">
+                <footer className="mt-8 border-t border-border/60 pt-6">
                   <cite className="not-italic">
-                    <span className="font-semibold text-stone-900">{home.homeTestimonial.name}</span>
-                    <span className="mt-1 block text-sm text-stone-600">
+                    <span className="font-semibold text-black">{home.homeTestimonial.name}</span>
+                    <span className="mt-1 block text-sm text-black">
                       {home.homeTestimonial.title}, {home.homeTestimonial.organization}
                     </span>
                   </cite>
@@ -345,10 +351,10 @@ export default async function HomePage() {
           />
           <div className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-accent-500/15 blur-3xl" aria-hidden />
           <HomeScrollReveal variant="tiltUp" start="top 82%" className="relative z-[1] block w-full">
-            <div className="relative mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8">
+            <div className="relative mx-auto grid w-full max-w-none gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8 xl:px-12 2xl:px-16">
               <div className="lg:col-span-5 lg:pt-1">
                 {home.homeCtaBand.eyebrow?.trim() ? (
-                  <p className="text-sm font-medium text-accent-200">{home.homeCtaBand.eyebrow}</p>
+                  <p className="text-sm font-medium text-white">{home.homeCtaBand.eyebrow}</p>
                 ) : null}
                 <h2 className="mt-4 font-serif text-xl font-semibold leading-snug text-white sm:text-2xl lg:text-[1.5rem] lg:leading-snug">
                   {home.homeCtaBand.title}
@@ -356,7 +362,7 @@ export default async function HomePage() {
               </div>
               <div className="flex flex-col justify-center pt-10 lg:col-span-7 lg:pt-0">
                 {home.homeCtaBand.body?.trim() ? (
-                  <p className="text-[17px] leading-[1.7] text-accent-100/90">{home.homeCtaBand.body}</p>
+                  <p className="text-[17px] leading-[1.7] text-white">{home.homeCtaBand.body}</p>
                 ) : null}
                 <div className="mt-9 flex flex-wrap gap-3">
                   {home.homeCtaBand.primaryCta?.trim() ? (
@@ -376,7 +382,7 @@ export default async function HomePage() {
                       href={home.homeCtaBand.secondaryHref || "/about"}
                       variant="outline"
                       size="lg"
-                      className="rounded-none border-stone-400/50 text-white hover:bg-white/10"
+                      className="rounded-none border-border/50 text-white hover:bg-white/10"
                     >
                       {home.homeCtaBand.secondaryCta}
                     </Button>
@@ -390,10 +396,10 @@ export default async function HomePage() {
 
       <HomeEventsSection pastEvents={pastEvents} upcomingEvents={upcomingEvents} />
 
-      <section className="border-t border-stone-200 bg-white py-14 sm:py-16 lg:py-20">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+      <section className="border-t border-border bg-white py-10 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
-            <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-stone-200 pb-4">
+            <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-border pb-4">
               <h2 className="font-sans text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{newsSectionTitle}</h2>
               <Link
                 href="/news"
@@ -415,15 +421,15 @@ export default async function HomePage() {
               staggerSelector="> *"
               stagger={0.14}
               start="top 86%"
-              className="mt-8 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:mt-10 lg:grid-cols-3"
+              className="mt-6 grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:mt-8 lg:grid-cols-3"
             >
               {latestNews.map(({ item, imageUrl }) => (
                 <NewsCard key={item.id} item={item} imageUrl={imageUrl} href="/news" variant="homeTeaser" />
               ))}
             </HomeScrollReveal>
           ) : (
-            <HomeScrollReveal variant="fadeUp" start="top 88%" className="mt-10 block">
-              <div className="border border-stone-200 bg-stone-50/90 p-8 text-center">
+            <HomeScrollReveal variant="fadeUp" start="top 88%" className="mt-8 block">
+              <div className="border border-border bg-stone-50/90 p-8 text-center">
                 <p className="text-slate-600">No published news yet.</p>
                 <Button asChild href="/news" variant="outline" className="mt-6 rounded-none">
                   News archive

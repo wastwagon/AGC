@@ -44,7 +44,7 @@ export default async function AdminSettingsPage() {
         description="Deploy runs migrations and baseline seed automatically (Docker “migrate” service). Use the buttons below if a deploy failed partway or you need to re-run safely."
       />
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Deployment maintenance</h2>
         <p className="mt-1 text-sm text-slate-600">
           Fallback if Coolify or Docker did not finish the migrate/seed job, or after changing environment variables.
@@ -61,12 +61,12 @@ export default async function AdminSettingsPage() {
         </p>
       </section>
 
-      <section className="mt-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="mt-6 rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Database content snapshot</h2>
         <p className="mt-1 text-sm text-slate-600">Quick verification that CMS sections are reading/writing from PostgreSQL.</p>
         <dl className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-5">
           {Object.entries(counts).map(([key, value]) => (
-            <div key={key} className="rounded-lg border border-slate-200 bg-slate-50 px-3 py-2">
+            <div key={key} className="rounded-lg border border-border bg-slate-50 px-3 py-2">
               <dt className="text-xs uppercase tracking-wide text-slate-500">{key}</dt>
               <dd className="mt-1 text-lg font-semibold text-slate-900">{value}</dd>
             </div>

@@ -16,8 +16,8 @@ import {
 } from "@/lib/site-chrome-parse";
 
 const btn =
-  "inline-flex items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50";
-const input = "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900";
+  "inline-flex items-center gap-1 rounded-lg border border-border bg-white px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50";
+const input = "w-full rounded-lg border border-border px-3 py-2 text-sm text-slate-900";
 const dangerBtn = "rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600";
 
 type LinkEdit = { href: string; label: string };
@@ -95,7 +95,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
       <input type="hidden" name="chromeFooterLegalJson" value={legalJson} readOnly />
       <input type="hidden" name="chromeFooterWorkThumbsJson" value={thumbsJson} readOnly />
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-semibold text-slate-900">Main navigation</h3>
@@ -110,7 +110,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         </div>
         <ul className="mt-4 space-y-4">
           {navRows.map((row, i) => (
-            <li key={i} className="rounded-lg border border-slate-200 bg-white p-3 shadow-sm">
+            <li key={i} className="rounded-lg border border-border bg-white p-3 shadow-sm">
               <div className="flex flex-wrap items-start gap-2">
                 <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-2">
                   <div>
@@ -170,7 +170,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         </button>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-semibold text-slate-900">Mobile bottom bar</h3>
@@ -183,7 +183,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         </div>
         <ul className="mt-3 space-y-2">
           {bottomRows.map((row, i) => (
-            <li key={i} className="flex flex-wrap items-end gap-2 rounded-lg border border-slate-200 bg-white p-2">
+            <li key={i} className="flex flex-wrap items-end gap-2 rounded-lg border border-border bg-white p-2">
               <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-2">
                 <div>
                   <label className="text-xs font-medium text-slate-600">Path</label>
@@ -205,7 +205,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         </button>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-semibold text-slate-900">Footer — quick links</h3>
@@ -222,7 +222,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         </button>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-semibold text-slate-900">Footer — legal links</h3>
@@ -239,7 +239,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         </button>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h3 className="text-sm font-semibold text-slate-900">Footer — “Our work” thumbnails</h3>
@@ -258,7 +258,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         </div>
         <ul className="mt-3 space-y-3">
           {thumbRows.map((row, i) => (
-            <li key={i} className="rounded-lg border border-slate-200 bg-white p-3">
+            <li key={i} className="rounded-lg border border-border bg-white p-3">
               <div className="flex flex-wrap items-start gap-2">
                 <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-2">
                   <div>
@@ -267,7 +267,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
                       className={`${input} mt-0.5`}
                       value={row.href}
                       onChange={(e) => setThumbRows((p) => p.map((r, j) => (j === i ? { ...r, href: e.target.value } : r)))}
-                      placeholder="/our-work/programs"
+                      placeholder="/our-work#programs"
                     />
                   </div>
                   <div>
@@ -300,7 +300,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
                   />
                   <button
                     type="button"
-                    className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                    className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
                     onClick={() => setThumbPickerIndex(i)}
                     title="Pick from Media Library"
                   >
@@ -308,7 +308,7 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
                     Media
                   </button>
                   {row.image.trim() && (row.image.startsWith("/") || row.image.startsWith("http")) ? (
-                    <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+                    <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md border border-border bg-slate-100">
                       <Image src={row.image} alt="" fill className="object-cover" sizes="48px" unoptimized />
                     </span>
                   ) : null}
@@ -354,7 +354,7 @@ function LinkRowsEditor({ rows, onChange }: { rows: LinkEdit[]; onChange: (r: Li
   return (
     <ul className="mt-3 space-y-2">
       {rows.map((row, i) => (
-        <li key={i} className="flex flex-wrap items-end gap-2 rounded-lg border border-slate-200 bg-white p-2">
+        <li key={i} className="flex flex-wrap items-end gap-2 rounded-lg border border-border bg-white p-2">
           <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-2">
             <div>
               <label className="text-xs font-medium text-slate-600">Path</label>

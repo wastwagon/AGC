@@ -8,7 +8,7 @@ type Row = { label: string; value: ReactNode };
  */
 export function AdminMobileEntityCard({ title, rows, actions }: { title: ReactNode; rows: Row[]; actions?: ReactNode }) {
   return (
-    <article className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+    <article className="rounded-xl border border-border bg-white p-4 shadow-sm">
       <h2 className="text-base font-semibold leading-snug text-slate-900">{title}</h2>
       <dl className="mt-3 space-y-2 text-sm">
         {rows.map((r) => (
@@ -18,7 +18,7 @@ export function AdminMobileEntityCard({ title, rows, actions }: { title: ReactNo
           </div>
         ))}
       </dl>
-      {actions ? <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-slate-100 pt-4">{actions}</div> : null}
+      {actions ? <div className="mt-4 flex flex-wrap justify-end gap-2 border-t border-border pt-4">{actions}</div> : null}
     </article>
   );
 }

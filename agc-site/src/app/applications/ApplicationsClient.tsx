@@ -106,8 +106,8 @@ export function ApplicationsClient({
   }
 
   const inputClass =
-    "mt-1.5 w-full rounded-none border border-stone-300/90 bg-white px-4 py-2.5 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
-  const labelClass = "block text-sm font-medium text-stone-700";
+    "mt-1.5 w-full rounded-none border border-border/90 bg-white px-4 py-2.5 text-black shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
+  const labelClass = "block text-sm font-medium text-black";
 
   return (
     <>
@@ -122,15 +122,15 @@ export function ApplicationsClient({
       />
 
       <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
+        <section className="border-t border-border/80 bg-white py-16 sm:py-20 lg:py-24">
         <div className="mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
           <div className="mb-10 border-l-[3px] border-accent-600 py-2 pl-5">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">{formEyebrow}</p>
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">{formEyebrow}</p>
             <p className="mt-2 page-prose max-w-xl text-[1.02rem]">{applyIntro}</p>
           </div>
 
           <div className="page-card p-8 sm:p-10">
-            <h2 className="page-heading text-xl text-stone-900">{formCardTitle}</h2>
+            <h2 className="page-heading text-xl text-black">{formCardTitle}</h2>
 
             <form onSubmit={handleSubmit} className="relative mt-10 space-y-10">
               <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
@@ -166,7 +166,7 @@ export function ApplicationsClient({
                 </div>
               </div>
 
-              <div className="border-t border-stone-200/80 pt-10">
+              <div className="border-t border-border/80 pt-10">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">{sectionExperience}</h3>
                 <div className="mt-5 space-y-5">
                   {formFields.experience.map((field) => (
@@ -180,7 +180,7 @@ export function ApplicationsClient({
                 </div>
               </div>
 
-              <div className="border-t border-stone-200/80 pt-10">
+              <div className="border-t border-border/80 pt-10">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">{sectionMotivation}</h3>
                 <div className="mt-5 space-y-5">
                   {formFields.motivation.map((field) => (

@@ -6,6 +6,8 @@ import { cardImageUrlOrNull } from "@/lib/image-delivery";
 import { resolveImageUrl } from "@/lib/media";
 import { Button } from "@/components/Button";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
+import { resolveProgramsForOurWork } from "@/lib/our-work-cards";
+import { WorkAreaCardGrid } from "@/components/our-work/WorkAreaCardGrid";
 
 export const metadata = {
   title: "Programs",
@@ -15,12 +17,13 @@ export const metadata = {
 type ProgramsWorkMerged = typeof workContent.programs & { heroImage?: string };
 
 export default async function ProgramsPage() {
-  const [merged, bc] = await Promise.all([
+  const [merged, bc, programCards] = await Promise.all([
     getMergedPageContent<ProgramsWorkMerged>(
       "our-work-programs",
       cmsStaticOrEmpty(workContent.programs as ProgramsWorkMerged)
     ),
     getBreadcrumbLabels(),
+    resolveProgramsForOurWork(),
   ]);
   const content = merged;
   const heroSrc =
@@ -43,10 +46,18 @@ export default async function ProgramsPage() {
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
         <section className="bg-white py-16 sm:py-20 lg:py-[80px] xl:py-[120px]">
-        <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 
           <div className="prose prose-slate prose-lg max-w-none">
             <p className="text-slate-600">{content.description}</p>
+          </div>
+
+          <div className="mt-14 sm:mt-16">
+            <p className="text-sm font-medium text-accent-800">Programmes</p>
+            <h2 className="page-heading mt-2 text-2xl text-black sm:text-3xl">What we run</h2>
+            <div className="mt-10">
+              <WorkAreaCardGrid cards={programCards} />
+            </div>
           </div>
 
           <div className="mt-16 flex flex-wrap gap-4">

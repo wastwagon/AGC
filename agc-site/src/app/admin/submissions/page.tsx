@@ -43,17 +43,17 @@ function Pager({
     return `/admin/submissions?${q.toString()}`;
   };
   return (
-    <nav className="flex items-center gap-2 border-t border-slate-200 px-4 py-3 sm:px-6" aria-label="Pagination">
+    <nav className="flex items-center gap-2 border-t border-border px-4 py-3 sm:px-6" aria-label="Pagination">
       {page > 1 ? (
         <Link
           href={mk(page - 1)}
-          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+          className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
         >
           <ChevronLeft className="h-4 w-4" />
           Previous
         </Link>
       ) : (
-        <span className="inline-flex items-center gap-1 rounded-lg border border-slate-100 px-3 py-1.5 text-sm text-slate-400">
+        <span className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm text-slate-400">
           <ChevronLeft className="h-4 w-4" />
           Previous
         </span>
@@ -64,13 +64,13 @@ function Pager({
       {page < totalPages ? (
         <Link
           href={mk(page + 1)}
-          className="inline-flex items-center gap-1 rounded-lg border border-slate-200 px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
+          className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm text-slate-700 hover:bg-slate-50"
         >
           Next
           <ChevronRight className="h-4 w-4" />
         </Link>
       ) : (
-        <span className="inline-flex items-center gap-1 rounded-lg border border-slate-100 px-3 py-1.5 text-sm text-slate-400">
+        <span className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-1.5 text-sm text-slate-400">
           Next
           <ChevronRight className="h-4 w-4" />
         </span>
@@ -185,8 +185,8 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
       )}
 
       {/* Newsletter */}
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-4 sm:px-6">
+      <section className="rounded-xl border border-border bg-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-4 sm:px-6">
           <div className="flex flex-wrap items-center gap-2">
             <Mail className="h-5 w-5 shrink-0 text-accent-600" aria-hidden />
             <h2 className="font-semibold text-slate-900">Newsletter signups</h2>
@@ -224,7 +224,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
         </ul>
 
         <div className="hidden overflow-x-auto md:block">
-          <table className="min-w-full divide-y divide-slate-200">
+          <table className="min-w-full divide-y divide-border">
             <thead className="bg-slate-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Email</th>
@@ -232,7 +232,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-border">
               {newsletter.map((row) => (
                 <tr key={row.id} className="hover:bg-slate-50/50">
                   <td className="px-6 py-3 text-sm text-slate-900">{row.email}</td>
@@ -256,8 +256,8 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
       </section>
 
       {/* Applications */}
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-4 sm:px-6">
+      <section className="rounded-xl border border-border bg-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-4 sm:px-6">
           <div className="flex flex-wrap items-center gap-2">
             <UserPlus className="h-5 w-5 shrink-0 text-accent-600" aria-hidden />
             <h2 className="font-semibold text-slate-900">Applications</h2>
@@ -315,7 +315,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
         </ul>
 
         <div className="hidden overflow-x-auto md:block">
-          <table className="min-w-full divide-y divide-slate-200">
+          <table className="min-w-full divide-y divide-border">
             <thead className="bg-slate-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Name</th>
@@ -326,7 +326,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-border">
               {applications.map((row) => (
                 <tr key={row.id} className="hover:bg-slate-50/50">
                   <td className="px-6 py-3 text-sm font-medium text-slate-900">{row.fullName}</td>
@@ -365,8 +365,8 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
       </section>
 
       {/* Partnership */}
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-4 sm:px-6">
+      <section className="rounded-xl border border-border bg-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-4 sm:px-6">
           <div className="flex flex-wrap items-center gap-2">
             <Handshake className="h-5 w-5 shrink-0 text-accent-600" aria-hidden />
             <h2 className="font-semibold text-slate-900">Partnership inquiries</h2>
@@ -423,7 +423,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
         </ul>
 
         <div className="hidden overflow-x-auto md:block">
-          <table className="min-w-full divide-y divide-slate-200">
+          <table className="min-w-full divide-y divide-border">
             <thead className="bg-slate-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Name</th>
@@ -433,7 +433,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-border">
               {partnerships.map((row) => (
                 <tr key={row.id} className="hover:bg-slate-50/50">
                   <td className="px-6 py-3 text-sm font-medium text-slate-900">{row.name}</td>
@@ -471,8 +471,8 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
       </section>
 
       {/* Work with us / careers */}
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-4 sm:px-6">
+      <section className="rounded-xl border border-border bg-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-4 sm:px-6">
           <div className="flex flex-wrap items-center gap-2">
             <Briefcase className="h-5 w-5 shrink-0 text-accent-600" aria-hidden />
             <h2 className="font-semibold text-slate-900">Work with us inquiries</h2>
@@ -529,7 +529,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
         </ul>
 
         <div className="hidden overflow-x-auto md:block">
-          <table className="min-w-full divide-y divide-slate-200">
+          <table className="min-w-full divide-y divide-border">
             <thead className="bg-slate-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Name</th>
@@ -539,7 +539,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-border">
               {joinInquiries.map((row) => (
                 <tr key={row.id} className="hover:bg-slate-50/50">
                   <td className="px-6 py-3 text-sm font-medium text-slate-900">{row.name}</td>
@@ -579,8 +579,8 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
       </section>
 
       {/* Contact */}
-      <section className="rounded-xl border border-slate-200 bg-white shadow-sm">
-        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 px-4 py-4 sm:px-6">
+      <section className="rounded-xl border border-border bg-white shadow-sm">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-4 sm:px-6">
           <div className="flex flex-wrap items-center gap-2">
             <MessageSquare className="h-5 w-5 shrink-0 text-accent-600" aria-hidden />
             <h2 className="font-semibold text-slate-900">Contact form</h2>
@@ -637,7 +637,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
         </ul>
 
         <div className="hidden overflow-x-auto md:block">
-          <table className="min-w-full divide-y divide-slate-200">
+          <table className="min-w-full divide-y divide-border">
             <thead className="bg-slate-50">
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Name</th>
@@ -647,7 +647,7 @@ export default async function AdminSubmissionsPage({ searchParams }: { searchPar
                 <th className="px-6 py-3 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Actions</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-slate-200">
+            <tbody className="divide-y divide-border">
               {contact.map((row) => (
                 <tr key={row.id} className="hover:bg-slate-50/50">
                   <td className="px-6 py-3 text-sm font-medium text-slate-900">{row.name}</td>

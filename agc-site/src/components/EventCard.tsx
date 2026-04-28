@@ -40,7 +40,7 @@ export function EventCard({ event }: EventCardProps) {
   return (
     <Link
       href={eventLink}
-      className="group flex flex-col overflow-hidden rounded-2xl border border-slate-200/80 bg-white shadow-sm transition-all duration-300 hover:border-accent-200/80 hover:shadow-lg"
+      className="group flex flex-col overflow-hidden rounded-2xl border border-border/80 bg-white shadow-sm transition-all duration-300 hover:border-accent-200/80 hover:shadow-lg"
     >
       <div className="relative aspect-[4/3] w-full overflow-hidden">
         <Image

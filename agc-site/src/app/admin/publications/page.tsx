@@ -76,8 +76,8 @@ export default async function AdminPublicationsPage() {
         ))}
       </ul>
 
-      <div className="hidden overflow-x-auto rounded-xl border border-slate-200 bg-white shadow-sm md:block">
-        <table className="min-w-full divide-y divide-slate-200">
+      <div className="hidden overflow-x-auto rounded-xl border border-border bg-white shadow-sm md:block">
+        <table className="min-w-full divide-y divide-border">
           <thead className="bg-slate-50">
             <tr>
               <th className="px-6 py-4 text-left text-xs font-medium uppercase tracking-wider text-slate-500">Title</th>
@@ -87,7 +87,7 @@ export default async function AdminPublicationsPage() {
               <th className="px-6 py-4 text-right text-xs font-medium uppercase tracking-wider text-slate-500">Actions</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-200">
+          <tbody className="divide-y divide-border">
             {items.map((item) => (
               <tr key={item.id} className="hover:bg-slate-50">
                 <td className="px-6 py-4 font-medium text-slate-900">{item.title}</td>
@@ -127,7 +127,7 @@ export default async function AdminPublicationsPage() {
       </div>
 
       {items.length === 0 && (
-        <div className="rounded-xl border border-slate-200 bg-white p-12 text-center text-slate-500">
+        <div className="rounded-xl border border-border bg-white p-12 text-center text-slate-500">
           No publications yet. Add your first publication.
         </div>
       )}

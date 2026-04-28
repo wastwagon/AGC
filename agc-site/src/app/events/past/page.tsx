@@ -64,8 +64,8 @@ export default async function PastEventsPage() {
       />
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
             {eventsDraftsOnly && <CmsDraftNotice entityLabel="events" adminHref="/admin/events" />}
             <PastEventsArchiveClient
               events={past}

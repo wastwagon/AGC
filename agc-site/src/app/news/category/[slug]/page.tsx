@@ -60,6 +60,7 @@ export default async function NewsCategoryPage({ params }: Props) {
       imageUrl: (await resolveImageUrl(item.image)) || placeholderImages.news,
     }))
   );
+  const hasSingleResult = newsItems.length === 1;
 
   return (
     <>
@@ -76,39 +77,44 @@ export default async function NewsCategoryPage({ params }: Props) {
       />
 
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4">
-            <div>
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Category</p>
-              <p className="mt-1 page-prose max-w-xl text-sm">
-                {newsItems.length} {newsItems.length === 1 ? "story" : "stories"} in this topic. Browse others below.
-              </p>
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="mb-10 bg-white p-5 sm:p-6">
+            <div className="flex flex-wrap items-baseline justify-between gap-4 pb-4">
+              <div>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Category</p>
+                <p className="mt-1 page-prose max-w-xl text-sm">
+                  {newsItems.length} {newsItems.length === 1 ? "story" : "stories"} in this topic. Browse others below.
+                </p>
+              </div>
+              <Link
+                href="/news"
+                className="text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-4 hover:text-accent-950"
+              >
+                All news
+              </Link>
             </div>
-            <Link
-              href="/news"
-              className="text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-4 hover:text-accent-950"
-            >
-              All news
-            </Link>
+            <div className="mt-5">
+              <NewsFilters
+                categoryOptions={taxonomy.newsCategories}
+                activeCategorySlugs={activeCategories}
+                currentCategory={slug}
+              />
+            </div>
+            {newsDraftsOnly && (
+              <div className="mt-4">
+                <CmsDraftNotice entityLabel="news articles" adminHref="/admin/news" />
+              </div>
+            )}
           </div>
-          {newsDraftsOnly && (
-            <div className="mb-6">
-              <CmsDraftNotice entityLabel="news articles" adminHref="/admin/news" />
-            </div>
-          )}
-
-          <NewsFilters
-            categoryOptions={taxonomy.newsCategories}
-            activeCategorySlugs={activeCategories}
-            currentCategory={slug}
-          />
 
           {newsItems.length > 0 ? (
-            <div className="grid gap-8 sm:grid-cols-2 xl:grid-cols-3">
-              {itemsWithImages.map(({ item, imageUrl }) => (
-                <NewsCard key={item.id} item={item} imageUrl={imageUrl} href="/news" />
-              ))}
+            <div className="bg-white">
+              <div className={hasSingleResult ? "mx-auto w-full max-w-[760px]" : "grid gap-8 sm:grid-cols-2 xl:grid-cols-3"}>
+                {itemsWithImages.map(({ item, imageUrl }) => (
+                  <NewsCard key={item.id} item={item} imageUrl={imageUrl} href="/news" variant="listing" />
+                ))}
+              </div>
             </div>
           ) : (
             <div className="page-card max-w-lg border-l-[4px] border-l-accent-600 p-8 sm:p-10">

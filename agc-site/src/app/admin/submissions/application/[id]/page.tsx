@@ -42,7 +42,7 @@ export default async function AdminApplicationDetailPage({ params }: Props) {
         }
       />
 
-      <div className="flex flex-wrap items-center justify-end gap-4 rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+      <div className="flex flex-wrap items-center justify-end gap-4 rounded-xl border border-border bg-white p-4 shadow-sm">
         <DeleteButton
           action={deleteVolunteerApplication.bind(null, id)}
           label="Delete application"
@@ -50,7 +50,7 @@ export default async function AdminApplicationDetailPage({ params }: Props) {
         />
       </div>
 
-      <dl className="grid gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2">
+      <dl className="grid gap-4 rounded-xl border border-border bg-white p-6 shadow-sm sm:grid-cols-2">
         <div>
           <dt className="text-xs font-medium uppercase tracking-wider text-slate-500">Application type</dt>
           <dd className="mt-1 text-slate-900">{typeLabel}</dd>
@@ -89,7 +89,7 @@ export default async function AdminApplicationDetailPage({ params }: Props) {
         </div>
       </dl>
 
-      <div className="space-y-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="space-y-4 rounded-xl border border-border bg-white p-6 shadow-sm">
         <div>
           <h3 className="text-sm font-semibold text-slate-900">Experience</h3>
           <p className="mt-2 whitespace-pre-wrap text-slate-700">{row.experience ?? "—"}</p>

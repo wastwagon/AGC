@@ -15,34 +15,34 @@ export function HomeSpotlightStory({
   if (!s.headline?.trim()) return null;
 
   return (
-    <section className="border-y border-stone-200/80 bg-white py-14 sm:py-20">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-12 lg:gap-12 lg:items-start xl:gap-14">
-          <div className="flex flex-col items-center gap-4 lg:col-span-5 lg:items-start">
-            <div className="relative aspect-[4/5] w-full max-w-[min(100%,280px)] shrink-0 overflow-hidden shadow-md sm:max-w-[min(100%,320px)] lg:max-w-[min(100%,400px)]">
+    <section className="border-y border-border/80 bg-white py-9 sm:py-12 lg:py-14">
+      <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-start lg:gap-6 xl:gap-8">
+          <div className="flex flex-col items-center gap-4 lg:shrink-0 lg:items-start">
+            <div className="relative aspect-[5/6] w-full max-w-[320px] shrink-0 overflow-hidden shadow-md sm:max-w-[360px] lg:w-[400px] lg:max-w-none">
               <Image
                 src={portraitSrc}
                 alt={s.name?.trim() ? `Portrait: ${s.name}` : "Fellow spotlight portrait"}
                 fill
-                sizes="(max-width: 640px) 280px, (max-width: 1024px) 320px, 400px"
+                sizes="(max-width: 1024px) 360px, 400px"
                 className="object-cover object-center"
                 unoptimized={preferUnoptimizedImage(portraitSrc)}
               />
             </div>
           </div>
-          <div className="lg:col-span-7">
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-medium text-accent-800">{s.label}</p>
-            <h2 className="mt-2 font-serif text-2xl font-semibold leading-snug tracking-tight text-stone-900 sm:text-3xl">
+            <h2 className="mt-2 font-serif text-2xl font-semibold leading-snug tracking-tight text-black sm:text-3xl">
               {s.headline}
             </h2>
-            <div className="mt-6 space-y-4 text-[17px] leading-relaxed text-stone-600">
+            <div className="mt-6 space-y-4 text-[17px] leading-relaxed text-black">
               {s.paragraphs.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
-            <div className="mt-8 border-t border-stone-200 pt-6">
-              <p className="font-semibold text-stone-900">{s.name}</p>
-              <p className="text-sm text-stone-600">{s.role}</p>
+            <div className="mt-8 border-t border-border pt-6">
+              <p className="font-semibold text-black">{s.name}</p>
+              <p className="text-sm text-black">{s.role}</p>
             </div>
             <Link
               href={s.ctaHref}

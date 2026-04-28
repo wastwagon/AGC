@@ -22,10 +22,10 @@ const REGION_TO_TAGS: Record<string, string[]> = {
 };
 
 const selectClass =
-  "min-h-[44px] w-full min-w-0 rounded-none border border-stone-300/90 bg-white px-3 py-2.5 text-sm text-stone-900 shadow-none focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500 sm:min-w-[140px] sm:flex-1";
+  "min-h-[44px] w-full min-w-0 rounded-none border border-border/90 bg-white px-3 py-2.5 text-sm text-black shadow-none focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500 sm:min-w-[140px] sm:flex-1";
 
 const inputClass =
-  "min-h-[44px] w-full min-w-0 rounded-none border border-stone-300/90 bg-white px-3 py-2.5 text-sm text-stone-900 shadow-none placeholder:text-stone-400 focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500 sm:min-w-[160px] sm:flex-1";
+  "min-h-[44px] w-full min-w-0 rounded-none border border-border/90 bg-white px-3 py-2.5 text-sm text-black shadow-none placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500 sm:min-w-[160px] sm:flex-1";
 
 type NewsListingSectionProps = {
   items: NewsListingItem[];
@@ -126,18 +126,18 @@ export function NewsListingSection({
   return (
     <>
       {(intro || draftsNotice) && (
-        <div className="mb-8 max-w-2xl space-y-4 border-b border-stone-200/80 pb-8">
+        <div className="mb-8 max-w-2xl space-y-4 border-b border-border/80 pb-8">
           {intro}
           {draftsNotice}
         </div>
       )}
 
-      <div className="border-b border-stone-200/80 pb-8">
+      <div className="border-b border-border/80 pb-8">
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
-          <span className="shrink-0 text-sm font-semibold text-stone-800">{labels.filter}</span>
+          <span className="shrink-0 text-sm font-semibold text-black">{labels.filter}</span>
           <div className="flex w-full flex-1 flex-col gap-3 sm:flex-row sm:flex-wrap sm:items-end lg:justify-end">
             <label className="flex w-full min-w-0 flex-col gap-1 sm:w-auto sm:min-w-[140px] sm:flex-1">
-              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-stone-500">{labels.textSearch}</span>
+              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-black">{labels.textSearch}</span>
               <input
                 type="search"
                 value={search}
@@ -151,7 +151,7 @@ export function NewsListingSection({
               />
             </label>
             <label className="flex w-full min-w-0 flex-col gap-1 sm:w-auto sm:min-w-[140px] sm:flex-1">
-              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-stone-500">{labels.theme}</span>
+              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-black">{labels.theme}</span>
               <select
                 value={theme}
                 onChange={(e) => {
@@ -170,7 +170,7 @@ export function NewsListingSection({
               </select>
             </label>
             <label className="flex w-full min-w-0 flex-col gap-1 sm:w-auto sm:min-w-[140px] sm:flex-1">
-              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-stone-500">{labels.region}</span>
+              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-black">{labels.region}</span>
               <select
                 value={region}
                 onChange={(e) => {
@@ -188,7 +188,7 @@ export function NewsListingSection({
               </select>
             </label>
             <label className="flex w-full min-w-0 flex-col gap-1 sm:w-auto sm:min-w-[140px] sm:flex-1">
-              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-stone-500">{labels.country}</span>
+              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-black">{labels.country}</span>
               <select
                 value={country}
                 onChange={(e) => {
@@ -207,7 +207,7 @@ export function NewsListingSection({
               </select>
             </label>
             <label className="flex w-full min-w-0 flex-col gap-1 sm:w-auto sm:min-w-[140px] sm:flex-1">
-              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-stone-500">{labels.programme}</span>
+              <span className="text-[0.65rem] font-semibold uppercase tracking-wider text-black">{labels.programme}</span>
               <select
                 value={programme}
                 onChange={(e) => {
@@ -229,7 +229,7 @@ export function NewsListingSection({
           <button
             type="button"
             onClick={resetFilters}
-            className="shrink-0 rounded-none border border-stone-400 bg-white px-5 py-2.5 text-sm font-semibold text-stone-800 transition-colors hover:bg-stone-50"
+            className="shrink-0 rounded-none border border-border bg-white px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-stone-50"
           >
             {labels.reset}
           </button>
@@ -271,7 +271,7 @@ export function NewsListingSection({
           )}
         </>
       ) : items.length > 0 ? (
-        <p className="mt-12 text-center text-base text-stone-600">{labels.noMatches}</p>
+        <p className="mt-12 text-center text-base text-black">{labels.noMatches}</p>
       ) : null}
     </>
   );

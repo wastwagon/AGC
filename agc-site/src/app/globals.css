@@ -11,7 +11,7 @@
   --accent: #2e728c;
   --accent-light: #3d8ba8;
   --accent-muted: #e8f4f8;
-  --border: #e7e0d5;
+  --border: #cadee7;
   --card: #ffffff;
   --card-foreground: #1c1917;
   /* Warm paper only — highlights follow logo teal (accent), not orange */
@@ -158,7 +158,7 @@ body {
   color: rgb(28 25 23);
 }
 .page-card {
-  border: 1px solid color-mix(in srgb, #b3dce8 42%, #e7e0d5);
+  border: 1px solid var(--border);
   background-color: #ffffff;
   box-shadow: 0 1px 2px rgba(14, 31, 38, 0.04);
 }

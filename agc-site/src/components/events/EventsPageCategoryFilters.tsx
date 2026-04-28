@@ -64,7 +64,7 @@ export function EventsPageCategoryFilters({ upcoming, past, tabs, filterAriaLabe
               className={cn(
                 "min-h-[44px] border-0 px-4 py-2 text-sm font-medium transition-colors",
                 "rounded-none focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600",
-                selected ? "bg-accent-600 text-white" : "bg-[#F0F0F0] text-blue-950 hover:bg-neutral-300"
+                selected ? "bg-accent-600 text-white" : "bg-[#f1f4f9] text-[#1d2d50] hover:bg-[#e4eaf3]"
               )}
             >
               {t.label}

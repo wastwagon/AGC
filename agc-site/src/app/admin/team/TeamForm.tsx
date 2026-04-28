@@ -48,7 +48,7 @@ export function TeamForm({ item }: TeamFormProps) {
           name="name"
           defaultValue={item?.name}
           required
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -59,7 +59,7 @@ export function TeamForm({ item }: TeamFormProps) {
           name="role"
           defaultValue={item?.role ?? ""}
           placeholder="e.g. Director"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -70,7 +70,7 @@ export function TeamForm({ item }: TeamFormProps) {
           name="bio"
           defaultValue={item?.bio ?? ""}
           rows={4}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -83,12 +83,12 @@ export function TeamForm({ item }: TeamFormProps) {
             value={image}
             onChange={(e) => setImage(e.target.value)}
             placeholder="media-... or /uploads/team.jpg"
-            className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
           <button
             type="button"
             onClick={() => setPickerOpen(true)}
-            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
             title="Pick from Media Library"
           >
             <ImagePlus className="h-4 w-4" />
@@ -104,7 +104,7 @@ export function TeamForm({ item }: TeamFormProps) {
           type="number"
           min={0}
           defaultValue={item?.order ?? 0}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -114,7 +114,7 @@ export function TeamForm({ item }: TeamFormProps) {
           id="status"
           name="status"
           defaultValue={item?.status ?? "draft"}
-          className="mt-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 rounded-lg border border-border px-4 py-2 text-slate-900"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -123,10 +123,10 @@ export function TeamForm({ item }: TeamFormProps) {
 
       <AdminFormStickyActions>
         <SubmitButton isEdit={!!isEdit} />
-        {isEdit ? <AdminFormPreviewLink href="/about/team">Preview on site</AdminFormPreviewLink> : null}
+        {isEdit ? <AdminFormPreviewLink href="/about#team">Preview on site</AdminFormPreviewLink> : null}
         <a
           href="/admin/team"
-          className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
+          className="flex min-h-[44px] items-center rounded-lg border border-border px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
         </a>

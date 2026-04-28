@@ -145,14 +145,14 @@ export function PageHero({
 
   if (variant === "minimal") {
     return (
-      <section className="border-b border-stone-200/90 bg-white">
+      <section className="border-b border-border/90 bg-white">
         <div className="mx-auto w-full max-w-4xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-          <nav aria-label="Breadcrumb" className="text-sm text-stone-500">
+          <nav aria-label="Breadcrumb" className="text-sm text-black">
             <ol className="flex flex-wrap items-center gap-1.5">
               {items.map((item, i) => (
                 <li key={i} className="flex items-center gap-1.5">
                   {item.href ? (
-                    <Link href={item.href} className="font-medium text-stone-600 transition-colors hover:text-accent-700">
+                    <Link href={item.href} className="font-medium text-black transition-colors hover:text-accent-700">
                       {item.label}
                     </Link>
                   ) : (
@@ -161,7 +161,7 @@ export function PageHero({
                       <span className="absolute left-0 right-0 -bottom-0.5 mx-auto h-1 rounded-full bg-accent-500/85" aria-hidden />
                     </span>
                   )}
-                  {i < items.length - 1 && <span className="text-stone-300/90">/</span>}
+                  {i < items.length - 1 && <span className="text-black/90">/</span>}
                 </li>
               ))}
             </ol>
@@ -169,7 +169,7 @@ export function PageHero({
           <h1 className="page-heading mt-4 text-3xl sm:text-4xl">
             {title}
           </h1>
-          {subtitle && <p className="mt-3 text-stone-600">{subtitle}</p>}
+          {subtitle && <p className="mt-3 text-black">{subtitle}</p>}
         </div>
       </section>
     );

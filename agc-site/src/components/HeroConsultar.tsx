@@ -1,7 +1,7 @@
 "use client";
 
 import type { HomePageCms } from "@/lib/home-page-data";
-import { HOME_HERO_DISPLAY_TAGLINE, HOME_HERO_DISPLAY_TITLE } from "@/data/content";
+import { HOME_HERO_DISPLAY_TAGLINE } from "@/data/content";
 import gsap from "gsap";
 import { HeroDarkScrim } from "@/components/HeroDarkScrim";
 import { ChevronLeft, ChevronRight } from "lucide-react";
@@ -23,9 +23,9 @@ function getPrefersReducedMotionServerSnapshot() {
   return false;
 }
 
-/** Home hero: headline + tagline only; slider/video from CMS. */
+/** Home hero: single headline; slider/video from CMS. */
 type HeroProps = {
-  /** Retained for callers; copy is fixed in `content.ts` (`HOME_HERO_DISPLAY_*`). */
+  /** Retained for callers; headline fixed in `content.ts` (`HOME_HERO_DISPLAY_TAGLINE`). */
   hero?: HomePageCms["heroContent"];
   /** Hero carousel image URLs. From CMS when set; otherwise pass default from page. */
   sliderImages: string[];
@@ -38,7 +38,6 @@ type HeroProps = {
 
 export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }: HeroProps) {
   void _hero; // prop kept so `page.tsx` can pass CMS draft without refactors
-  const eyebrowRef = useRef<HTMLParagraphElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const [current, setCurrent] = useState(0);
   const reducedMotion = useSyncExternalStore(
@@ -67,23 +66,18 @@ export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }:
   }, [next, reducedMotion, slides.length, useVideoBackground]);
 
   useLayoutEffect(() => {
-    const eyebrow = eyebrowRef.current;
     const title = titleRef.current;
-    if (!eyebrow || !title) return;
+    if (!title) return;
 
     if (reducedMotion) {
-      gsap.set([eyebrow, title], { autoAlpha: 1, y: 0, clearProps: "transform" });
+      gsap.set(title, { autoAlpha: 1, y: 0, clearProps: "transform" });
       return;
     }
 
     const ctx = gsap.context(() => {
-      gsap.set(eyebrow, { autoAlpha: 0, y: 20 });
       gsap.set(title, { autoAlpha: 0, y: 36 });
-
-      const tl = gsap.timeline({ defaults: { ease: "power4.out" } });
-      tl.to(eyebrow, { autoAlpha: 1, y: 0, duration: 1.05 });
-      tl.to(title, { autoAlpha: 1, y: 0, duration: 1.35 }, "+=0.32");
-    });
+      gsap.to(title, { autoAlpha: 1, y: 0, duration: 1.35, ease: "power4.out", delay: 0.12 });
+    }, title);
 
     return () => ctx.revert();
   }, [reducedMotion]);
@@ -130,15 +124,9 @@ export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }:
         ))
       )}
 
-      {/* Main copy — TBI-style: small caps sans eyebrow + large serif headline */}
+      {/* Main copy — large serif headline only */}
       <div className="relative z-10 mx-auto flex w-full max-w-4xl flex-1 flex-col items-center justify-center px-4 py-24 text-center sm:px-6 sm:py-28 lg:px-8 lg:py-32 xl:py-36">
         <div className="max-w-4xl [text-shadow:0_2px_24px_rgba(0,0,0,0.45)]">
-          <p
-            ref={eyebrowRef}
-            className="mb-3 font-sans text-[0.6875rem] font-bold uppercase leading-normal tracking-[0.22em] text-white sm:mb-4 sm:text-xs sm:tracking-[0.24em]"
-          >
-            {HOME_HERO_DISPLAY_TITLE}
-          </p>
           <h1
             ref={titleRef}
             className="text-balance font-serif text-[clamp(2.125rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-tight text-white sm:leading-[1.08] lg:text-[clamp(2.625rem,5vw,4.75rem)] lg:leading-[1.06] xl:text-[clamp(2.875rem,4.75vw,5.25rem)]"

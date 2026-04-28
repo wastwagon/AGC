@@ -73,7 +73,7 @@ export function NewsCard({
     return (
       <article className="group flex flex-col">
         <Link href={linkHref} className="flex flex-col">
-          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-stone-100 ring-1 ring-stone-200/80">
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-stone-100 ring-1 ring-border/80">
             <Image
               src={imageUrl}
               alt={item.title}
@@ -96,7 +96,7 @@ export function NewsCard({
     return (
       <article className="group flex flex-col">
         <Link href={linkHref} className="flex flex-col">
-          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-stone-100 ring-1 ring-stone-200/80">
+          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-stone-100 ring-1 ring-border/80">
             <Image
               src={imageUrl}
               alt={item.title}
@@ -120,7 +120,7 @@ export function NewsCard({
   }
 
   return (
-    <article className="group flex flex-col overflow-hidden rounded-2xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md">
+    <article className="group flex flex-col overflow-hidden rounded-2xl border border-border/90 bg-[#fffcf7] shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md">
       <Link href={linkHref} className="block flex-1">
         <div className="relative aspect-[16/10] w-full overflow-hidden rounded-t-2xl">
           <Image

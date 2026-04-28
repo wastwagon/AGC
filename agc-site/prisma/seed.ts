@@ -170,7 +170,6 @@ async function main() {
       contentJson: {
         ...workContent,
         heroImage: "/uploads/placeholder.svg",
-        homePillarIntro: "Three ways we show up alongside partners",
         pillarReadMoreLabel: "Read more",
         pillarCardImages: {
           programs: "/uploads/placeholder.svg",

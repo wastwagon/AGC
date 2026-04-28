@@ -27,7 +27,7 @@ function EventsPageIntro({ intro }: { intro: string }) {
   return (
     <div className="space-y-4">
       {paragraphs.map((para, i) => (
-        <p key={i} className="page-prose text-lg text-stone-800">
+        <p key={i} className="page-prose text-lg text-black">
           {para}
         </p>
       ))}
@@ -73,9 +73,9 @@ export default async function EventsPage() {
       />
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="max-w-3xl space-y-4">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="max-w-none space-y-4">
             <p className="text-sm font-medium text-accent-800">Convenings</p>
             <EventsPageIntro intro={introBody} />
             {eventsDraftsOnly && <CmsDraftNotice entityLabel="events" adminHref="/admin/events" />}
@@ -92,7 +92,7 @@ export default async function EventsPage() {
 
           {events.length === 0 && (
             <div className="mt-16 page-card p-12 text-center">
-              <div className="mx-auto max-w-3xl text-left">
+              <div className="mx-auto max-w-none text-left">
                 <EventsPageIntro intro={introBody} />
               </div>
               <p className="page-prose mt-6">{content.emptyContact ?? eventsContent.emptyContact}</p>

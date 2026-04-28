@@ -144,39 +144,39 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
           </span>
         ) : null}
         {lastSavedAt ? <span>Autosaved locally: {new Date(lastSavedAt).toLocaleTimeString()}</span> : null}
-        <button type="button" onClick={clearDraft} className="rounded-md border border-slate-300 px-2 py-1 text-slate-600 hover:bg-slate-100">
+        <button type="button" onClick={clearDraft} className="rounded-md border border-border px-2 py-1 text-slate-600 hover:bg-slate-100">
           Clear local draft
         </button>
       </div>
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Core copy</h2>
         <div className="mt-4 grid gap-4">
-          <input name="title" defaultValue={initialDraft?.title ?? content.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Page title" />
-          <input name="heroSubtitle" defaultValue={initialDraft?.heroSubtitle ?? content.hero.subtitle} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Hero subtitle" />
-          <textarea name="intro" defaultValue={initialDraft?.intro ?? content.intro} rows={3} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Intro" />
-          <textarea name="description" defaultValue={initialDraft?.description ?? content.description} rows={5} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Description" />
-          <textarea name="mission" defaultValue={initialDraft?.mission ?? content.mission} rows={4} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Mission" />
+          <input name="title" defaultValue={initialDraft?.title ?? content.title} className="rounded-lg border border-border px-4 py-2" placeholder="Page title" />
+          <input name="heroSubtitle" defaultValue={initialDraft?.heroSubtitle ?? content.hero.subtitle} className="rounded-lg border border-border px-4 py-2" placeholder="Hero subtitle" />
+          <textarea name="intro" defaultValue={initialDraft?.intro ?? content.intro} rows={3} className="rounded-lg border border-border px-4 py-2" placeholder="Intro" />
+          <textarea name="description" defaultValue={initialDraft?.description ?? content.description} rows={5} className="rounded-lg border border-border px-4 py-2" placeholder="Description" />
+          <textarea name="mission" defaultValue={initialDraft?.mission ?? content.mission} rows={4} className="rounded-lg border border-border px-4 py-2" placeholder="Mission" />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Strategic objectives</h2>
         <div className="mt-4 grid gap-4">
-          <input name="strategicTitle" defaultValue={initialDraft?.strategicTitle ?? content.strategicObjectives.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Section title" />
-          <textarea name="strategicContent" defaultValue={initialDraft?.strategicContent ?? content.strategicObjectives.content} rows={5} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Strategic content" />
-          <textarea name="strategicPrinciples" defaultValue={initialDraft?.strategicPrinciples ?? content.strategicObjectives.principles} rows={4} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Principles" />
-          <textarea name="strategicAgenda2063" defaultValue={initialDraft?.strategicAgenda2063 ?? content.strategicObjectives.agenda2063} rows={4} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Agenda 2063 alignment" />
+          <input name="strategicTitle" defaultValue={initialDraft?.strategicTitle ?? content.strategicObjectives.title} className="rounded-lg border border-border px-4 py-2" placeholder="Section title" />
+          <textarea name="strategicContent" defaultValue={initialDraft?.strategicContent ?? content.strategicObjectives.content} rows={5} className="rounded-lg border border-border px-4 py-2" placeholder="Strategic content" />
+          <textarea name="strategicPrinciples" defaultValue={initialDraft?.strategicPrinciples ?? content.strategicObjectives.principles} rows={4} className="rounded-lg border border-border px-4 py-2" placeholder="Principles" />
+          <textarea name="strategicAgenda2063" defaultValue={initialDraft?.strategicAgenda2063 ?? content.strategicObjectives.agenda2063} rows={4} className="rounded-lg border border-border px-4 py-2" placeholder="Agenda 2063 alignment" />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Our Team page</h2>
-        <p className="mt-1 text-sm text-slate-600">Hero for the public <code className="rounded bg-slate-100 px-1">/about/team</code> route. If no team hero image is set, the main About hero image is used.</p>
+        <p className="mt-1 text-sm text-slate-600">Hero for individual team profile pages (opened from the About section cards). If no team hero image is set, the main About hero image is used.</p>
         <div className="mt-4 grid gap-4">
           <input
             name="teamPageTitle"
             defaultValue={initialDraft?.teamPageTitle ?? content.teamPage?.title ?? aboutDefaults.teamPage.title}
-            className="rounded-lg border border-slate-300 px-4 py-2"
+            className="rounded-lg border border-border px-4 py-2"
             placeholder="Team page title"
           />
           <input
@@ -184,7 +184,7 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
             defaultValue={
               initialDraft?.teamPageSubtitle ?? content.teamPage?.subtitle ?? aboutDefaults.teamPage.subtitle
             }
-            className="rounded-lg border border-slate-300 px-4 py-2"
+            className="rounded-lg border border-border px-4 py-2"
             placeholder="Team page subtitle"
           />
           <div>
@@ -193,20 +193,20 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
                 name="teamHeroImage"
                 value={teamHeroImage}
                 onChange={(e) => setTeamHeroImage(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2"
+                className="w-full rounded-lg border border-border px-4 py-2"
                 placeholder="Team hero image (optional)"
               />
               <button
                 type="button"
                 onClick={() => setPickerTarget("teamHeroImage")}
-                className="inline-flex items-center rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-50"
+                className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50"
                 title="Pick from Media Library"
               >
                 <ImagePlus className="h-4 w-4" />
               </button>
             </div>
             {teamHeroPreview ? (
-              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
                 <Image
                   src={teamHeroPreview}
                   alt="Team hero preview"
@@ -220,18 +220,18 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Images</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div>
             <div className="flex gap-2">
-              <input name="heroImage" value={heroImage} onChange={(e) => setHeroImage(e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2" placeholder="Hero image media-id/url/path" />
-              <button type="button" onClick={() => setPickerTarget("heroImage")} className="inline-flex items-center rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-50" title="Pick from Media Library">
+              <input name="heroImage" value={heroImage} onChange={(e) => setHeroImage(e.target.value)} className="w-full rounded-lg border border-border px-4 py-2" placeholder="Hero image media-id/url/path" />
+              <button type="button" onClick={() => setPickerTarget("heroImage")} className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50" title="Pick from Media Library">
                 <ImagePlus className="h-4 w-4" />
               </button>
             </div>
             {heroPreview ? (
-              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
                 <Image
                   src={heroPreview}
                   alt="Hero preview"
@@ -248,20 +248,20 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
                 name="whoWeAreImage"
                 value={whoWeAreImage}
                 onChange={(e) => setWhoWeAreImage(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2"
+                className="w-full rounded-lg border border-border px-4 py-2"
                 placeholder="Who we are image media-id/url/path"
               />
               <button
                 type="button"
                 onClick={() => setPickerTarget("whoWeAreImage")}
-                className="inline-flex items-center rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-50"
+                className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50"
                 title="Pick from Media Library"
               >
                 <ImagePlus className="h-4 w-4" />
               </button>
             </div>
             {whoWeArePreview ? (
-              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
                 <Image
                   src={whoWeArePreview}
                   alt="Who we are section preview"
@@ -274,13 +274,13 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
           </div>
           <div>
             <div className="flex gap-2">
-              <input name="sectionImage" value={sectionImage} onChange={(e) => setSectionImage(e.target.value)} className="w-full rounded-lg border border-slate-300 px-4 py-2" placeholder="Section image media-id/url/path" />
-              <button type="button" onClick={() => setPickerTarget("sectionImage")} className="inline-flex items-center rounded-lg border border-slate-300 px-3 py-2 text-slate-700 hover:bg-slate-50" title="Pick from Media Library">
+              <input name="sectionImage" value={sectionImage} onChange={(e) => setSectionImage(e.target.value)} className="w-full rounded-lg border border-border px-4 py-2" placeholder="Section image media-id/url/path" />
+              <button type="button" onClick={() => setPickerTarget("sectionImage")} className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50" title="Pick from Media Library">
                 <ImagePlus className="h-4 w-4" />
               </button>
             </div>
             {sectionPreview ? (
-              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
                 <Image
                   src={sectionPreview}
                   alt="Section preview"

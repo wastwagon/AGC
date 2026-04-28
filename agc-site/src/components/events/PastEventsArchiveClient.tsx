@@ -129,21 +129,21 @@ function FilterDropdown({
   const selectedSuffix = selected.size > 0 ? ` (${selected.size})` : "";
 
   return (
-    <details className="group border-b border-stone-200 last:border-b-0">
-      <summary className="flex cursor-pointer list-none items-center justify-between gap-2 py-3 text-sm font-semibold text-stone-800 transition-colors hover:bg-stone-100/50 [&::-webkit-details-marker]:hidden">
+    <details className="group border-b border-border last:border-b-0">
+      <summary className="flex cursor-pointer list-none items-center justify-between gap-2 py-3 text-sm font-semibold text-black transition-colors hover:bg-stone-100/50 [&::-webkit-details-marker]:hidden">
         <span className="flex min-w-0 items-center gap-2">
-          <span className="shrink-0 text-stone-500">{icon}</span>
+          <span className="shrink-0 text-black">{icon}</span>
           <span className="min-w-0 truncate">
             {summaryLabel}
-            <span className="font-normal text-stone-500">{selectedSuffix}</span>
+            <span className="font-normal text-black">{selectedSuffix}</span>
           </span>
         </span>
         <ChevronDown
-          className="h-4 w-4 shrink-0 text-stone-400 transition-transform group-open:rotate-180"
+          className="h-4 w-4 shrink-0 text-black transition-transform group-open:rotate-180"
           aria-hidden
         />
       </summary>
-      <div className="border-t border-stone-200 bg-white/90 pb-3 pt-2">
+      <div className="border-t border-border bg-white/90 pb-3 pt-2">
         {rows.length > 0 ? (
           <>
             <div className="relative px-1 pb-2">
@@ -156,23 +156,23 @@ function FilterDropdown({
                 value={listFilter}
                 onChange={(e) => onListFilterChange(e.target.value)}
                 placeholder={listPlaceholder}
-                className="w-full rounded-none border border-stone-200 bg-white py-2 pl-2 pr-8 text-xs text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className="w-full rounded-none border border-border bg-white py-2 pl-2 pr-8 text-xs text-black placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500"
                 onClick={(e) => e.stopPropagation()}
               />
-              <Search className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-stone-400" aria-hidden />
+              <Search className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-black" aria-hidden />
             </div>
             {visibleRows.length === 0 ? (
-              <p className="px-2 py-3 text-center text-xs text-stone-500">No matches.</p>
+              <p className="px-2 py-3 text-center text-xs text-black">No matches.</p>
             ) : (
-              <ul className="max-h-56 space-y-0 overflow-y-auto overscroll-contain border-t border-stone-100">
+              <ul className="max-h-56 space-y-0 overflow-y-auto overscroll-contain border-t border-border">
                 {visibleRows.map((row) => (
-                  <li key={row.id} className="border-b border-stone-100 last:border-b-0">
-                    <label className="flex cursor-pointer items-center gap-2 px-2 py-2.5 text-sm text-stone-800 hover:bg-stone-50">
+                  <li key={row.id} className="border-b border-border last:border-b-0">
+                    <label className="flex cursor-pointer items-center gap-2 px-2 py-2.5 text-sm text-black hover:bg-stone-50">
                       <input
                         type="checkbox"
                         checked={rowChecked ? rowChecked(row) : selected.has(row.id)}
                         onChange={() => onToggle(row.id)}
-                        className="h-4 w-4 shrink-0 rounded border-stone-400 text-accent-600 focus:ring-accent-500"
+                        className="h-4 w-4 shrink-0 rounded border-border text-accent-600 focus:ring-accent-500"
                         onClick={(e) => e.stopPropagation()}
                       />
                       <span
@@ -180,7 +180,7 @@ function FilterDropdown({
                       >
                         {row.label}
                       </span>
-                      <span className="shrink-0 tabular-nums text-xs text-stone-500">({row.count})</span>
+                      <span className="shrink-0 tabular-nums text-xs text-black">({row.count})</span>
                     </label>
                   </li>
                 ))}
@@ -188,7 +188,7 @@ function FilterDropdown({
             )}
           </>
         ) : (
-          <p className="px-2 py-4 text-center text-sm text-stone-500">{emptyMessage}</p>
+          <p className="px-2 py-4 text-center text-sm text-black">{emptyMessage}</p>
         )}
       </div>
     </details>
@@ -203,7 +203,7 @@ function PastEventRow({ event }: { event: CmsEvent }) {
   const location = [event.venue_name, event.venue_address, event.location].filter(Boolean).join(", ") || event.location || "";
 
   return (
-    <div className="flex flex-col gap-6 border-b border-stone-200 py-10 sm:flex-row sm:items-stretch sm:gap-8">
+    <div className="flex flex-col gap-6 border-b border-border py-10 sm:flex-row sm:items-stretch sm:gap-8">
       <div className="flex w-full shrink-0 flex-col items-center justify-center rounded-none bg-accent-600 px-4 py-5 text-center text-white sm:w-36">
         <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-white/85">{eventsContent.gridBadges.past}</p>
         <p className="mt-2 text-sm font-semibold capitalize text-white">{month}</p>
@@ -217,13 +217,13 @@ function PastEventRow({ event }: { event: CmsEvent }) {
         <h3 className="mt-2">
           <Link
             href={eventLink}
-            className="font-sans text-xl font-bold leading-snug text-stone-950 underline decoration-transparent transition-colors hover:text-accent-800 hover:decoration-accent-600/40 sm:text-2xl"
+            className="font-sans text-xl font-bold leading-snug text-black underline decoration-transparent transition-colors hover:text-accent-800 hover:decoration-accent-600/40 sm:text-2xl"
           >
             {event.title}
           </Link>
         </h3>
-        {location ? <p className="mt-3 text-sm text-stone-600">{location}</p> : null}
-        {schedule ? <p className="mt-1 text-sm text-stone-600">{schedule}</p> : null}
+        {location ? <p className="mt-3 text-sm text-black">{location}</p> : null}
+        {schedule ? <p className="mt-1 text-sm text-black">{schedule}</p> : null}
       </div>
     </div>
   );
@@ -331,15 +331,15 @@ export function PastEventsArchiveClient({
 
   return (
     <div className="bg-white">
-      <header className="border-b border-stone-200 pb-8">
+      <header className="border-b border-border pb-8">
         <div className="h-1 w-16 rounded-none bg-accent-600" aria-hidden />
-        <h1 className="page-heading mt-5 text-4xl font-bold tracking-tight text-stone-950 sm:text-5xl">{copy.title}</h1>
-        <p className="mt-4 max-w-3xl text-lg leading-relaxed text-stone-600">{copy.subtitle}</p>
+        <h1 className="page-heading mt-5 text-4xl font-bold tracking-tight text-black sm:text-5xl">{copy.title}</h1>
+        <p className="mt-4 max-w-none text-lg leading-relaxed text-black">{copy.subtitle}</p>
       </header>
 
       <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-14">
         <aside className="min-w-0 lg:col-span-4">
-          <div className="rounded-none border border-stone-200/90 bg-white p-6">
+          <div className="rounded-none border border-border/90 bg-white p-6">
             <div className="relative">
               <label htmlFor="past-ev-search" className="sr-only">
                 {copy.searchPlaceholder}
@@ -350,17 +350,17 @@ export function PastEventsArchiveClient({
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={copy.searchPlaceholder}
-                className="w-full rounded-none border border-stone-300/90 bg-white py-2.5 pl-3 pr-10 text-sm text-stone-900 shadow-none placeholder:text-stone-400 focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className="w-full rounded-none border border-border/90 bg-white py-2.5 pl-3 pr-10 text-sm text-black shadow-none placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500"
               />
-              <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" aria-hidden />
+              <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black" aria-hidden />
             </div>
 
-            <p className="mt-8 text-sm font-bold text-stone-900">{copy.filterBy}</p>
-            <label className="mt-4 flex cursor-default items-center gap-2 border-b border-stone-200 py-3 text-sm text-stone-800">
-              <input type="checkbox" checked readOnly className="h-4 w-4 rounded border-stone-400 text-accent-600" />
+            <p className="mt-8 text-sm font-bold text-black">{copy.filterBy}</p>
+            <label className="mt-4 flex cursor-default items-center gap-2 border-b border-border py-3 text-sm text-black">
+              <input type="checkbox" checked readOnly className="h-4 w-4 rounded border-border text-accent-600" />
               <span>
                 {copy.eventCheckboxLabel}{" "}
-                <span className="text-stone-500">({events.length})</span>
+                <span className="text-black">({events.length})</span>
               </span>
             </label>
 
@@ -394,8 +394,8 @@ export function PastEventsArchiveClient({
               listPlaceholder={copy.listFilterPlaceholder?.trim() || "Filter list…"}
             />
 
-            <p className="mt-6 border-t border-stone-200 pt-4 text-sm font-bold text-stone-900">{copy.dateHeading}</p>
-            <ul className="mt-3 space-y-0 divide-y divide-stone-200 border-t border-stone-200">
+            <p className="mt-6 border-t border-border pt-4 text-sm font-bold text-black">{copy.dateHeading}</p>
+            <ul className="mt-3 space-y-0 divide-y divide-border border-t border-border">
               {(
                 [
                   ["all", copy.dateAll],
@@ -405,13 +405,13 @@ export function PastEventsArchiveClient({
                 ] as const
               ).map(([value, label]) => (
                 <li key={value}>
-                  <label className="flex cursor-pointer items-center gap-3 py-3 text-sm text-stone-800">
+                  <label className="flex cursor-pointer items-center gap-3 py-3 text-sm text-black">
                     <input
                       type="radio"
                       name="past-date"
                       checked={dateFilter === value}
                       onChange={() => setDateFilter(value)}
-                      className="h-4 w-4 border-stone-400 text-accent-600 focus:ring-accent-500"
+                      className="h-4 w-4 border-border text-accent-600 focus:ring-accent-500"
                     />
                     {label}
                   </label>
@@ -422,13 +422,13 @@ export function PastEventsArchiveClient({
         </aside>
 
         <div className="min-w-0 lg:col-span-8">
-          <p className="text-sm text-stone-500">
-            <span className="font-semibold text-stone-800">{filtered.length}</span> {copy.resultsFoundSuffix}
+          <p className="text-sm text-black">
+            <span className="font-semibold text-black">{filtered.length}</span> {copy.resultsFoundSuffix}
           </p>
 
           <div className="mt-6">
             {visible.length === 0 ? (
-              <p className="border border-stone-200/90 bg-white px-6 py-12 text-center text-stone-600">
+              <p className="border border-border/90 bg-white px-6 py-12 text-center text-black">
                 {emptyPastMessage}
               </p>
             ) : (
@@ -441,9 +441,9 @@ export function PastEventsArchiveClient({
               <button
                 type="button"
                 onClick={() => setVisibleCount((c) => Math.min(c + pageSize, filtered.length))}
-                className="flex w-full max-w-xl items-center justify-center gap-2 rounded-none border-2 border-stone-900 bg-white px-6 py-4 text-sm font-bold text-stone-900 transition-colors hover:bg-stone-50"
+                className="flex w-full max-w-xl items-center justify-center gap-2 rounded-none border-2 border-border bg-white px-6 py-4 text-sm font-bold text-black transition-colors hover:bg-stone-50"
               >
-                <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-stone-900">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-border">
                   <Plus className="h-3.5 w-3.5" strokeWidth={2.5} aria-hidden />
                 </span>
                 {copy.showMore}
@@ -452,11 +452,11 @@ export function PastEventsArchiveClient({
           ) : null}
 
           <div className="mt-8 flex justify-end">
-            <label className="flex items-center gap-2 text-sm text-stone-500">
+            <label className="flex items-center gap-2 text-sm text-black">
               <select
                 value={pageSize}
                 onChange={(e) => setPageSize(Number(e.target.value))}
-                className="rounded-none border border-stone-300 bg-white px-2 py-1.5 text-sm font-semibold text-stone-900 focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500"
+                className="rounded-none border border-border bg-white px-2 py-1.5 text-sm font-semibold text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500"
               >
                 {[10, 25, 50].map((n) => (
                   <option key={n} value={n}>

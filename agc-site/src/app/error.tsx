@@ -18,8 +18,8 @@ export default function Error({
   return (
     <div className="relative min-h-[65vh] overflow-hidden bg-white px-4 py-20">
       <div className="relative mx-auto max-w-lg text-center">
-        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Something slipped</p>
-        <h1 className="page-heading mt-4 text-3xl tracking-tight text-stone-900 sm:text-4xl">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Something slipped</p>
+        <h1 className="page-heading mt-4 text-3xl tracking-tight text-black sm:text-4xl">
           We couldn&apos;t load this
         </h1>
         <p className="mt-6 page-prose text-[1.02rem]">
@@ -34,7 +34,7 @@ export default function Error({
             Home
           </Button>
         </div>
-        <p className="mt-12 text-xs text-stone-500">
+        <p className="mt-12 text-xs text-black">
           Still stuck?{" "}
           <Link href="/contact" className="text-accent-800 underline underline-offset-2 hover:text-accent-950">
             Contact us

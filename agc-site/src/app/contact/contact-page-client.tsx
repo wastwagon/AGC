@@ -71,24 +71,24 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
       />
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-14 lg:grid-cols-2 lg:gap-20">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="grid gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
             <div>
               <p className="text-sm font-medium text-accent-800">Direct lines</p>
               <h2 className="page-heading mt-2 text-2xl sm:text-3xl">Get in touch</h2>
-              <p className="page-prose mt-4">{contactContent.intro}</p>
+              <p className="page-prose mt-4 max-w-none text-black">{contactContent.intro}</p>
               <ul className="mt-10 space-y-6">
                 {divisions.map((div) => (
                   <li key={div.name} className="flex gap-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-stone-200/60">
+                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-border/60">
                       <Mail className="h-5 w-5" />
                     </div>
                     <div>
-                      <p className="font-medium text-stone-900">{div.name}</p>
+                      <p className="font-medium text-black">{div.name}</p>
                       <a
                         href={`mailto:${div.email}`}
-                        className="text-stone-600 hover:text-accent-700"
+                        className="text-black hover:text-accent-700"
                       >
                         {div.email}
                       </a>
@@ -96,45 +96,45 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                   </li>
                 ))}
                 <li className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-stone-200/60">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-border/60">
                     <Phone className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="font-medium text-stone-900">Phone</p>
+                    <p className="font-medium text-black">Phone</p>
                     <a
                       href={`tel:${siteSettings.phone.replace(/\s/g, "")}`}
-                      className="text-stone-600 hover:text-accent-700"
+                      className="text-black hover:text-accent-700"
                     >
                       {siteSettings.phone}
                     </a>
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-stone-200/60">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-border/60">
                     <MapPin className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="font-medium text-stone-900">Address</p>
-                    <address className="not-italic text-stone-600">
+                    <p className="font-medium text-black">Address</p>
+                    <address className="not-italic text-black">
                       {siteSettings.address}
                     </address>
                   </div>
                 </li>
                 <li className="flex gap-4">
-                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-stone-200/60">
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-accent-700 shadow-sm ring-1 ring-border/60">
                     <Clock className="h-5 w-5" />
                   </div>
                   <div>
-                    <p className="font-medium text-stone-900">Office hours</p>
-                    <p className="text-stone-600">{siteSettings.officeHours}</p>
+                    <p className="font-medium text-black">Office hours</p>
+                    <p className="text-black">{siteSettings.officeHours}</p>
                   </div>
                 </li>
               </ul>
             </div>
 
-            <div className="rounded-none border border-stone-200/90 bg-white p-6 shadow-sm sm:p-8">
-              <h2 className="page-heading text-xl sm:text-2xl">{contactContent.formTitle}</h2>
-              <p className="page-prose mt-2 text-sm">{contactContent.formDescription}</p>
+            <div className="rounded-none border-0 bg-white p-6 shadow-md sm:p-7">
+              <h2 className="page-heading text-xl text-black sm:text-2xl">{contactContent.formTitle}</h2>
+              <p className="page-prose mt-2 max-w-none text-sm text-black">{contactContent.formDescription}</p>
               <form onSubmit={handleSubmit} className="mt-6 space-y-4">
                 <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
                   <label htmlFor="website">Website</label>
@@ -149,7 +149,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                       name="name"
                       required
                       placeholder={contactContent.formPlaceholders.name}
-                      className="w-full rounded-none border border-stone-300/90 bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+                      className="w-full rounded-none border border-border/90 bg-white px-4 py-3 text-black placeholder:text-black focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
                     />
                   </div>
                   <div>
@@ -160,7 +160,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                       name="email"
                       required
                       placeholder={contactContent.formPlaceholders.email}
-                      className="w-full rounded-none border border-stone-300/90 bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+                      className="w-full rounded-none border border-border/90 bg-white px-4 py-3 text-black placeholder:text-black focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
                     />
                   </div>
                 </div>
@@ -171,7 +171,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                     id="subject"
                     name="subject"
                     placeholder={contactContent.formPlaceholders.subject}
-                    className="w-full rounded-none border border-stone-300/90 bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+                    className="w-full rounded-none border border-border/90 bg-white px-4 py-3 text-black placeholder:text-black focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
                   />
                 </div>
                 <div>
@@ -182,7 +182,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
                     rows={5}
                     required
                     placeholder={contactContent.formPlaceholders.message}
-                    className="w-full rounded-none border border-stone-300/90 bg-white px-4 py-3 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
+                    className="w-full rounded-none border border-border/90 bg-white px-4 py-3 text-black placeholder:text-black focus:border-accent-600 focus:ring-1 focus:ring-accent-500"
                   />
                 </div>
                 {status === "success" && (
@@ -215,13 +215,13 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
       </HomeScrollReveal>
 
       <HomeScrollReveal variant="clipOpen" start="top 90%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-14 sm:py-16 lg:py-20">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h2 className="text-center font-serif text-2xl font-semibold text-stone-900 sm:text-3xl">Find Us</h2>
-          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-stone-600 sm:text-base">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <h2 className="text-center font-serif text-2xl font-semibold text-black sm:text-3xl">Find Us</h2>
+          <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-black sm:text-base">
             {siteSettings.address}
           </p>
-          <div className="mt-6 overflow-hidden rounded-2xl border border-stone-200/80 bg-white shadow-sm">
+          <div className="mt-6 overflow-hidden rounded-2xl border border-border/80 bg-white shadow-sm">
             <iframe
               title="Africa Governance Centre location map"
               src={mapEmbedSrc}

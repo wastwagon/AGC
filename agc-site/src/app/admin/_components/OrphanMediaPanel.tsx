@@ -67,15 +67,15 @@ export function OrphanMediaPanel({ onLibraryItemRemoved }: Props) {
 
   if (loading) {
     return (
-      <div className="mt-4 rounded-xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-600">
+      <div className="mt-4 rounded-xl border border-border bg-white px-4 py-3 text-sm text-slate-600">
         Scanning for unused images…
       </div>
     );
   }
 
   return (
-    <section className="mt-4 rounded-xl border border-slate-200 bg-white shadow-sm">
-      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-100 px-4 py-3 sm:px-5">
+    <section className="mt-4 rounded-xl border border-border bg-white shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-border px-4 py-3 sm:px-5">
         <div>
           <h2 className="font-semibold text-slate-900">Unused images (orphans)</h2>
           <p className="mt-0.5 text-xs text-slate-500">
@@ -86,7 +86,7 @@ export function OrphanMediaPanel({ onLibraryItemRemoved }: Props) {
           type="button"
           onClick={() => load(true)}
           disabled={refreshing}
-          className="inline-flex items-center gap-1.5 rounded-lg border border-slate-200 px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-1.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
         >
           <RefreshCw className={`h-4 w-4 ${refreshing ? "animate-spin" : ""}`} />
           Refresh
@@ -100,7 +100,7 @@ export function OrphanMediaPanel({ onLibraryItemRemoved }: Props) {
       {items.length === 0 ? (
         <p className="px-4 py-6 text-center text-sm text-slate-500 sm:px-5">No orphaned images right now.</p>
       ) : (
-        <ul className="divide-y divide-slate-100 p-3 sm:p-4">
+        <ul className="divide-y divide-border p-3 sm:p-4">
           {items.map((item) => (
             <li key={item.id} className="flex flex-wrap items-center gap-3 py-3 first:pt-0 last:pb-0">
               <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-slate-100">

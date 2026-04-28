@@ -9,8 +9,6 @@ type HomeEventsSectionProps = {
 };
 
 const EVENTS_TITLE = "Events";
-const EVENTS_DESCRIPTION =
-  "Discover conferences and workshops that advance governance excellence across Africa.";
 
 /**
  * Homepage events: white intro (title + blurb), then **Upcoming** band,
@@ -24,15 +22,14 @@ export function HomeEventsSection({ pastEvents, upcomingEvents }: HomeEventsSect
   return (
     <>
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200 bg-white pt-8 pb-2 sm:pt-10 sm:pb-3 lg:pt-12 lg:pb-3">
-          <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
-            <div className="border-b border-stone-200 pb-3">
+        <section className="border-t border-border bg-white pt-8 pb-2 sm:pt-10 sm:pb-3 lg:pt-12 lg:pb-3">
+          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+            <div className="border-b border-border pb-3">
               <h2 className="font-sans text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{EVENTS_TITLE}</h2>
             </div>
-            <p className="mt-3 max-w-3xl text-sm leading-relaxed text-slate-600 sm:text-[15px]">{EVENTS_DESCRIPTION}</p>
 
             {!hasAny ? (
-              <div className="mt-10 border border-stone-200 bg-stone-50/90 p-8 text-center">
+              <div className="mt-10 border border-border bg-stone-50/90 p-8 text-center">
                 <p className="text-slate-600">No published events yet.</p>
                 <Button asChild href="/events" variant="outline" className="mt-6 rounded-none">
                   Browse events

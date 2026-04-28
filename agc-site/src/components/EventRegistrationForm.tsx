@@ -11,9 +11,9 @@ type EventRegistrationFormProps = {
 };
 
 const embeddedFieldClass =
-  "mt-1.5 block w-full rounded-none border border-stone-300 bg-white px-3 py-2.5 text-stone-900 shadow-none placeholder:text-stone-400 focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500";
+  "mt-1.5 block w-full rounded-none border border-border bg-white px-3 py-2.5 text-black shadow-none placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500";
 const defaultFieldClass =
-  "mt-1 block w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-4 py-3 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
+  "mt-1 block w-full rounded-lg border border-border/90 bg-[#fffcf7] px-4 py-3 text-black shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
 
 export function EventRegistrationForm({ event, embedded = false }: EventRegistrationFormProps) {
   const inputClass = embedded ? embeddedFieldClass : defaultFieldClass;
@@ -82,7 +82,7 @@ export function EventRegistrationForm({ event, embedded = false }: EventRegistra
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <h2 className="page-heading text-2xl text-stone-900">
+          <h2 className="page-heading text-2xl text-black">
             {registeredAsWaitlist ? "You’re on the waitlist" : "You’re registered"}
           </h2>
           <p className="mt-3 page-prose mx-auto max-w-md text-[0.98rem]">
@@ -91,7 +91,7 @@ export function EventRegistrationForm({ event, embedded = false }: EventRegistra
               : "A confirmation email has been sent to you. Open your badge in a new tab to print or save. Present the QR code or your registration ID at the door."}
           </p>
           {publicRegistrationId ? (
-            <p className="mt-4 font-mono text-sm font-medium text-stone-800">
+            <p className="mt-4 font-mono text-sm font-medium text-black">
               Registration ID: <span className="select-all">{publicRegistrationId}</span>
             </p>
           ) : null}
@@ -109,16 +109,16 @@ export function EventRegistrationForm({ event, embedded = false }: EventRegistra
   }
 
   const formShell = embedded
-    ? "mx-auto mt-10 max-w-xl border border-stone-200 bg-white px-5 py-8 sm:px-8"
+    ? "mx-auto mt-10 max-w-xl border border-border bg-white px-5 py-8 sm:px-8"
     : "page-card p-6 sm:p-8";
 
   return (
     <form onSubmit={handleSubmit} className={formShell}>
       {!embedded ? (
         <>
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-stone-500">Your details</p>
-          <h2 className="page-heading mt-2 text-xl text-stone-900">{event.title}</h2>
-          <p className="mt-2 text-sm text-stone-600">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-black">Your details</p>
+          <h2 className="page-heading mt-2 text-xl text-black">{event.title}</h2>
+          <p className="mt-2 text-sm text-black">
             {new Date(event.start_date).toLocaleDateString("en-GB", {
               weekday: "long",
               year: "numeric",
@@ -132,7 +132,7 @@ export function EventRegistrationForm({ event, embedded = false }: EventRegistra
 
       <div className={embedded ? "space-y-5" : "mt-8 space-y-6"}>
         <div>
-          <label htmlFor="fullName" className="block text-sm font-medium text-stone-800">
+          <label htmlFor="fullName" className="block text-sm font-medium text-black">
             Full Name <span className="text-red-600">*</span>
           </label>
           <input
@@ -145,25 +145,25 @@ export function EventRegistrationForm({ event, embedded = false }: EventRegistra
           />
         </div>
         <div>
-          <label htmlFor="email" className="block text-sm font-medium text-stone-800">
+          <label htmlFor="email" className="block text-sm font-medium text-black">
             Email <span className="text-red-600">*</span>
           </label>
           <input id="email" name="email" type="email" required className={inputClass} placeholder="you@example.com" />
         </div>
         <div>
-          <label htmlFor="phone" className="block text-sm font-medium text-stone-800">
+          <label htmlFor="phone" className="block text-sm font-medium text-black">
             Phone
           </label>
           <input id="phone" name="phone" type="tel" className={inputClass} placeholder="+233 XX XXX XXXX" />
         </div>
         <div>
-          <label htmlFor="organization" className="block text-sm font-medium text-stone-800">
+          <label htmlFor="organization" className="block text-sm font-medium text-black">
             Organization
           </label>
           <input id="organization" name="organization" type="text" className={inputClass} placeholder="Your organization" />
         </div>
         <div>
-          <label htmlFor="dietaryReqs" className="block text-sm font-medium text-stone-800">
+          <label htmlFor="dietaryReqs" className="block text-sm font-medium text-black">
             Dietary Requirements
           </label>
           <input
@@ -177,7 +177,7 @@ export function EventRegistrationForm({ event, embedded = false }: EventRegistra
       </div>
 
       {message && (
-        <p className={`mt-4 text-sm ${status === "error" ? "text-red-700" : "text-stone-600"}`}>{message}</p>
+        <p className={`mt-4 text-sm ${status === "error" ? "text-red-700" : "text-black"}`}>{message}</p>
       )}
 
       <div className={`mt-8 flex flex-wrap gap-3 ${embedded ? "justify-center sm:justify-start" : ""}`}>

@@ -36,9 +36,9 @@ export default async function VolunteerPage() {
       />
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Volunteering</p>
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Volunteering</p>
           <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
           <p className="mt-6 page-prose">{c.description}</p>
 
@@ -46,7 +46,7 @@ export default async function VolunteerPage() {
             <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Ways to contribute</h2>
             <ul className="mt-6 space-y-4">
               {c.items.map((item, i) => (
-                <li key={item} className="flex gap-4 border-b border-stone-200/60 pb-4 last:border-0">
+                <li key={item} className="flex gap-4 border-b border-border/60 pb-4 last:border-0">
                   <span className="font-sans text-2xl font-semibold tabular-nums text-accent-800">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -60,11 +60,11 @@ export default async function VolunteerPage() {
       </HomeScrollReveal>
 
       <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
-        <section className="border-y border-stone-200/80 bg-white py-14 sm:py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <section className="w-full border-y border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <div className="page-card border-l-[4px] border-l-accent-600 p-8 sm:p-10">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-stone-500">Ready?</p>
-            <h2 className="page-heading mt-2 text-xl text-stone-900">Apply</h2>
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-black">Ready?</p>
+            <h2 className="page-heading mt-2 text-xl text-black">Apply</h2>
             <p className="mt-3 page-prose">
               Complete the volunteer application — we welcome people who want to strengthen governance dialogue and
               research.
@@ -77,7 +77,7 @@ export default async function VolunteerPage() {
                 Back to Get Involved
               </Button>
             </div>
-            <p className="mt-8 text-sm text-stone-600">
+            <p className="mt-8 text-sm text-black">
               Questions?{" "}
               <a href={`mailto:${siteSettings.email.programs}`} className="font-medium text-accent-800 hover:underline">
                 {siteSettings.email.programs}

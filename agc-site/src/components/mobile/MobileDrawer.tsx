@@ -33,10 +33,11 @@ const drawerLightSocialClass =
 const drawerIconByHref: Record<string, LucideIcon> = {
   "/about": Building2,
   "/our-work": Layers,
-  "/our-work/programs": Layers,
-  "/our-work/projects": Layers,
-  "/our-work/advisory": Layers,
+  "/our-work#programs": Layers,
+  "/our-work#projects": Layers,
+  "/our-work#advisory": Layers,
   "/app-summit": Landmark,
+  "/awpls": Landmark,
   "/events": Calendar,
   "/news": Newspaper,
   "/publications": BookOpen,
@@ -122,7 +123,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
   const navLinkClass =
     "group flex min-w-0 flex-1 items-center gap-3 rounded-xl px-3 py-3 text-[0.8125rem] font-medium uppercase tracking-wide text-[#1a365d] transition-colors hover:bg-stone-100 active:bg-stone-200/80";
   const iconWrapClass =
-    "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-stone-100 text-accent-700 ring-1 ring-stone-200/90";
+    "flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-stone-100 text-accent-700 ring-1 ring-border/90";
 
   function toggleSubmenu(href: string) {
     setOpenSubmenus((prev) => ({ ...prev, [href]: !prev[href] }));
@@ -146,15 +147,15 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
         role="dialog"
         aria-modal="true"
         aria-label={chrome.mobileDrawerAriaLabel}
-        className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,22rem)] max-w-[23rem] flex-col border-r border-stone-200/90 bg-white shadow-[8px_0_40px_-12px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden ${
+        className={`fixed left-0 top-0 z-[70] flex h-[100dvh] w-[min(88vw,22rem)] max-w-[23rem] flex-col border-r border-border/90 bg-white shadow-[8px_0_40px_-12px_rgba(0,0,0,0.12)] transition-transform duration-300 ease-out motion-reduce:transition-none lg:hidden ${
           mobileOpen ? "translate-x-0" : "-translate-x-full pointer-events-none"
         }`}
         inert={!mobileOpen ? true : undefined}
       >
         {/* Header — language / translator + close (matches light chrome strip) */}
-        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-stone-200/90 bg-white px-4 py-3.5">
+        <div className="flex shrink-0 items-start justify-between gap-3 border-b border-border/90 bg-white px-4 py-3.5">
           <div className="min-w-0 flex-1 pt-0.5">
-            <p className="mb-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-stone-500">
+            <p className="mb-1.5 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-black">
               {chrome.mobileLanguageEyebrow}
             </p>
             <LanguageSelector variant="light" languages={siteSettings.languages} />
@@ -166,7 +167,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
               setMobileOpen(false);
               requestAnimationFrame(() => menuTriggerRef.current?.focus());
             }}
-            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-stone-200 bg-white text-stone-600 shadow-sm transition-colors hover:border-stone-300 hover:bg-stone-50 hover:text-stone-900"
+            className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-border bg-white text-black shadow-sm transition-colors hover:border-border hover:bg-stone-50 hover:text-black"
             aria-label={chrome.mobileDrawerCloseAriaLabel}
           >
             <X className="h-5 w-5" strokeWidth={2.25} />
@@ -185,7 +186,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                 if (hasSubs) {
                   return (
                     <li key={`${item.href}-${item.label}`}>
-                      <div className="flex items-stretch overflow-hidden rounded-none ring-1 ring-transparent hover:ring-stone-200/80">
+                      <div className="flex items-stretch overflow-hidden rounded-none ring-1 ring-transparent hover:ring-border/80">
                         <Link
                           href={item.href}
                           onClick={() => setMobileOpen(false)}
@@ -201,7 +202,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                         <button
                           type="button"
                           onClick={() => toggleSubmenu(item.href)}
-                          className="flex w-12 shrink-0 items-center justify-center border-l border-stone-200/90 bg-white text-stone-500 transition-colors hover:bg-stone-100 hover:text-stone-700"
+                          className="flex w-12 shrink-0 items-center justify-center border-l border-border/90 bg-white text-black transition-colors hover:bg-stone-100 hover:text-black"
                           aria-expanded={expanded}
                           aria-controls={panelId}
                           aria-label={expanded ? `Collapse ${item.label} submenu` : `Expand ${item.label} submenu`}
@@ -224,9 +225,9 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                                 <Link
                                   href={sub.href}
                                   onClick={() => setMobileOpen(false)}
-                                  className="group flex items-center gap-2.5 rounded-lg px-2 py-2.5 text-sm font-medium text-stone-800 transition-colors hover:bg-stone-50"
+                                  className="group flex items-center gap-2.5 rounded-lg px-2 py-2.5 text-sm font-medium text-black transition-colors hover:bg-stone-50"
                                 >
-                                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-stone-50 text-accent-700 ring-1 ring-stone-200/80">
+                                  <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-stone-50 text-accent-700 ring-1 ring-border/80">
                                     <SubIcon className="h-4 w-4" strokeWidth={2} aria-hidden />
                                   </span>
                                   <span className="min-w-0 flex-1 font-sans font-medium leading-snug tracking-normal">
@@ -252,7 +253,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                         {item.label}
                       </span>
                       <ChevronRight
-                        className="h-4 w-4 shrink-0 text-stone-400 transition-transform group-hover:translate-x-0.5 group-hover:text-stone-500"
+                        className="h-4 w-4 shrink-0 text-black transition-transform group-hover:translate-x-0.5 group-hover:text-black"
                         aria-hidden
                       />
                     </Link>
@@ -263,26 +264,26 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
           </nav>
 
           {/* Email + socials (search / contact use header controls) */}
-          <section className="mx-3 mb-4 mt-1 rounded-none border border-stone-200/95 bg-stone-50/90 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
-            <p className="mb-3 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-stone-500">
+          <section className="mx-3 mb-4 mt-1 rounded-none border border-border/95 bg-stone-50/90 p-3.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.6)]">
+            <p className="mb-3 px-1 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-black">
               Get in touch
             </p>
             <a
               href={`mailto:${siteSettings.email.programs}`}
               onClick={() => setMobileOpen(false)}
-              className="flex items-center gap-3 rounded-none border border-stone-200/80 bg-white px-3 py-3 text-left shadow-sm transition-colors hover:border-stone-300 hover:bg-stone-50/80"
+              className="flex items-center gap-3 rounded-none border border-border/80 bg-white px-3 py-3 text-left shadow-sm transition-colors hover:border-border hover:bg-stone-50/80"
             >
               <span
-                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-stone-100 text-accent-800 ring-1 ring-stone-200/80"
+                className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-stone-100 text-accent-800 ring-1 ring-border/80"
                 aria-hidden
               >
                 <Mail className="h-[18px] w-[18px]" strokeWidth={2} />
               </span>
-              <span className="min-w-0 flex-1 break-words text-sm font-medium leading-snug text-stone-800">
+              <span className="min-w-0 flex-1 break-words text-sm font-medium leading-snug text-black">
                 {siteSettings.email.programs}
               </span>
             </a>
-            <nav className="mt-4 border-t border-stone-200/80 pt-3" aria-label="Social media">
+            <nav className="mt-4 border-t border-border/80 pt-3" aria-label="Social media">
               <p className="sr-only">Follow us on social media</p>
               <ul className="flex flex-wrap gap-2">
                 {publicSocialSlots(siteSettings).map(({ href, brand, label }) => (
@@ -300,7 +301,7 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                       </a>
                     ) : (
                       <span
-                        className="flex h-10 w-10 shrink-0 cursor-not-allowed items-center justify-center rounded-none bg-stone-200 text-stone-400 ring-1 ring-stone-300/80"
+                        className="flex h-10 w-10 shrink-0 cursor-not-allowed items-center justify-center rounded-none bg-stone-200 text-black ring-1 ring-border/80"
                         aria-label={`${label} — not configured`}
                         title="Add URL in Admin → Site settings → Social links"
                       >

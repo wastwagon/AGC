@@ -42,14 +42,14 @@ export default function AdminLoginPage() {
   }
 
   const inputClass =
-    "mt-1.5 w-full rounded-lg border border-stone-300/90 bg-[#fffcf7] px-3.5 py-2.5 text-stone-900 placeholder:text-stone-400 focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500";
+    "mt-1.5 w-full rounded-lg border border-border/90 bg-[#fffcf7] px-3.5 py-2.5 text-black placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500";
 
   return (
     <div className="w-full max-w-[420px]">
       <div className="mb-8 text-center">
         <Link href="/" className="inline-flex flex-col items-center gap-3 rounded-xl p-2 transition-opacity hover:opacity-90">
           <Image src="/agc-logo.png" alt="Africa Governance Centre" width={56} height={56} className="h-14 w-14 object-contain" />
-          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-stone-500">Staff access</span>
+          <span className="text-xs font-semibold uppercase tracking-[0.18em] text-black">Staff access</span>
         </Link>
       </div>
 
@@ -59,14 +59,14 @@ export default function AdminLoginPage() {
             <Lock className="h-5 w-5" aria-hidden />
           </div>
           <div>
-            <h1 className="page-heading text-xl text-stone-900">Sign in</h1>
-            <p className="mt-1 text-sm text-stone-600">CMS for content, events, and media.</p>
+            <h1 className="page-heading text-xl text-black">Sign in</h1>
+            <p className="mt-1 text-sm text-black">CMS for content, events, and media.</p>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-stone-500">
+            <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-wider text-black">
               Email
             </label>
             <input
@@ -81,7 +81,7 @@ export default function AdminLoginPage() {
             />
           </div>
           <div>
-            <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-stone-500">
+            <label htmlFor="password" className="block text-xs font-semibold uppercase tracking-wider text-black">
               Password
             </label>
             <div className="relative">
@@ -97,7 +97,7 @@ export default function AdminLoginPage() {
               <button
                 type="button"
                 onClick={() => setShowPassword((v) => !v)}
-                className="absolute inset-y-0 right-0 inline-flex items-center px-3 text-stone-500 transition-colors hover:text-stone-700"
+                className="absolute inset-y-0 right-0 inline-flex items-center px-3 text-black transition-colors hover:text-black"
                 aria-label={showPassword ? "Hide password" : "Show password"}
                 aria-pressed={showPassword}
               >
@@ -119,7 +119,7 @@ export default function AdminLoginPage() {
           </button>
         </form>
 
-        <p className="mt-8 text-center text-xs text-stone-500">
+        <p className="mt-8 text-center text-xs text-black">
           <Link href="/" className="text-accent-800 underline decoration-accent-300 underline-offset-2 hover:text-accent-950">
             ← Public site
           </Link>

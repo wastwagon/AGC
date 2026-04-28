@@ -59,7 +59,7 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
           name="title"
           defaultValue={item?.title}
           required
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -72,7 +72,7 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
           name="slug"
           defaultValue={item?.slug ?? ""}
           placeholder="auto-generated from title"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -85,11 +85,11 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
           name="excerpt"
           defaultValue={item?.excerpt ?? ""}
           rows={3}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
-      <fieldset className="rounded-lg border border-slate-200 p-4">
+      <fieldset className="rounded-lg border border-border p-4">
         <legend className="px-1 text-sm font-medium text-slate-700">Types (select any that apply)</legend>
         <p className="mb-3 text-xs text-slate-500">
           Options are defined in <strong>Admin → Taxonomy</strong>. Multiple types are allowed (e.g. Report + Research).
@@ -103,7 +103,7 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
                 type="checkbox"
                 value={t.slug}
                 defaultChecked={selectedTypes.has(t.slug)}
-                className="mt-1 h-4 w-4 rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+                className="mt-1 h-4 w-4 rounded border-border text-accent-600 focus:ring-accent-500"
               />
               <label htmlFor={`pub-type-${t.slug}`} className="text-sm text-slate-800">
                 <span className="font-medium">{t.label}</span>
@@ -123,7 +123,7 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
           name="file"
           defaultValue={item?.file ?? ""}
           placeholder="/uploads/publication.pdf"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -138,12 +138,12 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
             value={image}
             onChange={(e) => setImage(e.target.value)}
             placeholder="media-... or /uploads/cover.jpg"
-            className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
           <button
             type="button"
             onClick={() => setPickerOpen(true)}
-            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
             title="Pick from Media Library"
           >
             <ImagePlus className="h-4 w-4" />
@@ -165,7 +165,7 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
               ? new Date(item.datePublished).toISOString().slice(0, 10)
               : new Date().toISOString().slice(0, 10)
           }
-          className="mt-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -177,7 +177,7 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
           id="author"
           name="author"
           defaultValue={item?.author ?? ""}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -189,7 +189,7 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
           id="status"
           name="status"
           defaultValue={item?.status ?? "draft"}
-          className="mt-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 rounded-lg border border-border px-4 py-2 text-slate-900"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -203,7 +203,7 @@ export function PublicationForm({ typeOptions, item }: PublicationFormProps) {
         ) : null}
         <Link
           href="/admin/publications"
-          className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
+          className="flex min-h-[44px] items-center rounded-lg border border-border px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
         </Link>
