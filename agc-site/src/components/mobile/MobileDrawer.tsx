@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
   Building2,
@@ -57,17 +58,22 @@ function submenuPanelId(href: string) {
   return `drawer-submenu-${href.replace(/[^a-zA-Z0-9_-]/g, "_")}`;
 }
 
+function isActiveRoute(pathname: string, href: string): boolean {
+  if (!href || href.startsWith("#")) return false;
+  const cleanHref = href.split("#")[0].replace(/\/+$/, "") || "/";
+  const cleanPath = pathname.replace(/\/+$/, "") || "/";
+  if (cleanHref === "/") return cleanPath === "/";
+  return cleanPath === cleanHref || cleanPath.startsWith(`${cleanHref}/`);
+}
+
 export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
   /** Same order and About submenu as desktop (`Header` primary row). */
   const primaryNav = resolveHeaderPrimaryNav(siteSettings.chrome.nav);
+  const pathname = usePathname() ?? "/";
   const chrome = siteSettings.chrome;
   const { mobileOpen, setMobileOpen, menuTriggerRef } = useMobileNav();
   const closeBtnRef = useRef<HTMLButtonElement>(null);
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
-
-  useEffect(() => {
-    if (!mobileOpen) setOpenSubmenus({});
-  }, [mobileOpen]);
 
   // Escape closes; Tab cycles focus inside drawer (WCAG-friendly)
   useEffect(() => {
@@ -182,6 +188,9 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                 const hasSubs = Boolean(item.subLinks?.length);
                 const expanded = Boolean(openSubmenus[item.href]);
                 const panelId = submenuPanelId(item.href);
+                const itemActive =
+                  isActiveRoute(pathname, item.href) ||
+                  Boolean(item.subLinks?.some((sub) => isActiveRoute(pathname, sub.href)));
 
                 if (hasSubs) {
                   return (
@@ -190,7 +199,9 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                         <Link
                           href={item.href}
                           onClick={() => setMobileOpen(false)}
-                          className={`${navLinkClass} min-w-0 flex-1 rounded-r-none`}
+                          className={`${navLinkClass} min-w-0 flex-1 rounded-r-none ${
+                            itemActive ? "bg-stone-100 text-accent-700" : ""
+                          }`}
                         >
                           <span className={iconWrapClass}>
                             <Icon className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
@@ -225,7 +236,9 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
                                 <Link
                                   href={sub.href}
                                   onClick={() => setMobileOpen(false)}
-                                  className="group flex items-center gap-2.5 rounded-lg px-2 py-2.5 text-sm font-medium text-black transition-colors hover:bg-stone-50"
+                                  className={`group flex items-center gap-2.5 rounded-lg px-2 py-2.5 text-sm font-medium transition-colors hover:bg-stone-50 ${
+                                    isActiveRoute(pathname, sub.href) ? "bg-stone-100 text-accent-700" : "text-black"
+                                  }`}
                                 >
                                   <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md bg-stone-50 text-accent-700 ring-1 ring-border/80">
                                     <SubIcon className="h-4 w-4" strokeWidth={2} aria-hidden />
@@ -245,7 +258,11 @@ export function MobileDrawer({ siteSettings }: { siteSettings: SiteSettings }) {
 
                 return (
                   <li key={`${item.href}-${item.label}`}>
-                    <Link href={item.href} onClick={() => setMobileOpen(false)} className={navLinkClass}>
+                    <Link
+                      href={item.href}
+                      onClick={() => setMobileOpen(false)}
+                      className={`${navLinkClass} ${itemActive ? "bg-stone-100 text-accent-700" : ""}`}
+                    >
                       <span className={iconWrapClass}>
                         <Icon className="h-[1.125rem] w-[1.125rem]" strokeWidth={2} aria-hidden />
                       </span>

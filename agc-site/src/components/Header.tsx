@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { ChevronDown, Menu, Search, X } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
@@ -12,9 +13,18 @@ import { SearchModal } from "./SearchModal";
 import { useMobileNav } from "./mobile/MobileNavContext";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
+function isActiveRoute(pathname: string, href: string): boolean {
+  if (!href || href.startsWith("#")) return false;
+  const cleanHref = href.split("#")[0].replace(/\/+$/, "") || "/";
+  const cleanPath = pathname.replace(/\/+$/, "") || "/";
+  if (cleanHref === "/") return cleanPath === "/";
+  return cleanPath === cleanHref || cleanPath.startsWith(`${cleanHref}/`);
+}
+
 export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSettings; brandLogoSrc: string }) {
   const mainNav = resolveHeaderPrimaryNav(siteSettings.chrome.nav);
   const { mobileOpen, setMobileOpen, searchOpen, setSearchOpen, menuTriggerRef } = useMobileNav();
+  const pathname = usePathname() ?? "/";
   const [scrolled, setScrolled] = useState(false);
   const showTopbar = true;
 
@@ -62,7 +72,12 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                   {mainNav.map((item) => {
                     const linkClass =
                       "relative flex items-center gap-0.5 whitespace-nowrap px-1.5 py-2.5 text-[0.8125rem] font-medium uppercase tracking-wide text-[#1a365d] transition-colors hover:text-accent-600 xl:px-2 xl:text-sm [&:focus-visible]:outline [&:focus-visible]:outline-2 [&:focus-visible]:outline-offset-2 [&:focus-visible]:outline-accent-500";
-                    const bar = (
+                    const itemActive =
+                      isActiveRoute(pathname, item.href) ||
+                      Boolean(item.subLinks?.some((sub) => isActiveRoute(pathname, sub.href)));
+                    const bar = itemActive ? (
+                      <span className="absolute left-1/2 top-0 h-0.5 w-2/3 -translate-x-1/2 rounded-sm bg-accent-500 opacity-100 transition-all duration-300" />
+                    ) : (
                       <span className="absolute left-1/2 top-0 h-0.5 w-0 -translate-x-1/2 rounded-sm bg-accent-500 opacity-0 transition-all duration-300 group-hover:w-2/3 group-hover:opacity-100" />
                     );
                     if (item.subLinks?.length) {
@@ -73,7 +88,7 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                         >
                           <Link
                             href={item.href}
-                            className={linkClass}
+                            className={`${linkClass} ${itemActive ? "text-accent-700" : ""}`}
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
@@ -93,7 +108,9 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                                 <Link
                                   role="menuitem"
                                   href={sub.href}
-                                  className="block px-4 py-3 text-sm font-medium normal-case tracking-normal text-black transition-colors hover:bg-stone-50"
+                                  className={`block px-4 py-3 text-sm font-medium normal-case tracking-normal transition-colors hover:bg-stone-50 ${
+                                    isActiveRoute(pathname, sub.href) ? "bg-stone-50 text-accent-700" : "text-black"
+                                  }`}
                                 >
                                   {sub.label}
                                 </Link>
@@ -105,7 +122,7 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                     }
                     return (
                       <li key={`${item.href}-${item.label}`} className="group shrink-0">
-                        <Link href={item.href} className={linkClass}>
+                        <Link href={item.href} className={`${linkClass} ${itemActive ? "text-accent-700" : ""}`}>
                           {bar}
                           {item.label}
                         </Link>
