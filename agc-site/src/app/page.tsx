@@ -24,8 +24,12 @@ type OurWorkCms = typeof workContent & {
   heroImage?: string;
   /** Homepage pillar: heading above Programs / Projects / Advisory row */
   pillarRowTitlePrimary?: string;
+  /** Homepage pillar: description below Programs / Projects / Advisory row heading */
+  pillarRowDescriptionPrimary?: string;
   /** Homepage pillar: heading above Research / Training / Partnership row */
   pillarRowTitleSecondary?: string;
+  /** Homepage pillar: description below Research / Training / Partnership row heading */
+  pillarRowDescriptionSecondary?: string;
   pillarReadMoreLabel?: string;
   pillarCardImages?: {
     programs?: string;
@@ -251,7 +255,9 @@ export default async function HomePage() {
         <HeroFeaturesOverlap
           readMoreLabel={workMerged.pillarReadMoreLabel?.trim() ?? ""}
           rowTitlePrimary={workMerged.pillarRowTitlePrimary}
+          rowDescriptionPrimary={workMerged.pillarRowDescriptionPrimary}
           rowTitleSecondary={workMerged.pillarRowTitleSecondary}
+          rowDescriptionSecondary={workMerged.pillarRowDescriptionSecondary}
           cards={pillarCards}
         />
       </HomeScrollReveal>

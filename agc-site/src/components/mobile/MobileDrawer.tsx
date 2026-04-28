@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { LucideIcon } from "lucide-react";
 import {
+  Home,
   Building2,
   Layers,
   Landmark,
@@ -32,6 +33,7 @@ const drawerLightSocialClass =
   "flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-accent-600 text-white ring-1 ring-accent-700/40 transition-colors hover:bg-accent-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-500";
 
 const drawerIconByHref: Record<string, LucideIcon> = {
+  "/": Home,
   "/about": Building2,
   "/our-work": Layers,
   "/our-work#programs": Layers,

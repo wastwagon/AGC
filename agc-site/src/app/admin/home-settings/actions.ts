@@ -87,7 +87,9 @@ export async function updateHomeSettings(formData: FormData) {
 
   const workPillarPatch = {
     pillarRowTitlePrimary: trimOrEmpty(d.pillarRowTitlePrimary),
+    pillarRowDescriptionPrimary: trimOrEmpty(d.pillarRowDescriptionPrimary),
     pillarRowTitleSecondary: trimOrEmpty(d.pillarRowTitleSecondary),
+    pillarRowDescriptionSecondary: trimOrEmpty(d.pillarRowDescriptionSecondary),
     pillarReadMoreLabel: trimOrEmpty(d.pillarReadMoreLabel),
     pillarCardImages: {
       programs: trimOrEmpty(d.pillarImagePrograms),

@@ -58,15 +58,7 @@ export function AdminShell({ children, siteSettings }: { children: React.ReactNo
 
   if (isLoginPage) {
     return (
-      <div className="relative min-h-screen overflow-hidden bg-[#f7f4ef]">
-        <div
-          className="pointer-events-none absolute -right-20 top-1/4 h-64 w-64 rounded-full bg-accent-200/25 blur-3xl"
-          aria-hidden
-        />
-        <div
-          className="pointer-events-none absolute bottom-1/4 -left-16 h-48 w-48 rounded-full bg-accent-500/10 blur-3xl"
-          aria-hidden
-        />
+      <div className="relative min-h-screen overflow-hidden bg-white">
         <div className="relative flex min-h-screen flex-col items-center justify-center px-4 py-16 sm:px-6">
           {children}
         </div>

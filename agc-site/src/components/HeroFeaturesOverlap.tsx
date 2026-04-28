@@ -19,14 +19,22 @@ type Props = {
   readMoreLabel?: string;
   /** Heading above the first row (Programs / Projects / Advisory) — `pillarRowTitlePrimary` */
   rowTitlePrimary?: string;
+  /** Description below the first row heading — `pillarRowDescriptionPrimary` */
+  rowDescriptionPrimary?: string;
   /** Heading above the second row (Research / Training / Partnership) — `pillarRowTitleSecondary` */
   rowTitleSecondary?: string;
+  /** Description below the second row heading — `pillarRowDescriptionSecondary` */
+  rowDescriptionSecondary?: string;
   cards: HomePillarCard[];
 };
 
 /** Default row headings (single line each; no eyebrow). CMS may override via `pillarRowTitlePrimary` / `Secondary`. */
 const DEFAULT_ROW_TITLE_PRIMARY = "Engagement and delivery";
 const DEFAULT_ROW_TITLE_SECONDARY = "Knowledge and partnerships";
+const DEFAULT_ROW_DESCRIPTION_PRIMARY =
+  "Our programmes, projects, and advisory services support institutions and leaders to deliver better governance outcomes.";
+const DEFAULT_ROW_DESCRIPTION_SECONDARY =
+  "We generate evidence, build capacity, and strengthen partnerships to sustain reforms across sectors and countries.";
 
 const READ_MORE_FALLBACK = "Read more";
 
@@ -46,7 +54,9 @@ function chunkCards<T>(items: T[], chunkSize: number): T[][] {
 export function HeroFeaturesOverlap({
   readMoreLabel = "",
   rowTitlePrimary,
+  rowDescriptionPrimary,
   rowTitleSecondary,
+  rowDescriptionSecondary,
   cards,
 }: Props) {
   if (cards.length === 0) return null;
@@ -56,6 +66,11 @@ export function HeroFeaturesOverlap({
   const titleForRow = (index: number) => {
     if (index === 0) return (rowTitlePrimary ?? "").trim() || DEFAULT_ROW_TITLE_PRIMARY;
     if (index === 1) return (rowTitleSecondary ?? "").trim() || DEFAULT_ROW_TITLE_SECONDARY;
+    return "";
+  };
+  const descriptionForRow = (index: number) => {
+    if (index === 0) return (rowDescriptionPrimary ?? "").trim() || DEFAULT_ROW_DESCRIPTION_PRIMARY;
+    if (index === 1) return (rowDescriptionSecondary ?? "").trim() || DEFAULT_ROW_DESCRIPTION_SECONDARY;
     return "";
   };
 
@@ -71,10 +86,15 @@ export function HeroFeaturesOverlap({
                 className={cn("flex flex-col gap-4 sm:gap-5")}
               >
                 {titleForRow(rowIndex) ? (
-                  <header>
+                  <header className="text-center">
                     <h2 className="text-balance font-serif text-xl font-semibold tracking-tight text-black sm:text-2xl lg:text-[1.65rem] lg:leading-snug">
                       {titleForRow(rowIndex)}
                     </h2>
+                    {descriptionForRow(rowIndex) ? (
+                      <p className="mx-auto mt-2 max-w-4xl text-[1.02rem] leading-relaxed text-black">
+                        {descriptionForRow(rowIndex)}
+                      </p>
+                    ) : null}
                   </header>
                 ) : null}
                 <div
