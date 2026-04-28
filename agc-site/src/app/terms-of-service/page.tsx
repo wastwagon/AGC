@@ -59,13 +59,14 @@ export default async function TermsOfServicePage() {
             {content.sections
               .filter((section) => section.title.trim().toLowerCase() !== "introduction")
               .map((section) => {
-              const subs = "subsections" in section ? section.subsections : undefined;
-              const lead = "content" in section ? section.content?.trim() : "";
-              const itemList = "items" in section ? section.items : undefined;
-              const useSubGrid = (subs?.length ?? 0) >= 2;
-              const useItemGrid = (itemList?.length ?? 0) >= 5;
-              const isCompact = (subs?.length ?? 0) === 0 && (itemList?.length ?? 0) === 0 && lead.length < 260;
-              const spanFull = (subs?.length ?? 0) > 0;
+              const subs =
+                "subsections" in section && Array.isArray(section.subsections) ? section.subsections : [];
+              const lead = "content" in section ? section.content?.trim() ?? "" : "";
+              const itemList = "items" in section && Array.isArray(section.items) ? section.items : [];
+              const useSubGrid = subs.length >= 2;
+              const useItemGrid = itemList.length >= 5;
+              const isCompact = subs.length === 0 && itemList.length === 0 && lead.length < 260;
+              const spanFull = subs.length > 0;
 
               return (
                 <article
@@ -81,7 +82,7 @@ export default async function TermsOfServicePage() {
                   <h2 className="page-heading text-xl text-black sm:text-2xl">{section.title}</h2>
                   {lead ? <p className="mt-4 page-prose text-[0.98rem]">{section.content}</p> : null}
 
-                  {subs && subs.length > 0 ? (
+                  {subs.length > 0 ? (
                     <div
                       className={
                         lead
@@ -93,7 +94,7 @@ export default async function TermsOfServicePage() {
                             : "mt-6 space-y-8"
                       }
                     >
-                      {subs.map((sub) => (
+                      {subs.map((sub: { title: string; content: string; items?: string[] }) => (
                         <div
                           key={sub.title}
                           className="min-w-0 border border-border/70 bg-stone-50/40 px-5 py-6 sm:px-6"
@@ -102,7 +103,7 @@ export default async function TermsOfServicePage() {
                           <p className="mt-3 page-prose text-[0.95rem]">{sub.content}</p>
                           {sub.items && (
                             <ul className="mt-4 list-none space-y-2 border-l-2 border-border pl-4 text-[0.95rem] text-black">
-                              {sub.items.map((item) => (
+                              {sub.items.map((item: string) => (
                                 <li
                                   key={item}
                                   className="relative before:absolute before:-left-3 before:top-2.5 before:h-1 before:w-1 before:rounded-full before:bg-accent-600"
@@ -117,7 +118,7 @@ export default async function TermsOfServicePage() {
                     </div>
                   ) : null}
 
-                  {itemList && itemList.length > 0 ? (
+                  {itemList.length > 0 ? (
                     <ul
                       className={
                         useItemGrid
@@ -125,7 +126,7 @@ export default async function TermsOfServicePage() {
                           : "mt-4 list-none space-y-2 border-l-2 border-border pl-4 text-[0.95rem] text-black"
                       }
                     >
-                      {itemList.map((item) => (
+                      {itemList.map((item: string) => (
                         <li
                           key={item}
                           className="relative before:absolute before:-left-3 before:top-2.5 before:h-1 before:w-1 before:rounded-full before:bg-accent-600"
