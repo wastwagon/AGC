@@ -88,21 +88,21 @@ function cloneLinks(links: readonly { href: string; label: string }[]): SiteNavL
 
 /**
  * Desktop header primary row — fixed order and labels (independent of full `chrome.nav` order).
- * `About` uses `subLinks` for the hover panel; newsletter opens the footer signup (`/#newsletter`).
+ * `Get Involved` uses `subLinks` for the hover panel; newsletter opens the footer signup (`/#newsletter`).
  */
 export const HEADER_PRIMARY_NAV_SLOTS: readonly SiteNavItem[] = [
   { href: "/app-summit", label: "App Summit" },
+  { href: "/about", label: "About" },
+  { href: "/our-work", label: "Our Work" },
   {
-    href: "/about",
-    label: "About",
+    href: "/get-involved",
+    label: "Get Involved",
     subLinks: [
       { href: "/get-involved/join-us", label: "CAREERS & OPPORTUNITIES" },
       { href: "/get-involved/partnership", label: "PARTNER / SPONSOR" },
       { href: "/#newsletter", label: "SUBSCRIBE TO OUR NEWSLETTER" },
     ],
   },
-  { href: "/our-work", label: "Our Work" },
-  { href: "/get-involved", label: "Get Involved" },
   { href: "/events", label: "Events" },
   { href: "/contact", label: "Contact" },
 ];
@@ -119,18 +119,18 @@ export function resolveHeaderPrimaryNav(_nav: SiteNavItem[]): SiteNavItem[] {
 /** Additional destinations after the primary row (mobile drawer, defaults, etc.). */
 const DEFAULT_SITE_NAV_TAIL: SiteNavItem[] = [
   { href: "/about", label: "About Us" },
-  { href: "/about/team", label: "Team" },
   { href: "/get-involved/volunteer", label: "Volunteer" },
-  { href: "/our-work/programs", label: "Programs" },
-  { href: "/our-work/projects", label: "Projects" },
-  { href: "/our-work/advisory", label: "Advisory" },
+  { href: "/our-work#programs", label: "Programs" },
+  { href: "/our-work#projects", label: "Projects" },
+  { href: "/our-work#advisory", label: "Advisory" },
   { href: "/aypf", label: "AYPF" },
+  { href: "/awpls", label: "AWPLS" },
   { href: "/events", label: "Events" },
   { href: "/news", label: "News" },
   { href: "/publications", label: "Publications" },
 ];
 
-/** Header + drawer menu: primary row order with optional `subLinks` (e.g. About); tail adds secondary pages without duplicating hrefs. */
+/** Header + drawer menu: primary row order with optional `subLinks` (e.g. Get Involved); tail adds secondary pages without duplicating hrefs. */
 export const defaultSiteNav: SiteNavItem[] = (() => {
   const seen = new Set<string>();
   const out: SiteNavItem[] = [];

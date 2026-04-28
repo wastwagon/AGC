@@ -27,7 +27,7 @@ export default async function AdminProgramsEditPage({ params }: Props) {
       />
       <AdminFormErrorSuspense />
       <AdminFormSuccessSuspense />
-      <div className="rounded-xl border border-slate-200 bg-white p-4 shadow-sm sm:p-8">
+      <div className="rounded-xl border border-border bg-white p-4 shadow-sm sm:p-8">
         <ProgramForm item={item} />
       </div>
     </div>

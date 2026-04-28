@@ -13,6 +13,7 @@ const TOPBAR_LABEL_FALLBACK: Record<string, string> = {
   "/events": "Events",
   "/news": "News",
   "/aypf": "AYPF",
+  "/awpls": "AWPLS",
   "/get-involved/volunteer": "Volunteer",
 };
 
@@ -21,6 +22,7 @@ function topbarSlots(): { href: string; label?: string }[] {
     { href: "/news" },
     { href: donateHref, label: "Donate" },
     { href: "/aypf" },
+    { href: "/awpls", label: "AWPLS" },
     { href: "/get-involved/volunteer" },
   ];
 }
@@ -52,7 +54,7 @@ export function HeaderTopbar({ siteSettings }: { siteSettings: SiteSettings }) {
 
   // Tailwind: no spaces inside arbitrary `[]` classes — spaces split the class string and drop `bg-*`.
   return (
-    <div className="relative hidden border-b border-[rgb(3,74,95)] bg-accent-600 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] lg:block">
+    <div className="relative hidden bg-accent-600 text-white shadow-[inset_0_1px_0_0_rgba(255,255,255,0.12)] lg:block">
       <div className="w-full px-4 py-2.5 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="mx-auto flex max-w-[90rem] flex-wrap items-center justify-between gap-x-4 gap-y-2">
           {/* Left: programs email + social */}

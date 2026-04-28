@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Image from "next/image";
 import { LayoutGrid, Target, Users } from "lucide-react";
 import type { OurWorkPageContent } from "@/data/content";
 import { PageHero } from "@/components/PageHero";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
-import { preferUnoptimizedImage } from "@/lib/image-delivery";
 import type { SiteBreadcrumbChrome } from "@/data/site-chrome";
+import type { WorkAreaCard } from "@/lib/our-work-cards";
+import { WorkAreaCardGrid } from "@/components/our-work/WorkAreaCardGrid";
 
 const tabIcons = {
   programs: LayoutGrid,
@@ -15,19 +15,14 @@ const tabIcons = {
   advisory: Users,
 } as const;
 
-export type OurWorkAreaCard = {
-  key: string;
-  title: string;
-  description: string;
-  /** Resolved URL from CMS image; when null/empty, the card shows text only (no image area). */
-  imageUrl: string | null;
-};
+/** @deprecated Use WorkAreaCard from @/lib/our-work-cards */
+export type OurWorkAreaCard = WorkAreaCard;
 
 type TabKey = "programs" | "projects" | "advisory";
 
 type OurWorkClientProps = {
-  programsResolved: OurWorkAreaCard[];
-  projectsResolved: OurWorkAreaCard[];
+  programsResolved: WorkAreaCard[];
+  projectsResolved: WorkAreaCard[];
   content: OurWorkPageContent;
   heroImage: string;
   breadcrumbLabels: SiteBreadcrumbChrome;
@@ -60,6 +55,15 @@ export function OurWorkClient({
   }, []);
 
   useEffect(() => {
+    const syncFromHash = () => {
+      const t = tabFromHash();
+      if (t) setActiveTab(t);
+    };
+    window.addEventListener("hashchange", syncFromHash);
+    return () => window.removeEventListener("hashchange", syncFromHash);
+  }, []);
+
+  useEffect(() => {
     const next = `#${activeTab}`;
     if (typeof window !== "undefined" && window.location.hash !== next) {
       window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}${next}`);
@@ -72,7 +76,7 @@ export function OurWorkClient({
     { key: "advisory", label: content.tabs.advisory },
   ];
 
-  const programsCards: OurWorkAreaCard[] =
+  const programsCards: WorkAreaCard[] =
     programsResolved.length > 0
       ? programsResolved
       : content.programs.cards.map((c) => ({
@@ -82,7 +86,7 @@ export function OurWorkClient({
           imageUrl: null,
         }));
 
-  const projectsCards: OurWorkAreaCard[] =
+  const projectsCards: WorkAreaCard[] =
     projectsResolved.length > 0
       ? projectsResolved
       : content.projects.cards.map((c) => ({
@@ -92,14 +96,14 @@ export function OurWorkClient({
           imageUrl: null,
         }));
 
-  const advisoryCards: OurWorkAreaCard[] = content.advisory.cards.map((c) => ({
+  const advisoryCards: WorkAreaCard[] = content.advisory.cards.map((c) => ({
     key: c.title,
     title: c.title,
     description: c.description,
     imageUrl: null,
   }));
 
-  const cardsByTab: Record<TabKey, OurWorkAreaCard[]> = {
+  const cardsByTab: Record<TabKey, WorkAreaCard[]> = {
     programs: programsCards,
     projects: projectsCards,
     advisory: advisoryCards,
@@ -121,12 +125,12 @@ export function OurWorkClient({
       />
 
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
-        <section className="border-b border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
+        <section className="w-full border-b border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <p className="text-sm font-medium text-accent-800">How we work</p>
           <h2 className="page-heading mt-2 text-2xl sm:text-3xl lg:text-4xl">{content.approach.title}</h2>
           <p className="page-prose mt-6">{content.approach.intro}</p>
-          <p className="mt-8 text-sm font-semibold uppercase tracking-wide text-stone-500">
+          <p className="mt-8 text-sm font-semibold uppercase tracking-wide text-black">
             {content.approach.objectivesLead}
           </p>
           <ul className="mt-6 space-y-5">
@@ -146,15 +150,15 @@ export function OurWorkClient({
       <HomeScrollReveal variant="tiltUp" start="top 86%" className="block w-full">
         <section
           id="our-work-areas"
-          className="border-t border-stone-200/80 bg-white py-20 sm:py-24 lg:py-28"
+          className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14"
         >
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-xl lg:text-left">
             <p className="text-sm font-medium text-accent-800">Programmes & projects</p>
-            <p className="page-prose mt-2 text-stone-600">{activeContent.description}</p>
+            <p className="page-prose mt-2 text-black">{activeContent.description}</p>
           </div>
           <div
-            className="mt-10 flex flex-wrap gap-0 border-b border-stone-300/80 sm:mt-12"
+            className="mt-10 flex flex-wrap gap-2 sm:mt-12"
             role="tablist"
             aria-label="Work areas"
           >
@@ -172,10 +176,10 @@ export function OurWorkClient({
                     const el = document.getElementById("our-work-areas");
                     el?.scrollIntoView({ behavior: "smooth", block: "start" });
                   }}
-                  className={`relative flex items-center gap-2 px-4 py-3.5 text-sm font-medium transition-colors sm:px-6 ${
+                  className={`flex items-center gap-2 px-4 py-2 text-sm font-medium transition-colors sm:px-5 ${
                     isActive
-                      ? "text-accent-900 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-accent-600"
-                      : "text-stone-500 hover:text-stone-800"
+                      ? "bg-accent-600 text-white"
+                      : "bg-[#f1f4f9] text-black hover:bg-[#e4eaf3]"
                   }`}
                 >
                   <Icon className="h-4 w-4 opacity-80" />
@@ -186,43 +190,7 @@ export function OurWorkClient({
           </div>
 
           <div className="mt-14 sm:mt-16">
-            {cards.length > 0 ? (
-              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {cards.map((card) => {
-                  const imageSrc = card.imageUrl?.trim() ?? "";
-                  const hasImage = imageSrc.length > 0;
-                  return (
-                    <article
-                      key={card.key}
-                      className="group flex flex-col overflow-hidden rounded-none border border-stone-200/90 bg-white shadow-sm transition-all duration-300 hover:border-accent-200/60 hover:shadow-md"
-                    >
-                      {hasImage ? (
-                        <div className="relative aspect-[16/10] w-full shrink-0 overflow-hidden bg-stone-200/60">
-                          <Image
-                            src={imageSrc}
-                            alt={card.title}
-                            fill
-                            className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
-                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                            unoptimized={preferUnoptimizedImage(imageSrc)}
-                          />
-                        </div>
-                      ) : null}
-                      <div className="flex flex-1 flex-col p-6 sm:p-7">
-                        <h3 className="font-serif text-lg font-semibold leading-snug text-stone-900">
-                          {card.title}
-                        </h3>
-                        <p className="page-prose-tight mt-3 flex-1 text-sm text-stone-600">{card.description}</p>
-                      </div>
-                    </article>
-                  );
-                })}
-              </div>
-            ) : (
-              <div className="rounded-none border border-dashed border-stone-300 bg-white py-14 text-center">
-                <p className="text-stone-600">Nothing listed here yet—check back soon.</p>
-              </div>
-            )}
+            <WorkAreaCardGrid cards={cards} />
           </div>
         </div>
       </section>

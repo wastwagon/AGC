@@ -49,7 +49,7 @@ function ToolbarButton({
       disabled={disabled}
       className={cn(
         "inline-flex h-9 w-9 items-center justify-center rounded-md border border-transparent text-slate-700 transition-colors",
-        active ? "border-slate-300 bg-white shadow-sm" : "hover:bg-slate-200/80",
+        active ? "border-border bg-white shadow-sm" : "hover:bg-slate-200/80",
         disabled && "pointer-events-none opacity-40"
       )}
     >
@@ -74,7 +74,7 @@ function Toolbar({ editor }: { editor: Editor | null }) {
 
   return (
     <div
-      className="flex flex-wrap items-center gap-0.5 rounded-t-lg border border-b-0 border-slate-300 bg-slate-50 px-2 py-1.5"
+      className="flex flex-wrap items-center gap-0.5 rounded-t-lg border border-b-0 border-border bg-slate-50 px-2 py-1.5"
       role="toolbar"
       aria-label="Formatting"
     >
@@ -198,7 +198,7 @@ export function RichTextEditor({ initialHtml, onHtmlChange, placeholder, editorI
           "[&_h4]:mt-2 [&_h4]:text-base [&_h4]:font-semibold",
           "[&_ul]:ml-6 [&_ul]:list-disc",
           "[&_ol]:ml-6 [&_ol]:list-decimal",
-          "[&_blockquote]:border-l-4 [&_blockquote]:border-slate-300 [&_blockquote]:pl-4 [&_blockquote]:italic",
+          "[&_blockquote]:border-l-4 [&_blockquote]:border-border [&_blockquote]:pl-4 [&_blockquote]:italic",
           "[&_a]:text-accent-600 [&_a]:underline"
         ),
       },
@@ -212,7 +212,7 @@ export function RichTextEditor({ initialHtml, onHtmlChange, placeholder, editorI
   });
 
   return (
-    <div className="rounded-lg border border-slate-300 bg-white">
+    <div className="rounded-lg border border-border bg-white">
       <Toolbar editor={editor} />
       <EditorContent editor={editor} className="admin-rich-text [&_.ProseMirror]:min-h-[220px]" />
     </div>

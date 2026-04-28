@@ -71,7 +71,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
           name="title"
           defaultValue={item?.title}
           required
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -84,7 +84,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
           name="slug"
           defaultValue={item?.slug ?? ""}
           placeholder="my-article-slug"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -99,12 +99,12 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
             value={image}
             onChange={(e) => setImage(e.target.value)}
             placeholder="media-... or /uploads/news.jpg"
-            className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
           <button
             type="button"
             onClick={() => setPickerOpen(true)}
-            className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+            className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
             title="Pick from Media Library"
           >
             <ImagePlus className="h-4 w-4" />
@@ -120,7 +120,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
             <img
               src={imagePreviewUrl}
               alt=""
-              className="mt-1 max-h-44 max-w-full rounded-lg border border-slate-200 bg-slate-50 object-contain object-left"
+              className="mt-1 max-h-44 max-w-full rounded-lg border border-border bg-slate-50 object-contain object-left"
             />
           </div>
         ) : image.trim() ? (
@@ -143,7 +143,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
           name="excerpt"
           defaultValue={item?.excerpt ?? ""}
           rows={3}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -174,7 +174,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
         </div>
         {showContentPreview ? (
           <div
-            className="mt-3 rounded-lg border border-slate-200 bg-[#fffcf7] p-4 text-slate-800 [&_a]:text-accent-600 [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-slate-300 [&_blockquote]:pl-4 [&_h2]:mt-4 [&_h2]:text-xl [&_h2]:font-bold [&_h3]:mt-3 [&_h3]:text-lg [&_h3]:font-semibold [&_h4]:mt-2 [&_h4]:font-semibold [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc"
+            className="mt-3 rounded-lg border border-border bg-[#fffcf7] p-4 text-slate-800 [&_a]:text-accent-600 [&_a]:underline [&_blockquote]:border-l-4 [&_blockquote]:border-border [&_blockquote]:pl-4 [&_h2]:mt-4 [&_h2]:text-xl [&_h2]:font-bold [&_h3]:mt-3 [&_h3]:text-lg [&_h3]:font-semibold [&_h4]:mt-2 [&_h4]:font-semibold [&_ol]:ml-6 [&_ol]:list-decimal [&_ul]:ml-6 [&_ul]:list-disc"
             dangerouslySetInnerHTML={{ __html: sanitizeHtml(contentHtml) }}
           />
         ) : null}
@@ -188,11 +188,11 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
           id="author"
           name="author"
           defaultValue={item?.author ?? ""}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
-      <fieldset className="rounded-lg border border-slate-200 p-4">
+      <fieldset className="rounded-lg border border-border p-4">
         <legend className="px-1 text-sm font-medium text-slate-700">Categories (select any that apply)</legend>
         <p className="mb-3 text-xs text-slate-500">
           Options are defined in <strong>Admin → Taxonomy</strong>. You can select multiple categories.
@@ -206,7 +206,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
                 type="checkbox"
                 value={c.slug}
                 defaultChecked={selectedCategories.has(c.slug)}
-                className="mt-1 h-4 w-4 rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+                className="mt-1 h-4 w-4 rounded border-border text-accent-600 focus:ring-accent-500"
               />
               <label htmlFor={`cat-${c.slug}`} className="text-sm text-slate-800">
                 <span className="font-medium">{c.label}</span>
@@ -226,7 +226,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
           name="tags"
           defaultValue={tags.join(", ")}
           placeholder="governance, ghana"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
         <p className="mt-1 text-xs text-slate-500">Suggested slugs: {tagOptions.map((t) => t.slug).join(", ")}</p>
       </div>
@@ -253,7 +253,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
             if (typeof d === "object") return JSON.stringify([d], null, 2);
             return "[]";
           })()}
-          className="mt-2 w-full rounded-lg border border-slate-300 bg-white px-3 py-2 font-mono text-sm text-slate-900"
+          className="mt-2 w-full rounded-lg border border-border bg-white px-3 py-2 font-mono text-sm text-slate-900"
           placeholder={`[\n  {\n    "label": "Download report (PDF)",\n    "description": "Short line shown under the title.",\n    "href": "/uploads/documents/example.pdf"\n  }\n]`}
         />
       </div>
@@ -271,7 +271,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
               ? new Date(item.datePublished).toISOString().slice(0, 10)
               : new Date().toISOString().slice(0, 10)
           }
-          className="mt-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -283,7 +283,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
           id="status"
           name="status"
           defaultValue={item?.status ?? "draft"}
-          className="mt-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 rounded-lg border border-border px-4 py-2 text-slate-900"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -297,7 +297,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
         ) : null}
         <Link
           href="/admin/news"
-          className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
+          className="flex min-h-[44px] items-center rounded-lg border border-border px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
         </Link>

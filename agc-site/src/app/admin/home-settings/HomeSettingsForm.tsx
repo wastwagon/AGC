@@ -73,7 +73,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
 
   function onSelectMedia(media: MediaItem) {
     if (pickerTarget === "heroSlider") {
-      setHeroSliderImages((prev) => (prev.trim() ? `${prev}\n${media.id}` : media.id));
+    setHeroSliderImages((prev) => (prev.trim() ? `${prev}\n${media.id}` : media.id));
     } else if (pickerTarget === "spotlightPortrait") {
       setSpotlightImage(media.id);
     }
@@ -149,20 +149,20 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
           </span>
         ) : null}
         {lastSavedAt ? <span>Autosaved locally: {new Date(lastSavedAt).toLocaleTimeString()}</span> : null}
-        <button type="button" onClick={clearDraft} className="rounded-md border border-slate-300 px-2 py-1 text-slate-600 hover:bg-slate-100">
+        <button type="button" onClick={clearDraft} className="rounded-md border border-border px-2 py-1 text-slate-600 hover:bg-slate-100">
           Clear local draft
         </button>
       </div>
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Hero</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <input name="heroEyebrow" defaultValue={initialDraft?.heroEyebrow ?? home.heroContent.eyebrow} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Eyebrow" />
-          <input name="heroTitle" defaultValue={initialDraft?.heroTitle ?? home.heroContent.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Title" />
-          <textarea name="heroSubtitle" defaultValue={initialDraft?.heroSubtitle ?? home.heroContent.subtitle} rows={3} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Subtitle" />
-          <input name="heroCta" defaultValue={initialDraft?.heroCta ?? home.heroContent.cta} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Primary CTA label" />
-          <input name="heroCtaHref" defaultValue={initialDraft?.heroCtaHref ?? home.heroContent.ctaHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Primary CTA href" />
-          <input name="heroCtaSecondary" defaultValue={initialDraft?.heroCtaSecondary ?? home.heroContent.ctaSecondary} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Secondary CTA label" />
-          <input name="heroCtaSecondaryHref" defaultValue={initialDraft?.heroCtaSecondaryHref ?? home.heroContent.ctaSecondaryHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Secondary CTA href" />
+          <input name="heroEyebrow" defaultValue={initialDraft?.heroEyebrow ?? home.heroContent.eyebrow} className="rounded-lg border border-border px-4 py-2" placeholder="Eyebrow" />
+          <input name="heroTitle" defaultValue={initialDraft?.heroTitle ?? home.heroContent.title} className="rounded-lg border border-border px-4 py-2" placeholder="Title" />
+          <textarea name="heroSubtitle" defaultValue={initialDraft?.heroSubtitle ?? home.heroContent.subtitle} rows={3} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Subtitle" />
+          <input name="heroCta" defaultValue={initialDraft?.heroCta ?? home.heroContent.cta} className="rounded-lg border border-border px-4 py-2" placeholder="Primary CTA label" />
+          <input name="heroCtaHref" defaultValue={initialDraft?.heroCtaHref ?? home.heroContent.ctaHref} className="rounded-lg border border-border px-4 py-2" placeholder="Primary CTA href" />
+          <input name="heroCtaSecondary" defaultValue={initialDraft?.heroCtaSecondary ?? home.heroContent.ctaSecondary} className="rounded-lg border border-border px-4 py-2" placeholder="Secondary CTA label" />
+          <input name="heroCtaSecondaryHref" defaultValue={initialDraft?.heroCtaSecondaryHref ?? home.heroContent.ctaSecondaryHref} className="rounded-lg border border-border px-4 py-2" placeholder="Secondary CTA href" />
           <div className="sm:col-span-2">
             <label htmlFor="heroBackgroundVideoSrc" className="mb-1 block text-sm font-medium text-slate-700">
               Hero background video (MP4 path)
@@ -171,7 +171,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
               id="heroBackgroundVideoSrc"
               name="heroBackgroundVideoSrc"
               defaultValue={initialDraft?.heroBackgroundVideoSrc ?? home.heroBackgroundVideoSrc ?? ""}
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-sm"
+              className="w-full rounded-lg border border-border px-4 py-2 font-mono text-sm"
               placeholder="/media/hero-video-background.mp4"
             />
             <p className="mt-1 text-xs text-slate-500">
@@ -186,7 +186,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
                 value={heroSliderImages}
                 onChange={(e) => setHeroSliderImages(e.target.value)}
                 rows={3}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-sm"
+                className="w-full rounded-lg border border-border px-4 py-2 font-mono text-sm"
                 placeholder="media-id/url/path"
               />
               <button
@@ -195,7 +195,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
                   setPickerTarget("heroSlider");
                   setPickerOpen(true);
                 }}
-                className="inline-flex h-fit items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                className="inline-flex h-fit items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
                 title="Pick from Media Library"
               >
                 <ImagePlus className="h-4 w-4" />
@@ -226,10 +226,10 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
                       setDragOver(null);
                     }}
                     className={`rounded-lg border bg-slate-50 p-2 transition ${
-                      dragOver === item.index ? "border-accent-400 ring-1 ring-accent-200" : "border-slate-200"
+                      dragOver === item.index ? "border-accent-400 ring-1 ring-accent-200" : "border-border"
                     }`}
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+                    <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-border bg-slate-100">
                       <Image
                         src={item.url}
                         alt={item.raw}
@@ -244,7 +244,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
                       <button
                         type="button"
                         onClick={() => moveLine(item.index, -1)}
-                        className="inline-flex items-center rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
+                        className="inline-flex items-center rounded border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
                         title="Move up"
                       >
                         <ArrowUp className="h-3.5 w-3.5" />
@@ -252,7 +252,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
                       <button
                         type="button"
                         onClick={() => moveLine(item.index, 1)}
-                        className="inline-flex items-center rounded border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
+                        className="inline-flex items-center rounded border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-100"
                         title="Move down"
                       >
                         <ArrowDown className="h-3.5 w-3.5" />
@@ -274,31 +274,31 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Impact and newsletter band</h2>
         <div className="mt-4 grid gap-4">
-          <input name="homeReachTitle" defaultValue={initialDraft?.homeReachTitle ?? home.homeReach.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Section title" />
-          <textarea name="homeReachIntro" defaultValue={initialDraft?.homeReachIntro ?? home.homeReach.intro} rows={2} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Section intro" />
-          <textarea name="homeImpactMethodology" defaultValue={initialDraft?.homeImpactMethodology ?? home.homeImpactMethodology} rows={2} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Impact methodology" />
-          <textarea name="impactStats" defaultValue={initialDraft?.impactStats ?? home.homeImpactStats.map((s) => `${s.value}|${s.label}|${s.note}`).join("\n")} rows={5} className="rounded-lg border border-slate-300 px-4 py-2 font-mono text-sm" placeholder="Impact stats lines: value|label|note" />
-          <textarea name="heroPartnerStrip" defaultValue={initialDraft?.heroPartnerStrip ?? textAreaLines(home.heroPartnerStrip)} rows={4} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Partner lines (archival; not shown on homepage band)" />
-          <textarea name="homePartnerBlurb" defaultValue={initialDraft?.homePartnerBlurb ?? home.homePartnerBlurb} rows={2} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="e.g. Stay up to date with our research and events >" />
+          <input name="homeReachTitle" defaultValue={initialDraft?.homeReachTitle ?? home.homeReach.title} className="rounded-lg border border-border px-4 py-2" placeholder="Section title" />
+          <textarea name="homeReachIntro" defaultValue={initialDraft?.homeReachIntro ?? home.homeReach.intro} rows={2} className="rounded-lg border border-border px-4 py-2" placeholder="Section intro" />
+          <textarea name="homeImpactMethodology" defaultValue={initialDraft?.homeImpactMethodology ?? home.homeImpactMethodology} rows={2} className="rounded-lg border border-border px-4 py-2" placeholder="Impact methodology" />
+          <textarea name="impactStats" defaultValue={initialDraft?.impactStats ?? home.homeImpactStats.map((s) => `${s.value}|${s.label}|${s.note}`).join("\n")} rows={5} className="rounded-lg border border-border px-4 py-2 font-mono text-sm" placeholder="Impact stats lines: value|label|note" />
+          <textarea name="heroPartnerStrip" defaultValue={initialDraft?.heroPartnerStrip ?? textAreaLines(home.heroPartnerStrip)} rows={4} className="rounded-lg border border-border px-4 py-2" placeholder="Partner lines (archival; not shown on homepage band)" />
+          <textarea name="homePartnerBlurb" defaultValue={initialDraft?.homePartnerBlurb ?? home.homePartnerBlurb} rows={2} className="rounded-lg border border-border px-4 py-2" placeholder="e.g. Stay up to date with our research and events >" />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Testimonial and spotlight</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <textarea name="testimonialQuote" defaultValue={initialDraft?.testimonialQuote ?? home.homeTestimonial.quote} rows={4} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Quote" />
-          <input name="testimonialName" defaultValue={initialDraft?.testimonialName ?? home.homeTestimonial.name} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Name" />
-          <input name="testimonialInitials" defaultValue={initialDraft?.testimonialInitials ?? home.homeTestimonial.initials} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Initials" />
-          <input name="testimonialTitle" defaultValue={initialDraft?.testimonialTitle ?? home.homeTestimonial.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Title" />
-          <input name="testimonialOrganization" defaultValue={initialDraft?.testimonialOrganization ?? home.homeTestimonial.organization} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Organization" />
-          <input name="spotlightLabel" defaultValue={initialDraft?.spotlightLabel ?? home.homeSpotlightStory.label} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight label" />
-          <input name="spotlightHeadline" defaultValue={initialDraft?.spotlightHeadline ?? home.homeSpotlightStory.headline} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight headline" />
-          <textarea name="spotlightParagraphs" defaultValue={initialDraft?.spotlightParagraphs ?? textAreaLines(home.homeSpotlightStory.paragraphs)} rows={4} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight paragraphs (one per line)" />
-          <input name="spotlightName" defaultValue={initialDraft?.spotlightName ?? home.homeSpotlightStory.name} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight name" />
-          <input name="spotlightRole" defaultValue={initialDraft?.spotlightRole ?? home.homeSpotlightStory.role} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight role" />
+          <textarea name="testimonialQuote" defaultValue={initialDraft?.testimonialQuote ?? home.homeTestimonial.quote} rows={4} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Quote" />
+          <input name="testimonialName" defaultValue={initialDraft?.testimonialName ?? home.homeTestimonial.name} className="rounded-lg border border-border px-4 py-2" placeholder="Name" />
+          <input name="testimonialInitials" defaultValue={initialDraft?.testimonialInitials ?? home.homeTestimonial.initials} className="rounded-lg border border-border px-4 py-2" placeholder="Initials" />
+          <input name="testimonialTitle" defaultValue={initialDraft?.testimonialTitle ?? home.homeTestimonial.title} className="rounded-lg border border-border px-4 py-2" placeholder="Title" />
+          <input name="testimonialOrganization" defaultValue={initialDraft?.testimonialOrganization ?? home.homeTestimonial.organization} className="rounded-lg border border-border px-4 py-2" placeholder="Organization" />
+          <input name="spotlightLabel" defaultValue={initialDraft?.spotlightLabel ?? home.homeSpotlightStory.label} className="rounded-lg border border-border px-4 py-2" placeholder="Spotlight label" />
+          <input name="spotlightHeadline" defaultValue={initialDraft?.spotlightHeadline ?? home.homeSpotlightStory.headline} className="rounded-lg border border-border px-4 py-2" placeholder="Spotlight headline" />
+          <textarea name="spotlightParagraphs" defaultValue={initialDraft?.spotlightParagraphs ?? textAreaLines(home.homeSpotlightStory.paragraphs)} rows={4} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Spotlight paragraphs (one per line)" />
+          <input name="spotlightName" defaultValue={initialDraft?.spotlightName ?? home.homeSpotlightStory.name} className="rounded-lg border border-border px-4 py-2" placeholder="Spotlight name" />
+          <input name="spotlightRole" defaultValue={initialDraft?.spotlightRole ?? home.homeSpotlightStory.role} className="rounded-lg border border-border px-4 py-2" placeholder="Spotlight role" />
           <div className="sm:col-span-2">
             <label htmlFor="spotlightImage" className="mb-1 block text-sm font-medium text-slate-700">
               Spotlight portrait
@@ -309,7 +309,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
                 name="spotlightImage"
                 value={spotlightImage}
                 onChange={(e) => setSpotlightImage(e.target.value)}
-                className="w-full rounded-lg border border-slate-300 px-4 py-2"
+                className="w-full rounded-lg border border-border px-4 py-2"
                 placeholder="media-… or /uploads/… (square)"
               />
               <button
@@ -318,7 +318,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
                   setPickerTarget("spotlightPortrait");
                   setPickerOpen(true);
                 }}
-                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
                 title="Pick or upload from Media Library"
               >
                 <ImagePlus className="h-4 w-4" />
@@ -333,7 +333,7 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
             ) : spotlightPreviewUrl ? (
               <div className="mt-3">
                 <p className="text-xs font-medium text-slate-600">Preview</p>
-                <div className="relative mt-1 h-40 w-40 overflow-hidden rounded-lg border border-slate-200 bg-slate-100">
+                <div className="relative mt-1 h-40 w-40 overflow-hidden rounded-lg border border-border bg-slate-100">
                   <Image
                     src={spotlightPreviewUrl}
                     alt=""
@@ -356,43 +356,43 @@ export function HomeSettingsForm({ home, saved = false }: { home: HomePageCms; s
           <input
             name="spotlightInitials"
             defaultValue={initialDraft?.spotlightInitials ?? home.homeSpotlightStory.initials}
-            className="rounded-lg border border-slate-300 px-4 py-2"
+            className="rounded-lg border border-border px-4 py-2"
             placeholder="Initials (optional, legacy — not shown if image set)"
           />
-          <input name="spotlightCtaLabel" defaultValue={initialDraft?.spotlightCtaLabel ?? home.homeSpotlightStory.ctaLabel} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight CTA label" />
-          <input name="spotlightCtaHref" defaultValue={initialDraft?.spotlightCtaHref ?? home.homeSpotlightStory.ctaHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Spotlight CTA href" />
+          <input name="spotlightCtaLabel" defaultValue={initialDraft?.spotlightCtaLabel ?? home.homeSpotlightStory.ctaLabel} className="rounded-lg border border-border px-4 py-2" placeholder="Spotlight CTA label" />
+          <input name="spotlightCtaHref" defaultValue={initialDraft?.spotlightCtaHref ?? home.homeSpotlightStory.ctaHref} className="rounded-lg border border-border px-4 py-2" placeholder="Spotlight CTA href" />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Mid-page CTA band</h2>
         <p className="mt-1 text-sm text-slate-500">Accent section above events (formerly hard-coded on the homepage).</p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <input name="ctaBandEyebrow" defaultValue={home.homeCtaBand.eyebrow} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Eyebrow" />
-          <input name="ctaBandTitle" defaultValue={home.homeCtaBand.title} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Headline" />
-          <textarea name="ctaBandBody" defaultValue={home.homeCtaBand.body} rows={4} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Body" />
-          <input name="ctaBandPrimaryCta" defaultValue={home.homeCtaBand.primaryCta} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Primary button label" />
-          <input name="ctaBandPrimaryHref" defaultValue={home.homeCtaBand.primaryHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Primary href" />
-          <input name="ctaBandSecondaryCta" defaultValue={home.homeCtaBand.secondaryCta} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Secondary button label" />
-          <input name="ctaBandSecondaryHref" defaultValue={home.homeCtaBand.secondaryHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Secondary href" />
+          <input name="ctaBandEyebrow" defaultValue={home.homeCtaBand.eyebrow} className="rounded-lg border border-border px-4 py-2" placeholder="Eyebrow" />
+          <input name="ctaBandTitle" defaultValue={home.homeCtaBand.title} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Headline" />
+          <textarea name="ctaBandBody" defaultValue={home.homeCtaBand.body} rows={4} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Body" />
+          <input name="ctaBandPrimaryCta" defaultValue={home.homeCtaBand.primaryCta} className="rounded-lg border border-border px-4 py-2" placeholder="Primary button label" />
+          <input name="ctaBandPrimaryHref" defaultValue={home.homeCtaBand.primaryHref} className="rounded-lg border border-border px-4 py-2" placeholder="Primary href" />
+          <input name="ctaBandSecondaryCta" defaultValue={home.homeCtaBand.secondaryCta} className="rounded-lg border border-border px-4 py-2" placeholder="Secondary button label" />
+          <input name="ctaBandSecondaryHref" defaultValue={home.homeCtaBand.secondaryHref} className="rounded-lg border border-border px-4 py-2" placeholder="Secondary href" />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Homepage — news teaser</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <input name="homeNewsTitle" defaultValue={home.homeNewsTeaser.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Section title" />
-          <input name="homeNewsSubtitle" defaultValue={home.homeNewsTeaser.subtitle} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Subtitle" />
+          <input name="homeNewsTitle" defaultValue={home.homeNewsTeaser.title} className="rounded-lg border border-border px-4 py-2" placeholder="Section title" />
+          <input name="homeNewsSubtitle" defaultValue={home.homeNewsTeaser.subtitle} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Subtitle" />
         </div>
       </section>
 
-      <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+      <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Homepage — APP Summit teaser</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <input name="homeAppSummitTitle" defaultValue={home.homeAppSummitTeaser.title} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Title" />
-          <input name="homeAppSummitDescription" defaultValue={home.homeAppSummitTeaser.description} className="sm:col-span-2 rounded-lg border border-slate-300 px-4 py-2" placeholder="Description" />
-          <input name="homeAppSummitCtaLabel" defaultValue={home.homeAppSummitTeaser.ctaLabel} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Button label" />
-          <input name="homeAppSummitCtaHref" defaultValue={home.homeAppSummitTeaser.ctaHref} className="rounded-lg border border-slate-300 px-4 py-2" placeholder="Button href" />
+          <input name="homeAppSummitTitle" defaultValue={home.homeAppSummitTeaser.title} className="rounded-lg border border-border px-4 py-2" placeholder="Title" />
+          <input name="homeAppSummitDescription" defaultValue={home.homeAppSummitTeaser.description} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Description" />
+          <input name="homeAppSummitCtaLabel" defaultValue={home.homeAppSummitTeaser.ctaLabel} className="rounded-lg border border-border px-4 py-2" placeholder="Button label" />
+          <input name="homeAppSummitCtaHref" defaultValue={home.homeAppSummitTeaser.ctaHref} className="rounded-lg border border-border px-4 py-2" placeholder="Button href" />
         </div>
       </section>
 

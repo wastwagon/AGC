@@ -36,9 +36,9 @@ export default async function JoinUsPage() {
       />
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20">
-        <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Careers</p>
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Careers</p>
           <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
           <p className="mt-6 page-prose">{c.description}</p>
 
@@ -46,7 +46,7 @@ export default async function JoinUsPage() {
             <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Opportunities</h2>
             <ul className="mt-6 space-y-4">
               {c.items.map((item, i) => (
-                <li key={item} className="flex gap-4 border-b border-stone-200/60 pb-4 last:border-0">
+                <li key={item} className="flex gap-4 border-b border-border/60 pb-4 last:border-0">
                   <span className="font-sans text-2xl font-semibold tabular-nums text-accent-800">
                     {String(i + 1).padStart(2, "0")}
                   </span>
@@ -60,11 +60,11 @@ export default async function JoinUsPage() {
       </HomeScrollReveal>
 
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20">
-        <div className="container mx-auto max-w-2xl px-4 sm:px-6 lg:px-8">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Enquiry</p>
-          <h2 className="page-heading mt-3 text-2xl text-stone-900">Tell us you&apos;re interested</h2>
-          <p className="mt-2 text-stone-600">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Enquiry</p>
+          <h2 className="page-heading mt-3 text-2xl text-black">Tell us you&apos;re interested</h2>
+          <p className="mt-2 text-black">
             Use the form for a structured inquiry — or use the buttons below to email or call.
           </p>
           <div className="mt-10">
@@ -73,11 +73,11 @@ export default async function JoinUsPage() {
         </div>
       </section>
 
-      <section className="border-t border-stone-200/80 bg-white py-14 sm:py-20">
-        <div className="container mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-stone-500">Next step</p>
-          <h2 className="page-heading mt-3 text-2xl text-stone-900">Get in touch</h2>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-stone-600">
+      <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-black">Next step</p>
+          <h2 className="page-heading mt-3 text-2xl text-black">Get in touch</h2>
+          <p className="mt-4 max-w-none text-base leading-relaxed text-black">
             We&apos;re always interested in people passionate about governance, policy, and Africa&apos;s economic
             transformation.
           </p>
@@ -89,12 +89,12 @@ export default async function JoinUsPage() {
               asChild
               href="/get-involved"
               variant="outline"
-              className="!rounded-none border-stone-300 text-stone-800 hover:bg-stone-50"
+              className="!rounded-none border-border text-black hover:bg-stone-50"
             >
               Back to Get Involved
             </Button>
           </div>
-          <p className="mt-10 text-sm text-stone-600">
+          <p className="mt-10 text-sm text-black">
             <a
               href={`mailto:${siteSettings.email.programs}`}
               className="font-medium text-accent-800 underline decoration-accent-300/60 underline-offset-4 hover:text-accent-950"

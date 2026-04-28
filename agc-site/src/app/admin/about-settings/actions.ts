@@ -85,7 +85,6 @@ export async function updateAboutSettings(formData: FormData) {
   }
 
   revalidatePath("/about");
-  revalidatePath("/about/team");
   revalidatePath("/admin/about-settings");
   redirect("/admin/about-settings?saved=1");
 }

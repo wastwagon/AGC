@@ -30,6 +30,8 @@ export default async function TermsOfServicePage() {
   const heroSubtitle = [content.subtitle?.trim(), `Last updated · ${content.lastUpdated}`]
     .filter(Boolean)
     .join(" · ");
+  const introSection = content.sections.find((section) => section.title.trim().toLowerCase() === "introduction");
+  const introSectionText = "content" in (introSection ?? {}) ? introSection?.content?.trim() : "";
 
   return (
     <>
@@ -46,41 +48,108 @@ export default async function TermsOfServicePage() {
       />
 
       <HomeScrollReveal variant="fadeUp" start="top 90%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-14 sm:py-16 lg:py-20">
-        <div className="mx-auto w-full max-w-3xl px-4 sm:px-6 lg:px-8">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
             By using this site you agree to these terms. They govern access to our content, events registration, and
-            acceptable use of our services.
+            acceptable use of our services. {introSectionText}
           </p>
 
-          <div className="mt-14 space-y-12">
-            {content.sections.map((section) => (
-              <article key={section.title} className="page-card p-6 sm:p-8">
-                <h2 className="page-heading text-xl text-stone-900 sm:text-2xl">{section.title}</h2>
-                <p className="mt-4 page-prose text-[0.98rem]">{section.content}</p>
-                {"items" in section && section.items && (
-                  <ul className="mt-4 list-none space-y-2 border-l-2 border-stone-200 pl-4 text-[0.95rem] text-stone-600">
-                    {section.items.map((item) => (
-                      <li key={item} className="relative before:absolute before:-left-3 before:top-2.5 before:h-1 before:w-1 before:rounded-full before:bg-accent-600">
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </article>
-            ))}
+          <div className="mt-14 grid gap-8 lg:grid-cols-2">
+            {content.sections
+              .filter((section) => section.title.trim().toLowerCase() !== "introduction")
+              .map((section) => {
+              const subs = "subsections" in section ? section.subsections : undefined;
+              const lead = "content" in section ? section.content?.trim() : "";
+              const itemList = "items" in section ? section.items : undefined;
+              const useSubGrid = (subs?.length ?? 0) >= 2;
+              const useItemGrid = (itemList?.length ?? 0) >= 5;
+              const isCompact = (subs?.length ?? 0) === 0 && (itemList?.length ?? 0) === 0 && lead.length < 260;
+              const spanFull = (subs?.length ?? 0) > 0;
+
+              return (
+                <article
+                  key={section.title}
+                  className={
+                    spanFull
+                      ? "page-card p-6 sm:p-8 lg:col-span-2"
+                      : isCompact
+                        ? "page-card p-6 sm:p-7"
+                        : "page-card p-6 sm:p-8"
+                  }
+                >
+                  <h2 className="page-heading text-xl text-black sm:text-2xl">{section.title}</h2>
+                  {lead ? <p className="mt-4 page-prose text-[0.98rem]">{section.content}</p> : null}
+
+                  {subs && subs.length > 0 ? (
+                    <div
+                      className={
+                        lead
+                          ? useSubGrid
+                            ? "mt-8 grid gap-8 lg:grid-cols-2 lg:gap-10"
+                            : "mt-8 space-y-8"
+                          : useSubGrid
+                            ? "mt-6 grid gap-8 lg:grid-cols-2 lg:gap-10"
+                            : "mt-6 space-y-8"
+                      }
+                    >
+                      {subs.map((sub) => (
+                        <div
+                          key={sub.title}
+                          className="min-w-0 border border-border/70 bg-stone-50/40 px-5 py-6 sm:px-6"
+                        >
+                          <h3 className="text-xs font-semibold uppercase tracking-wider text-accent-800">{sub.title}</h3>
+                          <p className="mt-3 page-prose text-[0.95rem]">{sub.content}</p>
+                          {sub.items && (
+                            <ul className="mt-4 list-none space-y-2 border-l-2 border-border pl-4 text-[0.95rem] text-black">
+                              {sub.items.map((item) => (
+                                <li
+                                  key={item}
+                                  className="relative before:absolute before:-left-3 before:top-2.5 before:h-1 before:w-1 before:rounded-full before:bg-accent-600"
+                                >
+                                  {item}
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {itemList && itemList.length > 0 ? (
+                    <ul
+                      className={
+                        useItemGrid
+                          ? "mt-4 grid list-none grid-cols-1 gap-x-8 gap-y-2 border-l-2 border-border pl-4 text-[0.95rem] text-black sm:grid-cols-2"
+                          : "mt-4 list-none space-y-2 border-l-2 border-border pl-4 text-[0.95rem] text-black"
+                      }
+                    >
+                      {itemList.map((item) => (
+                        <li
+                          key={item}
+                          className="relative before:absolute before:-left-3 before:top-2.5 before:h-1 before:w-1 before:rounded-full before:bg-accent-600"
+                        >
+                          {item}
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </article>
+              );
+            })}
           </div>
         </div>
       </section>
       </HomeScrollReveal>
 
       <HomeScrollReveal variant="fadeIn" start="top 92%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-14 text-stone-900 sm:py-16">
-        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <section className="w-full border-t border-border/80 bg-white py-8 text-black sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-800">Legal</p>
-          <h2 className="page-heading mt-3 text-2xl text-stone-900">Contact</h2>
-          <p className="mt-4 text-sm leading-relaxed text-stone-600">Questions about these terms:</p>
-          <ul className="mt-6 space-y-2 text-sm text-stone-700">
+          <h2 className="page-heading mt-3 text-2xl text-black">Contact</h2>
+          <p className="mt-4 text-sm leading-relaxed text-black">Questions about these terms:</p>
+          <ul className="mt-6 space-y-2 text-sm text-black">
             <li>
               <a
                 href={`mailto:${siteSettings.email.info}`}
@@ -92,7 +161,7 @@ export default async function TermsOfServicePage() {
             <li>{siteSettings.address}</li>
             <li>{siteSettings.phone}</li>
           </ul>
-          <p className="mt-10 text-xs text-stone-500">
+          <p className="mt-10 text-xs text-black">
             <Link href="/privacy-policy" className="text-accent-700 hover:text-accent-900">
               Privacy policy
             </Link>

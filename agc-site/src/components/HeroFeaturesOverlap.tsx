@@ -17,8 +17,16 @@ export type HomePillarCard = {
 type Props = {
   /** Link label under each title (e.g. “Read more”) — from Admin → Page Content → our-work */
   readMoreLabel?: string;
+  /** Heading above the first row (Programs / Projects / Advisory) — `pillarRowTitlePrimary` */
+  rowTitlePrimary?: string;
+  /** Heading above the second row (Research / Training / Partnership) — `pillarRowTitleSecondary` */
+  rowTitleSecondary?: string;
   cards: HomePillarCard[];
 };
+
+/** Default row headings (single line each; no eyebrow). CMS may override via `pillarRowTitlePrimary` / `Secondary`. */
+const DEFAULT_ROW_TITLE_PRIMARY = "Engagement and delivery";
+const DEFAULT_ROW_TITLE_SECONDARY = "Knowledge and partnerships";
 
 const READ_MORE_FALLBACK = "Read more";
 
@@ -35,22 +43,43 @@ function chunkCards<T>(items: T[], chunkSize: number): T[][] {
  * hovered/focused card grows (Brookings-style); image on top, serif title, “Read more” reveals on hover (md+).
  * Touch: press feedback + image nudge without requiring hover.
  */
-export function HeroFeaturesOverlap({ readMoreLabel = "", cards }: Props) {
+export function HeroFeaturesOverlap({
+  readMoreLabel = "",
+  rowTitlePrimary,
+  rowTitleSecondary,
+  cards,
+}: Props) {
   if (cards.length === 0) return null;
 
   const cta = readMoreLabel.trim() || READ_MORE_FALLBACK;
   const rows = chunkCards(cards, 3);
+  const titleForRow = (index: number) => {
+    if (index === 0) return (rowTitlePrimary ?? "").trim() || DEFAULT_ROW_TITLE_PRIMARY;
+    if (index === 1) return (rowTitleSecondary ?? "").trim() || DEFAULT_ROW_TITLE_SECONDARY;
+    return "";
+  };
 
   return (
-    <section className="relative border-0 bg-[#ffffff] pb-12 pt-12 sm:pb-14 sm:pt-14 lg:pb-16 lg:pt-16">
-      <div className="container mx-auto max-w-7xl bg-[#ffffff] px-2 sm:px-4 lg:px-5">
-        <div className="bg-[#ffffff] py-1 sm:py-1.5 md:py-2">
-          <div className="flex flex-col gap-12 sm:gap-14 lg:gap-16">
+    <section className="relative isolate border-0 bg-white py-8 sm:py-10 lg:py-11">
+      {/* Match “The Scope of Our Work” + site header: same horizontal inset */}
+      <div className="mx-auto w-full max-w-none bg-white px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="bg-white">
+          <div className="flex flex-col gap-10 sm:gap-12 lg:gap-14">
             {rows.map((row, rowIndex) => (
               <div
                 key={rowIndex}
-                className="flex flex-col gap-4 sm:gap-5 md:h-[min(48vh,480px)] md:flex-row md:gap-3 md:overflow-hidden lg:h-[min(50vh,520px)]"
+                className={cn("flex flex-col gap-4 sm:gap-5")}
               >
+                {titleForRow(rowIndex) ? (
+                  <header>
+                    <h2 className="text-balance font-serif text-xl font-semibold tracking-tight text-black sm:text-2xl lg:text-[1.65rem] lg:leading-snug">
+                      {titleForRow(rowIndex)}
+                    </h2>
+                  </header>
+                ) : null}
+                <div
+                  className="flex flex-col gap-4 sm:gap-5 md:h-[min(48vh,480px)] md:flex-row md:gap-3 md:overflow-hidden lg:h-[min(50vh,520px)]"
+                >
                 {row.map((item) => (
                   <Link
                     key={item.href}
@@ -71,7 +100,7 @@ export function HeroFeaturesOverlap({ readMoreLabel = "", cards }: Props) {
                         "relative min-h-[180px] flex-1 overflow-hidden sm:min-h-[200px] md:min-h-0",
                         item.image
                           ? "bg-white"
-                          : "border border-stone-200 bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
+                          : "border border-border bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
                       )}
                     >
                       {item.image ? (
@@ -90,12 +119,12 @@ export function HeroFeaturesOverlap({ readMoreLabel = "", cards }: Props) {
                           aria-hidden
                         />
                       ) : (
-                        <span className="absolute inset-0 flex items-center justify-center px-4 text-sm font-medium text-stone-400">
+                        <span className="absolute inset-0 flex items-center justify-center px-4 text-sm font-medium text-black">
                           Image placeholder
                         </span>
                       )}
                       <span
-                        className="pointer-events-none absolute right-3 top-3 z-10 hidden h-10 w-10 items-center justify-center rounded-full bg-white text-stone-900 shadow-md ring-1 ring-stone-200/90 transition duration-500 md:flex md:translate-y-1 md:opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 group-focus-visible/card:translate-y-0 group-focus-visible/card:opacity-100 group-active/card:translate-y-0 group-active/card:opacity-100"
+                        className="pointer-events-none absolute right-3 top-3 z-10 hidden h-10 w-10 items-center justify-center rounded-full bg-white text-black shadow-md ring-1 ring-border/90 transition duration-500 md:flex md:translate-y-1 md:opacity-0 group-hover/card:translate-y-0 group-hover/card:opacity-100 group-focus-visible/card:translate-y-0 group-focus-visible/card:opacity-100 group-active/card:translate-y-0 group-active/card:opacity-100"
                         aria-hidden
                       >
                         <ArrowRight className="h-4 w-4" strokeWidth={2.25} aria-hidden />
@@ -103,15 +132,16 @@ export function HeroFeaturesOverlap({ readMoreLabel = "", cards }: Props) {
                     </div>
 
                     <div className="shrink-0 bg-transparent pt-3">
-                      <h2 className="font-serif text-[1.35rem] font-semibold leading-snug tracking-tight text-stone-950 sm:text-2xl md:text-[clamp(1.125rem,1.55vw,1.7rem)] md:leading-[1.2] lg:text-[clamp(1.2rem,1.35vw,1.85rem)]">
+                      <h3 className="font-serif text-[1.35rem] font-semibold leading-snug tracking-tight text-black sm:text-2xl md:text-[clamp(1.125rem,1.55vw,1.7rem)] md:leading-[1.2] lg:text-[clamp(1.2rem,1.35vw,1.85rem)]">
                         {item.title}
-                      </h2>
-                      <span className="mt-2 block overflow-hidden text-[0.8125rem] font-normal text-stone-700 underline decoration-stone-400 underline-offset-[4px] transition-[opacity,transform,max-height,colors] duration-500 ease-out max-md:max-h-16 max-md:translate-y-0 max-md:opacity-100 md:max-h-0 md:translate-y-1 md:opacity-0 md:group-hover/card:max-h-16 md:group-hover/card:translate-y-0 md:group-hover/card:opacity-100 md:group-hover/card:decoration-[rgb(65,130,163)] md:group-hover/card:text-[rgb(45,105,135)] md:group-focus-visible/card:max-h-16 md:group-focus-visible/card:translate-y-0 md:group-focus-visible/card:opacity-100 md:group-focus-visible/card:decoration-[rgb(65,130,163)] md:group-focus-visible/card:text-[rgb(45,105,135)]">
+                      </h3>
+                      <span className="mt-2 block overflow-hidden text-[0.8125rem] font-normal text-black underline decoration-stone-400 underline-offset-[4px] transition-[opacity,transform,max-height,colors] duration-500 ease-out max-md:max-h-16 max-md:translate-y-0 max-md:opacity-100 md:max-h-0 md:translate-y-1 md:opacity-0 md:group-hover/card:max-h-16 md:group-hover/card:translate-y-0 md:group-hover/card:opacity-100 md:group-hover/card:decoration-[rgb(65,130,163)] md:group-hover/card:text-[rgb(45,105,135)] md:group-focus-visible/card:max-h-16 md:group-focus-visible/card:translate-y-0 md:group-focus-visible/card:opacity-100 md:group-focus-visible/card:decoration-[rgb(65,130,163)] md:group-focus-visible/card:text-[rgb(45,105,135)]">
                         {cta}
                       </span>
                     </div>
                   </Link>
                 ))}
+                </div>
               </div>
             ))}
           </div>

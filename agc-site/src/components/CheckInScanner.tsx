@@ -177,7 +177,7 @@ export function CheckInScanner({ expectedEventSlug, expectedEventTitle }: CheckI
             value={manualId}
             onChange={(e) => setManualId(e.target.value.toUpperCase())}
             placeholder="Enter Registration ID (e.g. AGC-EV-2025-XXXX)"
-            className="flex-1 rounded-lg border border-slate-300 px-4 py-3 font-mono text-sm"
+            className="flex-1 rounded-lg border border-border px-4 py-3 font-mono text-sm"
           />
           <button
             type="submit"
@@ -199,7 +199,7 @@ export function CheckInScanner({ expectedEventSlug, expectedEventTitle }: CheckI
       )}
 
       {recentScans.length > 0 && (
-        <div className="rounded-xl border border-slate-200 bg-slate-50/90 p-4">
+        <div className="rounded-xl border border-border bg-slate-50/90 p-4">
           <p className="text-xs font-semibold uppercase tracking-wide text-slate-500">Recent scans</p>
           <ul className="mt-2 space-y-1.5 text-sm text-slate-700">
             {recentScans.map((r, i) => (

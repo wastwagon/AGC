@@ -116,7 +116,7 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="max-h-[90vh] w-full max-w-4xl overflow-hidden rounded-2xl bg-white shadow-xl">
-        <div className="flex items-center justify-between border-b border-slate-200 px-6 py-4">
+        <div className="flex items-center justify-between border-b border-border px-6 py-4">
           <h2 className="font-serif text-lg font-bold text-slate-900">Select from Media Library</h2>
           <button
             type="button"
@@ -127,11 +127,11 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
           </button>
         </div>
         <div className="max-h-[60vh] overflow-y-auto p-6">
-          <div className="mb-5 rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <div className="mb-5 rounded-xl border border-border bg-slate-50 p-4">
             <div className="flex flex-wrap items-center gap-3">
               <label
                 htmlFor="picker-upload"
-                className={`inline-flex cursor-pointer items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 ${uploading ? "pointer-events-none opacity-60" : ""}`}
+                className={`inline-flex cursor-pointer items-center gap-2 rounded-lg border border-border bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50 ${uploading ? "pointer-events-none opacity-60" : ""}`}
               >
                 {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
                 {uploading ? "Uploading…" : "Upload from computer"}
@@ -158,13 +158,13 @@ export function ImagePicker({ open, onClose, onSelect }: ImagePickerProps) {
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder="Search filename, title, alt, ID"
-                className="w-64 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                className="w-64 rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-900"
                 aria-label="Search media picker"
               />
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as "newest" | "oldest" | "name")}
-                className="rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                className="rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-900"
                 aria-label="Sort media picker"
               >
                 <option value="newest">Newest first</option>

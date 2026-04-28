@@ -13,7 +13,7 @@ export function AdminFormPreviewLink({ href, children = "Preview on site" }: Adm
       href={href}
       target="_blank"
       rel="noopener noreferrer"
-      className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
+      className="flex min-h-[44px] items-center rounded-lg border border-border px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
     >
       {children}
     </Link>

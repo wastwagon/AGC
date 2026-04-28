@@ -25,7 +25,7 @@ function SubmitButton() {
 }
 
 const input =
-  "mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900";
+  "mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm text-slate-900";
 const label = "block text-sm font-medium text-slate-700";
 const ta = `${input} min-h-[80px]`;
 
@@ -39,7 +39,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
 
   return (
     <form action={updateHomePageContent} className="space-y-10">
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-lg border border-border bg-slate-50 p-4">
         <div>
           <p className="font-semibold text-slate-900">Homepage (public site)</p>
           <p className="text-sm text-slate-600">
@@ -63,7 +63,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
         </div>
       </div>
 
-      <fieldset className="rounded-xl border border-slate-200 p-6">
+      <fieldset className="rounded-xl border border-border p-6">
         <legend className="px-2 text-lg font-semibold text-slate-900">Hero</legend>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
@@ -108,7 +108,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
         </div>
       </fieldset>
 
-      <fieldset className="rounded-xl border border-slate-200 p-6">
+      <fieldset className="rounded-xl border border-border p-6">
         <legend className="px-2 text-lg font-semibold text-slate-900">Testimonial</legend>
         <div className="mt-4 space-y-4">
           <div>
@@ -136,7 +136,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
         </div>
       </fieldset>
 
-      <fieldset className="rounded-xl border border-slate-200 p-6">
+      <fieldset className="rounded-xl border border-border p-6">
         <legend className="px-2 text-lg font-semibold text-slate-900">Fellow / programme spotlight</legend>
         <div className="mt-4 space-y-4">
           <div>
@@ -159,7 +159,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
                 <button
                   type="button"
                   onClick={() => setSpotPickerOpen(true)}
-                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+                  className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
                   title="Pick or upload from Media Library"
                 >
                   <ImagePlus className="h-4 w-4" />
@@ -179,7 +179,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
                   <img
                     src={spotPreviewUrl}
                     alt=""
-                    className="mt-1 max-h-48 max-w-[200px] rounded-lg border border-slate-200 bg-slate-50 object-cover object-center"
+                    className="mt-1 max-h-48 max-w-[200px] rounded-lg border border-border bg-slate-50 object-cover object-center"
                   />
                 </div>
               ) : spotlightImage.trim() ? (
@@ -225,7 +225,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
         </div>
       </fieldset>
 
-      <fieldset className="rounded-xl border border-slate-200 p-6">
+      <fieldset className="rounded-xl border border-border p-6">
         <legend className="px-2 text-lg font-semibold text-slate-900">Reach section + stats</legend>
         <div className="mt-4 space-y-4">
           <div>
@@ -239,7 +239,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
           {[0, 1, 2, 3].map((i) => {
             const st = data.homeImpactStats[i] ?? { value: "", label: "", note: "" };
             return (
-              <div key={i} className="rounded-lg border border-slate-100 bg-slate-50/80 p-4">
+              <div key={i} className="rounded-lg border border-border bg-slate-50/80 p-4">
                 <p className="mb-2 text-sm font-medium text-slate-600">Stat {i + 1}</p>
                 <div className="grid gap-3 sm:grid-cols-3">
                   <div>
@@ -265,7 +265,7 @@ export function HomePageContentForm({ data, status }: { data: HomePageCms; statu
         </div>
       </fieldset>
 
-      <fieldset className="rounded-xl border border-slate-200 p-6">
+      <fieldset className="rounded-xl border border-border p-6">
         <legend className="px-2 text-lg font-semibold text-slate-900">Newsletter band (home)</legend>
         <p className="mb-3 text-sm text-slate-600">
           Logo blue bar with centered copy and a Subscribe button. Partner lines below are kept in data for other uses;

@@ -1,4 +1,3 @@
-import Image from "next/image";
 import { aboutContent } from "@/data/content";
 import { placeholderImages } from "@/data/images";
 import { getTeam } from "@/lib/content";
@@ -24,17 +23,16 @@ export default async function AboutPage() {
     getBreadcrumbLabels(),
   ]);
   const heroImage = (await resolveImageUrl((content as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.about;
-  const whoWeAreImage =
-    (await resolveImageUrl((content as Record<string, unknown>).whoWeAreImage as string | undefined)) ||
-    placeholderImages.about;
-  const sectionImage = (await resolveImageUrl((content as Record<string, unknown>).sectionImage as string | undefined)) || placeholderImages.about;
-  const teamForTabs = cmsTeam.map((m) => ({
-    id: m.id,
-    name: m.name,
-    role: m.role,
-    bio: m.bio,
-    section: (m as { section?: string }).section || "advisory_board",
-  }));
+  const teamForTabs = await Promise.all(
+    cmsTeam.map(async (m) => ({
+      id: m.id,
+      name: m.name,
+      role: m.role,
+      bio: m.bio,
+      imageUrl: await resolveImageUrl(m.image ?? undefined),
+      section: (m as { section?: string }).section || "advisory_board",
+    }))
+  );
 
   return (
     <>
@@ -46,70 +44,40 @@ export default async function AboutPage() {
         breadcrumbs={[{ label: bc.home, href: "/" }, { label: bc.about }]}
       />
 
-      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-b border-stone-200/80 bg-white py-16 sm:py-20 lg:py-20">
-        <div className="mx-auto grid max-w-7xl gap-8 px-3 sm:px-4 lg:grid-cols-12 lg:gap-20 lg:px-6">
-          <div className="lg:col-span-6">
-            <p className="text-sm font-medium text-accent-800">Who we are</p>
-            <h2 className="page-heading mt-2 text-2xl sm:text-3xl">{content.title}</h2>
-              <p className="page-prose mt-6 border-l-4 border-accent-600 pl-6 text-lg text-stone-700">
-                {content.intro}
-              </p>
-            <p className="page-prose mt-8">{content.description}</p>
-            <p className="page-prose mt-6">{content.mission}</p>
+      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full bg-[#ffffff]">
+        <section className="w-full border-b border-border/80 bg-[#ffffff] py-8 sm:py-12 lg:py-14">
+          {/* Match home “Scope of Our Work”: full-width shell, header-aligned gutters */}
+          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+            <header>
+              <p className="text-sm font-medium text-black">Who we are</p>
+              <h2 className="page-heading mt-2 text-2xl text-black sm:text-3xl">{content.title}</h2>
+            </header>
+            <p className="page-prose mt-8 max-w-none border-l-4 border-accent-600 pl-6 text-lg leading-relaxed text-black">
+              {content.intro}
+            </p>
+            <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.description}</p>
+            <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.mission}</p>
           </div>
-          <aside className="lg:col-span-6">
-            <div className="sticky top-28 space-y-3">
-              <div className="relative aspect-[4/3] overflow-hidden rounded-none shadow-lg ring-1 ring-stone-200/60 lg:aspect-auto lg:min-h-[360px]">
-                <Image
-                  src={whoWeAreImage}
-                  alt="Who we are section image"
-                  fill
-                  className="object-cover"
-                  sizes="(max-width: 1024px) 100vw, 45vw"
-                />
-              </div>
-              <div className="rounded-none border border-stone-200/80 bg-white p-6">
-                <p className="font-serif text-lg italic leading-snug text-stone-800">
-                  &ldquo;Governance is not abstract—it is the bridge between policy and the lives people actually
-                  lead.&rdquo;
-                </p>
-                <p className="mt-4 text-sm text-stone-500">How we frame our work with partners</p>
-              </div>
-            </div>
-          </aside>
+        </section>
+      </HomeScrollReveal>
+
+      <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full bg-[#ffffff]">
+        <section className="w-full border-b border-border/80 bg-[#ffffff] py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <header>
+            <p className="text-sm font-medium text-black">Strategic direction</p>
+            <h2 className="page-heading mt-2 text-2xl text-black sm:text-3xl">{content.strategicObjectives.title}</h2>
+          </header>
+          <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.strategicObjectives.content}</p>
+          <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.strategicObjectives.principles}</p>
+          <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.strategicObjectives.agenda2063}</p>
         </div>
       </section>
       </HomeScrollReveal>
 
-      <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
-        <section className="border-b border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 lg:items-start">
-            <div>
-              <p className="text-sm font-medium text-accent-800">Strategic direction</p>
-              <h2 className="page-heading mt-2 text-2xl sm:text-3xl">{content.strategicObjectives.title}</h2>
-              <p className="page-prose mt-6">{content.strategicObjectives.content}</p>
-              <p className="page-prose mt-6">{content.strategicObjectives.principles}</p>
-              <p className="page-prose mt-6 text-stone-700">{content.strategicObjectives.agenda2063}</p>
-            </div>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-none shadow-lg ring-1 ring-stone-200/60 lg:aspect-auto lg:min-h-[420px]">
-              <Image
-                src={sectionImage}
-                alt="Governance conference and summit"
-                fill
-                className="object-cover"
-                sizes="(max-width: 1024px) 100vw, 50vw"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-      </HomeScrollReveal>
-
-      <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full bg-[#ffffff]">
+        <section id="team" className="w-full border-t border-border/80 bg-[#ffffff] py-16 sm:py-20 lg:py-24">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <TeamSectionTabs cmsTeam={teamForTabs} />
           <div className="mt-14 flex justify-center">
             <Button asChild href="/get-involved" variant="primary" className="rounded-none px-8">

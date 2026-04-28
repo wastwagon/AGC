@@ -5,8 +5,8 @@ export default function NotFound() {
   return (
     <div className="relative min-h-[70vh] overflow-hidden bg-white px-4 py-20">
       <div className="relative mx-auto max-w-lg text-center">
-        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-stone-500">404</p>
-        <h1 className="page-heading mt-4 text-4xl tracking-tight text-stone-900 sm:text-[2.75rem]">
+        <p className="text-[0.7rem] font-semibold uppercase tracking-[0.22em] text-black">404</p>
+        <h1 className="page-heading mt-4 text-4xl tracking-tight text-black sm:text-[2.75rem]">
           This page isn&apos;t here
         </h1>
         <p className="mt-6 page-prose text-[1.05rem]">

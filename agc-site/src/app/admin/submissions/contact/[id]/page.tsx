@@ -34,7 +34,7 @@ export default async function AdminContactSubmissionDetailPage({ params }: Props
         }
       />
 
-      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-semibold text-slate-900">{row.name}</h2>
         <DeleteButton
           action={deleteContactSubmission.bind(null, id)}
@@ -43,7 +43,7 @@ export default async function AdminContactSubmissionDetailPage({ params }: Props
         />
       </div>
 
-      <dl className="grid gap-4 rounded-xl border border-slate-200 bg-white p-6 shadow-sm sm:grid-cols-2">
+      <dl className="grid gap-4 rounded-xl border border-border bg-white p-6 shadow-sm sm:grid-cols-2">
         <div>
           <dt className="text-xs font-medium uppercase tracking-wider text-slate-500">Email</dt>
           <dd className="mt-1">
@@ -58,7 +58,7 @@ export default async function AdminContactSubmissionDetailPage({ params }: Props
         </div>
       </dl>
 
-      <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
+      <div className="rounded-xl border border-border bg-white p-6 shadow-sm">
         <h3 className="text-sm font-semibold text-slate-900">Message</h3>
         <p className="mt-3 whitespace-pre-wrap text-slate-700">{row.message}</p>
       </div>

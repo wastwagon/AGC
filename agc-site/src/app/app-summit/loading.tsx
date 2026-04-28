@@ -10,7 +10,7 @@ export default function AppSummitLoading() {
             <div className="h-4 w-full max-w-xl rounded bg-stone-100" />
             <div className="mt-8 h-12 w-40 rounded-lg bg-accent-200/50" />
           </div>
-          <div className="rounded-2xl border border-stone-200 bg-white p-6 shadow-sm">
+          <div className="rounded-2xl border border-border bg-white p-6 shadow-sm">
             <div className="h-5 w-32 rounded bg-stone-200" />
             <div className="mt-4 space-y-3">
               <div className="h-10 w-full rounded-lg bg-stone-100" />

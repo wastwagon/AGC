@@ -5,6 +5,7 @@ import { DEFAULT_SITE_CHROME, type SiteChrome, type SiteNavItem, type SiteNavLin
 import { prisma } from "@/lib/db";
 import { resolveImageUrl } from "@/lib/media";
 import { parseBottomNav, parseLinkList, parseNavList, parseWorkThumbs } from "@/lib/site-chrome-parse";
+import { markDevDatabaseUnreachable, shouldSkipPrismaCalls } from "@/lib/skip-db";
 
 export type SiteSettings = {
   name: string;
@@ -286,9 +287,12 @@ async function loadSiteSettingsFromDatabase(): Promise<SiteSettings> {
 }
 
 export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
+  if (shouldSkipPrismaCalls()) return DEFAULT_SITE_SETTINGS;
   try {
     return await loadSiteSettingsFromDatabase();
   } catch (e) {
+    // Keep public routes renderable in local dev when Postgres is offline.
+    markDevDatabaseUnreachable();
     console.error("[getSiteSettings] Database read failed; using bundled defaults. Nav/chrome will match repo until DB is reachable.", e);
     return DEFAULT_SITE_SETTINGS;
   }

@@ -34,12 +34,12 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
   return (
     <header
       className={`sticky top-0 z-50 w-full overflow-visible bg-white transition-shadow duration-300 ${
-        scrolled ? "shadow-[0_4px_24px_-8px_rgba(28,25,23,0.08)]" : "border-b border-stone-200/90"
+        scrolled ? "shadow-[0_4px_24px_-8px_rgba(28,25,23,0.08)]" : ""
       }`}
     >
       {showTopbar && <HeaderTopbar siteSettings={siteSettings} />}
 
-      <div className="wpo-site-header overflow-visible border-b border-stone-200/80 bg-white">
+      <div className="wpo-site-header overflow-visible bg-white">
         <nav className="w-full overflow-visible px-4 py-0 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <div className="flex min-h-[5.25rem] flex-wrap items-center justify-between gap-x-3 gap-y-3 overflow-visible py-3 lg:min-h-[5.5rem] lg:flex-nowrap lg:gap-x-4 lg:py-2">
             <Link href="/" className="flex shrink-0 items-center py-1 pr-1 lg:pr-2">
@@ -86,14 +86,14 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                           <ul
                             role="menu"
                             aria-label={`${item.label} submenu`}
-                            className="pointer-events-none invisible absolute left-0 top-[calc(100%+0.25rem)] z-[200] min-w-[18rem] border border-stone-200/95 bg-white py-2 opacity-0 shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] transition-[opacity,visibility] duration-150 ease-out group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:opacity-100"
+                            className="pointer-events-none invisible absolute left-0 top-[calc(100%+0.25rem)] z-[200] min-w-[18rem] border border-border/95 bg-white py-2 opacity-0 shadow-[0_12px_40px_-8px_rgba(0,0,0,0.2)] transition-[opacity,visibility] duration-150 ease-out group-hover:pointer-events-auto group-hover:visible group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:visible group-focus-within:opacity-100"
                           >
                             {item.subLinks.map((sub) => (
                               <li key={sub.href} role="none">
                                 <Link
                                   role="menuitem"
                                   href={sub.href}
-                                  className="block px-4 py-3 text-sm font-medium normal-case tracking-normal text-stone-900 transition-colors hover:bg-stone-50"
+                                  className="block px-4 py-3 text-sm font-medium normal-case tracking-normal text-black transition-colors hover:bg-stone-50"
                                 >
                                   {sub.label}
                                 </Link>

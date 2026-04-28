@@ -37,17 +37,17 @@ export function NewsFilters({ categoryOptions, activeCategorySlugs, currentCateg
     <div className="mb-10">
       <label
         htmlFor="news-category-filter"
-        className="mb-2 block text-xs font-semibold uppercase tracking-wider text-stone-500"
+        className="mb-2 block text-xs font-semibold uppercase tracking-wider text-black"
       >
         {filters.filterBy}
       </label>
-      <div className="group relative w-full max-w-xs rounded-xl border border-stone-200/90 bg-[#fffcf7] shadow-sm transition-shadow hover:border-stone-300 hover:shadow-md focus-within:border-accent-500/40 focus-within:ring-2 focus-within:ring-accent-500/15 sm:max-w-none sm:w-auto">
+      <div className="group relative w-full max-w-xs rounded-none bg-white shadow-sm transition-shadow hover:shadow-md focus-within:ring-2 focus-within:ring-accent-500/15 sm:max-w-none sm:w-auto">
         <Filter className="pointer-events-none absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-accent-700/80" aria-hidden />
         <select
           id="news-category-filter"
           value={currentValue}
           onChange={handleChange}
-          className="w-full min-w-0 cursor-pointer appearance-none rounded-xl border-0 bg-transparent py-3.5 pl-11 pr-12 text-sm font-medium text-stone-900 transition-colors hover:text-accent-800 focus:outline-none sm:min-w-[240px] sm:w-auto"
+          className="w-full min-w-0 cursor-pointer appearance-none rounded-none border-0 bg-transparent py-3.5 pl-11 pr-12 text-sm font-medium text-black transition-colors hover:text-accent-800 focus:outline-none sm:min-w-[240px] sm:w-auto"
           aria-label={filters.filterBy}
         >
           {options.map((opt) => (
@@ -56,7 +56,7 @@ export function NewsFilters({ categoryOptions, activeCategorySlugs, currentCateg
             </option>
           ))}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-stone-400" aria-hidden />
+        <ChevronDown className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-black" aria-hidden />
       </div>
     </div>
   );

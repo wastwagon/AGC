@@ -44,13 +44,13 @@ export function PartnershipInquiryForm({ programsEmail }: PartnershipInquiryForm
   }
 
   const inputClass =
-    "mt-1.5 w-full rounded-none border border-stone-300/90 bg-white px-4 py-2.5 text-stone-900 shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
-  const labelClass = "block text-sm font-medium text-stone-700";
+    "mt-1.5 w-full rounded-none border border-border/90 bg-white px-4 py-2.5 text-black shadow-sm focus:border-accent-600 focus:ring-1 focus:ring-accent-500";
+  const labelClass = "block text-sm font-medium text-black";
 
   return (
     <div className="page-card !rounded-none p-8 sm:p-10">
-      <h2 className="page-heading text-xl text-stone-900">Partnership inquiry form</h2>
-      <p className="mt-2 text-sm text-stone-600">
+      <h2 className="page-heading text-xl text-black">Partnership inquiry form</h2>
+      <p className="mt-2 text-sm text-black">
         Tell us about your organisation and how you&apos;d like to collaborate. We store submissions securely and reply from{" "}
         <a href={`mailto:${programsEmail}`} className="font-medium text-accent-700 hover:underline">
           {programsEmail}

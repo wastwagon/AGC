@@ -104,22 +104,22 @@ export function PastEventDetailView({
 
   return (
     <>
-      <section className="border-b border-stone-200/90 bg-white">
-        <div className="mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
-          <nav aria-label="Breadcrumb" className="text-sm text-stone-500">
+      <section className="border-b border-border/90 bg-white">
+        <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-6 sm:py-10 lg:px-8 xl:px-12 2xl:px-16">
+          <nav aria-label="Breadcrumb" className="text-sm text-black">
             <ol className="flex flex-wrap items-center gap-1.5">
               <li>
-                <Link href="/" className="font-medium text-stone-600 transition-colors hover:text-accent-700">
+                <Link href="/" className="font-medium text-black transition-colors hover:text-accent-700">
                   {breadcrumbs.home}
                 </Link>
               </li>
-              <span className="text-stone-300/90">/</span>
+              <span className="text-black/90">/</span>
               <li>
-                <Link href="/events" className="font-medium text-stone-600 transition-colors hover:text-accent-700">
+                <Link href="/events" className="font-medium text-black transition-colors hover:text-accent-700">
                   {breadcrumbs.events}
                 </Link>
               </li>
-              <span className="text-stone-300/90">/</span>
+              <span className="text-black/90">/</span>
               <li>
                 <span className="font-semibold text-accent-800">{breadcrumbs.current}</span>
               </li>
@@ -129,16 +129,16 @@ export function PastEventDetailView({
           <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,7.5rem)_1fr] lg:items-start lg:gap-12">
             <div className="flex flex-col items-center text-center lg:items-stretch lg:text-left">
               <div className="h-px w-full bg-stone-300" aria-hidden />
-              <p className="mt-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-stone-500">{month}</p>
-              <p className="font-sans text-5xl font-bold leading-none tracking-tight text-stone-950 sm:text-6xl">{day}</p>
-              <p className="mt-2 text-sm font-medium text-stone-500">{year}</p>
+              <p className="mt-4 text-[0.65rem] font-semibold uppercase tracking-[0.22em] text-black">{month}</p>
+              <p className="font-sans text-5xl font-bold leading-none tracking-tight text-black sm:text-6xl">{day}</p>
+              <p className="mt-2 text-sm font-medium text-black">{year}</p>
               <div className="mt-4 h-px w-full bg-stone-300" aria-hidden />
             </div>
             <div className="min-w-0">
-              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-stone-600">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">
                 {eventsContent.gridBadges.past}
               </p>
-              <h1 className="page-heading mt-3 text-3xl font-bold leading-tight tracking-tight text-stone-950 sm:text-4xl lg:text-[2.35rem] lg:leading-snug">
+              <h1 className="page-heading mt-3 text-3xl font-bold leading-tight tracking-tight text-black sm:text-4xl lg:text-[2.35rem] lg:leading-snug">
                 {event.title}
               </h1>
             </div>
@@ -146,21 +146,21 @@ export function PastEventDetailView({
         </div>
       </section>
 
-      <div className="border-b border-stone-200 bg-white">
-        <div className="mx-auto grid max-w-6xl gap-8 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_minmax(0,1.1fr)_auto] lg:items-center lg:gap-10 lg:px-8 lg:py-8">
+      <div className="border-b border-border bg-white">
+        <div className="mx-auto grid w-full max-w-none gap-8 px-4 py-6 sm:px-6 lg:grid-cols-[1fr_minmax(0,1.1fr)_auto] lg:items-center lg:gap-10 lg:px-8 xl:px-12 2xl:px-16 lg:py-8">
           <div className="min-w-0">
-            {dateLine ? <p className="text-base font-bold text-stone-900">{dateLine}</p> : null}
-            {timeLine ? <p className="mt-1 text-sm text-stone-500">{timeLine}</p> : null}
+            {dateLine ? <p className="text-base font-bold text-black">{dateLine}</p> : null}
+            {timeLine ? <p className="mt-1 text-sm text-black">{timeLine}</p> : null}
           </div>
           <div className="min-w-0 text-center lg:text-left">
-            <p className="text-base font-bold text-stone-900">{siteConfig.name}</p>
+            <p className="text-base font-bold text-black">{siteConfig.name}</p>
             {event.venue_name?.trim() ? (
-              <p className="mt-1 text-base font-bold text-stone-900">{event.venue_name.trim()}</p>
+              <p className="mt-1 text-base font-bold text-black">{event.venue_name.trim()}</p>
             ) : null}
             {event.venue_address?.trim() ? (
-              <p className="mt-1 text-sm text-stone-500">{event.venue_address.trim()}</p>
+              <p className="mt-1 text-sm text-black">{event.venue_address.trim()}</p>
             ) : !event.venue_name && event.location?.trim() ? (
-              <p className="mt-1 text-sm text-stone-500">{event.location.trim()}</p>
+              <p className="mt-1 text-sm text-black">{event.location.trim()}</p>
             ) : null}
           </div>
           <div className="flex flex-wrap justify-center gap-2 lg:justify-end">
@@ -193,8 +193,8 @@ export function PastEventDetailView({
       </div>
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-12 sm:py-16 lg:py-20">
-          <div className="mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
             {embedSrc ? (
               <div className="aspect-video w-full overflow-hidden bg-stone-950 shadow-lg shadow-stone-900/10">
                 <iframe
@@ -221,27 +221,27 @@ export function PastEventDetailView({
 
             {event.description ? (
               <div
-                className="prose prose-stone prose-lg mt-12 max-w-3xl text-stone-800 prose-headings:font-semibold prose-a:text-accent-700"
+                className="prose prose-stone prose-lg mt-12 max-w-none text-black prose-headings:font-semibold prose-a:text-accent-700"
                 dangerouslySetInnerHTML={{ __html: event.description }}
               />
             ) : null}
 
             {(event.event_type || speakers.length > 0 || agenda.length > 0) && (
-              <div className="mt-12 max-w-3xl space-y-10 border-t border-stone-200 pt-10">
+              <div className="mt-12 max-w-none space-y-10 border-t border-border pt-10">
                 {event.event_type ? (
                   <div>
-                    <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Type</h2>
-                    <p className="mt-2 capitalize text-stone-800">{event.event_type.replace(/_/g, " ")}</p>
+                    <h2 className="text-xs font-semibold uppercase tracking-wider text-black">Type</h2>
+                    <p className="mt-2 capitalize text-black">{event.event_type.replace(/_/g, " ")}</p>
                   </div>
                 ) : null}
                 {speakers.length > 0 ? (
                   <div>
-                    <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Speakers</h2>
+                    <h2 className="text-xs font-semibold uppercase tracking-wider text-black">Speakers</h2>
                     <ul className="mt-3 space-y-2">
                       {speakers.map((s) => (
-                        <li key={s.id} className="text-stone-800">
+                        <li key={s.id} className="text-black">
                           <span className="font-medium">{s.name}</span>
-                          {s.role ? <span className="text-stone-500"> · {s.role}</span> : null}
+                          {s.role ? <span className="text-black"> · {s.role}</span> : null}
                         </li>
                       ))}
                     </ul>
@@ -249,7 +249,7 @@ export function PastEventDetailView({
                 ) : null}
                 {agenda.length > 0 ? (
                   <div>
-                    <h2 className="text-xs font-semibold uppercase tracking-wider text-stone-500">Agenda</h2>
+                    <h2 className="text-xs font-semibold uppercase tracking-wider text-black">Agenda</h2>
                     <ul className="mt-3 space-y-4">
                       {agenda.map((item, i) => (
                         <li key={i} className="flex gap-4">
@@ -257,9 +257,9 @@ export function PastEventDetailView({
                             <span className="shrink-0 text-sm font-semibold text-accent-800">{item.time}</span>
                           ) : null}
                           <div>
-                            <span className="font-medium text-stone-800">{item.title}</span>
+                            <span className="font-medium text-black">{item.title}</span>
                             {item.description ? (
-                              <p className="mt-1 text-sm text-stone-600">{item.description}</p>
+                              <p className="mt-1 text-sm text-black">{item.description}</p>
                             ) : null}
                           </div>
                         </li>
@@ -277,7 +277,7 @@ export function PastEventDetailView({
               >
                 ← Past events
               </Link>
-              <span className="mx-2 text-stone-300">·</span>
+              <span className="mx-2 text-black">·</span>
               <Link
                 href="/events"
                 className="text-sm font-medium text-accent-800 underline decoration-accent-300 underline-offset-2 transition-colors hover:text-accent-950"

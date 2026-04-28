@@ -8,10 +8,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let news: { slug: string | null; datePublished: Date | null }[] = [];
   let publications: { slug: string | null; datePublished: Date | null }[] = [];
   let events: { slug: string | null; startDate: Date; endDate: Date | null }[] = [];
+  let teamIds: number[] = [];
 
   if (!shouldSkipPrismaCalls()) {
     try {
-      [news, publications, events] = await Promise.all([
+      [news, publications, events, teamIds] = await Promise.all([
         prisma.news.findMany({
           where: { status: "published" },
           select: { slug: true, datePublished: true },
@@ -24,6 +25,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           where: { status: "published" },
           select: { slug: true, startDate: true, endDate: true },
         }),
+        prisma.team.findMany({
+          where: { status: "published" },
+          select: { id: true },
+        }).then((rows) => rows.map((r) => r.id)),
       ]);
     } catch {
       // DB unavailable at runtime: use static entries only
@@ -33,16 +38,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const staticEntries: MetadataRoute.Sitemap = [
     { url: baseUrl, lastModified: new Date(), changeFrequency: "weekly", priority: 1 },
     { url: `${baseUrl}/about`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
-    { url: `${baseUrl}/about/team`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/our-work`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
-    { url: `${baseUrl}/our-work/programs`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${baseUrl}/our-work/projects`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
-    { url: `${baseUrl}/our-work/advisory`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/our-work/research`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/our-work/training`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/our-work/partnership`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.8 },
     { url: `${baseUrl}/app-summit`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
     { url: `${baseUrl}/aypf`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.85 },
+    { url: `${baseUrl}/awpls`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.85 },
     { url: `${baseUrl}/events`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${baseUrl}/events/past`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.75 },
     { url: `${baseUrl}/news`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
@@ -75,6 +77,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       priority: 0.6,
     }));
 
+  const teamEntries: MetadataRoute.Sitemap = teamIds.map((id) => ({
+    url: `${baseUrl}/about/team/${id}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.65,
+  }));
+
   const eventEntries: MetadataRoute.Sitemap = events
     .filter((e) => e.slug)
     .map((e) => {
@@ -88,5 +97,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       };
     });
 
-  return [...staticEntries, ...newsEntries, ...publicationEntries, ...eventEntries];
+  return [...staticEntries, ...newsEntries, ...publicationEntries, ...teamEntries, ...eventEntries];
 }

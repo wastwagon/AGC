@@ -30,7 +30,7 @@ export default async function AdminScanPage({ searchParams }: Props) {
         {eventSlug ? (
           <Link
             href={`/admin/events/${encodeURIComponent(eventSlug)}`}
-            className="flex min-h-[44px] items-center gap-2 rounded-lg border border-slate-200 bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="flex min-h-[44px] items-center gap-2 rounded-lg border border-border bg-white px-4 py-3 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             <QrCode className="h-4 w-4" aria-hidden />
             Registrations list

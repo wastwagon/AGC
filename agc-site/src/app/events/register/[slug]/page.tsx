@@ -52,15 +52,15 @@ export default async function EventRegisterPage({ params }: Props) {
   let confirmedCount = 0;
   let waitlistCount = 0;
   if (!isPastEvent) {
-    try {
-      const [c, w] = await Promise.all([
-        prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: false } }),
-        prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: true } }),
-      ]);
-      confirmedCount = c;
-      waitlistCount = w;
-    } catch {
-      /* DB unavailable (e.g. dev / CI without Postgres) — treat as zero registrations */
+  try {
+    const [c, w] = await Promise.all([
+      prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: false } }),
+      prisma.eventRegistration.count({ where: { eventSlug: slug, waitlisted: true } }),
+    ]);
+    confirmedCount = c;
+    waitlistCount = w;
+  } catch {
+    /* DB unavailable (e.g. dev / CI without Postgres) — treat as zero registrations */
     }
   }
 
@@ -77,10 +77,10 @@ export default async function EventRegisterPage({ params }: Props) {
   if (isPastEvent) {
     const eventsPage = await getMergedPageContent<typeof eventsContent>("events", cmsStaticOrEmpty(eventsContent));
     const pageCopy = eventsPage as unknown as typeof eventsContent & { heroImage?: string };
-    const heroImage =
-      (await resolveImageUrl(event.image)) ||
-      (await resolveImageUrl(pageCopy.heroImage)) ||
-      placeholderImages.events;
+  const heroImage =
+    (await resolveImageUrl(event.image)) ||
+    (await resolveImageUrl(pageCopy.heroImage)) ||
+    placeholderImages.events;
     return (
       <PastEventDetailView
         event={event}
@@ -102,92 +102,92 @@ export default async function EventRegisterPage({ params }: Props) {
   return (
     <>
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-12 sm:py-16 lg:py-20">
-          <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
-            <nav aria-label="Breadcrumb" className="text-sm text-stone-500">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+            <nav aria-label="Breadcrumb" className="text-sm text-black">
               <ol className="flex flex-wrap items-center gap-1.5">
                 <li>
-                  <Link href="/" className="font-medium text-stone-600 transition-colors hover:text-accent-700">
+                  <Link href="/" className="font-medium text-black transition-colors hover:text-accent-700">
                     {bc.home}
                   </Link>
                 </li>
-                <span className="text-stone-300/90">/</span>
+                <span className="text-black/90">/</span>
                 <li>
-                  <Link href="/events" className="font-medium text-stone-600 transition-colors hover:text-accent-700">
+                  <Link href="/events" className="font-medium text-black transition-colors hover:text-accent-700">
                     {bc.events}
                   </Link>
                 </li>
-                <span className="text-stone-300/90">/</span>
+                <span className="text-black/90">/</span>
                 <li>
                   <Link
                     href={`/events/${encodeURIComponent(slug)}`}
-                    className="font-medium text-stone-600 transition-colors hover:text-accent-700"
+                    className="font-medium text-black transition-colors hover:text-accent-700"
                   >
                     {event.title}
                   </Link>
                 </li>
-                <span className="text-stone-300/90">/</span>
+                <span className="text-black/90">/</span>
                 <li>
                   <span className="font-semibold text-accent-800">{bc.eventRegister}</span>
                 </li>
               </ol>
             </nav>
 
-            <h1 className="page-heading mt-8 text-3xl font-bold tracking-tight text-stone-950 sm:text-4xl">{event.title}</h1>
-            {scheduleLine ? <p className="mt-5 text-base font-semibold text-stone-900">{scheduleLine}</p> : null}
+            <h1 className="page-heading mt-8 text-3xl font-bold tracking-tight text-black sm:text-4xl">{event.title}</h1>
+            {scheduleLine ? <p className="mt-5 text-base font-semibold text-black">{scheduleLine}</p> : null}
             {locationBody ? (
-              <p className="mt-5 text-base leading-relaxed text-stone-800">
+              <p className="mt-5 text-base leading-relaxed text-black">
                 <span className="font-bold">{eventsContent.locationLabel}</span> {locationBody}
               </p>
             ) : null}
 
             {event.description ? (
               <div
-                className="prose prose-stone prose-lg mt-10 max-w-none text-stone-800 prose-headings:font-semibold prose-a:text-accent-700"
+                className="prose prose-stone prose-lg mt-10 max-w-none text-black prose-headings:font-semibold prose-a:text-accent-700"
                 dangerouslySetInnerHTML={{ __html: event.description }}
               />
             ) : null}
 
             {event.event_type ? (
-              <p className="mt-10 text-sm text-stone-700">
-                <span className="font-semibold uppercase tracking-wider text-stone-500">Type </span>
+              <p className="mt-10 text-sm text-black">
+                <span className="font-semibold uppercase tracking-wider text-black">Type </span>
                 <span className="capitalize">{event.event_type.replace(/_/g, " ")}</span>
               </p>
-            ) : null}
+                          ) : null}
 
             {speakers.length > 0 ? (
               <div className="mt-10">
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-500">Speakers</h2>
-                <ul className="mt-3 space-y-2 text-stone-800">
-                  {speakers.map((s) => (
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-black">Speakers</h2>
+                <ul className="mt-3 space-y-2 text-black">
+                        {speakers.map((s) => (
                     <li key={s.id}>
                       <span className="font-medium">{s.name}</span>
-                      {s.role ? <span className="text-stone-500"> · {s.role}</span> : null}
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                      {s.role ? <span className="text-black"> · {s.role}</span> : null}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
             ) : null}
 
             {agenda.length > 0 ? (
               <div className="mt-10">
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-stone-500">Agenda</h2>
-                <ul className="mt-4 space-y-4 text-stone-800">
-                  {agenda.map((item, i) => (
-                    <li key={i} className="flex gap-4">
+                <h2 className="text-sm font-semibold uppercase tracking-wider text-black">Agenda</h2>
+                <ul className="mt-4 space-y-4 text-black">
+                        {agenda.map((item, i) => (
+                          <li key={i} className="flex gap-4">
                       {item.time ? <span className="shrink-0 text-sm font-semibold text-accent-800">{item.time}</span> : null}
-                      <div>
+                            <div>
                         <span className="font-medium">{item.title}</span>
-                        {item.description ? <p className="mt-1 text-sm text-stone-600">{item.description}</p> : null}
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
+                        {item.description ? <p className="mt-1 text-sm text-black">{item.description}</p> : null}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
             ) : null}
 
-            <div className="mt-16 border-t border-stone-200 pt-14">
-              <h2 className="text-center text-xl font-bold tracking-tight text-stone-950 sm:text-2xl">
+            <div className="mt-16 border-t border-border pt-14">
+              <h2 className="text-center text-xl font-bold tracking-tight text-black sm:text-2xl">
                 {eventsContent.registerToAttendHeading}
               </h2>
 
@@ -213,8 +213,8 @@ export default async function EventRegisterPage({ params }: Props) {
                   <EventRegistrationForm event={event} embedded />
                 </div>
               ) : (
-                <div className="mx-auto mt-8 max-w-xl border border-stone-200 bg-white px-6 py-8 text-center">
-                  <p className="page-prose text-stone-800">
+                <div className="mx-auto mt-8 max-w-xl border border-border bg-white px-6 py-8 text-center">
+                  <p className="page-prose text-black">
                     {isPastDeadline
                       ? "Registration for this event has closed. Thank you for your interest."
                       : "This event has reached maximum capacity and the waitlist is not open for this event."}
@@ -227,7 +227,7 @@ export default async function EventRegisterPage({ params }: Props) {
                   </Link>
                   <Link
                     href="/events"
-                    className="mt-3 block text-sm font-medium text-stone-600 underline-offset-2 hover:text-stone-900"
+                    className="mt-3 block text-sm font-medium text-black underline-offset-2 hover:text-black"
                   >
                     All events
                   </Link>
@@ -243,8 +243,8 @@ export default async function EventRegisterPage({ params }: Props) {
                 ← Back to event details
               </Link>
             </p>
-          </div>
-        </section>
+        </div>
+      </section>
       </HomeScrollReveal>
     </>
   );

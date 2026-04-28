@@ -73,13 +73,13 @@ export function AppSummitClient({
         imageAlt={content.heroImageAlt || "APP Summit"}
       />
 
-      <section className="border-b border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+      <section className="w-full border-b border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <div className="grid gap-12 lg:grid-cols-3 lg:gap-16">
             <HomeScrollReveal variant="slideLeft" start="top 87%" className="block w-full lg:col-span-2">
               <div>
                 {content.aboutSectionEyebrow?.trim() ? (
-                  <p className="text-sm font-medium text-accent-800">{content.aboutSectionEyebrow}</p>
+                  <p className="text-sm font-medium text-black">{content.aboutSectionEyebrow}</p>
                 ) : null}
                 {content.aboutSectionHeading?.trim() ? (
                   <h2
@@ -107,8 +107,8 @@ export function AppSummitClient({
                             <Calendar className="h-6 w-6" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-stone-500">{content.detailLabelDate}</p>
-                            <p className="font-semibold text-stone-900">{d.date}</p>
+                            <p className="text-sm font-medium text-black">{content.detailLabelDate}</p>
+                            <p className="font-semibold text-black">{d.date}</p>
                           </div>
                         </li>
                       ) : null}
@@ -118,8 +118,8 @@ export function AppSummitClient({
                             <MapPin className="h-6 w-6" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-stone-500">{content.detailLabelLocation}</p>
-                            <p className="font-semibold text-stone-900">{d.location}</p>
+                            <p className="text-sm font-medium text-black">{content.detailLabelLocation}</p>
+                            <p className="font-semibold text-black">{d.location}</p>
                           </div>
                         </li>
                       ) : null}
@@ -129,8 +129,8 @@ export function AppSummitClient({
                             <Users className="h-6 w-6" />
                           </div>
                           <div>
-                            <p className="text-sm font-medium text-stone-500">{content.detailLabelParticipants}</p>
-                            <p className="font-semibold text-stone-900">{d.participants}</p>
+                            <p className="text-sm font-medium text-black">{content.detailLabelParticipants}</p>
+                            <p className="font-semibold text-black">{d.participants}</p>
                           </div>
                         </li>
                       ) : null}
@@ -140,9 +140,9 @@ export function AppSummitClient({
               </div>
             </HomeScrollReveal>
             <HomeScrollReveal variant="slideRight" start="top 86%" className="block w-full self-start">
-              <div className="rounded-none border border-stone-200/90 bg-white p-6 shadow-sm sm:p-8">
+              <div className="rounded-none border border-border/90 bg-white p-6 shadow-sm sm:p-8">
                 <h3 className="page-heading text-xl">{registration.title}</h3>
-                <p className="page-prose mt-2 text-sm text-balance">
+                <p className="page-prose mt-2 text-sm text-black">
                   <RegistrationCardSubtitle text={registrationSubtitle} />
                 </p>
                 <Button asChild href={registration.href} variant="primary" className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700">
@@ -155,8 +155,8 @@ export function AppSummitClient({
       </section>
 
       {showPurposeImpact && pi ? (
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
             <HomeScrollReveal variant="clipOpen" start="top 88%" className="block w-full">
               <div>
                 {pi.eyebrow?.trim() ? (
@@ -169,7 +169,7 @@ export function AppSummitClient({
                 ) : null}
                 {pi.intro?.trim() ? (
                   <p
-                    className={`page-prose max-w-3xl text-lg leading-relaxed ${pi.heading?.trim() || pi.eyebrow?.trim() ? "mt-4" : ""}`}
+                    className={`page-prose max-w-none text-lg leading-relaxed ${pi.heading?.trim() || pi.eyebrow?.trim() ? "mt-4" : ""}`}
                   >
                     {pi.intro}
                   </p>
@@ -192,13 +192,13 @@ export function AppSummitClient({
                     return (
                       <li
                         key={`${pillar.title}-${idx}`}
-                        className="rounded-none border border-stone-200/80 bg-white p-7 shadow-sm transition-all hover:border-accent-200/50 hover:shadow-md sm:p-8"
+                        className="rounded-none border border-border/80 bg-white p-7 shadow-sm transition-all hover:border-accent-200/50 hover:shadow-md sm:p-8"
                       >
                         <div className="flex h-12 w-12 items-center justify-center rounded-none bg-accent-100 text-accent-700">
                           <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden />
                         </div>
                         {pillar.title?.trim() ? (
-                          <h3 className="mt-5 font-sans text-lg font-semibold text-stone-900">{pillar.title}</h3>
+                          <h3 className="mt-5 font-sans text-lg font-semibold text-black">{pillar.title}</h3>
                         ) : null}
                         {pillar.description?.trim() ? (
                           <p className="page-prose-tight mt-2 text-sm leading-relaxed">{pillar.description}</p>
@@ -214,7 +214,7 @@ export function AppSummitClient({
       ) : null}
 
       {showProgrammeAgenda && agenda?.days?.length ? (
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
+        <section className="border-t border-border/80 bg-white py-16 sm:py-20 lg:py-24">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
               <div className="max-w-2xl">
@@ -227,7 +227,7 @@ export function AppSummitClient({
             </HomeScrollReveal>
 
             <HomeScrollReveal variant="slideRight" start="top 90%" className="mt-10 block w-full">
-              <div className="flex flex-wrap gap-0 border-b border-stone-300/80">
+              <div className="flex flex-wrap gap-0 border-b border-border/80">
                 {agenda.days.map((d, i) => (
                   <button
                     key={d.day}
@@ -236,7 +236,7 @@ export function AppSummitClient({
                     className={`relative px-5 py-3 text-sm font-medium transition-colors ${
                       activeDay === i
                         ? "text-accent-900 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-accent-600"
-                        : "text-stone-500 hover:text-stone-800"
+                        : "text-black hover:text-black"
                     }`}
                   >
                     {[content.dayTabPrefix?.trim(), String(d.day)].filter(Boolean).join(" ") || String(d.day)}
@@ -247,7 +247,7 @@ export function AppSummitClient({
 
             <div className="mt-12">
               <HomeScrollReveal variant="fadeIn" start="top 92%" className="mb-8 block w-full">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-stone-500">{activeAgenda.date}</h3>
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-black">{activeAgenda.date}</h3>
               </HomeScrollReveal>
               <HomeScrollReveal
                 key={activeDay}
@@ -260,12 +260,12 @@ export function AppSummitClient({
                 {activeAgenda.sessions.map((session, i) => (
                   <article
                     key={i}
-                    className="flex gap-4 rounded-none border border-stone-200/80 bg-white p-6 transition-all hover:border-accent-200/50 hover:shadow-sm sm:gap-6"
+                    className="flex gap-4 rounded-none border border-border/80 bg-white p-6 transition-all hover:border-accent-200/50 hover:shadow-sm sm:gap-6"
                   >
                     <span className="mt-1.5 flex h-2 w-2 shrink-0 rounded-full bg-accent-600" />
                     <div className="min-w-0 flex-1">
                       <p className="text-sm font-semibold text-accent-800">{session.time}</p>
-                      <h4 className="mt-1 font-sans text-lg font-semibold text-stone-900">{session.title}</h4>
+                      <h4 className="mt-1 font-sans text-lg font-semibold text-black">{session.title}</h4>
                       {session.topic && (
                         <p className="page-prose-tight mt-2 text-sm">{session.topic}</p>
                       )}
@@ -288,11 +288,11 @@ export function AppSummitClient({
         </section>
       ) : null}
 
-      <section className="isolate w-full border-t border-stone-200/80 bg-white py-16 sm:py-20">
+      <section className="isolate w-full border-t border-border/80 bg-white py-16 sm:py-20">
         <div className="mx-auto w-full max-w-4xl bg-white px-4 sm:px-6 lg:px-8">
           <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full bg-white">
-            <div className="rounded-none border border-stone-200/80 bg-white p-8 sm:p-10">
-              <p className="page-prose">{content.contactNote}</p>
+            <div className="rounded-none border border-border/80 bg-white p-8 sm:p-10">
+              <p className="page-prose text-black">{content.contactNote}</p>
               <div className="mt-6 flex flex-wrap gap-4">
                 {content.contactSectionCtaLabel?.trim() ? (
                   <Button asChild href="/contact" variant="primary" className="rounded-none bg-accent-700 hover:bg-accent-800">
@@ -301,7 +301,7 @@ export function AppSummitClient({
                 ) : null}
                 <a
                   href={`mailto:${siteSettings.email.programs}`}
-                  className="inline-flex items-center justify-center rounded-none border border-stone-300/90 bg-white px-5 py-2.5 text-sm font-medium text-stone-800 transition-colors hover:border-accent-300"
+                  className="inline-flex items-center justify-center rounded-none border border-border/90 bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:border-accent-300"
                 >
                   {siteSettings.email.programs}
                 </a>

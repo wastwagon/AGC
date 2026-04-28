@@ -72,14 +72,14 @@ export function EventGridCell({
       <h3 className="mt-5">
         <Link
           href={eventLink}
-          className="font-sans text-lg font-bold leading-snug text-stone-900 underline decoration-transparent decoration-2 underline-offset-2 transition-colors hover:text-accent-800 hover:decoration-accent-600/40"
+          className="font-sans text-lg font-bold leading-snug text-black underline decoration-transparent decoration-2 underline-offset-2 transition-colors hover:text-accent-800 hover:decoration-accent-600/40"
         >
           {event.title}
         </Link>
       </h3>
 
-      {location ? <p className="mt-3 text-sm leading-relaxed text-stone-600">{location}</p> : null}
-      {schedule ? <p className="mt-1 text-sm leading-relaxed text-stone-600">{schedule}</p> : null}
+      {location ? <p className="mt-3 text-sm leading-relaxed text-black">{location}</p> : null}
+      {schedule ? <p className="mt-1 text-sm leading-relaxed text-black">{schedule}</p> : null}
     </article>
   );
 }

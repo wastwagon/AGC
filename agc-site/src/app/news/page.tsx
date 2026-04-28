@@ -40,7 +40,7 @@ export default async function NewsPage() {
     }))
   );
 
-  const f = content.filters as typeof content.filters & {
+  const f = ((content.filters ?? newsContent.filters ?? {}) as typeof newsContent.filters) as typeof content.filters & {
     filterLabel?: string;
     textSearch?: string;
     theme?: string;
@@ -64,14 +64,14 @@ export default async function NewsPage() {
     previous: f.previous ?? "Previous",
     next: f.next ?? "Next",
     all: f.allOption ?? f.allCategories ?? "All",
-    noMatches: f.noMatchesFiltered ?? f.noResults,
+    noMatches: f.noMatchesFiltered ?? f.noResults ?? "No news matched your filters.",
   };
 
   return (
     <>
       <PageHero
-        title={content.title}
-        subtitle={content.subtitle}
+        title={content.title || newsContent.title}
+        subtitle={content.subtitle || newsContent.subtitle}
         image={heroImage}
         imageAlt="Latest News"
         breadcrumbs={[
@@ -81,22 +81,22 @@ export default async function NewsPage() {
       />
 
       <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
-        <section className="border-t border-stone-200/80 bg-white py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           {newsItems.length > 0 ? (
             <NewsListingSection
               items={itemsWithImages}
               categoryOptions={taxonomy.newsCategories}
               tagOptions={taxonomy.newsTags}
               labels={listingLabels}
-              intro={content.intro?.trim() ? <p className="page-prose max-w-2xl">{content.intro}</p> : undefined}
+              intro={(content.intro || newsContent.intro)?.trim() ? <p className="page-prose max-w-2xl">{content.intro || newsContent.intro}</p> : undefined}
               draftsNotice={
                 newsDraftsOnly ? <CmsDraftNotice entityLabel="news articles" adminHref="/admin/news" /> : undefined
               }
             />
           ) : (
             <div className="page-card max-w-2xl p-8">
-              <p className="page-prose">{content.intro}</p>
+              <p className="page-prose">{content.intro || newsContent.intro}</p>
               <p className="page-prose mt-6">
                 Stay up-to-date with our latest news and initiatives. Subscribe to our newsletter or contact{" "}
                 <a href={`mailto:${siteSettings.email.programs}`} className="font-medium text-accent-600 hover:underline">

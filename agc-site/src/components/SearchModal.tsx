@@ -87,12 +87,12 @@ export function SearchModal({ isOpen, onClose, copy }: SearchModalProps) {
   return (
     <div className="fixed inset-0 z-[100] flex items-start justify-center bg-black/50 pt-[15vh] px-4">
       <div
-        className="w-full max-w-xl border border-slate-200 bg-white shadow-2xl"
+        className="w-full max-w-xl border border-border bg-white shadow-2xl"
         role="dialog"
         aria-modal="true"
         aria-label={copy.dialogAriaLabel}
       >
-        <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3">
+        <div className="flex items-center gap-3 border-b border-border px-4 py-3">
           <Search className="h-5 w-5 shrink-0 text-slate-400" />
           <input
             ref={inputRef}

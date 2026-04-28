@@ -215,7 +215,7 @@ export default function AdminMediaPageClient() {
         onDragLeave={() => setDragOver(false)}
         onDrop={handleDrop}
         className={`mt-6 rounded-2xl border-2 border-dashed p-12 text-center transition-colors ${
-          dragOver ? "border-accent-500 bg-accent-50" : "border-slate-200 bg-white"
+          dragOver ? "border-accent-500 bg-accent-50" : "border-border bg-white"
         }`}
       >
         <input
@@ -255,13 +255,13 @@ export default function AdminMediaPageClient() {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search filename, title, alt, ID"
-              className="w-64 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+              className="w-64 rounded-lg border border-border px-3 py-2 text-sm text-slate-900"
               aria-label="Search media library"
             />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as "newest" | "oldest" | "name")}
-              className="rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+              className="rounded-lg border border-border px-3 py-2 text-sm text-slate-900"
               aria-label="Sort media library"
             >
               <option value="newest">Newest first</option>
@@ -271,11 +271,11 @@ export default function AdminMediaPageClient() {
           </div>
         </div>
         {items.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center text-slate-500">
+          <div className="rounded-2xl border border-border bg-white p-12 text-center text-slate-500">
             No images yet. Upload some to get started.
           </div>
         ) : visibleItems.length === 0 ? (
-          <div className="rounded-2xl border border-slate-200 bg-white p-12 text-center text-slate-500">
+          <div className="rounded-2xl border border-border bg-white p-12 text-center text-slate-500">
             No images match your search.
           </div>
         ) : (
@@ -284,7 +284,7 @@ export default function AdminMediaPageClient() {
               {pagedItems.map((item) => (
                 <div
                   key={item.id}
-                  className="group overflow-hidden rounded-xl border border-slate-200 bg-white shadow-sm transition-shadow hover:shadow-md"
+                  className="group overflow-hidden rounded-xl border border-border bg-white shadow-sm transition-shadow hover:shadow-md"
                 >
                   <div className="relative aspect-square overflow-hidden bg-slate-100">
                     {item.fileMissing || thumbLoadFailed[item.id] ? (
@@ -326,19 +326,19 @@ export default function AdminMediaPageClient() {
                     ) : null}
 
                     {editingId === item.id ? (
-                      <div className="mt-2 space-y-2 rounded-lg border border-slate-200 bg-slate-50 p-2">
+                      <div className="mt-2 space-y-2 rounded-lg border border-border bg-slate-50 p-2">
                         <input
                           value={metaDraft.title}
                           onChange={(e) => setMetaDraft((prev) => ({ ...prev, title: e.target.value }))}
                           placeholder="Title"
-                          className="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-900"
+                          className="w-full rounded border border-border px-2 py-1 text-xs text-slate-900"
                           aria-label={`Edit title for ${item.filename}`}
                         />
                         <input
                           value={metaDraft.alt}
                           onChange={(e) => setMetaDraft((prev) => ({ ...prev, alt: e.target.value }))}
                           placeholder="Alt text"
-                          className="w-full rounded border border-slate-300 px-2 py-1 text-xs text-slate-900"
+                          className="w-full rounded border border-border px-2 py-1 text-xs text-slate-900"
                           aria-label={`Edit alt text for ${item.filename}`}
                         />
                         <div className="flex gap-1">
@@ -406,7 +406,7 @@ export default function AdminMediaPageClient() {
               ))}
             </div>
             {totalPages > 1 ? (
-              <div className="mt-4 flex items-center justify-between rounded-xl border border-slate-200 bg-white px-4 py-3">
+              <div className="mt-4 flex items-center justify-between rounded-xl border border-border bg-white px-4 py-3">
                 <p className="text-sm text-slate-600">
                   Page {page} of {totalPages}
                 </p>
@@ -415,7 +415,7 @@ export default function AdminMediaPageClient() {
                     type="button"
                     disabled={page <= 1}
                     onClick={() => setPage((p) => Math.max(1, p - 1))}
-                    className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-border px-3 py-1.5 text-sm text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Previous
                   </button>
@@ -423,7 +423,7 @@ export default function AdminMediaPageClient() {
                     type="button"
                     disabled={page >= totalPages}
                     onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-                    className="rounded-lg border border-slate-300 px-3 py-1.5 text-sm text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="rounded-lg border border-border px-3 py-1.5 text-sm text-slate-700 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Next
                   </button>

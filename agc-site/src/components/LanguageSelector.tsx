@@ -118,7 +118,7 @@ export function LanguageSelector({ variant = "light", languages }: LanguageSelec
             className={`absolute left-0 right-0 top-full z-[90] mt-1 min-w-[140px] rounded-lg border py-1 shadow-lg ${
               variant === "dark"
                 ? "border-white/15 bg-accent-900 text-white ring-1 ring-white/10"
-                : "border-slate-200 bg-white"
+                : "border-border bg-white"
             }`}
           >
             {languageList.map((lang) => (

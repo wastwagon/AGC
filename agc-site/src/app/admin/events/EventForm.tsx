@@ -131,7 +131,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
           name="title"
           defaultValue={item?.title}
           required
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -144,7 +144,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
           name="slug"
           defaultValue={item?.slug ?? ""}
           placeholder="my-event-slug"
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -157,7 +157,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
           name="description"
           defaultValue={item?.description ?? ""}
           rows={4}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -172,7 +172,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             type="datetime-local"
             defaultValue={item ? formatDate(item.startDate) : ""}
             required
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
         <div>
@@ -184,7 +184,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             name="endDate"
             type="datetime-local"
             defaultValue={item?.endDate ? formatDate(item.endDate) : ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
       </div>
@@ -198,7 +198,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             id="location"
             name="location"
             defaultValue={item?.location ?? ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
         <div>
@@ -210,7 +210,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             name="category"
             defaultValue={item?.category ?? ""}
             placeholder="e.g. summit, conference"
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
       </div>
@@ -225,7 +225,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             name="eventType"
             defaultValue={item?.eventType ?? ""}
             placeholder="e.g. summit, workshop, webinar"
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
           <p className="mt-1 text-xs text-slate-500">Shown on the public registration page.</p>
         </div>
@@ -241,7 +241,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             id="venueName"
             name="venueName"
             defaultValue={item?.venueName ?? ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
         <div>
@@ -252,7 +252,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             id="venueAddress"
             name="venueAddress"
             defaultValue={item?.venueAddress ?? ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
       </div>
@@ -269,12 +269,12 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
               value={image}
               onChange={(e) => setImage(e.target.value)}
               placeholder="media-... or /uploads/event.jpg"
-              className="w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+              className="w-full rounded-lg border border-border px-4 py-2 text-slate-900"
             />
             <button
               type="button"
               onClick={() => setPickerOpen(true)}
-              className="inline-flex items-center gap-1 rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
+              className="inline-flex items-center gap-1 rounded-lg border border-border px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
               title="Pick from Media Library"
             >
               <ImagePlus className="h-4 w-4" />
@@ -289,7 +289,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
               <img
                 src={imagePreviewUrl}
                 alt=""
-                className="mt-1 max-h-44 max-w-full rounded-lg border border-slate-200 bg-slate-50 object-contain object-left"
+                className="mt-1 max-h-44 max-w-full rounded-lg border border-border bg-slate-50 object-contain object-left"
               />
             </div>
           ) : image.trim() ? (
@@ -311,7 +311,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             name="link"
             type="url"
             defaultValue={item?.link ?? ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
       </div>
@@ -327,7 +327,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             type="number"
             min="0"
             defaultValue={item?.capacity ?? ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
         <div>
@@ -339,19 +339,19 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
             name="registrationDeadline"
             type="date"
             defaultValue={item?.registrationDeadline ? formatDateOnly(item.registrationDeadline) : ""}
-            className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
           />
         </div>
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-slate-50/80 px-4 py-3">
+      <div className="rounded-lg border border-border bg-slate-50/80 px-4 py-3">
         <label className="flex cursor-pointer items-start gap-3">
           <input
             type="checkbox"
             name="allowWaitlist"
             value="on"
             defaultChecked={Boolean(item?.allowWaitlist)}
-            className="mt-1 h-4 w-4 rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+            className="mt-1 h-4 w-4 rounded border-border text-accent-600 focus:ring-accent-500"
           />
           <span>
             <span className="block text-sm font-medium text-slate-800">Allow waitlist when capacity is full</span>
@@ -363,7 +363,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
         </label>
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <div>
             <h2 className="text-sm font-semibold text-slate-900">Agenda</h2>
@@ -372,7 +372,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
           <button
             type="button"
             onClick={addAgendaRow}
-            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
+            className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-white px-3 py-2 text-sm font-medium text-slate-700 hover:bg-slate-50"
           >
             <Plus className="h-4 w-4" />
             Add item
@@ -384,7 +384,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
         ) : (
           <ul className="mt-4 space-y-4">
             {agendaRows.map((row, index) => (
-              <li key={index} className="rounded-lg border border-slate-200 bg-white p-4">
+              <li key={index} className="rounded-lg border border-border bg-white p-4">
                 <div className="mb-3 flex items-center justify-between gap-2">
                   <span className="text-xs font-medium uppercase tracking-wide text-slate-500">Item {index + 1}</span>
                   <button
@@ -403,7 +403,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
                       value={row.time}
                       onChange={(e) => updateAgendaRow(index, "time", e.target.value)}
                       placeholder="09:00"
-                      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                      className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm text-slate-900"
                     />
                   </div>
                   <div className="sm:col-span-2">
@@ -412,7 +412,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
                       value={row.title}
                       onChange={(e) => updateAgendaRow(index, "title", e.target.value)}
                       placeholder="Session title"
-                      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                      className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm text-slate-900"
                     />
                   </div>
                   <div className="sm:col-span-3">
@@ -422,7 +422,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
                       onChange={(e) => updateAgendaRow(index, "description", e.target.value)}
                       rows={2}
                       placeholder="Optional details"
-                      className="mt-1 w-full rounded-lg border border-slate-300 px-3 py-2 text-sm text-slate-900"
+                      className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm text-slate-900"
                     />
                   </div>
                 </div>
@@ -432,13 +432,13 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
         )}
       </div>
 
-      <div className="rounded-xl border border-slate-200 bg-slate-50/80 p-4">
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
         <h2 className="text-sm font-semibold text-slate-900">Speakers</h2>
         <p className="text-xs text-slate-600">Optional — select team members to highlight on the registration page.</p>
         {teamOptions.length === 0 ? (
           <p className="mt-3 text-sm text-slate-500">No team members yet. Add people under Admin → Team.</p>
         ) : (
-          <div className="mt-3 max-h-48 space-y-2 overflow-y-auto rounded-lg border border-slate-200 bg-white p-3">
+          <div className="mt-3 max-h-48 space-y-2 overflow-y-auto rounded-lg border border-border bg-white p-3">
             {teamOptions.map((m) => (
               <label key={m.id} className="flex cursor-pointer items-center gap-2 text-sm text-slate-800">
                 <input
@@ -446,7 +446,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
                   name="speakerIds"
                   value={String(m.id)}
                   defaultChecked={selectedSpeakerIds.includes(m.id)}
-                  className="rounded border-slate-300 text-accent-600 focus:ring-accent-500"
+                  className="rounded border-border text-accent-600 focus:ring-accent-500"
                 />
                 <span>{m.name}</span>
               </label>
@@ -463,7 +463,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
           id="status"
           name="status"
           defaultValue={item?.status ?? "draft"}
-          className="mt-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 rounded-lg border border-border px-4 py-2 text-slate-900"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -479,7 +479,7 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
         ) : null}
         <Link
           href="/admin/events"
-          className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
+          className="flex min-h-[44px] items-center rounded-lg border border-border px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
         </Link>

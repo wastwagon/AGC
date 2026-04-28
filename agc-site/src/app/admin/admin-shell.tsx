@@ -89,13 +89,13 @@ export function AdminShell({ children, siteSettings }: { children: React.ReactNo
       )}
 
       <aside
-        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-slate-200 bg-white shadow-[4px_0_24px_-8px_rgba(15,23,42,0.08)] transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed inset-y-0 left-0 z-50 flex w-[260px] flex-col border-r border-border bg-white shadow-[4px_0_24px_-8px_rgba(15,23,42,0.08)] transition-transform duration-200 lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
         <div className="absolute bottom-0 left-0 top-0 w-0.5 bg-accent-500/25" aria-hidden />
 
-        <div className="flex h-16 shrink-0 items-center justify-between border-b border-slate-100 bg-slate-50/80 px-4">
+        <div className="flex h-16 shrink-0 items-center justify-between border-b border-border bg-slate-50/80 px-4">
           <Link href="/" className="flex items-center gap-2 rounded-lg pr-2 hover:opacity-90">
             <Image
               src="/agc-logo.png"
@@ -155,10 +155,10 @@ export function AdminShell({ children, siteSettings }: { children: React.ReactNo
           </ul>
         </nav>
 
-        <div className="border-t border-slate-100 bg-slate-50/50 p-3">
+        <div className="border-t border-border bg-slate-50/50 p-3">
           <Link
             href="/"
-            className="flex items-center justify-center gap-2 rounded-lg border border-slate-200 bg-white py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-accent-200 hover:bg-accent-50/50 hover:text-accent-800"
+            className="flex items-center justify-center gap-2 rounded-lg border border-border bg-white py-2.5 text-sm font-medium text-slate-700 shadow-sm transition hover:border-accent-200 hover:bg-accent-50/50 hover:text-accent-800"
           >
             <ExternalLink className="h-4 w-4" />
             View public site
@@ -167,7 +167,7 @@ export function AdminShell({ children, siteSettings }: { children: React.ReactNo
       </aside>
 
       <div className="flex flex-1 flex-col lg:pl-[260px]">
-        <header className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-wrap items-center gap-3 border-b border-slate-200/80 bg-white/95 px-4 py-3 shadow-sm backdrop-blur-md sm:px-6">
+        <header className="sticky top-0 z-20 flex min-h-14 shrink-0 flex-wrap items-center gap-3 border-b border-border/80 bg-white/95 px-4 py-3 shadow-sm backdrop-blur-md sm:px-6">
           <button
             type="button"
             onClick={() => setSidebarOpen(true)}
@@ -199,7 +199,7 @@ export function AdminShell({ children, siteSettings }: { children: React.ReactNo
           <form action={async () => signOut({ callbackUrl: "/admin/login" })} className="shrink-0">
             <button
               type="submit"
-              className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-slate-300 hover:bg-white"
+              className="flex items-center gap-2 rounded-lg border border-border bg-slate-50 px-3 py-2 text-sm font-medium text-slate-700 transition hover:border-border hover:bg-white"
             >
               <LogOut className="h-4 w-4" aria-hidden />
               <span className="hidden sm:inline">Sign out</span>

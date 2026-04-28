@@ -166,16 +166,16 @@ export default async function PublicationDetailPage({ params }: Props) {
         <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
             <div className="min-w-0 lg:col-span-8">
-              <nav aria-label="Breadcrumb" className="mb-10 border-b border-stone-200/90 pb-6 text-sm text-stone-500">
+              <nav aria-label="Breadcrumb" className="mb-10 border-b border-border/90 pb-6 text-sm text-black">
                 <Link href="/" className="transition-colors hover:text-accent-700">
                   {bc.home}
                 </Link>
-                <span className="mx-2 text-stone-300">/</span>
+                <span className="mx-2 text-black">/</span>
                 <Link href="/publications" className="transition-colors hover:text-accent-700">
                   {bc.publications}
                 </Link>
-                <span className="mx-2 text-stone-300">/</span>
-                <span className="line-clamp-1 text-stone-700">{item.title}</span>
+                <span className="mx-2 text-black">/</span>
+                <span className="line-clamp-1 text-black">{item.title}</span>
               </nav>
 
               {leadHtml ? (
@@ -184,20 +184,20 @@ export default async function PublicationDetailPage({ params }: Props) {
                     className="article-lead text-xl font-medium leading-relaxed text-accent-950 [&_p]:mb-0"
                     dangerouslySetInnerHTML={{ __html: leadHtml }}
                   />
-                  <hr className="my-10 border-0 border-t border-stone-200" />
+                  <hr className="my-10 border-0 border-t border-border" />
                 </>
               ) : null}
 
               {fileUrl ? (
-                <div className={leadHtml ? "mt-14 border-t border-stone-200 pt-10" : ""}>
-                  <h3 className="page-heading text-lg text-stone-900">Download</h3>
-                  <p className="mt-1 text-sm text-stone-600">
+                <div className={leadHtml ? "mt-14 border-t border-border pt-10" : ""}>
+                  <h3 className="page-heading text-lg text-black">Download</h3>
+                  <p className="mt-1 text-sm text-black">
                     Full text as PDF — for research, teaching, and policy use.
                   </p>
                   <ul className="mt-6 space-y-4">
                     <li>
-                      <div className="rounded-none border border-stone-200/90 bg-white p-6 shadow-sm sm:p-8">
-                        <h4 className="page-heading text-xl text-stone-900">{item.title}</h4>
+                      <div className="rounded-none border border-border/90 bg-white p-6 shadow-sm sm:p-8">
+                        <h4 className="page-heading text-xl text-black">{item.title}</h4>
                         <a
                           href={fileUrl}
                           target="_blank"
@@ -212,7 +212,7 @@ export default async function PublicationDetailPage({ params }: Props) {
                   </ul>
                 </div>
               ) : (
-                <p className="page-prose text-stone-600">
+                <p className="page-prose text-black">
                   A downloadable file is not linked for this publication yet. For a copy, please{" "}
                   <Link
                     href="/contact"
@@ -225,7 +225,7 @@ export default async function PublicationDetailPage({ params }: Props) {
               )}
             </div>
 
-            <aside className="min-w-0 border-t border-stone-200 pt-10 lg:col-span-4 lg:border-l lg:border-t-0 lg:border-stone-200 lg:pl-10 lg:pt-0">
+            <aside className="min-w-0 border-t border-border pt-10 lg:col-span-4 lg:border-l lg:border-t-0 lg:border-border lg:pl-10 lg:pt-0">
               <div className="lg:sticky lg:top-28">
                 {dateStrSidebar ? <p className="text-lg font-bold text-accent-600">{dateStrSidebar}</p> : null}
 
@@ -234,7 +234,7 @@ export default async function PublicationDetailPage({ params }: Props) {
                     <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-600">
                       {detailCopy.typeLabel}
                     </p>
-                    <p className="mt-3 text-sm font-semibold leading-relaxed text-stone-800">{typeLabel}</p>
+                    <p className="mt-3 text-sm font-semibold leading-relaxed text-black">{typeLabel}</p>
                   </div>
                 ) : null}
 
@@ -243,7 +243,7 @@ export default async function PublicationDetailPage({ params }: Props) {
                     <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-600">
                       {detailCopy.authorLabel}
                     </p>
-                    <p className="mt-3 text-sm leading-relaxed text-stone-700">{item.author}</p>
+                    <p className="mt-3 text-sm leading-relaxed text-black">{item.author}</p>
                   </div>
                 ) : null}
 
@@ -254,7 +254,7 @@ export default async function PublicationDetailPage({ params }: Props) {
 
           {relatedWithImages.length > 0 ? (
             <section className="mt-20 lg:mt-24" aria-labelledby="related-publications-heading">
-              <div className="border-t border-b border-stone-200 py-4">
+              <div className="border-t border-b border-border py-4">
                 <h2
                   id="related-publications-heading"
                   className="font-sans text-2xl font-semibold tracking-tight text-accent-800 sm:text-3xl"

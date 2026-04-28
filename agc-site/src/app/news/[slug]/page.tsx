@@ -141,37 +141,37 @@ export default async function NewsDetailPage({ params }: Props) {
           priority
         />
         <HeroDarkScrim />
-        <div className="absolute inset-0 flex flex-col justify-end p-6 sm:p-10 lg:p-16">
-          <div className="mx-auto w-full max-w-3xl [text-shadow:0_1px_2px_rgba(0,0,0,0.2),0_2px_14px_rgba(0,0,0,0.22)]">
+        <div className="absolute inset-0 flex flex-col justify-end px-4 pb-8 pt-0 sm:px-6 sm:pb-10 lg:px-8 lg:pb-12 xl:px-12 2xl:px-16">
+          <div className="mx-auto w-full max-w-none [text-shadow:0_1px_2px_rgba(0,0,0,0.2),0_2px_14px_rgba(0,0,0,0.22)]">
             <p className="mb-3 text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-white">{pageCopy.title}</p>
             <h1 className="font-serif text-3xl font-semibold leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-[2.35rem]">
               {item.title}
             </h1>
             {dateStrHero ? (
               <p className="mt-4 flex items-center gap-2 text-sm text-white/95">
-                <Calendar className="h-4 w-4 shrink-0 text-white" aria-hidden />
+              <Calendar className="h-4 w-4 shrink-0 text-white" aria-hidden />
                 {dateStrHero}
-              </p>
+            </p>
             ) : null}
           </div>
         </div>
       </div>
 
       <div className="relative z-[1] -mt-6 bg-white sm:-mt-10">
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-14 lg:px-8 lg:py-16">
+        <div className="mx-auto w-full max-w-none px-4 py-8 sm:px-6 sm:py-10 lg:px-8 lg:py-12 xl:px-12 2xl:px-16">
           <div className="grid gap-12 lg:grid-cols-12 lg:gap-14">
             <div className="min-w-0 lg:col-span-8">
-              <nav aria-label="Breadcrumb" className="mb-10 border-b border-stone-200/90 pb-6 text-sm text-stone-500">
-                <Link href="/" className="transition-colors hover:text-accent-700">
-                  {bc.home}
-                </Link>
-                <span className="mx-2 text-stone-300">/</span>
-                <Link href="/news" className="transition-colors hover:text-accent-700">
-                  {bc.news}
-                </Link>
-                <span className="mx-2 text-stone-300">/</span>
-                <span className="line-clamp-1 text-stone-700">{item.title}</span>
-              </nav>
+              <nav aria-label="Breadcrumb" className="mb-10 border-b border-border/90 pb-6 text-sm text-black">
+              <Link href="/" className="transition-colors hover:text-accent-700">
+                {bc.home}
+              </Link>
+              <span className="mx-2 text-black">/</span>
+              <Link href="/news" className="transition-colors hover:text-accent-700">
+                {bc.news}
+              </Link>
+              <span className="mx-2 text-black">/</span>
+              <span className="line-clamp-1 text-black">{item.title}</span>
+            </nav>
 
               {leadHtml ? (
                 <>
@@ -179,31 +179,31 @@ export default async function NewsDetailPage({ params }: Props) {
                     className="article-lead text-xl font-medium leading-relaxed text-accent-950 [&_p]:mb-0"
                     dangerouslySetInnerHTML={{ __html: leadHtml }}
                   />
-                  <hr className="my-10 border-0 border-t border-stone-200" />
+                  <hr className="my-10 border-0 border-t border-border" />
                 </>
               ) : null}
 
               <div
                 className="prose prose-lg max-w-none
-                  prose-headings:page-heading prose-headings:mt-10 prose-headings:mb-4 prose-headings:text-stone-900
-                  prose-p:page-prose prose-p:mb-5 prose-p:text-stone-700
+                  prose-headings:page-heading prose-headings:mt-10 prose-headings:mb-4 prose-headings:text-black
+                  prose-p:page-prose prose-p:mb-5 prose-p:text-black
                   prose-a:text-accent-800 prose-a:font-medium prose-a:no-underline hover:prose-a:underline prose-a:decoration-accent-400
-                  prose-strong:text-stone-900 prose-li:text-stone-600
-                  prose-blockquote:border-l-accent-600 prose-blockquote:bg-stone-50/80 prose-blockquote:py-1 prose-blockquote:not-italic prose-blockquote:text-stone-700"
+                  prose-strong:text-black prose-li:text-black
+                  prose-blockquote:border-l-accent-600 prose-blockquote:bg-stone-50/80 prose-blockquote:py-1 prose-blockquote:not-italic prose-blockquote:text-black"
                 dangerouslySetInnerHTML={{ __html: bodyHtml }}
               />
 
               {documentDownloads.length > 0 ? (
-                <div className="mt-14 border-t border-stone-200 pt-10">
-                  <h3 className="page-heading text-lg text-stone-900">Documents</h3>
-                  <p className="mt-1 text-sm text-stone-600">Download PDFs and resources linked to this article.</p>
+                <div className="mt-14 border-t border-border pt-10">
+                  <h3 className="page-heading text-lg text-black">Documents</h3>
+                  <p className="mt-1 text-sm text-black">Download PDFs and resources linked to this article.</p>
                   <ul className="mt-6 space-y-4">
                     {documentDownloads.map((doc) => (
                       <li key={`${doc.label}-${doc.href}`}>
-                        <div className="rounded-none border border-stone-200/90 bg-white p-6 shadow-sm sm:p-8">
-                          <h4 className="page-heading text-xl text-stone-900">{doc.label}</h4>
+                        <div className="rounded-none border border-border/90 bg-white p-6 shadow-sm sm:p-8">
+                          <h4 className="page-heading text-xl text-black">{doc.label}</h4>
                           {doc.description ? (
-                            <p className="mt-2 page-prose text-[0.98rem] text-stone-700">{doc.description}</p>
+                            <p className="mt-2 page-prose text-[0.98rem] text-black">{doc.description}</p>
                           ) : null}
                           <a
                             href={doc.href}
@@ -222,7 +222,7 @@ export default async function NewsDetailPage({ params }: Props) {
               ) : null}
             </div>
 
-            <aside className="min-w-0 border-t border-stone-200 pt-10 lg:col-span-4 lg:border-l lg:border-t-0 lg:border-stone-200 lg:pl-10 lg:pt-0">
+            <aside className="min-w-0 border-t border-border pt-10 lg:col-span-4 lg:border-l lg:border-t-0 lg:border-border lg:pl-10 lg:pt-0">
               <div className="lg:sticky lg:top-28">
                 {dateStrSidebar ? (
                   <p className="text-lg font-bold text-accent-600">{dateStrSidebar}</p>
@@ -235,16 +235,16 @@ export default async function NewsDetailPage({ params }: Props) {
                     </p>
                     <div className="mt-3 flex flex-col gap-2">
                       {categorySlugs.map((catSlug) => (
-                        <Link
-                          key={catSlug}
-                          href={`/news/category/${catSlug}`}
+                      <Link
+                        key={catSlug}
+                        href={`/news/category/${catSlug}`}
                           className="text-sm font-semibold text-accent-800 underline decoration-accent-300 underline-offset-4 transition-colors hover:text-accent-950"
-                        >
-                          {getCategoryLabel(catSlug, taxonomy.newsCategories)}
-                        </Link>
-                      ))}
-                    </div>
-                  </div>
+                      >
+                        {getCategoryLabel(catSlug, taxonomy.newsCategories)}
+                      </Link>
+                    ))}
+                </div>
+              </div>
                 ) : null}
 
                 {tagSlugs.length > 0 ? (
@@ -252,7 +252,7 @@ export default async function NewsDetailPage({ params }: Props) {
                     <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-600">
                       {detailCopy.tagsLabel}
                     </p>
-                    <p className="mt-3 text-sm leading-relaxed text-stone-700">
+                    <p className="mt-3 text-sm leading-relaxed text-black">
                       {tagSlugs.map((tagSlug, i) => (
                         <span key={tagSlug}>
                           {i > 0 ? ", " : null}
@@ -269,13 +269,13 @@ export default async function NewsDetailPage({ params }: Props) {
                 ) : null}
 
                 <NewsArticleShareLinks url={canonicalUrl} title={item.title} />
-              </div>
+                </div>
             </aside>
           </div>
 
           {relatedWithImages.length > 0 ? (
             <section className="mt-20 lg:mt-24" aria-labelledby="related-news-heading">
-              <div className="border-t border-b border-stone-200 py-4">
+              <div className="border-t border-b border-border py-4">
                 <h2
                   id="related-news-heading"
                   className="font-sans text-2xl font-semibold tracking-tight text-accent-800 sm:text-3xl"

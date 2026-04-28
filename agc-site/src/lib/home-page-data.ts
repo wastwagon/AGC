@@ -14,6 +14,9 @@ const LEGACY_HOME_REACH_TITLE = "The shape of our work";
 const LEGACY_HOME_IMPACT_METHODOLOGY =
   "Numbers describe our reach, not our worth. We report in full in our annual updates—ask us if you want the detail behind a figure.";
 
+const LEGACY_HOME_NEWS_TEASER_SUBTITLE =
+  "Stay updated with our latest research, events, and insights on governance across Africa.";
+
 function normalizeRetiredHomeReachFields(home: HomePageCms) {
   if (home.homeReach.intro === LEGACY_HOME_REACH_INTRO) {
     home.homeReach.intro = "";
@@ -29,6 +32,9 @@ function normalizeRetiredHomeReachFields(home: HomePageCms) {
   }
   if (home.homeImpactMethodology === LEGACY_HOME_IMPACT_METHODOLOGY) {
     home.homeImpactMethodology = "";
+  }
+  if (home.homeNewsTeaser.subtitle?.trim() === LEGACY_HOME_NEWS_TEASER_SUBTITLE) {
+    home.homeNewsTeaser.subtitle = "";
   }
 }
 

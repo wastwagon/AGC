@@ -284,7 +284,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           defaultValue={item.slug}
           required
           readOnly
-          className="mt-1 w-full rounded-lg border border-slate-300 bg-slate-50 px-4 py-2 text-slate-600"
+          className="mt-1 w-full rounded-lg border border-border bg-slate-50 px-4 py-2 text-slate-600"
         />
         <p className="mt-1 text-xs text-slate-500">Slug cannot be changed after creation.</p>
       </div>
@@ -295,7 +295,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           id="title"
           name="title"
           defaultValue={item.title ?? ""}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -305,7 +305,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           id="heroTitle"
           name="heroTitle"
           defaultValue={item.heroTitle ?? ""}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -316,7 +316,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           name="heroSubtitle"
           defaultValue={item.heroSubtitle ?? ""}
           rows={2}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -327,7 +327,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           name="intro"
           defaultValue={item.intro ?? ""}
           rows={3}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -338,7 +338,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           name="description"
           defaultValue={item.description ?? ""}
           rows={4}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -349,7 +349,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           name="mission"
           defaultValue={item.mission ?? ""}
           rows={3}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -359,7 +359,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           id="objectivesTitle"
           name="objectivesTitle"
           defaultValue={item.objectivesTitle ?? ""}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -370,7 +370,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           name="objectivesContent"
           defaultValue={item.objectivesContent ?? ""}
           rows={4}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -381,7 +381,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           name="objectivesPrinciples"
           defaultValue={item.objectivesPrinciples ?? ""}
           rows={4}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -392,7 +392,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           name="objectivesAgenda2063"
           defaultValue={item.objectivesAgenda2063 ?? ""}
           rows={4}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
         />
       </div>
 
@@ -402,7 +402,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           id="status"
           name="status"
           defaultValue={item.status ?? "published"}
-          className="mt-1 rounded-lg border border-slate-300 px-4 py-2 text-slate-900"
+          className="mt-1 rounded-lg border border-border px-4 py-2 text-slate-900"
         >
           <option value="draft">Draft</option>
           <option value="published">Published</option>
@@ -425,13 +425,13 @@ export function PageContentForm({ item }: PageContentFormProps) {
           <button
             type="button"
             onClick={clearLocalDraft}
-            className="rounded-md border border-slate-300 px-2 py-1 text-slate-600 hover:bg-slate-100"
+            className="rounded-md border border-border px-2 py-1 text-slate-600 hover:bg-slate-100"
           >
             Clear local draft
           </button>
         </div>
         {item.slug.startsWith("our-work-") && (
-          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Our Work helper</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
@@ -440,7 +440,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.title === "string" ? parsedJson.title : ""}
                   onChange={(e) => updateJsonField("title", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -449,7 +449,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.subtitle === "string" ? parsedJson.subtitle : ""}
                   onChange={(e) => updateJsonField("subtitle", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -459,13 +459,13 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.description === "string" ? parsedJson.description : ""}
                 onChange={(e) => updateJsonField("description", e.target.value)}
                 rows={3}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
           </div>
         )}
         {item.slug === "our-work" && (
-          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Our Work main page helper</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
@@ -477,7 +477,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["hero", "title"])}
                   onChange={(e) => updateNestedString(["hero", "title"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -486,7 +486,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["hero", "subtitle"])}
                   onChange={(e) => updateNestedString(["hero", "subtitle"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -497,7 +497,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["tabs", "programs"])}
                   onChange={(e) => updateNestedString(["tabs", "programs"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -506,7 +506,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["tabs", "projects"])}
                   onChange={(e) => updateNestedString(["tabs", "projects"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -515,33 +515,57 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["tabs", "advisory"])}
                   onChange={(e) => updateNestedString(["tabs", "advisory"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
             <div className="mt-4 rounded-md border border-amber-200 bg-amber-50/40 p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Homepage pillar cards</p>
               <p className="mt-1 text-[11px] text-slate-500">
-                Six cards under the hero. Titles default from the <strong className="font-medium text-slate-700">programs</strong>,{" "}
-                <strong className="font-medium text-slate-700">projects</strong>, <strong className="font-medium text-slate-700">advisory</strong>,{" "}
-                <strong className="font-medium text-slate-700">research</strong>, <strong className="font-medium text-slate-700">training</strong>, and{" "}
-                <strong className="font-medium text-slate-700">partnership</strong> blocks on this page (or each section’s CMS page). Use Media Library IDs or{" "}
+                Six cards under the hero in two rows. Optional headings below replace the defaults (one title per row). Card titles come from the{" "}
+                <strong className="font-medium text-slate-700">programs</strong>, <strong className="font-medium text-slate-700">projects</strong>,{" "}
+                <strong className="font-medium text-slate-700">advisory</strong>, <strong className="font-medium text-slate-700">research</strong>,{" "}
+                <strong className="font-medium text-slate-700">training</strong>, and <strong className="font-medium text-slate-700">partnership</strong> blocks. Use Media Library IDs or{" "}
                 <code className="rounded bg-white px-0.5">/uploads/…</code> paths for images.
               </p>
-              <label className="mt-2 block text-xs font-medium text-slate-600">Intro line (optional)</label>
-              <input
-                type="text"
-                value={typeof parsedJson.homePillarIntro === "string" ? parsedJson.homePillarIntro : ""}
-                onChange={(e) => updateJsonField("homePillarIntro", e.target.value)}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
-                placeholder="e.g. Three ways we show up alongside partners"
-              />
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">
+                    Heading — first row (default: Engagement and delivery)
+                  </label>
+                  <input
+                    type="text"
+                    value={
+                      typeof parsedJson.pillarRowTitlePrimary === "string" ? parsedJson.pillarRowTitlePrimary : ""
+                    }
+                    onChange={(e) => updateJsonField("pillarRowTitlePrimary", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                    placeholder="Engagement and delivery"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-slate-600">
+                    Heading — second row (default: Knowledge and partnerships)
+                  </label>
+                  <input
+                    type="text"
+                    value={
+                      typeof parsedJson.pillarRowTitleSecondary === "string"
+                        ? parsedJson.pillarRowTitleSecondary
+                        : ""
+                    }
+                    onChange={(e) => updateJsonField("pillarRowTitleSecondary", e.target.value)}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                    placeholder="Knowledge and partnerships"
+                  />
+                </div>
+              </div>
               <label className="mt-2 block text-xs font-medium text-slate-600">Card link label (optional)</label>
               <input
                 type="text"
                 value={typeof parsedJson.pillarReadMoreLabel === "string" ? parsedJson.pillarReadMoreLabel : ""}
                 onChange={(e) => updateJsonField("pillarReadMoreLabel", e.target.value)}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 placeholder="e.g. Read more"
               />
               <div className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -551,7 +575,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["pillarCardImages", "programs"])}
                     onChange={(e) => updateNestedString(["pillarCardImages", "programs"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
                     placeholder="media-… or /uploads/…"
                   />
                 </div>
@@ -561,7 +585,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["pillarCardImages", "projects"])}
                     onChange={(e) => updateNestedString(["pillarCardImages", "projects"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
                     placeholder="media-… or /uploads/…"
                   />
                 </div>
@@ -571,7 +595,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["pillarCardImages", "advisory"])}
                     onChange={(e) => updateNestedString(["pillarCardImages", "advisory"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
                     placeholder="media-… or /uploads/…"
                   />
                 </div>
@@ -581,7 +605,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["pillarCardImages", "research"])}
                     onChange={(e) => updateNestedString(["pillarCardImages", "research"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
                     placeholder="media-… or /uploads/…"
                   />
                 </div>
@@ -591,7 +615,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["pillarCardImages", "training"])}
                     onChange={(e) => updateNestedString(["pillarCardImages", "training"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
                     placeholder="media-… or /uploads/…"
                   />
                 </div>
@@ -601,13 +625,13 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["pillarCardImages", "partnership"])}
                     onChange={(e) => updateNestedString(["pillarCardImages", "partnership"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1 text-xs font-mono"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1 text-xs font-mono"
                     placeholder="media-… or /uploads/…"
                   />
                 </div>
               </div>
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Approach section</p>
               <div className="mt-2 grid gap-2">
                 <input
@@ -615,21 +639,21 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={getNestedString(["approach", "title"])}
                   onChange={(e) => updateNestedString(["approach", "title"], e.target.value)}
                   placeholder="Approach title"
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                  className="rounded-md border border-border px-2 py-1 text-xs"
                 />
                 <textarea
                   value={getNestedString(["approach", "intro"])}
                   onChange={(e) => updateNestedString(["approach", "intro"], e.target.value)}
                   rows={3}
                   placeholder="Approach intro"
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                  className="rounded-md border border-border px-2 py-1 text-xs"
                 />
                 <input
                   type="text"
                   value={getNestedString(["approach", "objectivesLead"])}
                   onChange={(e) => updateNestedString(["approach", "objectivesLead"], e.target.value)}
                   placeholder="Objectives lead text"
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                  className="rounded-md border border-border px-2 py-1 text-xs"
                 />
                 <textarea
                   value={getNestedStringArray(["approach", "objectives"]).join("\n")}
@@ -644,24 +668,24 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   }
                   rows={5}
                   placeholder="Objectives (one line per objective)"
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                  className="rounded-md border border-border px-2 py-1 text-xs"
                 />
               </div>
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Advisory cards</p>
                 <button
                   type="button"
                   onClick={() => updateNestedArray(["advisory", "cards"], (arr) => [...arr, { title: "", description: "" }])}
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
                 >
                   + Add card
                 </button>
               </div>
               <div className="space-y-2">
                 {ourWorkAdvisoryCards.map((card, idx) => (
-                  <div key={idx} className="rounded-md border border-slate-200 p-3">
+                  <div key={idx} className="rounded-md border border-border p-3">
                     <div className="grid gap-2 sm:grid-cols-2">
                       <input
                         value={typeof card.title === "string" ? card.title : ""}
@@ -671,7 +695,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           )
                         }
                         placeholder="Card title"
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-border px-2 py-1 text-xs"
                       />
                       <button
                         type="button"
@@ -690,7 +714,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       }
                       rows={3}
                       placeholder="Card description"
-                      className="mt-2 w-full rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      className="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs"
                     />
                   </div>
                 ))}
@@ -699,7 +723,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           </div>
         )}
         {item.slug === "site-settings" && (
-          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Global site settings</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
@@ -708,7 +732,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.name === "string" ? parsedJson.name : ""}
                   onChange={(e) => updateJsonField("name", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -717,7 +741,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.phone === "string" ? parsedJson.phone : ""}
                   onChange={(e) => updateJsonField("phone", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -727,7 +751,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.tagline === "string" ? parsedJson.tagline : ""}
                 onChange={(e) => updateJsonField("tagline", e.target.value)}
                 rows={2}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -736,7 +760,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 type="text"
                 value={typeof parsedJson.address === "string" ? parsedJson.address : ""}
                 onChange={(e) => updateJsonField("address", e.target.value)}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -745,7 +769,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 type="text"
                 value={typeof parsedJson.officeHours === "string" ? parsedJson.officeHours : ""}
                 onChange={(e) => updateJsonField("officeHours", e.target.value)}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
@@ -755,7 +779,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="email"
                   value={getNestedString(["email", "programs"])}
                   onChange={(e) => updateNestedString(["email", "programs"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -764,7 +788,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="email"
                   value={getNestedString(["email", "media"])}
                   onChange={(e) => updateNestedString(["email", "media"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -773,7 +797,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="email"
                   value={getNestedString(["email", "info"])}
                   onChange={(e) => updateNestedString(["email", "info"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -784,7 +808,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="url"
                   value={getNestedString(["social", "linkedin"])}
                   onChange={(e) => updateNestedString(["social", "linkedin"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -793,7 +817,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="url"
                   value={getNestedString(["social", "twitter"])}
                   onChange={(e) => updateNestedString(["social", "twitter"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -802,7 +826,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="url"
                   value={getNestedString(["social", "instagram"])}
                   onChange={(e) => updateNestedString(["social", "instagram"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -811,14 +835,14 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="url"
                   value={getNestedString(["social", "facebook"])}
                   onChange={(e) => updateNestedString(["social", "facebook"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
           </div>
         )}
         {item.slug === "get-involved" && (
-          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Get Involved helper</p>
             <div>
               <label className="block text-xs font-medium text-slate-600">Page intro</label>
@@ -826,10 +850,10 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.intro === "string" ? parsedJson.intro : ""}
                 onChange={(e) => updateJsonField("intro", e.target.value)}
                 rows={3}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Sub-page hero images</p>
               <p className="mt-1 text-xs text-slate-500">
                 Backgrounds for <code className="text-[0.7rem]">/get-involved/join-us</code>,{" "}
@@ -853,12 +877,12 @@ export function PageContentForm({ item }: PageContentFormProps) {
                         value={getNestedString([...path])}
                         onChange={(e) => updateNestedString([...path], e.target.value)}
                         placeholder="media-… or /uploads/…"
-                        className="w-full min-w-0 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-900"
+                        className="w-full min-w-0 rounded-md border border-border bg-white px-2 py-1.5 text-xs text-slate-900"
                       />
                       <button
                         type="button"
                         onClick={() => setPickerTarget({ nested: [...path] })}
-                        className="inline-flex shrink-0 items-center gap-1 rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100"
+                        className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-white px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100"
                         title="Pick from Media Library"
                       >
                         <ImagePlus className="h-3.5 w-3.5" />
@@ -868,7 +892,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 ))}
               </div>
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Sub-page text</p>
               <p className="mt-1 text-xs text-slate-500">
                 Copy for the three detail routes below. The main hub cards are edited in <strong>Opportunities</strong>{" "}
@@ -882,14 +906,14 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     { key: "volunteer", label: "Volunteer (/get-involved/volunteer)", ctaHrefKey: "applicationHref" as const },
                   ] as const
                 ).map(({ key, label, ctaHrefKey }) => (
-                  <details key={key} className="group rounded-md border border-slate-200 bg-slate-50/80 open:bg-white">
+                  <details key={key} className="group rounded-md border border-border bg-slate-50/80 open:bg-white">
                     <summary className="cursor-pointer list-none px-3 py-2 text-sm font-medium text-slate-800 [&::-webkit-details-marker]:hidden">
                       <span className="inline-flex items-center gap-2">
                         <ChevronRight className="h-4 w-4 shrink-0 text-slate-500 transition group-open:rotate-90" />
                         {label}
                       </span>
                     </summary>
-                    <div className="space-y-2 border-t border-slate-200 px-3 pb-3 pt-2">
+                    <div className="space-y-2 border-t border-border px-3 pb-3 pt-2">
                       <div className="grid gap-2 sm:grid-cols-2">
                         <div>
                           <label className="block text-xs font-medium text-slate-600">Hero title</label>
@@ -897,7 +921,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                             type="text"
                             value={getNestedString([key, "title"])}
                             onChange={(e) => updateNestedString([key, "title"], e.target.value)}
-                            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                            className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
                           />
                         </div>
                         <div>
@@ -906,7 +930,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                             type="text"
                             value={getNestedString([key, "subtitle"])}
                             onChange={(e) => updateNestedString([key, "subtitle"], e.target.value)}
-                            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                            className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
                           />
                         </div>
                       </div>
@@ -916,7 +940,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           value={getNestedString([key, "intro"])}
                           onChange={(e) => updateNestedString([key, "intro"], e.target.value)}
                           rows={3}
-                          className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                          className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
                         />
                       </div>
                       <div>
@@ -925,7 +949,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           value={getNestedString([key, "description"])}
                           onChange={(e) => updateNestedString([key, "description"], e.target.value)}
                           rows={4}
-                          className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                          className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
                         />
                       </div>
                       <div>
@@ -943,7 +967,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           }
                           rows={5}
                           placeholder="One bullet per line"
-                          className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                          className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
                         />
                       </div>
                       <div className="grid gap-2 sm:grid-cols-2">
@@ -953,7 +977,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                             type="text"
                             value={getNestedString([key, "cta"])}
                             onChange={(e) => updateNestedString([key, "cta"], e.target.value)}
-                            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                            className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
                           />
                         </div>
                         <div>
@@ -965,7 +989,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                             value={getNestedString([key, ctaHrefKey])}
                             onChange={(e) => updateNestedString([key, ctaHrefKey], e.target.value)}
                             placeholder="/contact or /applications"
-                            className="mt-1 w-full rounded-md border border-slate-300 bg-white px-2 py-1.5 text-xs"
+                            className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
                           />
                         </div>
                       </div>
@@ -981,7 +1005,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["bottomSection", "getInTouch", "title"])}
                   onChange={(e) => updateNestedString(["bottomSection", "getInTouch", "title"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -990,11 +1014,11 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["bottomSection", "upcomingEvents", "title"])}
                   onChange={(e) => updateNestedString(["bottomSection", "upcomingEvents", "title"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Opportunities</p>
                 <button
@@ -1005,14 +1029,14 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       { id: `item-${arr.length + 1}`, title: "", description: "", items: [], cta: "", href: "", pageHref: "" },
                     ])
                   }
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
                 >
                   + Add opportunity
                 </button>
               </div>
               <div className="space-y-2">
                 {getInvolvedOpportunities.map((opp, idx) => (
-                  <div key={idx} className="rounded-md border border-slate-200 p-3">
+                  <div key={idx} className="rounded-md border border-border p-3">
                     <div className="grid gap-2 sm:grid-cols-3">
                       <input
                         value={typeof opp.id === "string" ? opp.id : ""}
@@ -1022,7 +1046,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           )
                         }
                         placeholder="id"
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-border px-2 py-1 text-xs"
                       />
                       <input
                         value={typeof opp.title === "string" ? opp.title : ""}
@@ -1032,7 +1056,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           )
                         }
                         placeholder="title"
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-border px-2 py-1 text-xs"
                       />
                       <button
                         type="button"
@@ -1051,7 +1075,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       }
                       rows={2}
                       placeholder="Description"
-                      className="mt-2 w-full rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      className="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs"
                     />
                     <div className="mt-2 grid gap-2 sm:grid-cols-3">
                       <input
@@ -1062,7 +1086,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           )
                         }
                         placeholder="CTA label"
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-border px-2 py-1 text-xs"
                       />
                       <input
                         value={typeof opp.href === "string" ? opp.href : ""}
@@ -1072,7 +1096,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           )
                         }
                         placeholder="CTA href"
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-border px-2 py-1 text-xs"
                       />
                       <input
                         value={typeof opp.pageHref === "string" ? opp.pageHref : ""}
@@ -1082,14 +1106,14 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           )
                         }
                         placeholder="Detail page href"
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-border px-2 py-1 text-xs"
                       />
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Upcoming events list</p>
                 <button
@@ -1100,14 +1124,14 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       { startDate: "", endDate: "", label: "", registerHref: "/events" },
                     ])
                   }
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
                 >
                   + Add event
                 </button>
               </div>
               <div className="space-y-2">
                 {getInvolvedEvents.map((evt, idx) => (
-                  <div key={idx} className="grid gap-2 rounded-md border border-slate-200 p-3 sm:grid-cols-4">
+                  <div key={idx} className="grid gap-2 rounded-md border border-border p-3 sm:grid-cols-4">
                     <input
                       value={typeof evt.startDate === "string" ? evt.startDate : ""}
                       onChange={(e) =>
@@ -1116,7 +1140,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                         )
                       }
                       placeholder="Start date"
-                      className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      className="rounded-md border border-border px-2 py-1 text-xs"
                     />
                     <input
                       value={typeof evt.endDate === "string" ? evt.endDate : ""}
@@ -1126,7 +1150,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                         )
                       }
                       placeholder="End date"
-                      className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      className="rounded-md border border-border px-2 py-1 text-xs"
                     />
                     <input
                       value={typeof evt.label === "string" ? evt.label : ""}
@@ -1136,7 +1160,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                         )
                       }
                       placeholder="Label"
-                      className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      className="rounded-md border border-border px-2 py-1 text-xs"
                     />
                     <div className="flex gap-2">
                       <input
@@ -1147,7 +1171,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           )
                         }
                         placeholder="Register href"
-                        className="w-full rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="w-full rounded-md border border-border px-2 py-1 text-xs"
                       />
                       <button
                         type="button"
@@ -1167,28 +1191,28 @@ export function PageContentForm({ item }: PageContentFormProps) {
         )}
         {item.slug === "events" && (
           <div className="mb-3 grid gap-4">
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <div className="rounded-lg border border-border bg-slate-50 p-4">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">Main listing (/events)</p>
               <p className="mt-1 text-xs text-slate-600">
                 Body copy above the filters uses the <strong className="font-medium text-slate-800">Intro</strong> field at
                 the top of this form (stored as{" "}
-                <code className="rounded bg-white px-1 ring-1 ring-slate-200">intro</code> in page JSON). Blank lines create
+                <code className="rounded bg-white px-1 ring-1 ring-border">intro</code> in page JSON). Blank lines create
                 separate paragraphs. Category tabs read labels from{" "}
-                <code className="rounded bg-white px-1 ring-1 ring-slate-200">eventCategoryFilters</code>; matching uses the
+                <code className="rounded bg-white px-1 ring-1 ring-border">eventCategoryFilters</code>; matching uses the
                 event’s Category / event type strings (e.g. <code className="text-[0.65rem]">summit</code>,{" "}
                 <code className="text-[0.65rem]">webinar</code>, <code className="text-[0.65rem]">roundtable</code>
                 ).
               </p>
             </div>
-            <div className="rounded-lg border border-slate-200 bg-slate-50 p-4">
+            <div className="rounded-lg border border-border bg-slate-50 p-4">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-700">
               Past events archive (public /events/past)
             </p>
             <p className="text-xs text-slate-600">
               Copy for the archive filters, search, and list UI. Stored in{" "}
-              <code className="rounded bg-white px-1 ring-1 ring-slate-200">content_json.pastArchive</code> and the
+              <code className="rounded bg-white px-1 ring-1 ring-border">content_json.pastArchive</code> and the
               empty-state line in{" "}
-              <code className="rounded bg-white px-1 ring-1 ring-slate-200">content_json.gridEmpty.past</code>. The
+              <code className="rounded bg-white px-1 ring-1 ring-border">content_json.gridEmpty.past</code>. The
               route hero uses the main Hero fields on this page when set.
             </p>
             <div className="grid gap-3 sm:grid-cols-2">
@@ -1218,7 +1242,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["pastArchive", key])}
                     onChange={(e) => updateNestedString(["pastArchive", key], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
               ))}
@@ -1230,7 +1254,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={getNestedString(["pastArchive", "topicEmpty"])}
                   onChange={(e) => updateNestedString(["pastArchive", "topicEmpty"], e.target.value)}
                   rows={2}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1241,7 +1265,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={getNestedString(["pastArchive", "filterComingSoon"])}
                   onChange={(e) => updateNestedString(["pastArchive", "filterComingSoon"], e.target.value)}
                   rows={2}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -1251,19 +1275,19 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={getNestedString(["gridEmpty", "past"])}
                 onChange={(e) => updateNestedString(["gridEmpty", "past"], e.target.value)}
                 rows={3}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             </div>
           </div>
         )}
         {item.slug === "app-summit" && (
-          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">APP Summit helper</p>
-            <label className="flex cursor-pointer items-start gap-3 rounded-md border border-slate-200 bg-white p-3 text-sm text-slate-800">
+            <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border bg-white p-3 text-sm text-slate-800">
               <input
                 type="checkbox"
-                className="mt-0.5 h-4 w-4 shrink-0 rounded border-slate-300"
+                className="mt-0.5 h-4 w-4 shrink-0 rounded border-border"
                 checked={parsedJson.programmeAgendaVisible !== false}
                 onChange={(e) => updateJsonFieldBoolean("programmeAgendaVisible", e.target.checked)}
               />
@@ -1282,7 +1306,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.aboutSectionEyebrow === "string" ? parsedJson.aboutSectionEyebrow : ""}
                   onChange={(e) => updateJsonField("aboutSectionEyebrow", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1291,7 +1315,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.aboutSectionHeading === "string" ? parsedJson.aboutSectionHeading : ""}
                   onChange={(e) => updateJsonField("aboutSectionHeading", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1300,7 +1324,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.detailLabelDate === "string" ? parsedJson.detailLabelDate : ""}
                   onChange={(e) => updateJsonField("detailLabelDate", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1309,7 +1333,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.detailLabelLocation === "string" ? parsedJson.detailLabelLocation : ""}
                   onChange={(e) => updateJsonField("detailLabelLocation", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1318,7 +1342,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.detailLabelParticipants === "string" ? parsedJson.detailLabelParticipants : ""}
                   onChange={(e) => updateJsonField("detailLabelParticipants", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1327,7 +1351,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.programmeEyebrow === "string" ? parsedJson.programmeEyebrow : ""}
                   onChange={(e) => updateJsonField("programmeEyebrow", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1336,7 +1360,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.dayTabPrefix === "string" ? parsedJson.dayTabPrefix : ""}
                   onChange={(e) => updateJsonField("dayTabPrefix", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   placeholder="e.g. Day (space after if needed)"
                 />
               </div>
@@ -1346,7 +1370,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.contactSectionCtaLabel === "string" ? parsedJson.contactSectionCtaLabel : ""}
                   onChange={(e) => updateJsonField("contactSectionCtaLabel", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1355,7 +1379,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.heroImageAlt === "string" ? parsedJson.heroImageAlt : ""}
                   onChange={(e) => updateJsonField("heroImageAlt", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -1365,7 +1389,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.intro === "string" ? parsedJson.intro : ""}
                 onChange={(e) => updateJsonField("intro", e.target.value)}
                 rows={4}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -1374,7 +1398,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.inauguralParagraph === "string" ? parsedJson.inauguralParagraph : ""}
                 onChange={(e) => updateJsonField("inauguralParagraph", e.target.value)}
                 rows={4}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             <div className="grid gap-3 sm:grid-cols-3">
@@ -1384,7 +1408,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["details", "date"])}
                   onChange={(e) => updateNestedString(["details", "date"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1393,7 +1417,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["details", "location"])}
                   onChange={(e) => updateNestedString(["details", "location"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1402,7 +1426,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["details", "participants"])}
                   onChange={(e) => updateNestedString(["details", "participants"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -1413,7 +1437,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["registration", "cta"])}
                   onChange={(e) => updateNestedString(["registration", "cta"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1422,7 +1446,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={getNestedString(["registration", "href"])}
                   onChange={(e) => updateNestedString(["registration", "href"], e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -1432,10 +1456,10 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.contactNote === "string" ? parsedJson.contactNote : ""}
                 onChange={(e) => updateJsonField("contactNote", e.target.value)}
                 rows={2}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Agenda days</p>
                 <button
@@ -1446,7 +1470,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       { day: String(arr.length + 1), date: "", sessions: [] },
                     ])
                   }
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
                 >
                   + Add day
                 </button>
@@ -1469,7 +1493,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                         setDragDayIdx(null);
                       }}
                       onDragEnd={() => setDragDayIdx(null)}
-                      className="rounded-md border border-slate-200 p-3"
+                      className="rounded-md border border-border p-3"
                     >
                       <div className="mb-2 flex items-center justify-between">
                         <button
@@ -1500,7 +1524,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                             )
                           }
                           placeholder="Day number"
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                          className="rounded-md border border-border px-2 py-1 text-xs"
                         />
                         <input
                           value={typeof day.date === "string" ? day.date : ""}
@@ -1510,7 +1534,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                             )
                           }
                           placeholder="Date label"
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs sm:col-span-2"
+                          className="rounded-md border border-border px-2 py-1 text-xs sm:col-span-2"
                         />
                       </div>
                       <div className="mt-2 flex items-center justify-between">
@@ -1530,14 +1554,14 @@ export function PageContentForm({ item }: PageContentFormProps) {
                                 )
                               )
                             }
-                            className="rounded-md border border-slate-300 px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-50"
+                            className="rounded-md border border-border px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-50"
                           >
                             + Add session
                           </button>
                           <button
                             type="button"
                             onClick={() => reorderNestedArray(["agenda", "days"], dayIdx, dayIdx - 1)}
-                            className="rounded-md border border-slate-300 px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-50"
+                            className="rounded-md border border-border px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-50"
                             title="Move day up"
                           >
                             <ArrowUp className="h-3.5 w-3.5" />
@@ -1545,7 +1569,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           <button
                             type="button"
                             onClick={() => reorderNestedArray(["agenda", "days"], dayIdx, dayIdx + 1)}
-                            className="rounded-md border border-slate-300 px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-50"
+                            className="rounded-md border border-border px-2 py-1 text-[11px] text-slate-700 hover:bg-slate-50"
                             title="Move day down"
                           >
                             <ArrowDown className="h-3.5 w-3.5" />
@@ -1602,7 +1626,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                                 )
                               }
                               placeholder="Time"
-                              className="rounded-md border border-slate-300 px-2 py-1 text-xs sm:col-span-3"
+                              className="rounded-md border border-border px-2 py-1 text-xs sm:col-span-3"
                             />
                             <input
                               value={typeof s.title === "string" ? s.title : ""}
@@ -1618,7 +1642,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                                 )
                               }
                               placeholder="Session title"
-                              className="rounded-md border border-slate-300 px-2 py-1 text-xs sm:col-span-5"
+                              className="rounded-md border border-border px-2 py-1 text-xs sm:col-span-5"
                             />
                             <input
                               value={typeof s.topic === "string" ? s.topic : ""}
@@ -1634,7 +1658,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                                 )
                               }
                               placeholder="Topic (optional)"
-                              className="rounded-md border border-slate-300 px-2 py-1 text-xs sm:col-span-3"
+                              className="rounded-md border border-border px-2 py-1 text-xs sm:col-span-3"
                             />
                             <button
                               type="button"
@@ -1667,7 +1691,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           </div>
         )}
         {item.slug === "aypf" && (
-          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">AYPF helper</p>
             <p className="text-xs text-slate-500">
               Hero image uses the shared field below. List fields: one item per line.
@@ -1679,7 +1703,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.breadcrumbLabel === "string" ? parsedJson.breadcrumbLabel : ""}
                   onChange={(e) => updateJsonField("breadcrumbLabel", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1688,7 +1712,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.heroImageAlt === "string" ? parsedJson.heroImageAlt : ""}
                   onChange={(e) => updateJsonField("heroImageAlt", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -1697,7 +1721,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.title === "string" ? parsedJson.title : ""}
                   onChange={(e) => updateJsonField("title", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -1706,7 +1730,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={typeof parsedJson.subtitle === "string" ? parsedJson.subtitle : ""}
                   onChange={(e) => updateJsonField("subtitle", e.target.value)}
                   rows={2}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
@@ -1716,7 +1740,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.leadParagraph === "string" ? parsedJson.leadParagraph : ""}
                 onChange={(e) => updateJsonField("leadParagraph", e.target.value)}
                 rows={3}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -1725,7 +1749,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.launchParagraph === "string" ? parsedJson.launchParagraph : ""}
                 onChange={(e) => updateJsonField("launchParagraph", e.target.value)}
                 rows={3}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -1734,7 +1758,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.themeQuote === "string" ? parsedJson.themeQuote : ""}
                 onChange={(e) => updateJsonField("themeQuote", e.target.value)}
                 rows={2}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
             <div>
@@ -1743,10 +1767,10 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.inauguralParagraph === "string" ? parsedJson.inauguralParagraph : ""}
                 onChange={(e) => updateJsonField("inauguralParagraph", e.target.value)}
                 rows={2}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Purpose section</p>
               <div className="grid gap-2 sm:grid-cols-2">
                 <div>
@@ -1755,7 +1779,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["purposeSection", "eyebrow"])}
                     onChange={(e) => updateNestedString(["purposeSection", "eyebrow"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1764,7 +1788,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["purposeSection", "heading"])}
                     onChange={(e) => updateNestedString(["purposeSection", "heading"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
               </div>
@@ -1774,7 +1798,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={getNestedString(["purposeSection", "intro"])}
                   onChange={(e) => updateNestedString(["purposeSection", "intro"], e.target.value)}
                   rows={2}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="mt-2">
@@ -1791,7 +1815,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     )
                   }
                   rows={6}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono text-xs"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm font-mono text-xs"
                 />
               </div>
             </div>
@@ -1801,10 +1825,10 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={typeof parsedJson.legitimacyParagraph === "string" ? parsedJson.legitimacyParagraph : ""}
                 onChange={(e) => updateJsonField("legitimacyParagraph", e.target.value)}
                 rows={2}
-                className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">From dialogue to action</p>
               <div className="grid gap-2 sm:grid-cols-2">
                 <div>
@@ -1813,7 +1837,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["actionSection", "eyebrow"])}
                     onChange={(e) => updateNestedString(["actionSection", "eyebrow"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1822,7 +1846,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["actionSection", "heading"])}
                     onChange={(e) => updateNestedString(["actionSection", "heading"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
               </div>
@@ -1832,7 +1856,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={getNestedString(["actionSection", "intro"])}
                   onChange={(e) => updateNestedString(["actionSection", "intro"], e.target.value)}
                   rows={3}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="mt-2">
@@ -1849,11 +1873,11 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     )
                   }
                   rows={5}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono text-xs"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm font-mono text-xs"
                 />
               </div>
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Looking ahead</p>
               <div className="grid gap-2 sm:grid-cols-2">
                 <div>
@@ -1862,7 +1886,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["lookingAheadSection", "eyebrow"])}
                     onChange={(e) => updateNestedString(["lookingAheadSection", "eyebrow"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1871,7 +1895,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["lookingAheadSection", "heading"])}
                     onChange={(e) => updateNestedString(["lookingAheadSection", "heading"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
               </div>
@@ -1881,7 +1905,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={getNestedString(["lookingAheadSection", "intro"])}
                   onChange={(e) => updateNestedString(["lookingAheadSection", "intro"], e.target.value)}
                   rows={3}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="mt-2">
@@ -1898,7 +1922,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     )
                   }
                   rows={5}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono text-xs"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm font-mono text-xs"
                 />
               </div>
               <div className="mt-2">
@@ -1907,11 +1931,11 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={getNestedString(["lookingAheadSection", "invitationNote"])}
                   onChange={(e) => updateNestedString(["lookingAheadSection", "invitationNote"], e.target.value)}
                   rows={2}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Register</p>
               <div className="grid gap-2 sm:grid-cols-2">
                 <div className="sm:col-span-2">
@@ -1920,7 +1944,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["registerSection", "heading"])}
                     onChange={(e) => updateNestedString(["registerSection", "heading"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -1929,7 +1953,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     value={getNestedString(["registerSection", "intro"])}
                     onChange={(e) => updateNestedString(["registerSection", "intro"], e.target.value)}
                     rows={2}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1938,7 +1962,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     type="text"
                     value={getNestedString(["registerSection", "ctaLabel"])}
                     onChange={(e) => updateNestedString(["registerSection", "ctaLabel"], e.target.value)}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div>
@@ -1948,7 +1972,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     value={getNestedString(["registerSection", "registrationHref"])}
                     onChange={(e) => updateNestedString(["registerSection", "registrationHref"], e.target.value)}
                     placeholder="https://…"
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -1965,7 +1989,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       )
                     }
                     rows={4}
-                    className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm font-mono text-xs"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm font-mono text-xs"
                   />
                 </div>
               </div>
@@ -1973,7 +1997,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           </div>
         )}
         {item.slug === "applications" && (
-          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Applications page helper</p>
             <p className="text-xs text-slate-500">
               Hero and intro also live here. Optional <code className="rounded bg-white px-1">fieldLabelOverrides</code> in the JSON
@@ -1987,7 +2011,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.heroImageAlt === "string" ? parsedJson.heroImageAlt : ""}
                   onChange={(e) => updateJsonField("heroImageAlt", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -1996,7 +2020,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.breadcrumbHome === "string" ? parsedJson.breadcrumbHome : ""}
                   onChange={(e) => updateJsonField("breadcrumbHome", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2005,7 +2029,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.breadcrumbGetInvolved === "string" ? parsedJson.breadcrumbGetInvolved : ""}
                   onChange={(e) => updateJsonField("breadcrumbGetInvolved", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2014,7 +2038,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.breadcrumbVolunteer === "string" ? parsedJson.breadcrumbVolunteer : ""}
                   onChange={(e) => updateJsonField("breadcrumbVolunteer", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2023,7 +2047,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.breadcrumbApplication === "string" ? parsedJson.breadcrumbApplication : ""}
                   onChange={(e) => updateJsonField("breadcrumbApplication", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2032,7 +2056,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.formEyebrow === "string" ? parsedJson.formEyebrow : ""}
                   onChange={(e) => updateJsonField("formEyebrow", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -2041,7 +2065,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.formCardTitle === "string" ? parsedJson.formCardTitle : ""}
                   onChange={(e) => updateJsonField("formCardTitle", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2050,7 +2074,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.sectionPersonal === "string" ? parsedJson.sectionPersonal : ""}
                   onChange={(e) => updateJsonField("sectionPersonal", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2059,7 +2083,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.sectionExperience === "string" ? parsedJson.sectionExperience : ""}
                   onChange={(e) => updateJsonField("sectionExperience", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2068,7 +2092,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.sectionMotivation === "string" ? parsedJson.sectionMotivation : ""}
                   onChange={(e) => updateJsonField("sectionMotivation", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -2077,7 +2101,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.applicationTypeLabel === "string" ? parsedJson.applicationTypeLabel : ""}
                   onChange={(e) => updateJsonField("applicationTypeLabel", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2086,7 +2110,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.optionVolunteer === "string" ? parsedJson.optionVolunteer : ""}
                   onChange={(e) => updateJsonField("optionVolunteer", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2095,7 +2119,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.optionStaff === "string" ? parsedJson.optionStaff : ""}
                   onChange={(e) => updateJsonField("optionStaff", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2104,7 +2128,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.optionFellow === "string" ? parsedJson.optionFellow : ""}
                   onChange={(e) => updateJsonField("optionFellow", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2113,7 +2137,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.availabilityPlaceholder === "string" ? parsedJson.availabilityPlaceholder : ""}
                   onChange={(e) => updateJsonField("availabilityPlaceholder", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2122,7 +2146,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.availabilityFullTime === "string" ? parsedJson.availabilityFullTime : ""}
                   onChange={(e) => updateJsonField("availabilityFullTime", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2131,7 +2155,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.availabilityPartTime === "string" ? parsedJson.availabilityPartTime : ""}
                   onChange={(e) => updateJsonField("availabilityPartTime", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2140,7 +2164,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.availabilityFlexible === "string" ? parsedJson.availabilityFlexible : ""}
                   onChange={(e) => updateJsonField("availabilityFlexible", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2149,7 +2173,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.submitIdle === "string" ? parsedJson.submitIdle : ""}
                   onChange={(e) => updateJsonField("submitIdle", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2158,7 +2182,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.submitSending === "string" ? parsedJson.submitSending : ""}
                   onChange={(e) => updateJsonField("submitSending", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -2167,7 +2191,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={typeof parsedJson.successMessage === "string" ? parsedJson.successMessage : ""}
                   onChange={(e) => updateJsonField("successMessage", e.target.value)}
                   rows={2}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -2176,7 +2200,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   value={typeof parsedJson.emailWarnIntro === "string" ? parsedJson.emailWarnIntro : ""}
                   onChange={(e) => updateJsonField("emailWarnIntro", e.target.value)}
                   rows={2}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -2185,14 +2209,14 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.errorFallback === "string" ? parsedJson.errorFallback : ""}
                   onChange={(e) => updateJsonField("errorFallback", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
           </div>
         )}
         {(item.slug === "privacy-policy" || item.slug === "terms-of-service") && (
-          <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3">
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Legal page helper</p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
@@ -2201,7 +2225,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.title === "string" ? parsedJson.title : ""}
                   onChange={(e) => updateJsonField("title", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
               <div>
@@ -2210,11 +2234,11 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   type="text"
                   value={typeof parsedJson.lastUpdated === "string" ? parsedJson.lastUpdated : ""}
                   onChange={(e) => updateJsonField("lastUpdated", e.target.value)}
-                  className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
             </div>
-            <div className="rounded-md border border-slate-200 bg-white p-3">
+            <div className="rounded-md border border-border bg-white p-3">
               <div className="mb-2 flex items-center justify-between">
                 <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Sections</p>
                 <button
@@ -2222,7 +2246,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   onClick={() =>
                     updateNestedArray(["sections"], (arr) => [...arr, { title: "", content: "", items: [] }])
                   }
-                  className="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                  className="rounded-md border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
                 >
                   + Add section
                 </button>
@@ -2242,7 +2266,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       setDragLegalIdx(null);
                     }}
                     onDragEnd={() => setDragLegalIdx(null)}
-                    className="rounded-md border border-slate-200 p-3"
+                    className="rounded-md border border-border p-3"
                   >
                     <div className="mb-2 flex items-center justify-between">
                       <button
@@ -2272,7 +2296,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           )
                         }
                         placeholder="Section title"
-                        className="rounded-md border border-slate-300 px-2 py-1 text-xs"
+                        className="rounded-md border border-border px-2 py-1 text-xs"
                       />
                       <button
                         type="button"
@@ -2287,7 +2311,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                         <button
                           type="button"
                           onClick={() => reorderNestedArray(["sections"], idx, idx - 1)}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          className="rounded-md border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
                           title="Move section up"
                         >
                           <ArrowUp className="h-3.5 w-3.5" />
@@ -2295,7 +2319,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                         <button
                           type="button"
                           onClick={() => reorderNestedArray(["sections"], idx, idx + 1)}
-                          className="rounded-md border border-slate-300 px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          className="rounded-md border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
                           title="Move section down"
                         >
                           <ArrowDown className="h-3.5 w-3.5" />
@@ -2311,7 +2335,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       }
                       rows={3}
                       placeholder="Section content"
-                      className="mt-2 w-full rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      className="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs"
                     />
                     <textarea
                       value={Array.isArray(sec.items) ? sec.items.filter((x) => typeof x === "string").join("\n") : ""}
@@ -2332,7 +2356,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       }
                       rows={3}
                       placeholder="Bullet items (one per line)"
-                      className="mt-2 w-full rounded-md border border-slate-300 px-2 py-1 text-xs"
+                      className="mt-2 w-full rounded-md border border-border px-2 py-1 text-xs"
                     />
                     </>
                     )}
@@ -2347,7 +2371,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
             </p>
           </div>
         )}
-        <div className="mb-3 grid gap-3 rounded-lg border border-slate-200 bg-slate-50 p-3 sm:grid-cols-2">
+        <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3 sm:grid-cols-2">
           <div>
             <label className="block text-xs font-semibold uppercase tracking-wide text-slate-600">Hero image</label>
             <div className="mt-1 flex gap-2">
@@ -2356,12 +2380,12 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={quickValues.heroImage}
                 onChange={(e) => updateJsonField("heroImage", e.target.value)}
                 placeholder="media-... or /uploads/..."
-                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-900"
               />
               <button
                 type="button"
                 onClick={() => setPickerTarget("heroImage")}
-                className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
                 title="Pick from Media Library"
               >
                 <ImagePlus className="h-4 w-4" />
@@ -2376,12 +2400,12 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 value={quickValues.sectionImage}
                 onChange={(e) => updateJsonField("sectionImage", e.target.value)}
                 placeholder="media-... or /uploads/..."
-                className="w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+                className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-900"
               />
               <button
                 type="button"
                 onClick={() => setPickerTarget("sectionImage")}
-                className="inline-flex items-center gap-1 rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
                 title="Pick from Media Library"
               >
                 <ImagePlus className="h-4 w-4" />
@@ -2395,7 +2419,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
               value={quickValues.subtitle}
               onChange={(e) => updateJsonField("subtitle", e.target.value)}
               placeholder="Page subtitle"
-              className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+              className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-900"
             />
           </div>
           <div>
@@ -2405,7 +2429,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
               value={quickValues.applyIntro}
               onChange={(e) => updateJsonField("applyIntro", e.target.value)}
               placeholder="Applications page helper text"
-              className="mt-1 w-full rounded-md border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900"
+              className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-900"
             />
           </div>
         </div>
@@ -2415,7 +2439,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
           value={jsonText}
           onChange={(e) => setJsonText(e.target.value)}
           rows={18}
-          className="mt-1 w-full rounded-lg border border-slate-300 px-4 py-2 font-mono text-sm text-slate-900"
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 font-mono text-sm text-slate-900"
           placeholder='{"heroImage":"media-...","intro":"..."}'
         />
         <p className="mt-1 text-xs text-slate-500">
@@ -2430,7 +2454,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
         <AdminFormPreviewLink href={publicPathForPageSlug(item.slug)}>Preview on site</AdminFormPreviewLink>
         <a
           href="/admin/pages"
-          className="flex min-h-[44px] items-center rounded-lg border border-slate-300 px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
+          className="flex min-h-[44px] items-center rounded-lg border border-border px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
         </a>
