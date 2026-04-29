@@ -36,9 +36,10 @@ export function TeamSectionTabs({
   return (
     <div>
       <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-none lg:text-left">
-        <p className="text-sm font-medium text-black">People</p>
-        <h2 className="page-heading mt-1 text-2xl text-black sm:text-3xl">Our team & advisors</h2>
-        <p className="page-prose mt-3 text-black">
+        <h2 className="mt-1 font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+          Our team & advisors
+        </h2>
+        <p className="page-prose mt-3 text-black font-medium">
           Fellows, associates, and advisory voices who shape our research and convenings.
         </p>
       </div>
