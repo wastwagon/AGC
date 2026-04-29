@@ -8,6 +8,8 @@ import { TeamSectionTabs } from "@/components/TeamSectionTabs";
 import { Button } from "@/components/Button";
 import { resolveImageUrl } from "@/lib/media";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
+import Image from "next/image";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 export const metadata = {
   title: "About Us",
@@ -101,7 +103,7 @@ export default async function AboutPage() {
     <>
       <PageHero
         title={content.title}
-        titleClassName="font-serif text-[1.85rem] font-semibold tracking-tight text-white sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight"
+        titleClassName="font-serif text-[clamp(2.25rem,5.8vw,4.2rem)] font-semibold leading-[1.08] tracking-tight text-white lg:text-[clamp(2.85rem,5.2vw,5rem)] xl:text-[clamp(3.1rem,4.9vw,5.45rem)]"
         subtitle={content.hero.subtitle}
         image={heroImage}
         imageAlt="About Africa Governance Centre"
@@ -110,49 +112,71 @@ export default async function AboutPage() {
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full bg-[#ffffff]">
         <section className="w-full border-b border-border/80 bg-[#ffffff] py-8 sm:py-12 lg:py-14">
-          {/* Match home “Scope of Our Work”: full-width shell, header-aligned gutters */}
           <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
             <header>
-              <p className="text-sm font-medium text-black">Who we are</p>
-              <h2 className="page-heading mt-2 text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem]">
+              <p className="text-sm font-medium uppercase tracking-[0.08em] text-black">Who we are</p>
+              <h2 className="mt-3 max-w-[16ch] font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
                 {content.title}
               </h2>
             </header>
-            <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:gap-10">
-              <div className="lg:col-span-8">
-                <div className="space-y-6">
-                  {ABOUT_LEAD_PARAGRAPHS.map((paragraph) => (
-                    <p key={paragraph} className="page-prose max-w-none text-black">
-                      {paragraph}
-                    </p>
-                  ))}
-                </div>
-                <div className="mt-8">
-                  <h3 className="font-serif text-2xl font-semibold text-black sm:text-3xl">We deliver our work by:</h3>
-                  <ul className="mt-5 space-y-4">
-                    {ABOUT_DELIVERY_POINTS.map((point) => (
-                      <li key={point.title} className="page-card p-5">
-                        <p className="font-semibold text-black">{point.title}:</p>
-                        <p className="page-prose mt-2 text-black">{point.body}</p>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-              <aside className="lg:col-span-4">
-                <div className="grid gap-4">
-                  <div className="flex min-h-[220px] items-center justify-center border border-border bg-white text-sm text-black">
-                    Image placeholder
-                  </div>
-                  <div className="flex min-h-[220px] items-center justify-center border border-border bg-white text-sm text-black">
-                    Image placeholder
-                  </div>
-                </div>
-              </aside>
+            <div className="relative mt-8 aspect-[16/5] w-full overflow-hidden bg-stone-100">
+              <Image
+                src={heroImage}
+                alt="About section visual"
+                fill
+                className="object-cover object-center"
+                sizes="100vw"
+                unoptimized={preferUnoptimizedImage(heroImage)}
+              />
             </div>
+            <div className="mt-8 max-w-5xl space-y-6">
+              {ABOUT_LEAD_PARAGRAPHS.map((paragraph) => (
+                <p key={paragraph} className="max-w-none text-black font-semibold page-prose">
+                  {paragraph}
+                </p>
+              ))}
+            </div>
+          </div>
+        </section>
+      </HomeScrollReveal>
+
+      <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full bg-[#ffffff]">
+        <section className="w-full border-b border-border/80 bg-[#ffffff] py-8 sm:py-12 lg:py-14">
+          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+            <header>
+              <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+                We deliver our work by:
+              </h2>
+            </header>
+
+            <div className="mt-8 grid gap-6 sm:grid-cols-2">
+              {ABOUT_DELIVERY_POINTS.map((point, idx) => (
+                <article key={point.title} className="page-card overflow-hidden p-0">
+                  <div className="relative aspect-[16/9] w-full bg-stone-100">
+                    <Image
+                      src={heroImage}
+                      alt={`${point.title} visual`}
+                      fill
+                      className="object-cover object-center"
+                      sizes="(max-width: 640px) 100vw, 50vw"
+                      unoptimized={preferUnoptimizedImage(heroImage)}
+                    />
+                    <div className="absolute inset-0 bg-black/25" aria-hidden />
+                    <div className="absolute bottom-3 left-3 rounded-sm bg-white/90 px-2 py-1 text-xs font-semibold text-black">
+                      {idx + 1}
+                    </div>
+                  </div>
+                  <div className="p-5 sm:p-6">
+                    <h3 className="font-serif text-2xl font-semibold text-black">{point.title}</h3>
+                    <p className="mt-3 text-black font-semibold page-prose">{point.body}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
+
             <div className="mt-10 border-t border-border/70 pt-8">
               <h3 className="font-serif text-2xl font-semibold text-black sm:text-3xl">Partnerships and network</h3>
-              <p className="page-prose mt-4 max-w-none text-black">{ABOUT_PARTNERSHIPS_TEXT}</p>
+              <p className="page-prose mt-4 max-w-none text-black text-semibold">{ABOUT_PARTNERSHIPS_TEXT}</p>
             </div>
           </div>
         </section>
