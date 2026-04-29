@@ -44,8 +44,8 @@ function SubmitButton() {
 }
 
 export function PageContentForm({ item }: PageContentFormProps) {
-          className="mt-1 w-full rounded-lg border border-border px-4 py-2 font-mono text-xs"
   const showAboutExtendedFields = item.slug === "about";
+  const action = updatePageContent.bind(null, item.slug);
   const initialJson = useMemo(
     () => (item.contentJson ? JSON.stringify(item.contentJson, null, 2) : ""),
     [item.contentJson]
