@@ -21,7 +21,11 @@ function formatNewsDateShort(iso: string | undefined): string {
   if (!iso) return "";
   const d = new Date(iso);
   if (Number.isNaN(d.getTime())) return "";
-  return d.toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+  return d.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
 }
 
 function formatNewsDateListing(iso: string | undefined): string {
@@ -39,14 +43,23 @@ export function NewsCard({
   variant = "default",
 }: NewsCardProps) {
   const date = item.date_published || item.date_created;
-  const dateStrLong = date ? new Date(date).toLocaleDateString("en-GB", { year: "numeric", month: "long", day: "numeric" }) : "";
+  const dateStrLong = date
+    ? new Date(date).toLocaleDateString("en-GB", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      })
+    : "";
   const dateStrShort = formatNewsDateShort(date);
-  const excerpt = (item.excerpt || item.content || "").replace(/<[^>]*>/g, "").slice(0, 150);
+  const excerpt = (item.excerpt || item.content || "")
+    .replace(/<[^>]*>/g, "")
+    .slice(0, 150);
   const linkHref = item.slug ? `${href.replace(/\/$/, "")}/${item.slug}` : href;
   const hasDownloads = normalizeNewsDownloads(item).length > 0;
 
   if (variant === "homeTeaser") {
-    const category = getNewsCategorySlugs(item)[0]?.replace(/-/g, " ").toUpperCase() || "NEWS";
+    const category =
+      getNewsCategorySlugs(item)[0]?.replace(/-/g, " ").toUpperCase() || "NEWS";
     return (
       <article className="group flex flex-col bg-white">
         <Link href={linkHref} className="flex flex-col">
@@ -61,16 +74,20 @@ export function NewsCard({
             />
           </div>
           <div className="pt-5">
-            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">{category}</p>
-            <h2 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black">
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">
+              {category}
+            </p>
+            <h2 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black hover:underline">
               {item.title}
             </h2>
           </div>
           {dateStrShort ? (
-            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-black">{dateStrShort.toUpperCase()}</p>
+            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-black">
+              {dateStrShort.toUpperCase()}
+            </p>
           ) : null}
           {excerpt ? (
-            <p className="mt-3 text-base font-medium leading-relaxed text-black">
+            <p className="mt-3 text-base font-medium leading-relaxed text-black hover:underline">
               {excerpt}
               {excerpt.length >= 150 ? "..." : ""}
             </p>
@@ -94,7 +111,7 @@ export function NewsCard({
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </div>
-          <h2 className="mt-3 font-sans text-base font-semibold leading-snug text-accent-800 transition-colors group-hover:text-accent-950 sm:text-lg">
+          <h2 className="mt-3 font-sans text-base font-semibold leading-snug text-accent-800 transition-colors group-hover:text-black sm:text-lg hover:underline">
             {item.title}
           </h2>
         </Link>
@@ -122,7 +139,7 @@ export function NewsCard({
               {dateListing}
             </p>
           ) : null}
-          <h2 className="mt-2 font-sans text-lg font-semibold leading-snug text-accent-800 transition-colors group-hover:text-accent-950 sm:text-xl">
+          <h2 className="mt-2 font-sans text-lg font-semibold leading-snug text-accent-800 transition-colors hover:text-black sm:text-xl group-hover:underline group-hover:decoration-black group-hover:underline-offset-2">
             {item.title}
           </h2>
         </Link>
@@ -147,11 +164,11 @@ export function NewsCard({
           {dateStrLong && (
             <p className="text-sm font-medium text-accent-600">{dateStrLong}</p>
           )}
-          <h2 className="mt-2 font-sans text-xl font-bold text-slate-900 line-clamp-2 group-hover:text-accent-600">
+          <h2 className="mt-2 font-sans text-xl font-bold text-slate-900 line-clamp-2 hover:underline">
             {item.title}
           </h2>
           {excerpt && (
-            <p className="mt-3 line-clamp-3 text-slate-600">
+            <p className="mt-3 line-clamp-3 text-black hover:underline">
               {excerpt}
               {excerpt.length >= 150 ? "..." : ""}
             </p>

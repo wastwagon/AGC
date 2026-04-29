@@ -33,7 +33,7 @@ export function AypfClient({
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
         <section className="w-full border-b border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
         <p className="page-prose text-lg leading-relaxed">{content.leadParagraph}</p>
         <p className="page-prose mt-6 text-lg leading-relaxed">{content.launchParagraph}</p>
           {content.themeQuote?.trim() ? (
@@ -48,7 +48,7 @@ export function AypfClient({
 
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
         <section className="w-full border-t border-white/20 bg-accent-600 py-8 sm:py-12 lg:py-14 text-white">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           {content.purposeSection.eyebrow?.trim() ? (
             <p className="text-sm font-medium text-white/90">{content.purposeSection.eyebrow}</p>
           ) : null}
@@ -68,7 +68,7 @@ export function AypfClient({
 
       <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full">
       <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           {content.actionSection.eyebrow?.trim() ? (
              <p className="text-sm font-medium text-accent-800">{content.actionSection.eyebrow}</p>
           ) : null}
@@ -87,7 +87,7 @@ export function AypfClient({
 
       <HomeScrollReveal variant="fadeIn" start="top 88%" className="block w-full">
         <section className="w-full border-t border-white/20 bg-accent-600 py-8 sm:py-12 lg:py-14 text-white">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           {content.lookingAheadSection.eyebrow?.trim() ? (
             <p className="text-sm font-medium text-white/90">{content.lookingAheadSection.eyebrow}</p>
           ) : null}
@@ -109,7 +109,7 @@ export function AypfClient({
 
       <HomeScrollReveal variant="tiltUp" start="top 86%" className="block w-full">
       <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="rounded-none border border-border/80 bg-accent-600 p-10 sm:p-12 text-white">
             <h2 className="page-heading !text-white text-2xl">{content.registerSection.heading}</h2>
             <p className="page-prose mt-2 !text-white text-lg">{content.registerSection.intro}</p>

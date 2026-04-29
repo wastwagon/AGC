@@ -57,7 +57,7 @@ export function EventGridCell({
   const location = [event.venue_name, event.venue_address, event.location].filter(Boolean).join(", ") || event.location || "";
 
   return (
-    <article className="flex h-full flex-col">
+    <article className="group flex h-full flex-col">
       <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-700">{categoryLabel(event)}</p>
 
       <div className="mt-4 flex flex-col items-center justify-center rounded-none bg-accent-600 px-3 py-5 text-center text-white">
@@ -78,8 +78,12 @@ export function EventGridCell({
         </Link>
       </h3>
 
-      {location ? <p className="mt-3 text-sm leading-relaxed text-black">{location}</p> : null}
-      {schedule ? <p className="mt-1 text-sm leading-relaxed text-black">{schedule}</p> : null}
+      {location ? (
+        <p className="mt-3 text-sm leading-relaxed text-black group-hover:underline group-hover:decoration-accent-300 group-hover:underline-offset-2">{location}</p>
+      ) : null}
+      {schedule ? (
+        <p className="mt-1 text-sm leading-relaxed text-black group-hover:underline group-hover:decoration-accent-300 group-hover:underline-offset-2">{schedule}</p>
+      ) : null}
     </article>
   );
 }

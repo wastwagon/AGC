@@ -82,7 +82,7 @@ export default async function NewsPage() {
 
       <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           {newsItems.length > 0 ? (
             <NewsListingSection
               items={itemsWithImages}

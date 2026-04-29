@@ -58,11 +58,11 @@ function EventBandItem({ event, isPastBand }: { event: CmsEvent; isPastBand: boo
         <span className="mt-1 text-[2.15rem] font-semibold leading-none tracking-tight sm:text-[2.35rem]">{day}</span>
         <span className="mt-1 text-[11px] font-medium text-white/85">{year}</span>
       </div>
-      <div className="flex flex-1 flex-col justify-center gap-1 px-4 py-4 sm:px-5 md:py-5 md:pl-5">
+        <div className="flex flex-1 flex-col justify-center gap-1 px-4 py-4 sm:px-5 md:py-5 md:pl-5">
         <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-700">{categoryLabel(event)}</p>
-        <h3 className="font-sans text-[2rem] font-semibold leading-[1.12] tracking-tight text-slate-900 sm:text-[2.1rem] md:text-[2.25rem]">{event.title}</h3>
-        <p className="mt-1 text-[1.05rem] leading-snug text-black">{locationLine(event)}</p>
-        <p className="text-[1.02rem] text-black">{scheduleLine(event)}</p>
+        <h3 className="font-sans text-[2rem] font-semibold leading-[1.12] tracking-tight text-slate-900 sm:text-[2.1rem] md:text-[2.25rem] group-hover:underline group-hover:decoration-accent-300 group-hover:underline-offset-2">{event.title}</h3>
+        <p className="mt-1 text-[1.05rem] leading-snug text-black group-hover:underline group-hover:decoration-accent-300 group-hover:underline-offset-2">{locationLine(event)}</p>
+        <p className="text-[1.02rem] text-black group-hover:underline group-hover:decoration-accent-300 group-hover:underline-offset-2">{scheduleLine(event)}</p>
       </div>
     </Link>
   );

@@ -9,6 +9,48 @@ import { shouldSkipPrismaCalls } from "@/lib/skip-db";
  */
 const BASELINE_PAGES: { slug: string; title: string; contentJson: Record<string, unknown> }[] = [
   {
+    slug: "our-work-programs",
+    title: "Programs",
+    contentJson: {
+      title: "Programs",
+      subtitle: "Our core focus areas",
+      description:
+        "Through forums and expert roundtables, the Africa Governance Centre promotes a culture of collaboration, knowledge sharing, and collective action to advance good governance practices and support economic transformation in Africa.",
+      programs: [
+        {
+          title: "African Political Parties Initiative",
+          description:
+            "The African Political Parties Initiative (APPI) is a project developed by the Africa Governance Centre dedicated to supporting the role of political parties in Africa's development.",
+          backgroundImage: "",
+        },
+        {
+          title: "Africa Governance Review",
+          description:
+            "The Africa Governance Review Project is a comprehensive initiative dedicated to conducting detailed assessments, offering policy recommendations, and facilitating discussions on governance challenges and opportunities across African nations.",
+          backgroundImage: "",
+        },
+        {
+          title: "Africa Resource Governance Initiative",
+          description:
+            "The Africa Resource Governance Initiative (ARGI), a project of the Africa Governance Centre, is dedicated to promoting transparency, accountability, and sustainable management of natural resources across Africa.",
+          backgroundImage: "",
+        },
+        {
+          title: "Public Sector Efficiency and Innovation Project",
+          description:
+            "The Public Sector Efficiency and Innovation Project is dedicated to addressing the critical need for streamlined operations, improved public service delivery, and the integration of innovative solutions to support Africa's development.",
+          backgroundImage: "",
+        },
+        {
+          title: "Media and Democracy Initiative",
+          description:
+            "The Media and Democracy Initiative of the Africa Governance Centre seek to empower media professionals, support independent journalism, and strengthen the media's ability to facilitate informed citizen participation in governance processes.",
+          backgroundImage: "",
+        },
+      ],
+    },
+  },
+  {
     slug: "aypf",
     title: "African Youth in Politics Forum (AYPF)",
     contentJson: { ...aypfContent, heroImage: "/uploads/placeholder.svg" },

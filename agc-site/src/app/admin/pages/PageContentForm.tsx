@@ -36,7 +36,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="min-h-[44px] rounded-lg bg-accent-500 px-6 py-2 font-medium text-white hover:bg-accent-600 disabled:opacity-50"
+      className="min-h-11 rounded-lg bg-accent-500 px-6 py-2 font-medium text-white hover:bg-accent-600 disabled:opacity-50"
     >
       {pending ? "Saving…" : "Save changes"}
     </button>
@@ -44,7 +44,7 @@ function SubmitButton() {
 }
 
 export function PageContentForm({ item }: PageContentFormProps) {
-  const action = updatePageContent.bind(null, item.slug);
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 font-mono text-xs"
   const showAboutExtendedFields = item.slug === "about";
   const initialJson = useMemo(
     () => (item.contentJson ? JSON.stringify(item.contentJson, null, 2) : ""),
@@ -245,8 +245,33 @@ export function PageContentForm({ item }: PageContentFormProps) {
   const legalSections = getNestedArray(["sections"]);
   const summitDays = getNestedArray(["agenda", "days"]);
   const ourWorkAdvisoryCards = getNestedArray(["advisory", "cards"]);
+  const ourWorkPrograms = getNestedArray(["programs"]);
   const getInvolvedOpportunities = getNestedArray(["opportunities"]);
   const getInvolvedEvents = getNestedArray(["bottomSection", "upcomingEvents", "events"]);
+
+  function updateProgram(index: number, key: string, value: string) {
+    updateNestedArray(["programs"], (arr) =>
+      arr.map((program, i) => (i === index ? { ...program, [key]: value } : program))
+    );
+  }
+
+  function addProgram() {
+    updateNestedArray(["programs"], (arr) => [...arr, { title: "", description: "", backgroundImage: "" }]);
+  }
+
+  function removeProgram(index: number) {
+    updateNestedArray(["programs"], (arr) => arr.filter((_, i) => i !== index));
+  }
+
+  function moveProgram(index: number, direction: -1 | 1) {
+    updateNestedArray(["programs"], (arr) => {
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= arr.length) return arr;
+      const copy = [...arr];
+      [copy[index], copy[nextIndex]] = [copy[nextIndex], copy[index]];
+      return copy;
+    });
+  }
 
   function onSelectMedia(media: MediaItem) {
     if (!pickerTarget) return;
@@ -696,6 +721,93 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        )}
+        {item.slug === "our-work-programs" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Programs page helper</p>
+            <p className="text-[11px] text-slate-500">
+              Edit the carousel items shown on <code className="rounded bg-slate-100 px-0.5">/our-work/programs</code>.
+              Leave <code className="rounded bg-slate-100 px-0.5">backgroundImage</code> blank to use the default image fallback.
+            </p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[11px] text-slate-500">Use the arrows to reorder items. These values are saved into the page content JSON.</p>
+              <button
+                type="button"
+                onClick={addProgram}
+                className="rounded-md border border-border bg-white px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-100"
+              >
+                + Add item
+              </button>
+            </div>
+            <div className="space-y-3">
+              {ourWorkPrograms.length === 0 ? (
+                <p className="text-sm text-slate-500">No program items yet. Add the first one above.</p>
+              ) : (
+                ourWorkPrograms.map((program, index) => (
+                  <div key={index} className="rounded-md border border-border bg-white p-3 shadow-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Item {index + 1}</p>
+                      <div className="ml-auto flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => moveProgram(index, -1)}
+                          className="inline-flex items-center rounded border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          title="Move up"
+                        >
+                          <ArrowUp className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => moveProgram(index, 1)}
+                          className="inline-flex items-center rounded border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          title="Move down"
+                        >
+                          <ArrowDown className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeProgram(index)}
+                          className="inline-flex items-center rounded border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-3 grid gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Title</label>
+                        <input
+                          type="text"
+                          value={typeof program.title === "string" ? program.title : ""}
+                          onChange={(e) => updateProgram(index, "title", e.target.value)}
+                          className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Description</label>
+                        <textarea
+                          value={typeof program.description === "string" ? program.description : ""}
+                          onChange={(e) => updateProgram(index, "description", e.target.value)}
+                          rows={4}
+                          className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Background image</label>
+                        <input
+                          type="text"
+                          value={typeof program.backgroundImage === "string" ? program.backgroundImage : ""}
+                          onChange={(e) => updateProgram(index, "backgroundImage", e.target.value)}
+                          className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                          placeholder="media id, image URL, or /uploads/..."
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
             </div>
           </div>
         )}
@@ -1792,7 +1904,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     )
                   }
                   rows={6}
-                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm font-mono text-xs"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
                 />
               </div>
             </div>
@@ -1850,7 +1962,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     )
                   }
                   rows={5}
-                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm font-mono text-xs"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
                 />
               </div>
             </div>
@@ -1899,7 +2011,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                     )
                   }
                   rows={5}
-                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm font-mono text-xs"
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
                 />
               </div>
               <div className="mt-2">
@@ -1966,7 +2078,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       )
                     }
                     rows={4}
-                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm font-mono text-xs"
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
                   />
                 </div>
               </div>
@@ -2431,7 +2543,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
         <AdminFormPreviewLink href={publicPathForPageSlug(item.slug)}>Preview on site</AdminFormPreviewLink>
         <a
           href="/admin/pages"
-          className="flex min-h-[44px] items-center rounded-lg border border-border px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
+          className="flex min-h-11 items-center rounded-lg border border-border px-6 py-3 font-medium text-slate-700 hover:bg-slate-50"
         >
           Cancel
         </a>

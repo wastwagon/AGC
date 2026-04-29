@@ -112,7 +112,7 @@ export default async function AboutPage() {
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full bg-[#ffffff]">
         <section className="w-full border-b border-border/80 bg-[#ffffff] py-8 sm:py-12 lg:py-14">
-          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <header>
               <p className="text-sm font-medium uppercase tracking-[0.08em] text-black">Who we are</p>
               <h2 className="mt-3 max-w-[16ch] font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
@@ -142,7 +142,7 @@ export default async function AboutPage() {
 
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full bg-[#ffffff]">
         <section className="w-full border-b border-border/80 bg-[#ffffff] py-8 sm:py-12 lg:py-14">
-          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <header>
               <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
                 We deliver our work by:
@@ -184,7 +184,7 @@ export default async function AboutPage() {
 
       <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full bg-[#ffffff]">
         <section id="team" className="w-full border-t border-border/80 bg-[#ffffff] py-16 sm:py-20 lg:py-24">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <TeamSectionTabs cmsTeam={teamForTabs} tabs={teamTabs} />
           <div className="mt-14 flex justify-center">
             <Button asChild href="/get-involved" variant="primary" className="rounded-none px-8">

@@ -164,23 +164,29 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
         ) : null}
       </div>
 
-      <div>
-        <label htmlFor="excerpt" className="block text-sm font-medium text-slate-700">
-          Excerpt
-        </label>
-        <textarea
-          id="excerpt"
-          name="excerpt"
-          defaultValue={item?.excerpt ?? ""}
-          rows={3}
-          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
-        />
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
+        <h2 className="text-sm font-semibold text-slate-900">News descriptions</h2>
+        <p className="mt-1 text-xs text-slate-600">
+          Use a short description for cards/lists and full content for the article page.
+        </p>
+        <div className="mt-4">
+          <label htmlFor="excerpt" className="block text-sm font-medium text-slate-700">
+            Short description
+          </label>
+          <textarea
+            id="excerpt"
+            name="excerpt"
+            defaultValue={item?.excerpt ?? ""}
+            rows={3}
+            className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+          />
+        </div>
       </div>
 
       <div>
         <div className="flex flex-wrap items-center justify-between gap-2">
           <label htmlFor="news-content-editor" className="block text-sm font-medium text-slate-700">
-            Content
+            Full description
           </label>
           <button
             type="button"

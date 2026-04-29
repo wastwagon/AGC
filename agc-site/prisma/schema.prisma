@@ -18,6 +18,7 @@ model Event {
   id                    Int       @id @default(autoincrement())
   title                 String    @db.VarChar(255)
   slug                  String?   @unique @db.VarChar(255)
+  shortDescription      String?   @map("short_description") @db.Text
   description           String?   @db.Text
   location              String?   @db.VarChar(255)
   startDate             DateTime  @map("start_date")

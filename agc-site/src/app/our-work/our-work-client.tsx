@@ -130,7 +130,7 @@ export function OurWorkClient({
 
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
         <section className="w-full border-b border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <p className="text-base font-semibold text-accent-800">How we work</p>
           <h2 className="page-heading mt-2 text-3xl font-extrabold sm:text-4xl lg:text-5xl">{content.approach.title}</h2>
           <p className="page-prose mt-6 text-lg font-semibold text-black sm:text-xl">{content.approach.intro}</p>
@@ -156,7 +156,7 @@ export function OurWorkClient({
           id="our-work-areas"
           className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14"
         >
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-xl lg:text-left">
             <p className="text-sm font-medium text-accent-800">Programmes & projects</p>
             <p className="page-prose mt-2 text-black">{activeContent.description}</p>

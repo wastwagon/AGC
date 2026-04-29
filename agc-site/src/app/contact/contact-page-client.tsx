@@ -72,7 +72,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
             <div>
               <p className="text-sm font-medium text-accent-800">Direct lines</p>
@@ -216,7 +216,7 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
 
       <HomeScrollReveal variant="clipOpen" start="top 90%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <h2 className="text-center font-serif text-2xl font-semibold text-black sm:text-3xl">Find Us</h2>
           <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-black sm:text-base">
             {siteSettings.address}
