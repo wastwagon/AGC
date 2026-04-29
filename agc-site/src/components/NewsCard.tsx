@@ -5,6 +5,7 @@ import { normalizeNewsDownloads } from "@/lib/news-downloads";
 import { placeholderImages } from "@/data/images";
 import type { CmsNews } from "@/lib/content";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
+import { getNewsCategorySlugs } from "@/lib/news";
 
 type NewsCardProps = {
   item: CmsNews;
@@ -45,24 +46,34 @@ export function NewsCard({
   const hasDownloads = normalizeNewsDownloads(item).length > 0;
 
   if (variant === "homeTeaser") {
+    const category = getNewsCategorySlugs(item)[0]?.replace(/-/g, " ").toUpperCase() || "NEWS";
     return (
-      <article className="group flex flex-col">
+      <article className="group flex flex-col bg-white">
         <Link href={linkHref} className="flex flex-col">
-          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-stone-100">
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-none bg-stone-100">
             <Image
               src={imageUrl}
               alt={item.title}
               fill
               unoptimized={preferUnoptimizedImage(imageUrl)}
-              className="object-cover transition-opacity duration-200 group-hover:opacity-95"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </div>
-          <h2 className="mt-3 font-sans text-[15px] font-semibold leading-snug text-slate-900 sm:text-base sm:leading-snug">
-            {item.title}
-          </h2>
+          <div className="pt-5">
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">{category}</p>
+            <h2 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black">
+              {item.title}
+            </h2>
+          </div>
           {dateStrShort ? (
-            <p className="mt-2 font-sans text-sm font-medium text-accent-600">{dateStrShort}</p>
+            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-black">{dateStrShort.toUpperCase()}</p>
+          ) : null}
+          {excerpt ? (
+            <p className="mt-3 text-base font-medium leading-relaxed text-black">
+              {excerpt}
+              {excerpt.length >= 150 ? "..." : ""}
+            </p>
           ) : null}
         </Link>
       </article>

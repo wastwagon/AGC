@@ -73,6 +73,7 @@ export async function updateHomeSettings(formData: FormData) {
       eyebrow: d.ctaBandEyebrow ?? "",
       title: d.ctaBandTitle ?? "",
       body: d.ctaBandBody ?? "",
+      image: d.ctaBandImage?.trim() ?? "",
       primaryCta: d.ctaBandPrimaryCta ?? "",
       primaryHref: d.ctaBandPrimaryHref ?? "/get-involved",
       secondaryCta: d.ctaBandSecondaryCta ?? "",

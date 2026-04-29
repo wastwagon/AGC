@@ -296,6 +296,7 @@ export const homeSettingsFormSchema = z.object({
   ctaBandEyebrow: z.string().max(200).optional(),
   ctaBandTitle: z.string().max(600).optional(),
   ctaBandBody: z.string().max(2500).optional(),
+  ctaBandImage: z.string().max(500).optional(),
   ctaBandPrimaryCta: z.string().max(120).optional(),
   ctaBandPrimaryHref: z.string().max(255).optional(),
   ctaBandSecondaryCta: z.string().max(120).optional(),

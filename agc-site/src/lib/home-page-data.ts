@@ -72,6 +72,7 @@ export function emptyHomePageCms(): HomePageCms {
       eyebrow: "",
       title: "",
       body: "",
+      image: "",
       primaryCta: "",
       primaryHref: "/",
       secondaryCta: "",

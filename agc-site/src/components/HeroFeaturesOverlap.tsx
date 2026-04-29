@@ -75,7 +75,7 @@ export function HeroFeaturesOverlap({
   };
 
   return (
-    <section className="relative isolate border-0 bg-white pb-8 pt-5 sm:pb-10 sm:pt-7 lg:pb-11 lg:pt-8">
+    <section className="relative isolate border-0 bg-white pb-8 pt-9 sm:pb-10 sm:pt-7 lg:pb-11 lg:pt-8">
       {/* Match “The Scope of Our Work” + site header: same horizontal inset */}
       <div className="mx-auto w-full max-w-none bg-white px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="bg-white">
@@ -98,7 +98,7 @@ export function HeroFeaturesOverlap({
                   </header>
                 ) : null}
                 <div
-                  className="flex flex-col gap-4 sm:gap-5 md:h-[min(56vh,560px)] md:flex-row md:gap-3 md:overflow-hidden lg:h-[min(58vh,600px)]"
+                  className="flex lg:mt-2 flex-col gap-4 sm:gap-5 md:h-[min(56vh,560px)] md:flex-row md:gap-3 md:overflow-hidden lg:h-[min(58vh,600px)]"
                 >
                 {row.map((item) => (
                   <Link
