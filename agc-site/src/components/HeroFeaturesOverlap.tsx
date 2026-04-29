@@ -75,7 +75,7 @@ export function HeroFeaturesOverlap({
   };
 
   return (
-    <section className="relative isolate border-0 bg-white py-8 sm:py-10 lg:py-11">
+    <section className="relative isolate border-0 bg-white pb-8 pt-5 sm:pb-10 sm:pt-7 lg:pb-11 lg:pt-8">
       {/* Match “The Scope of Our Work” + site header: same horizontal inset */}
       <div className="mx-auto w-full max-w-none bg-white px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
         <div className="bg-white">
@@ -85,20 +85,20 @@ export function HeroFeaturesOverlap({
                 key={rowIndex}
                 className={cn("flex flex-col gap-4 sm:gap-5")}
               >
-                {titleForRow(rowIndex) ? (
+                {rowIndex === 0 && titleForRow(rowIndex) ? (
                   <header className="text-center">
-                    <h2 className="text-balance font-serif text-xl font-semibold tracking-tight text-black sm:text-2xl lg:text-[1.65rem] lg:leading-snug">
+                    <h2 className="text-balance font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
                       {titleForRow(rowIndex)}
                     </h2>
                     {descriptionForRow(rowIndex) ? (
-                      <p className="mx-auto mt-2 max-w-4xl text-[1.02rem] leading-relaxed text-black">
+                      <p className="mx-auto mt-3 max-w-4xl text-[0.98rem] font-semibold leading-relaxed text-black sm:text-[1.08rem]">
                         {descriptionForRow(rowIndex)}
                       </p>
                     ) : null}
                   </header>
                 ) : null}
                 <div
-                  className="flex flex-col gap-4 sm:gap-5 md:h-[min(48vh,480px)] md:flex-row md:gap-3 md:overflow-hidden lg:h-[min(50vh,520px)]"
+                  className="flex flex-col gap-4 sm:gap-5 md:h-[min(56vh,560px)] md:flex-row md:gap-3 md:overflow-hidden lg:h-[min(58vh,600px)]"
                 >
                 {row.map((item) => (
                   <Link
@@ -117,7 +117,7 @@ export function HeroFeaturesOverlap({
                   >
                     <div
                       className={cn(
-                        "relative min-h-[180px] flex-1 overflow-hidden sm:min-h-[200px] md:min-h-0",
+                        "relative min-h-[220px] flex-1 overflow-hidden sm:min-h-[250px] md:min-h-0",
                         item.image
                           ? "bg-white"
                           : "border border-border bg-white shadow-[0_2px_8px_rgba(0,0,0,0.06)]"
@@ -152,12 +152,14 @@ export function HeroFeaturesOverlap({
                     </div>
 
                     <div className="shrink-0 bg-transparent pt-3">
-                      <h3 className="font-serif text-[1.35rem] font-semibold leading-snug tracking-tight text-black sm:text-2xl md:text-[clamp(1.125rem,1.55vw,1.7rem)] md:leading-[1.2] lg:text-[clamp(1.2rem,1.35vw,1.85rem)]">
+                      <h3 className="font-serif text-[1.6rem] font-semibold leading-snug tracking-tight text-black sm:text-[2.1rem] md:text-[clamp(1.3rem,1.9vw,2rem)] md:leading-[1.2] lg:text-[clamp(1.4rem,1.7vw,2.1rem)]">
                         {item.title}
                       </h3>
-                      <span className="mt-2 block overflow-hidden text-[0.8125rem] font-normal text-black underline decoration-stone-400 underline-offset-[4px] transition-[opacity,transform,max-height,colors] duration-500 ease-out max-md:max-h-16 max-md:translate-y-0 max-md:opacity-100 md:max-h-0 md:translate-y-1 md:opacity-0 md:group-hover/card:max-h-16 md:group-hover/card:translate-y-0 md:group-hover/card:opacity-100 md:group-hover/card:decoration-[rgb(65,130,163)] md:group-hover/card:text-[rgb(45,105,135)] md:group-focus-visible/card:max-h-16 md:group-focus-visible/card:translate-y-0 md:group-focus-visible/card:opacity-100 md:group-focus-visible/card:decoration-[rgb(65,130,163)] md:group-focus-visible/card:text-[rgb(45,105,135)]">
-                        {cta}
-                      </span>
+                      {item.description?.trim() ? (
+                        <p className="mt-2 overflow-hidden text-[0.95rem] font-semibold leading-relaxed text-black transition-[opacity,transform,max-height] duration-500 ease-out max-h-0 translate-y-1 opacity-0 group-hover/card:max-h-24 group-hover/card:translate-y-0 group-hover/card:opacity-100 group-focus-visible/card:max-h-24 group-focus-visible/card:translate-y-0 group-focus-visible/card:opacity-100">
+                          {item.description}
+                        </p>
+                      ) : null}
                     </div>
                   </Link>
                 ))}

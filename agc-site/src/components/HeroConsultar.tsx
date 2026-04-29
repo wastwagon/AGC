@@ -129,7 +129,7 @@ export function HeroConsultar({ hero: _hero, sliderImages, backgroundVideoSrc }:
         <div className="max-w-4xl [text-shadow:0_2px_24px_rgba(0,0,0,0.45)]">
           <h1
             ref={titleRef}
-            className="text-balance font-serif text-[clamp(2.125rem,5.5vw,4rem)] font-semibold leading-[1.1] tracking-tight text-white sm:leading-[1.08] lg:text-[clamp(2.625rem,5vw,4.75rem)] lg:leading-[1.06] xl:text-[clamp(2.875rem,4.75vw,5.25rem)]"
+            className="text-balance font-serif text-[clamp(2.25rem,5.8vw,4.2rem)] font-semibold leading-[1.1] tracking-tight text-white sm:leading-[1.08] lg:text-[clamp(2.85rem,5.2vw,5rem)] lg:leading-[1.06] xl:text-[clamp(4.1rem,5.25vw,6.45rem)]"
           >
             {heroHeadline}
           </h1>

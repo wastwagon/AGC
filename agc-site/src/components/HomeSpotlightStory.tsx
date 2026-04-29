@@ -31,22 +31,22 @@ export function HomeSpotlightStory({
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-sm font-medium text-accent-800">{s.label}</p>
-            <h2 className="mt-2 font-serif text-2xl font-semibold leading-snug tracking-tight text-black sm:text-3xl">
+            <p className="text-base font-bold uppercase tracking-wide text-black">{s.label}</p>
+            <h2 className="mt-2 font-serif text-[2rem] font-semibold leading-snug tracking-tight text-black sm:text-[2.45rem]">
               {s.headline}
             </h2>
-            <div className="mt-6 space-y-4 text-[17px] leading-relaxed text-black">
+            <div className="mt-6 space-y-4 text-[17px] font-semibold leading-relaxed text-black">
               {s.paragraphs.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
             <div className="mt-8 border-t border-border pt-6">
-              <p className="font-semibold text-black">{s.name}</p>
-              <p className="text-sm text-black">{s.role}</p>
+              <p className="text-lg font-bold text-black">{s.name}</p>
+              <p className="text-base font-semibold text-black">{s.role}</p>
             </div>
             <Link
               href={s.ctaHref}
-              className="mt-6 inline-flex text-sm font-semibold text-accent-700 underline decoration-accent-300 underline-offset-4 hover:text-accent-900"
+              className="mt-6 inline-flex text-base font-bold text-black underline decoration-black/40 underline-offset-4 hover:text-black"
             >
               {s.ctaLabel} →
             </Link>

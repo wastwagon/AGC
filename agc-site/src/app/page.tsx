@@ -178,7 +178,11 @@ export default async function HomePage() {
         workMerged.programs?.title?.trim() ||
         programsSectionMerged.title?.trim() ||
         workContent.programs.title,
-      href: "/our-work#programs",
+      description:
+        workMerged.programs?.subtitle?.trim() ||
+        programsSectionMerged.subtitle?.trim() ||
+        workContent.programs.subtitle,
+      href: "/our-work/programs",
       image: imgPrograms,
     },
     {
@@ -186,7 +190,11 @@ export default async function HomePage() {
         workMerged.projects?.title?.trim() ||
         projectsSectionMerged.title?.trim() ||
         workContent.projects.title,
-      href: "/our-work#projects",
+      description:
+        workMerged.projects?.subtitle?.trim() ||
+        projectsSectionMerged.subtitle?.trim() ||
+        workContent.projects.subtitle,
+      href: "/our-work/projects",
       image: imgProjects,
     },
     {
@@ -194,7 +202,11 @@ export default async function HomePage() {
         workMerged.advisory?.title?.trim() ||
         advisorySectionMerged.title?.trim() ||
         workContent.advisory.title,
-      href: "/our-work#advisory",
+      description:
+        workMerged.advisory?.subtitle?.trim() ||
+        advisorySectionMerged.subtitle?.trim() ||
+        workContent.advisory.subtitle,
+      href: "/our-work/advisory",
       image: imgAdvisory,
     },
     {
@@ -202,14 +214,19 @@ export default async function HomePage() {
         workMerged.research?.title?.trim() ||
         researchSectionMerged.title?.trim() ||
         workContent.research.title,
+      description:
+        workMerged.research?.subtitle?.trim() ||
+        researchSectionMerged.subtitle?.trim() ||
+        workContent.research.subtitle,
       href: "/our-work/research",
       image: imgResearch,
     },
     {
-      title:
-        workMerged.training?.title?.trim() ||
-        trainingSectionMerged.title?.trim() ||
-        workContent.training.title,
+      title: "Capacity Building",
+      description:
+        workMerged.training?.subtitle?.trim() ||
+        trainingSectionMerged.subtitle?.trim() ||
+        workContent.training.subtitle,
       href: "/our-work/training",
       image: imgTraining,
     },
@@ -218,6 +235,10 @@ export default async function HomePage() {
         workMerged.partnership?.title?.trim() ||
         partnershipSectionMerged.title?.trim() ||
         workContent.partnership.title,
+      description:
+        workMerged.partnership?.subtitle?.trim() ||
+        partnershipSectionMerged.subtitle?.trim() ||
+        workContent.partnership.subtitle,
       href: "/our-work/partnership",
       image: imgPartnership,
     },
@@ -270,7 +291,7 @@ export default async function HomePage() {
               {showReach && (
                 <HomeScrollReveal variant="fadeUp" start="top 90%" className="mb-10 block w-full sm:mb-11">
                   <div>
-                    <h2 className="font-serif text-2xl font-semibold tracking-tight text-black sm:text-3xl">
+                    <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
                       {home.homeReach.title}
                     </h2>
                   </div>
@@ -292,8 +313,8 @@ export default async function HomePage() {
                       <p className="font-sans text-3xl font-semibold tabular-nums tracking-tight text-accent-800">
                         {stat.value}
                       </p>
-                      <p className="mt-2 text-sm font-medium text-black">{stat.label}</p>
-                      <p className="mt-2 text-xs leading-relaxed text-black">{stat.note}</p>
+                      <p className="mt-2 text-sm font-semibold text-black">{stat.label}</p>
+                      <p className="mt-2 text-xs font-semibold leading-relaxed text-black">{stat.note}</p>
                     </div>
                   ))}
                 </HomeScrollReveal>
@@ -323,13 +344,13 @@ export default async function HomePage() {
                 {home.homeTestimonial.initials}
               </div>
               <blockquote className="min-w-0">
-                <p className="font-serif text-lg leading-relaxed text-black sm:text-xl sm:leading-relaxed">
+                <p className="font-serif text-lg font-semibold leading-relaxed text-black sm:text-xl sm:leading-relaxed">
                   &ldquo;{home.homeTestimonial.quote}&rdquo;
                 </p>
                 <footer className="mt-8 border-t border-border/60 pt-6">
                   <cite className="not-italic">
-                    <span className="font-semibold text-black">{home.homeTestimonial.name}</span>
-                    <span className="mt-1 block text-sm text-black">
+                    <span className="text-lg font-bold text-black">{home.homeTestimonial.name}</span>
+                    <span className="mt-1 block text-sm font-semibold text-black">
                       {home.homeTestimonial.title}, {home.homeTestimonial.organization}
                     </span>
                   </cite>
@@ -398,7 +419,7 @@ export default async function HomePage() {
         <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
           <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
             <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-border pb-4">
-              <h2 className="font-sans text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{newsSectionTitle}</h2>
+              <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">{newsSectionTitle}</h2>
               <Link
                 href="/news"
                 className="shrink-0 text-sm font-medium text-slate-600 transition-colors hover:text-slate-900"

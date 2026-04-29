@@ -23,6 +23,7 @@ type TabKey = "programs" | "projects" | "advisory";
 type OurWorkClientProps = {
   programsResolved: WorkAreaCard[];
   projectsResolved: WorkAreaCard[];
+  advisoryResolved: WorkAreaCard[];
   content: OurWorkPageContent;
   heroImage: string;
   breadcrumbLabels: SiteBreadcrumbChrome;
@@ -38,16 +39,16 @@ function tabFromHash(): TabKey | null {
 export function OurWorkClient({
   programsResolved,
   projectsResolved,
+  advisoryResolved,
   content,
   heroImage,
   breadcrumbLabels,
 }: OurWorkClientProps) {
-  const [activeTab, setActiveTab] = useState<TabKey>("programs");
+  const [activeTab, setActiveTab] = useState<TabKey>(() => tabFromHash() ?? "programs");
 
   useEffect(() => {
     const fromHash = tabFromHash();
     if (fromHash) {
-      setActiveTab(fromHash);
       requestAnimationFrame(() => {
         document.getElementById("our-work-areas")?.scrollIntoView({ behavior: "smooth", block: "start" });
       });
@@ -96,12 +97,15 @@ export function OurWorkClient({
           imageUrl: null,
         }));
 
-  const advisoryCards: WorkAreaCard[] = content.advisory.cards.map((c) => ({
-    key: c.title,
-    title: c.title,
-    description: c.description,
-    imageUrl: null,
-  }));
+  const advisoryCards: WorkAreaCard[] =
+    advisoryResolved.length > 0
+      ? advisoryResolved
+      : content.advisory.cards.map((c) => ({
+          key: c.title,
+          title: c.title,
+          description: c.description,
+          imageUrl: null,
+        }));
 
   const cardsByTab: Record<TabKey, WorkAreaCard[]> = {
     programs: programsCards,
@@ -127,9 +131,9 @@ export function OurWorkClient({
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
         <section className="w-full border-b border-border/80 bg-white py-8 sm:py-12 lg:py-14">
         <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          <p className="text-sm font-medium text-accent-800">How we work</p>
-          <h2 className="page-heading mt-2 text-2xl sm:text-3xl lg:text-4xl">{content.approach.title}</h2>
-          <p className="page-prose mt-6">{content.approach.intro}</p>
+          <p className="text-base font-semibold text-accent-800">How we work</p>
+          <h2 className="page-heading mt-2 text-3xl font-extrabold sm:text-4xl lg:text-5xl">{content.approach.title}</h2>
+          <p className="page-prose mt-6 text-lg font-semibold text-black sm:text-xl">{content.approach.intro}</p>
           <p className="mt-8 text-sm font-semibold uppercase tracking-wide text-black">
             {content.approach.objectivesLead}
           </p>

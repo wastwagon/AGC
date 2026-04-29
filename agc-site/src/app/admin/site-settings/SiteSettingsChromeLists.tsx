@@ -1,18 +1,14 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Image from "next/image";
-import { ImagePlus, Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { DEFAULT_SITE_CHROME, type SiteChrome, type SiteNavItem } from "@/data/site-chrome";
-import { ImagePicker, type MediaItem } from "@/components/ImagePicker";
 import {
   parseBottomNav,
   parseLinkList,
   parseNavList,
-  parseWorkThumbs,
   serializeHrefLabelArray,
   serializeNavForSettings,
-  serializeWorkThumbsForSettings,
 } from "@/lib/site-chrome-parse";
 
 const btn =
@@ -21,7 +17,6 @@ const input = "w-full rounded-lg border border-border px-3 py-2 text-sm text-sla
 const dangerBtn = "rounded-lg p-2 text-slate-400 hover:bg-red-50 hover:text-red-600";
 
 type LinkEdit = { href: string; label: string };
-type ThumbEdit = { href: string; alt: string; image: string };
 
 /** Flat top-level links only (submenus are not shown on the public site). */
 function navListToRows(nav: SiteNavItem[]): LinkEdit[] {
@@ -43,10 +38,6 @@ function cloneLinks(links: { href: string; label: string }[]) {
   return links.map((x) => ({ ...x }));
 }
 
-function cloneThumbs(thumbs: { href: string; alt: string; image?: string }[]) {
-  return thumbs.map((x) => ({ href: x.href, alt: x.alt, image: typeof x.image === "string" ? x.image : "" }));
-}
-
 type Props = {
   chrome: SiteChrome;
   initialDraft: Record<string, string> | null;
@@ -55,8 +46,6 @@ type Props = {
 };
 
 export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }: Props) {
-  const [thumbPickerIndex, setThumbPickerIndex] = useState<number | null>(null);
-
   const [navRows, setNavRows] = useState<LinkEdit[]>(() =>
     cloneLinks(navListToRows(parseJsonField(initialDraft?.chromeNavJson, parseNavList, chrome.nav)))
   );
@@ -73,19 +62,14 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
     cloneLinks(parseJsonField(initialDraft?.chromeFooterLegalJson, parseLinkList, chrome.footer.legal))
   );
 
-  const [thumbRows, setThumbRows] = useState<ThumbEdit[]>(() =>
-    cloneThumbs(parseJsonField(initialDraft?.chromeFooterWorkThumbsJson, parseWorkThumbs, chrome.footer.workThumbnails))
-  );
-
   const navJson = useMemo(() => serializeNavForSettings(navRows), [navRows]);
   const bottomJson = useMemo(() => serializeHrefLabelArray(bottomRows), [bottomRows]);
   const quickJson = useMemo(() => serializeHrefLabelArray(quickRows), [quickRows]);
   const legalJson = useMemo(() => serializeHrefLabelArray(legalRows), [legalRows]);
-  const thumbsJson = useMemo(() => serializeWorkThumbsForSettings(thumbRows), [thumbRows]);
 
   useEffect(() => {
     onListsChange?.();
-  }, [navJson, bottomJson, quickJson, legalJson, thumbsJson, onListsChange]);
+  }, [navJson, bottomJson, quickJson, legalJson, onListsChange]);
 
   return (
     <div className="mt-6 space-y-8">
@@ -93,7 +77,6 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
       <input type="hidden" name="chromeBottomNavJson" value={bottomJson} readOnly />
       <input type="hidden" name="chromeFooterQuickLinksJson" value={quickJson} readOnly />
       <input type="hidden" name="chromeFooterLegalJson" value={legalJson} readOnly />
-      <input type="hidden" name="chromeFooterWorkThumbsJson" value={thumbsJson} readOnly />
 
       <div className="rounded-xl border border-border bg-slate-50/80 p-4">
         <div className="flex flex-wrap items-center justify-between gap-2">
@@ -239,113 +222,6 @@ export function SiteSettingsChromeLists({ chrome, initialDraft, onListsChange }:
         </button>
       </div>
 
-      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
-        <div className="flex flex-wrap items-center justify-between gap-2">
-          <div>
-            <h3 className="text-sm font-semibold text-slate-900">Footer — “Our work” thumbnails</h3>
-            <p className="mt-0.5 text-xs text-slate-600">
-              Tiles link to the paths below. Set an image per tile (Media Library or paste a <code className="text-[11px]">/uploads/…</code> URL); leave empty to use the built-in default for that link.
-            </p>
-          </div>
-          <button
-            type="button"
-            className={btn}
-            onClick={() => setThumbRows((prev) => [...prev, { href: "", alt: "", image: "" }])}
-          >
-            <Plus className="h-4 w-4" />
-            Add tile
-          </button>
-        </div>
-        <ul className="mt-3 space-y-3">
-          {thumbRows.map((row, i) => (
-            <li key={i} className="rounded-lg border border-border bg-white p-3">
-              <div className="flex flex-wrap items-start gap-2">
-                <div className="grid min-w-0 flex-1 gap-2 sm:grid-cols-2">
-                  <div>
-                    <label className="text-xs font-medium text-slate-600">Link path</label>
-                    <input
-                      className={`${input} mt-0.5`}
-                      value={row.href}
-                      onChange={(e) => setThumbRows((p) => p.map((r, j) => (j === i ? { ...r, href: e.target.value } : r)))}
-                      placeholder="/our-work#programs"
-                    />
-                  </div>
-                  <div>
-                    <label className="text-xs font-medium text-slate-600">Image alt text</label>
-                    <input
-                      className={`${input} mt-0.5`}
-                      value={row.alt}
-                      onChange={(e) => setThumbRows((p) => p.map((r, j) => (j === i ? { ...r, alt: e.target.value } : r)))}
-                      placeholder="Programs"
-                    />
-                  </div>
-                </div>
-                <button
-                  type="button"
-                  className={dangerBtn}
-                  aria-label="Remove"
-                  onClick={() => setThumbRows((p) => p.filter((_, j) => j !== i))}
-                >
-                  <Trash2 className="h-4 w-4" />
-                </button>
-              </div>
-              <div className="mt-2">
-                <label className="text-xs font-medium text-slate-600">Tile image</label>
-                <div className="mt-0.5 flex flex-wrap items-center gap-2">
-                  <input
-                    className={`${input} min-w-[12rem] flex-1`}
-                    value={row.image}
-                    onChange={(e) => setThumbRows((p) => p.map((r, j) => (j === i ? { ...r, image: e.target.value } : r)))}
-                    placeholder="media-… or /uploads/…"
-                  />
-                  <button
-                    type="button"
-                    className="inline-flex shrink-0 items-center gap-1 rounded-lg border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-50"
-                    onClick={() => setThumbPickerIndex(i)}
-                    title="Pick from Media Library"
-                  >
-                    <ImagePlus className="h-4 w-4" />
-                    Media
-                  </button>
-                  {row.image.trim() && (row.image.startsWith("/") || row.image.startsWith("http")) ? (
-                    <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-md border border-border bg-slate-100">
-                      <Image src={row.image} alt="" fill className="object-cover" sizes="48px" unoptimized />
-                    </span>
-                  ) : null}
-                </div>
-              </div>
-            </li>
-          ))}
-        </ul>
-        <button
-          type="button"
-          className="mt-3 text-xs text-slate-500 underline hover:text-slate-700"
-          onClick={() =>
-            setThumbRows(
-              DEFAULT_SITE_CHROME.footer.workThumbnails.map((x) => ({
-                href: x.href,
-                alt: x.alt,
-                image: typeof x.image === "string" ? x.image : "",
-              }))
-            )
-          }
-        >
-          Reset to defaults
-        </button>
-      </div>
-
-      <ImagePicker
-        open={thumbPickerIndex !== null}
-        onClose={() => setThumbPickerIndex(null)}
-        onSelect={(item: MediaItem) => {
-          if (thumbPickerIndex === null) return;
-          const ref = item.url?.trim() || item.id;
-          setThumbRows((rows) =>
-            rows.map((r, j) => (j === thumbPickerIndex ? { ...r, image: ref } : r))
-          );
-          setThumbPickerIndex(null);
-        }}
-      />
     </div>
   );
 }

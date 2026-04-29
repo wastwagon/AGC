@@ -27,7 +27,7 @@ export function HomeEventsSection({ pastEvents, upcomingEvents, title }: HomeEve
         <section className="border-t border-border bg-white pt-8 pb-2 sm:pt-10 sm:pb-3 lg:pt-12 lg:pb-3">
           <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
             <div className="border-b border-border pb-3">
-              <h2 className="font-sans text-xl font-bold tracking-tight text-slate-900 sm:text-2xl">{eventsTitle}</h2>
+              <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">{eventsTitle}</h2>
             </div>
 
             {!hasAny ? (

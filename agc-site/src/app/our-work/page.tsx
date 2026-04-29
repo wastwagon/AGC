@@ -4,7 +4,11 @@ import { placeholderImages } from "@/data/images";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
-import { resolveProgramsForOurWork, resolveProjectsForOurWork } from "@/lib/our-work-cards";
+import {
+  resolveAdvisoryForOurWork,
+  resolveProgramsForOurWork,
+  resolveProjectsForOurWork,
+} from "@/lib/our-work-cards";
 
 export const metadata = {
   title: "Our Work",
@@ -20,6 +24,11 @@ export default async function OurWorkPage() {
     getMergedPageContent<typeof workContent>("our-work", cmsStaticOrEmpty(workContent)),
     getSiteSettings(),
   ]);
+  const advisoryResolved = await resolveAdvisoryForOurWork(
+    (merged as unknown as { advisory?: { cards?: Array<Record<string, unknown>> } }).advisory?.cards as
+      | Array<{ id?: string; title?: string; description?: string; image?: string; order?: number; status?: string }>
+      | undefined
+  );
 
   const workMerged = merged as unknown as OurWorkPageContent & { heroImage?: string };
   const heroImage =
@@ -29,6 +38,7 @@ export default async function OurWorkPage() {
     <OurWorkClient
       programsResolved={programsResolved}
       projectsResolved={projectsResolved}
+      advisoryResolved={advisoryResolved}
       content={workMerged}
       heroImage={heroImage}
       breadcrumbLabels={siteSettings.chrome.breadcrumbs}

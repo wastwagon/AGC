@@ -45,6 +45,7 @@ function SubmitButton() {
 
 export function PageContentForm({ item }: PageContentFormProps) {
   const action = updatePageContent.bind(null, item.slug);
+  const showAboutExtendedFields = item.slug === "about";
   const initialJson = useMemo(
     () => (item.contentJson ? JSON.stringify(item.contentJson, null, 2) : ""),
     [item.contentJson]
@@ -325,59 +326,63 @@ export function PageContentForm({ item }: PageContentFormProps) {
         />
       </div>
 
-      <div>
-        <label htmlFor="mission" className="block text-sm font-medium text-slate-700">Mission</label>
-        <textarea
-          id="mission"
-          name="mission"
-          defaultValue={item.mission ?? ""}
-          rows={3}
-          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
-        />
-      </div>
+      {showAboutExtendedFields ? (
+        <>
+          <div>
+            <label htmlFor="mission" className="block text-sm font-medium text-slate-700">Mission</label>
+            <textarea
+              id="mission"
+              name="mission"
+              defaultValue={item.mission ?? ""}
+              rows={3}
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
 
-      <div>
-        <label htmlFor="objectivesTitle" className="block text-sm font-medium text-slate-700">Objectives Title</label>
-        <input
-          id="objectivesTitle"
-          name="objectivesTitle"
-          defaultValue={item.objectivesTitle ?? ""}
-          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
-        />
-      </div>
+          <div>
+            <label htmlFor="objectivesTitle" className="block text-sm font-medium text-slate-700">Objectives Title</label>
+            <input
+              id="objectivesTitle"
+              name="objectivesTitle"
+              defaultValue={item.objectivesTitle ?? ""}
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
 
-      <div>
-        <label htmlFor="objectivesContent" className="block text-sm font-medium text-slate-700">Objectives Content</label>
-        <textarea
-          id="objectivesContent"
-          name="objectivesContent"
-          defaultValue={item.objectivesContent ?? ""}
-          rows={4}
-          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
-        />
-      </div>
+          <div>
+            <label htmlFor="objectivesContent" className="block text-sm font-medium text-slate-700">Objectives Content</label>
+            <textarea
+              id="objectivesContent"
+              name="objectivesContent"
+              defaultValue={item.objectivesContent ?? ""}
+              rows={4}
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
 
-      <div>
-        <label htmlFor="objectivesPrinciples" className="block text-sm font-medium text-slate-700">Objectives Principles</label>
-        <textarea
-          id="objectivesPrinciples"
-          name="objectivesPrinciples"
-          defaultValue={item.objectivesPrinciples ?? ""}
-          rows={4}
-          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
-        />
-      </div>
+          <div>
+            <label htmlFor="objectivesPrinciples" className="block text-sm font-medium text-slate-700">Objectives Principles</label>
+            <textarea
+              id="objectivesPrinciples"
+              name="objectivesPrinciples"
+              defaultValue={item.objectivesPrinciples ?? ""}
+              rows={4}
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
 
-      <div>
-        <label htmlFor="objectivesAgenda2063" className="block text-sm font-medium text-slate-700">Objectives Agenda 2063</label>
-        <textarea
-          id="objectivesAgenda2063"
-          name="objectivesAgenda2063"
-          defaultValue={item.objectivesAgenda2063 ?? ""}
-          rows={4}
-          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
-        />
-      </div>
+          <div>
+            <label htmlFor="objectivesAgenda2063" className="block text-sm font-medium text-slate-700">Objectives Agenda 2063</label>
+            <textarea
+              id="objectivesAgenda2063"
+              name="objectivesAgenda2063"
+              defaultValue={item.objectivesAgenda2063 ?? ""}
+              rows={4}
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
+        </>
+      ) : null}
 
       <div>
         <label htmlFor="status" className="block text-sm font-medium text-slate-700">Status</label>

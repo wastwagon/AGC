@@ -264,7 +264,7 @@ export const workContent = {
       "Placeholder copy for Research. Edit this section in Admin → Pages → our-work-research (or the main Our Work JSON for titles). Describe flagship studies, fellows, and knowledge products.",
   },
   training: {
-    title: "Training",
+    title: "Capacity Building",
     subtitle: "Capacity building",
     description:
       "Placeholder copy for Training. Edit in Admin → Pages → our-work-training. Highlight workshops, fellowships, and tailored learning for practitioners.",

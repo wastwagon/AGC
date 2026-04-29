@@ -5,8 +5,8 @@
 
 import { fallbackTeam } from "@/data/content";
 import { prisma } from "@/lib/db";
-import type { NewsDocumentDownload } from "@/lib/news-downloads";
-import { normalizeNewsDownloads } from "@/lib/news-downloads";
+import type { NewsDocumentDownload, NewsSocialLinks } from "@/lib/news-downloads";
+import { normalizeNewsDownloads, normalizeNewsSocialLinks } from "@/lib/news-downloads";
 import { devPublicRead } from "@/lib/skip-db";
 
 // ============ Shared types (compatible with former Cms* interfaces) ============
@@ -82,6 +82,8 @@ export interface CmsNews {
   author?: string;
   /** PDFs / documents shown on the article (from `download_resources` JSON). */
   downloadResources?: NewsDocumentDownload[];
+  /** Optional article-level social links (from `download_resources.socialLinks`). */
+  socialLinks?: NewsSocialLinks;
 }
 
 export interface CmsProgram {
@@ -215,6 +217,7 @@ export async function getNews(limit = 10) {
   });
     return rows.map((n) => {
       const downloads = normalizeNewsDownloads({ downloadResources: n.downloadResources });
+      const socialLinks = normalizeNewsSocialLinks({ downloadResources: n.downloadResources });
       return {
     id: n.id,
     status: n.status,
@@ -229,6 +232,7 @@ export async function getNews(limit = 10) {
     categories: n.categories as string[] | undefined,
     tags: n.tags as string[] | undefined,
         ...(downloads.length ? { downloadResources: downloads } : {}),
+        ...(Object.keys(socialLinks).length ? { socialLinks } : {}),
       };
     });
   });
@@ -241,6 +245,7 @@ export async function getNewsBySlug(slug: string) {
   });
   if (!n) return null;
     const downloads = normalizeNewsDownloads({ downloadResources: n.downloadResources });
+    const socialLinks = normalizeNewsSocialLinks({ downloadResources: n.downloadResources });
   return {
     id: n.id,
     status: n.status,
@@ -255,6 +260,7 @@ export async function getNewsBySlug(slug: string) {
     categories: n.categories as string[] | undefined,
     tags: n.tags as string[] | undefined,
       ...(downloads.length ? { downloadResources: downloads } : {}),
+      ...(Object.keys(socialLinks).length ? { socialLinks } : {}),
   };
   });
 }

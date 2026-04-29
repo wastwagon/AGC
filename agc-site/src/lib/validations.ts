@@ -92,6 +92,11 @@ export const newsFormSchema = z.object({
   author: z.string().max(255).optional(),
   categories: z.array(z.string()).optional(),
   tags: z.array(z.string()).optional(),
+  socialFacebook: z.string().max(2000).optional(),
+  socialX: z.string().max(2000).optional(),
+  socialLinkedin: z.string().max(2000).optional(),
+  socialInstagram: z.string().max(2000).optional(),
+  socialEmail: z.string().max(2000).optional(),
   status: z.enum(["draft", "published"]),
   datePublished: z.string().optional(),
 });
@@ -134,6 +139,18 @@ export const programFormSchema = z.object({
 });
 
 export const projectFormSchema = z.object({
+  title: z.string().min(1, "Title is required").max(255),
+  description: z.string().max(5000).optional(),
+  image: z.string().max(500).optional(),
+  order: z.string().optional().transform((v) => {
+    if (v === "" || !v) return 0;
+    const n = parseInt(v, 10);
+    return isNaN(n) ? 0 : n;
+  }),
+  status: z.enum(["draft", "published"]),
+});
+
+export const advisoryFormSchema = z.object({
   title: z.string().min(1, "Title is required").max(255),
   description: z.string().max(5000).optional(),
   image: z.string().max(500).optional(),

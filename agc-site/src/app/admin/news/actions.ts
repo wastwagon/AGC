@@ -10,7 +10,24 @@ function parseNewsDownloadResourcesFromForm(
   const raw = formData.get("downloadResourcesJson");
   if (typeof raw !== "string") return { ok: true, value: null };
   const trimmed = raw.trim();
-  if (trimmed === "" || trimmed === "[]") return { ok: true, value: null };
+  const socialLinks = {
+    facebook: typeof formData.get("socialFacebook") === "string" ? String(formData.get("socialFacebook")).trim() : "",
+    x: typeof formData.get("socialX") === "string" ? String(formData.get("socialX")).trim() : "",
+    linkedin: typeof formData.get("socialLinkedin") === "string" ? String(formData.get("socialLinkedin")).trim() : "",
+    instagram: typeof formData.get("socialInstagram") === "string" ? String(formData.get("socialInstagram")).trim() : "",
+    email: typeof formData.get("socialEmail") === "string" ? String(formData.get("socialEmail")).trim() : "",
+  };
+  const hasSocialLinks = Object.values(socialLinks).some(Boolean);
+  if (trimmed === "" || trimmed === "[]") {
+    if (!hasSocialLinks) return { ok: true, value: null };
+    return {
+      ok: true,
+      value: {
+        downloads: [],
+        socialLinks,
+      } as Prisma.InputJsonValue,
+    };
+  }
   try {
     const parsed = JSON.parse(trimmed) as unknown;
     if (!Array.isArray(parsed)) {
@@ -29,7 +46,15 @@ function parseNewsDownloadResourcesFromForm(
       }
       cleaned.push(row);
     }
-    return { ok: true, value: cleaned.length ? cleaned : null };
+    if (!cleaned.length && !hasSocialLinks) return { ok: true, value: null };
+    if (!hasSocialLinks) return { ok: true, value: cleaned as Prisma.InputJsonValue };
+    return {
+      ok: true,
+      value: {
+        downloads: cleaned,
+        socialLinks,
+      } as Prisma.InputJsonValue,
+    };
   } catch {
     return {
       ok: false,
@@ -88,6 +113,11 @@ export async function createNews(formData: FormData) {
     author: formData.get("author") || undefined,
     categories: formData.getAll("categories").filter((x): x is string => typeof x === "string"),
     tags: formData.get("tags") ? (formData.get("tags") as string).split(",").map((s) => s.trim()).filter(Boolean) : [],
+    socialFacebook: formData.get("socialFacebook") || undefined,
+    socialX: formData.get("socialX") || undefined,
+    socialLinkedin: formData.get("socialLinkedin") || undefined,
+    socialInstagram: formData.get("socialInstagram") || undefined,
+    socialEmail: formData.get("socialEmail") || undefined,
     status: formData.get("status") || "draft",
     datePublished: formData.get("datePublished") || undefined,
   };
@@ -156,6 +186,11 @@ export async function updateNews(id: number, formData: FormData) {
     author: formData.get("author") || undefined,
     categories: formData.getAll("categories").filter((x): x is string => typeof x === "string"),
     tags: formData.get("tags") ? (formData.get("tags") as string).split(",").map((s) => s.trim()).filter(Boolean) : [],
+    socialFacebook: formData.get("socialFacebook") || undefined,
+    socialX: formData.get("socialX") || undefined,
+    socialLinkedin: formData.get("socialLinkedin") || undefined,
+    socialInstagram: formData.get("socialInstagram") || undefined,
+    socialEmail: formData.get("socialEmail") || undefined,
     status: formData.get("status") || "draft",
     datePublished: formData.get("datePublished") || undefined,
   };
