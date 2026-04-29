@@ -1,5 +1,6 @@
 "use server";
 
+import { Prisma } from "@prisma/client";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
@@ -101,15 +102,18 @@ export async function createAdvisory(formData: FormData) {
         status,
       },
     ]);
+    const nextJson = next as Prisma.InputJsonValue;
+    const nextJson = next as Prisma.InputJsonValue;
+    const nextJson = next as Prisma.InputJsonValue;
     await prisma.pageContent.upsert({
       where: { slug: "our-work" },
       create: {
         slug: "our-work",
         title: "Our Work",
         status: "published",
-        contentJson: next,
+        contentJson: nextJson,
       },
-      update: { contentJson: next },
+      update: { contentJson: nextJson },
     });
   } catch (err) {
     console.error("createAdvisory:", err);
@@ -165,9 +169,9 @@ export async function updateAdvisory(id: string, formData: FormData) {
         slug: "our-work",
         title: "Our Work",
         status: "published",
-        contentJson: next,
+        contentJson: nextJson,
       },
-      update: { contentJson: next },
+      update: { contentJson: nextJson },
     });
   } catch (err) {
     console.error("updateAdvisory:", err);
@@ -194,9 +198,9 @@ export async function deleteAdvisory(id: string, _formData?: FormData) {
         slug: "our-work",
         title: "Our Work",
         status: "published",
-        contentJson: next,
+        contentJson: nextJson,
       },
-      update: { contentJson: next },
+      update: { contentJson: nextJson },
     });
   } catch (err) {
     console.error("deleteAdvisory:", err);

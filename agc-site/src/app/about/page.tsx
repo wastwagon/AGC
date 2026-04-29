@@ -16,6 +16,51 @@ export const metadata = {
 
 export const revalidate = 60;
 
+const ABOUT_LEAD_PARAGRAPHS = [
+  "The Africa Governance Centre (AGC) is an independent policy, advocacy, and research think tank working to strengthen governance systems across Africa. We focus on advancing democratic governance, economic transformation, political cooperation, institutional development, and regulatory strengthening across the continent.",
+  "Since its establishment, the Centre has convened strategic stakeholder dialogues, developed policy recommendations, and supported evidence-based governance reforms at local, regional, and continental levels.",
+];
+
+const ABOUT_DELIVERY_POINTS = [
+  {
+    title: "Shaping African knowledge systems",
+    body: "We produce high-quality research and analysis that centres African perspectives in continental and global governance debates. Our work contributes to advancing key frameworks such as the AfCFTA, Agenda 2063, and the Sustainable Development Goals.",
+  },
+  {
+    title: "Convening multi-stakeholder dialogue",
+    body: "Through platforms such as the African Political Parties Initiative, we bring together governments, political actors, civil society, the diplomatic community, media, and academia to engage on governance and development priorities. We convene structured dialogues that support practical solutions to critical governance and economic challenges.",
+  },
+  {
+    title: "Advancing youth and women leadership",
+    body: "Through initiatives such as the African Youth in Politics Forum and the Africa Women Political Leadership Summit, we equip young people and women with skills, knowledge, and networks to participate meaningfully in governance and public policy. Our work advances inclusive leadership in line with Agenda 2063.",
+  },
+  {
+    title: "Building capacity for emerging leaders",
+    body: "Our fellowships, bootcamps and training programmes strengthen the next generation of governance practitioners through practical learning and applied research development.",
+  },
+];
+
+const ABOUT_PARTNERSHIPS_TEXT =
+  "The Africa Governance Centre (AGC) works with a wide range of partners across Africa and beyond, including regional and continental institutions such as Economic Community of West African States and the African Union, as well as international development partners including the European Union and United Nations Development Program. We also engage closely with the diplomatic community, academia, civil society organisations, and corporate stakeholders seeking informed perspectives on governance, policy, and development across Africa. Through these partnerships, AGC provides evidence-based analysis, facilitates strategic dialogue, and supports collaborative approaches to addressing governance and development challenges on the continent.";
+
+const EXECUTIVE_COUNCIL = [
+  "Prof. Nelson Oppong - Executive Director",
+  "Benedicta Lasi Esq. - Executive Chair",
+  "H.E. Edite Ten Jua - Member",
+  "Senator Barry N. Griffin - Member",
+  "Hon. Dithapelo Lefoko Keorapetse - Member",
+  "Senator Janice Allen - Member",
+  "Dr. Otteng Acheampong - Member",
+  "Prof. Isaac Olawale Albert - Member",
+  "Ambassador Grant Ntrakwa - Member",
+];
+
+const MANAGEMENT_TEAM = [
+  "David Quaye - Programs and Partnerships Manager",
+  "Auguster Boateng - Programs Manager",
+  "Diana Ayaim - Programs Manager",
+];
+
 function resolveTeamTabs(content: typeof aboutContent & { teamTabsList?: { key: string; label: string }[] }) {
   const configured = Array.isArray(content.teamTabsList) ? content.teamTabsList : [];
   const cleaned = configured
@@ -56,6 +101,7 @@ export default async function AboutPage() {
     <>
       <PageHero
         title={content.title}
+        titleClassName="font-serif text-[1.85rem] font-semibold tracking-tight text-white sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight"
         subtitle={content.hero.subtitle}
         image={heroImage}
         imageAlt="About Africa Governance Centre"
@@ -68,29 +114,48 @@ export default async function AboutPage() {
           <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
             <header>
               <p className="text-sm font-medium text-black">Who we are</p>
-              <h2 className="page-heading mt-2 text-2xl text-black sm:text-3xl">{content.title}</h2>
+              <h2 className="page-heading mt-2 text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem]">
+                {content.title}
+              </h2>
             </header>
-            <p className="page-prose mt-8 max-w-none border-l-4 border-accent-600 pl-6 text-lg leading-relaxed text-black">
-              {content.intro}
-            </p>
-            <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.description}</p>
-            <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.mission}</p>
+            <div className="mt-8 grid gap-8 lg:grid-cols-12 lg:gap-10">
+              <div className="lg:col-span-8">
+                <div className="space-y-6">
+                  {ABOUT_LEAD_PARAGRAPHS.map((paragraph) => (
+                    <p key={paragraph} className="page-prose max-w-none text-black">
+                      {paragraph}
+                    </p>
+                  ))}
+                </div>
+                <div className="mt-8">
+                  <h3 className="font-serif text-2xl font-semibold text-black sm:text-3xl">We deliver our work by:</h3>
+                  <ul className="mt-5 space-y-4">
+                    {ABOUT_DELIVERY_POINTS.map((point) => (
+                      <li key={point.title} className="page-card p-5">
+                        <p className="font-semibold text-black">{point.title}:</p>
+                        <p className="page-prose mt-2 text-black">{point.body}</p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+              <aside className="lg:col-span-4">
+                <div className="grid gap-4">
+                  <div className="flex min-h-[220px] items-center justify-center border border-border bg-white text-sm text-black">
+                    Image placeholder
+                  </div>
+                  <div className="flex min-h-[220px] items-center justify-center border border-border bg-white text-sm text-black">
+                    Image placeholder
+                  </div>
+                </div>
+              </aside>
+            </div>
+            <div className="mt-10 border-t border-border/70 pt-8">
+              <h3 className="font-serif text-2xl font-semibold text-black sm:text-3xl">Partnerships and network</h3>
+              <p className="page-prose mt-4 max-w-none text-black">{ABOUT_PARTNERSHIPS_TEXT}</p>
+            </div>
           </div>
         </section>
-      </HomeScrollReveal>
-
-      <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full bg-[#ffffff]">
-        <section className="w-full border-b border-border/80 bg-[#ffffff] py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
-          <header>
-            <p className="text-sm font-medium text-black">Strategic direction</p>
-            <h2 className="page-heading mt-2 text-2xl text-black sm:text-3xl">{content.strategicObjectives.title}</h2>
-          </header>
-          <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.strategicObjectives.content}</p>
-          <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.strategicObjectives.principles}</p>
-          <p className="page-prose mt-8 max-w-none leading-relaxed text-black">{content.strategicObjectives.agenda2063}</p>
-        </div>
-      </section>
       </HomeScrollReveal>
 
       <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full bg-[#ffffff]">
