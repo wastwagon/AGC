@@ -23,6 +23,7 @@ export default async function TrainingWorkPage() {
     getBreadcrumbLabels(),
   ]);
   const content = merged;
+  const displayTitle = (content.title || "").trim().toLowerCase() === "training" ? "Capacity Building" : content.title;
   const heroSrc =
     cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
 
@@ -30,14 +31,14 @@ export default async function TrainingWorkPage() {
     <>
       <PageHero
         variant="compact"
-        title={content.title}
+        title={displayTitle}
         subtitle={content.subtitle}
         image={heroSrc}
         imageAlt="Capacity Building"
         breadcrumbs={[
           { label: bc.home, href: "/" },
           { label: bc.ourWork, href: "/our-work" },
-          { label: content.title },
+          { label: displayTitle },
         ]}
       />
 
