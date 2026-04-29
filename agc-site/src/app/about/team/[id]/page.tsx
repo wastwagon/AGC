@@ -83,7 +83,7 @@ export default async function TeamMemberProfilePage({ params }: Props) {
 
   return (
     <div className="bg-[#ffffff] pb-16 pt-10 sm:pb-20 sm:pt-12">
-      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="mx-auto max-w-6xl px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
         <Breadcrumbs
           items={[
             { label: bc.home, href: "/" },

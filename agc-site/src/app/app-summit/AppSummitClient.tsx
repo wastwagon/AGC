@@ -74,7 +74,7 @@ export function AppSummitClient({
       />
 
       <section className="w-full border-b border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="grid gap-12 lg:grid-cols-3 lg:gap-16">
             <HomeScrollReveal variant="slideLeft" start="top 87%" className="block w-full lg:col-span-2">
               <div>
@@ -156,7 +156,7 @@ export function AppSummitClient({
 
       {showPurposeImpact && pi ? (
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+          <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <HomeScrollReveal variant="clipOpen" start="top 88%" className="block w-full">
               <div>
                 {pi.eyebrow?.trim() ? (

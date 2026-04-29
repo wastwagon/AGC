@@ -22,6 +22,7 @@ export interface CmsEvent {
   status: string;
   title: string;
   slug?: string;
+  short_description?: string;
   description?: string;
   location?: string;
   start_date: string;
@@ -126,6 +127,7 @@ export async function getEvents() {
     status: e.status,
     title: e.title,
     slug: e.slug ?? undefined,
+    short_description: e.shortDescription ?? undefined,
     description: e.description ?? undefined,
     location: e.location ?? undefined,
     start_date: e.startDate.toISOString(),
@@ -157,6 +159,7 @@ export async function getEventBySlugAdmin(slug: string) {
     status: e.status,
     title: e.title,
     slug: e.slug ?? undefined,
+    short_description: e.shortDescription ?? undefined,
     description: e.description ?? undefined,
     location: e.location ?? undefined,
     start_date: e.startDate.toISOString(),
@@ -187,6 +190,7 @@ export async function getEventBySlug(slug: string) {
     status: e.status,
     title: e.title,
     slug: e.slug ?? undefined,
+    short_description: e.shortDescription ?? undefined,
     description: e.description ?? undefined,
     location: e.location ?? undefined,
     start_date: e.startDate.toISOString(),

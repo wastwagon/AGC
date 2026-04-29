@@ -272,7 +272,7 @@ export default async function HomePage() {
       {(homeEventsDrafts || homeNewsDrafts) && (
         <HomeScrollReveal variant="fadeIn" className="block w-full">
           <div className="border-b border-amber-200/80 bg-amber-50/95">
-            <div className="mx-auto w-full max-w-none px-4 py-3 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+            <div className="mx-auto w-full max-w-none px-6 py-3 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
               <CmsDraftNotice entityLabel="news or events" adminHref="/admin" />
             </div>
           </div>
@@ -294,7 +294,7 @@ export default async function HomePage() {
         <HomeScrollReveal variant="clipOpen" className="block w-full">
           <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
             {/* Match site header (`Header.tsx` nav): same horizontal inset as logo row */}
-            <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+            <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
               {showReach && (
                 <HomeScrollReveal variant="fadeUp" start="top 90%" className="mb-10 block w-full sm:mb-11">
                   <div>
@@ -342,22 +342,22 @@ export default async function HomePage() {
       {home.homeTestimonial.quote?.trim() ? (
         <HomeScrollReveal variant="scaleUp" start="top 84%" className="block w-full">
           <section className="bg-white py-14 sm:py-20">
-            <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+            <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
               <div className="mx-auto grid max-w-4xl gap-8 rounded-none bg-white p-8 shadow-[0_6px_24px_-6px_rgba(15,23,42,0.14)] sm:grid-cols-[auto_1fr] sm:gap-10 sm:p-10">
               <div
-                className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-accent-100 font-sans text-2xl font-semibold text-accent-900 sm:mx-0"
+                className="mx-auto flex h-20 w-20 shrink-0 items-center justify-center rounded-full bg-accent-100 font-sans text-2xl font-medium text-accent-900 sm:mx-0"
                 aria-hidden
               >
                 {home.homeTestimonial.initials}
               </div>
               <blockquote className="min-w-0">
-                <p className="font-serif text-lg font-semibold leading-relaxed text-black sm:text-xl sm:leading-relaxed">
+                <p className="font-serif text-lg font-medium leading-relaxed text-black sm:text-xl sm:leading-relaxed">
                   &ldquo;{home.homeTestimonial.quote}&rdquo;
                 </p>
                 <footer className="mt-8 border-t border-border/60 pt-6">
                   <cite className="not-italic">
-                    <span className="text-lg font-bold text-black">{home.homeTestimonial.name}</span>
-                    <span className="mt-1 block text-sm font-semibold text-black">
+                    <span className="text-lg font-medium text-black">{home.homeTestimonial.name}</span>
+                    <span className="mt-1 block text-sm font-medium text-black">
                       {home.homeTestimonial.title}, {home.homeTestimonial.organization}
                     </span>
                   </cite>
@@ -372,7 +372,7 @@ export default async function HomePage() {
       {showCtaBand && (
         <section className="bg-white py-12 sm:py-14 lg:py-16">
           <HomeScrollReveal variant="tiltUp" start="top 82%" className="block w-full">
-            <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+            <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
               <div
                 className="relative overflow-hidden rounded-none"
                 style={{
@@ -430,7 +430,7 @@ export default async function HomePage() {
       <HomeEventsSection pastEvents={pastEvents} upcomingEvents={upcomingEvents} title={eventsSectionTitle} />
 
       <section className="border-t border-border bg-white py-10 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
             <div className="flex flex-wrap items-end justify-between gap-x-6 gap-y-2 border-b border-border pb-4">
               <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">{newsSectionTitle}</h2>

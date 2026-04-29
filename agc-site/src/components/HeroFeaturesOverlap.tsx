@@ -77,7 +77,7 @@ export function HeroFeaturesOverlap({
   return (
     <section className="relative isolate border-0 bg-white pb-8 pt-9 sm:pb-10 sm:pt-7 lg:pb-11 lg:pt-8">
       {/* Match “The Scope of Our Work” + site header: same horizontal inset */}
-      <div className="mx-auto w-full max-w-none bg-white px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+      <div className="mx-auto w-full max-w-none bg-white px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
         <div className="bg-white">
           <div className="flex flex-col gap-10 sm:gap-12 lg:gap-14">
             {rows.map((row, rowIndex) => (
@@ -91,7 +91,7 @@ export function HeroFeaturesOverlap({
                       {titleForRow(rowIndex)}
                     </h2>
                     {descriptionForRow(rowIndex) ? (
-                      <p className="mx-auto mt-3 max-w-4xl text-[0.98rem] font-semibold leading-relaxed text-black sm:text-[1.08rem]">
+                      <p className="mx-auto mt-3 max-w-4xl text-[0.98rem] font-medium leading-relaxed text-black sm:text-[1.08rem]">
                         {descriptionForRow(rowIndex)}
                       </p>
                     ) : null}
@@ -156,7 +156,7 @@ export function HeroFeaturesOverlap({
                         {item.title}
                       </h3>
                       {item.description?.trim() ? (
-                        <p className="mt-2 overflow-hidden text-[0.95rem] font-semibold leading-relaxed text-black transition-[opacity,transform,max-height] duration-500 ease-out max-h-0 translate-y-1 opacity-0 group-hover/card:max-h-24 group-hover/card:translate-y-0 group-hover/card:opacity-100 group-focus-visible/card:max-h-24 group-focus-visible/card:translate-y-0 group-focus-visible/card:opacity-100">
+                        <p className="mt-2 overflow-hidden text-[0.95rem] font-medium leading-relaxed text-black transition-[opacity,transform,max-height] duration-500 ease-out max-h-0 translate-y-1 opacity-0 group-hover/card:max-h-24 group-hover/card:translate-y-0 group-hover/card:opacity-100 group-focus-visible/card:max-h-24 group-focus-visible/card:translate-y-0 group-focus-visible/card:opacity-100">
                           {item.description}
                         </p>
                       ) : null}

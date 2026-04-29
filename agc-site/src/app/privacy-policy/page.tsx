@@ -50,7 +50,7 @@ export default async function PrivacyPolicyPage() {
 
       <HomeScrollReveal variant="fadeUp" start="top 90%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
             This policy describes how we handle personal data when you use our website, register for events, or contact
             us. For questions, use the details at the end of this page.{" "}
@@ -148,7 +148,7 @@ export default async function PrivacyPolicyPage() {
 
       <HomeScrollReveal variant="fadeIn" start="top 92%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 text-black sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-accent-800">Privacy & data</p>
           <h2 className="page-heading mt-3 text-2xl text-black">Contact us</h2>
           <p className="mt-4 text-sm leading-relaxed text-black">

@@ -42,6 +42,7 @@ export async function createEvent(formData: FormData) {
   const raw = {
     title: formData.get("title"),
     slug: formData.get("slug") || undefined,
+    shortDescription: formData.get("shortDescription") || undefined,
     description: formData.get("description") || undefined,
     location: formData.get("location") || undefined,
     startDate: formData.get("startDate"),
@@ -85,6 +86,7 @@ export async function createEvent(formData: FormData) {
       data: {
         title: data.title,
         slug: finalSlug,
+        shortDescription: data.shortDescription || null,
         description: data.description || null,
         location: data.location || null,
         startDate: new Date(data.startDate),
@@ -125,6 +127,7 @@ export async function updateEvent(id: number, formData: FormData) {
   const raw = {
     title: formData.get("title"),
     slug: formData.get("slug") || undefined,
+    shortDescription: formData.get("shortDescription") || undefined,
     description: formData.get("description") || undefined,
     location: formData.get("location") || undefined,
     startDate: formData.get("startDate"),
@@ -168,6 +171,7 @@ export async function updateEvent(id: number, formData: FormData) {
       data: {
         title: data.title,
         slug: finalSlug,
+        shortDescription: data.shortDescription || null,
         description: data.description || null,
         location: data.location || null,
         startDate: new Date(data.startDate),

@@ -78,7 +78,7 @@ export default async function NewsTagPage({ params }: Props) {
 
       <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="mb-2 flex flex-wrap items-baseline justify-between gap-4">
             <div>
               <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Tag</p>

@@ -20,6 +20,7 @@ type EventFormProps = {
     id: number;
     title: string;
     slug: string | null;
+    shortDescription?: string | null;
     description: string | null;
     location: string | null;
     startDate: Date;
@@ -148,17 +149,37 @@ export function EventForm({ item, teamOptions }: EventFormProps) {
         />
       </div>
 
-      <div>
-        <label htmlFor="description" className="block text-sm font-medium text-slate-700">
-          Description
-        </label>
-        <textarea
-          id="description"
-          name="description"
-          defaultValue={item?.description ?? ""}
-          rows={4}
-          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
-        />
+      <div className="rounded-xl border border-border bg-slate-50/80 p-4">
+        <h2 className="text-sm font-semibold text-slate-900">Event descriptions</h2>
+        <p className="mt-1 text-xs text-slate-600">
+          Use a short description for cards/lists and a full description for the main event page.
+        </p>
+        <div className="mt-4 grid gap-4">
+          <div>
+            <label htmlFor="shortDescription" className="block text-sm font-medium text-slate-700">
+              Short description
+            </label>
+            <textarea
+              id="shortDescription"
+              name="shortDescription"
+              defaultValue={item?.shortDescription ?? ""}
+              rows={3}
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-slate-700">
+              Full description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              defaultValue={item?.description ?? ""}
+              rows={5}
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
+        </div>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

@@ -1,6 +1,6 @@
 /** Map CMS page slug to the public URL path. */
 const PATH_BY_SLUG: Record<string, string> = {
-  "our-work-programs": "/our-work#programs",
+  "our-work-programs": "/our-work/programs",
   "our-work-projects": "/our-work#projects",
   "our-work-advisory": "/our-work#advisory",
   "our-work-research": "/our-work/research",

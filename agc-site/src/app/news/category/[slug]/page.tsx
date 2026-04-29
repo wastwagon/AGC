@@ -78,7 +78,7 @@ export default async function NewsCategoryPage({ params }: Props) {
 
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="mb-10 bg-white p-5 sm:p-6">
             <div className="flex flex-wrap items-baseline justify-between gap-4 pb-4">
               <div>

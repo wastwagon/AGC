@@ -79,6 +79,7 @@ function eventMatchesSearch(event: CmsEvent, q: string): boolean {
   if (!s) return true;
   const hay = [
     event.title,
+    event.short_description,
     event.description,
     event.location,
     event.venue_name,

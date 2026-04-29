@@ -37,7 +37,7 @@ export default async function VolunteerPage() {
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Volunteering</p>
           <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
           <p className="mt-6 page-prose">{c.description}</p>
@@ -61,7 +61,7 @@ export default async function VolunteerPage() {
 
       <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
         <section className="w-full border-y border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="page-card border-l-[4px] border-l-accent-600 p-8 sm:p-10">
             <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-black">Ready?</p>
             <h2 className="page-heading mt-2 text-xl text-black">Apply</h2>
