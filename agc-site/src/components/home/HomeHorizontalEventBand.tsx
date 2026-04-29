@@ -51,18 +51,18 @@ function EventBandItem({ event, isPastBand }: { event: CmsEvent; isPastBand: boo
   return (
     <Link
       href={href}
-      className="group flex min-h-[120px] flex-col transition-colors hover:bg-stone-50 sm:min-h-[100px] md:min-h-[140px] md:flex-row md:items-stretch"
+      className="group flex min-h-[120px] flex-col transition-colors sm:min-h-[100px] md:min-h-[160px] md:flex-row md:items-stretch"
     >
-      <div className="flex w-full shrink-0 flex-col items-center justify-center border-t-[3px] border-white bg-accent-600 px-3 py-4 text-center text-white sm:w-[7.5rem] md:w-32 md:py-5">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.12em] text-white/90">{month}</span>
-        <span className="mt-0.5 text-[2.25rem] font-bold leading-none tracking-tight sm:text-4xl">{day}</span>
-        <span className="mt-1 text-[11px] font-medium text-white/75">{year}</span>
+      <div className="flex w-full shrink-0 flex-col items-center justify-center bg-accent-700 px-3 py-5 text-center text-white sm:w-[7.5rem] md:w-[106px] md:py-6">
+        <span className="text-[11px] font-medium uppercase tracking-[0.14em] text-white/90">{month}</span>
+        <span className="mt-1 text-[2.15rem] font-semibold leading-none tracking-tight sm:text-[2.35rem]">{day}</span>
+        <span className="mt-1 text-[11px] font-medium text-white/85">{year}</span>
       </div>
-      <div className="flex flex-1 flex-col justify-center gap-1 border-t border-border px-4 py-4 sm:px-5 md:border-t-0 md:border-l md:border-border md:py-5 md:pl-6">
-        <p className="text-[10px] font-semibold uppercase tracking-[0.18em] text-accent-800">{categoryLabel(event)}</p>
-        <h3 className="font-sans text-base font-bold leading-snug text-slate-900 sm:text-lg md:text-xl">{event.title}</h3>
-        <p className="mt-1 text-sm leading-snug text-black">{locationLine(event)}</p>
-        <p className="text-sm text-black">{scheduleLine(event)}</p>
+      <div className="flex flex-1 flex-col justify-center gap-1 px-4 py-4 sm:px-5 md:py-5 md:pl-5">
+        <p className="text-[10px] font-medium uppercase tracking-[0.2em] text-slate-700">{categoryLabel(event)}</p>
+        <h3 className="font-sans text-[2rem] font-semibold leading-[1.12] tracking-tight text-slate-900 sm:text-[2.1rem] md:text-[2.25rem]">{event.title}</h3>
+        <p className="mt-1 text-[1.05rem] leading-snug text-black">{locationLine(event)}</p>
+        <p className="text-[1.02rem] text-black">{scheduleLine(event)}</p>
       </div>
     </Link>
   );
@@ -94,20 +94,20 @@ export function HomeHorizontalEventBand({
   if (events.length === 0) return null;
 
   return (
-    <section className={cn("bg-white pt-5 pb-8 sm:pt-6 sm:pb-10 lg:pt-6 lg:pb-10", className)}>
+    <section className={cn("bg-[#f3f4f6] pt-8 pb-10 sm:pt-10 sm:pb-12 lg:pt-12 lg:pb-14", className)}>
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-        <h2 className="font-sans text-lg font-bold tracking-tight text-slate-900 sm:text-xl">{title}</h2>
+        <h2 className="font-sans text-[2rem] font-semibold tracking-tight text-slate-900 sm:text-[2.25rem]">{title}</h2>
 
-        <div className="mt-5 grid grid-cols-1 divide-y divide-border md:mt-6 md:grid-cols-3 md:divide-x md:divide-y-0">
+        <div className="mt-7 grid grid-cols-1 gap-7 md:mt-8 md:grid-cols-3 md:gap-8">
           {events.map((event) => (
             <EventBandItem key={event.id} event={event} isPastBand={isPastBand} />
           ))}
         </div>
 
-        <div className="mt-6 flex justify-center md:mt-8">
+        <div className="mt-8 flex justify-center md:mt-10">
           <Link
             href={ctaHref}
-            className="inline-flex min-h-[44px] items-center justify-center rounded-none bg-accent-600 px-10 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600"
+            className="inline-flex min-h-[44px] items-center justify-center rounded-none bg-accent-700 px-12 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-700"
           >
             {ctaLabel}
           </Link>

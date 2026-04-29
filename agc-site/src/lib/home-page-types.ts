@@ -40,6 +40,7 @@ export type HomePageCms = {
     eyebrow: string;
     title: string;
     body: string;
+    image?: string;
     primaryCta: string;
     primaryHref: string;
     secondaryCta: string;

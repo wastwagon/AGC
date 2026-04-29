@@ -253,6 +253,13 @@ export default async function HomePage() {
   const spotlightImageRef = home.homeSpotlightStory.image?.trim() || placeholderImages.hero;
   const spotlightPortraitSrc =
     (await resolveImageUrl(spotlightImageRef)) ?? (spotlightImageRef.startsWith("/") ? spotlightImageRef : `/${spotlightImageRef}`);
+  const ctaBandImageRef = home.homeCtaBand.image?.trim() || "";
+  const ctaBandImage =
+    (ctaBandImageRef ? await resolveImageUrl(ctaBandImageRef) : null) ||
+    imgProjects ||
+    imgPrograms ||
+    imgAdvisory ||
+    placeholderImages.hero;
 
   return (
     <>
@@ -363,27 +370,32 @@ export default async function HomePage() {
       ) : null}
 
       {showCtaBand && (
-        <section className="relative overflow-hidden bg-accent-600 py-16 sm:py-20 lg:py-24">
-          <div
-            className="pointer-events-none absolute -left-32 top-0 h-96 w-96 rounded-full bg-accent-600/20 blur-3xl"
-            aria-hidden
-          />
-          <div className="pointer-events-none absolute bottom-0 right-0 h-80 w-80 rounded-full bg-accent-500/15 blur-3xl" aria-hidden />
-          <HomeScrollReveal variant="tiltUp" start="top 82%" className="relative z-[1] block w-full">
-            <div className="relative mx-auto grid w-full max-w-none gap-12 px-4 sm:px-6 lg:grid-cols-12 lg:gap-16 lg:px-8 xl:px-12 2xl:px-16">
-              <div className="lg:col-span-5 lg:pt-1">
+        <section className="bg-white py-12 sm:py-14 lg:py-16">
+          <HomeScrollReveal variant="tiltUp" start="top 82%" className="block w-full">
+            <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+              <div
+                className="relative overflow-hidden rounded-none"
+                style={{
+                  backgroundImage: `linear-gradient(180deg, rgba(8,13,20,0.1) 0%, rgba(6,10,16,0.62) 58%, rgba(0,0,0,0.86) 100%), radial-gradient(circle at 18% 30%, rgba(0,0,0,0.34) 0%, rgba(0,0,0,0) 48%), url(${ctaBandImage})`,
+                  backgroundSize: "cover",
+                  backgroundPosition: "center",
+                }}
+              >
+                <div className="absolute inset-0 bg-black/10" aria-hidden />
+                <div className="relative z-[1] grid gap-8 px-6 py-12 sm:px-8 sm:py-14 lg:grid-cols-12 lg:gap-10 lg:px-12 lg:py-16">
+              <div className="lg:col-span-6 lg:pt-1">
                 {home.homeCtaBand.eyebrow?.trim() ? (
-                  <p className="text-sm font-medium text-white">{home.homeCtaBand.eyebrow}</p>
+                  <p className="text-sm font-semibold uppercase tracking-[0.08em] text-white/90">{home.homeCtaBand.eyebrow}</p>
                 ) : null}
-                <h2 className="mt-4 font-serif text-xl font-semibold leading-snug text-white sm:text-2xl lg:text-[1.5rem] lg:leading-snug">
+                <h2 className="mt-4 max-w-[18ch] font-serif text-[1.75rem] font-semibold leading-[1.1] text-white sm:text-[2.1rem] lg:text-[2.7rem]">
                   {home.homeCtaBand.title}
                 </h2>
               </div>
-              <div className="flex flex-col justify-center pt-10 lg:col-span-7 lg:pt-0">
+              <div className="flex flex-col justify-center pt-4 lg:col-span-6 lg:pt-0">
                 {home.homeCtaBand.body?.trim() ? (
-                  <p className="text-[17px] leading-[1.7] text-white">{home.homeCtaBand.body}</p>
+                  <p className="max-w-[48ch] text-[17px] leading-[1.65] text-white/95">{home.homeCtaBand.body}</p>
                 ) : null}
-                <div className="mt-9 flex flex-wrap gap-3">
+                <div className="mt-7 flex flex-wrap gap-3">
                   {home.homeCtaBand.primaryCta?.trim() ? (
                     <Button
                       asChild
@@ -406,6 +418,8 @@ export default async function HomePage() {
                       {home.homeCtaBand.secondaryCta}
                     </Button>
                   ) : null}
+                </div>
+              </div>
                 </div>
               </div>
             </div>

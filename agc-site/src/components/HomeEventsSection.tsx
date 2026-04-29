@@ -1,7 +1,11 @@
 import type { CmsEvent } from "@/lib/content";
+import Image from "next/image";
+import Link from "next/link";
 import { Button } from "@/components/Button";
-import { HomeHorizontalEventBand } from "@/components/home/HomeHorizontalEventBand";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
+import { placeholderImages } from "@/data/images";
+import { resolveImageUrlSync } from "@/lib/content";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
 
 type HomeEventsSectionProps = {
   pastEvents: CmsEvent[];
@@ -10,6 +14,31 @@ type HomeEventsSectionProps = {
 };
 
 const EVENTS_TITLE = "Events";
+
+function eventHref(e: CmsEvent): string {
+  const l = e.link?.trim();
+  if (l && /^https?:\/\//i.test(l)) return l;
+  if (!e.slug) return "/events";
+  return `/events/${e.slug}`;
+}
+
+function eventTypeLabel(e: CmsEvent): string {
+  return (e.event_type || e.category || "Event").replace(/_/g, " ").toUpperCase();
+}
+
+function eventDateLabel(start: string): string {
+  const d = new Date(start);
+  if (Number.isNaN(d.getTime())) return "";
+  return d
+    .toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+    .toUpperCase();
+}
+
+function excerpt(e: CmsEvent): string {
+  const text = (e.description || "").replace(/<[^>]*>/g, "").trim();
+  if (!text) return "Read more about this event on our events page.";
+  return text.length > 160 ? `${text.slice(0, 157)}...` : text;
+}
 
 /**
  * Homepage events: white intro (title + blurb), then **Upcoming** band,
@@ -42,15 +71,92 @@ export function HomeEventsSection({ pastEvents, upcomingEvents, title }: HomeEve
         </section>
       </HomeScrollReveal>
 
-      {upcoming.length > 0 ? (
-        <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
-          <HomeHorizontalEventBand title="Upcoming Events" events={upcoming} />
-        </HomeScrollReveal>
-      ) : null}
+      {hasAny ? (
+        <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+          <section className="bg-white pb-10 pt-5 sm:pb-12 sm:pt-6 lg:pb-14 lg:pt-7">
+            <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-12 2xl:px-16">
+              {upcoming.length > 0 ? (
+                <div>
+                  <h3 className="font-sans text-lg font-semibold text-black sm:text-xl">Upcoming Events</h3>
+                  <div className="mt-4 grid gap-6 md:grid-cols-3">
+                    {upcoming.map((event) => {
+                      const href = eventHref(event);
+                      const imageUrl = resolveImageUrlSync(event.image) || placeholderImages.events;
+                      return (
+                        <Link key={event.id} href={href} className="group block bg-white">
+                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100">
+                            <Image
+                              src={imageUrl}
+                              alt={event.title}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                              unoptimized={preferUnoptimizedImage(imageUrl)}
+                            />
+                          </div>
+                          <div className="pt-5">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">
+                              {eventTypeLabel(event)}
+                            </p>
+                            <h3 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black">
+                              {event.title}
+                            </h3>
+                            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-black">
+                              {eventDateLabel(event.start_date)}
+                            </p>
+                            <p className="mt-3 text-base font-medium leading-relaxed text-black">{excerpt(event)}</p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
 
-      {past.length > 0 ? (
-        <HomeScrollReveal variant="slideRight" start="top 88%" className="block w-full">
-          <HomeHorizontalEventBand title="Past Events" events={past} isPastBand />
+              {past.length > 0 ? (
+                <div className={upcoming.length > 0 ? "mt-10 sm:mt-12" : ""}>
+                  <h3 className="font-sans text-lg font-semibold text-black sm:text-xl">Past Events</h3>
+                  <div className="mt-4 grid gap-6 md:grid-cols-3">
+                    {past.map((event) => {
+                      const href = eventHref(event);
+                      const imageUrl = resolveImageUrlSync(event.image) || placeholderImages.events;
+                      return (
+                        <Link key={event.id} href={href} className="group block bg-white">
+                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100">
+                            <Image
+                              src={imageUrl}
+                              alt={event.title}
+                              fill
+                              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+                              sizes="(max-width: 768px) 100vw, 33vw"
+                              unoptimized={preferUnoptimizedImage(imageUrl)}
+                            />
+                          </div>
+                          <div className="pt-5">
+                            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">
+                              {eventTypeLabel(event)}
+                            </p>
+                            <h3 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black">
+                              {event.title}
+                            </h3>
+                            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-black">
+                              {eventDateLabel(event.start_date)}
+                            </p>
+                            <p className="mt-3 text-base font-medium leading-relaxed text-black">{excerpt(event)}</p>
+                          </div>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : null}
+              <div className="mt-8 flex justify-center">
+                <Button asChild href="/events" variant="primary" className="rounded-none">
+                  See all events
+                </Button>
+              </div>
+            </div>
+          </section>
         </HomeScrollReveal>
       ) : null}
     </>

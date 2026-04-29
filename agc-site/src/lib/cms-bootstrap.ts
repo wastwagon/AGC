@@ -47,6 +47,7 @@ export function getBootstrapHomePageCms(): HomePageCms {
       title:
         "Everyone deserves institutions they can trust—schools that teach, clinics that heal, budgets that add up.",
       body: "That is human development in practice. We help governments and civic actors strengthen governance—through evidence, training, and patient partnership—so prosperity and dignity are not reserved for the few.",
+      image: "",
       primaryCta: "Get involved",
       primaryHref: "/get-involved",
       secondaryCta: "About the Centre",

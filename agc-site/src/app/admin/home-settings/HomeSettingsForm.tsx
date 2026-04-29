@@ -24,6 +24,7 @@ function parseLines(text: string): string[] {
 type MediaPickerTarget =
   | "heroSlider"
   | "spotlightPortrait"
+  | "ctaBandImage"
   | "pillarPrograms"
   | "pillarProjects"
   | "pillarAdvisory"
@@ -73,6 +74,9 @@ export function HomeSettingsForm({
   const [spotlightImage, setSpotlightImage] = useState(
     initialDraft?.spotlightImage ?? home.homeSpotlightStory.image ?? ""
   );
+  const [ctaBandImage, setCtaBandImage] = useState(
+    initialDraft?.ctaBandImage ?? home.homeCtaBand.image ?? ""
+  );
   const [pillarImagePrograms, setPillarImagePrograms] = useState(
     initialDraft?.pillarImagePrograms ?? workPillars.pillarCardImages?.programs ?? ""
   );
@@ -94,6 +98,7 @@ export function HomeSettingsForm({
   const [pickerOpen, setPickerOpen] = useState(false);
   const [pickerTarget, setPickerTarget] = useState<MediaPickerTarget | null>(null);
   const { previewUrl: spotlightPreviewUrl, loading: spotlightPreviewLoading } = useImageFieldPreview(spotlightImage);
+  const { previewUrl: ctaBandPreviewUrl, loading: ctaBandPreviewLoading } = useImageFieldPreview(ctaBandImage);
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({});
   const [dragFrom, setDragFrom] = useState<number | null>(null);
   const [dragOver, setDragOver] = useState<number | null>(null);
@@ -126,6 +131,8 @@ export function HomeSettingsForm({
     setHeroSliderImages((prev) => (prev.trim() ? `${prev}\n${media.id}` : media.id));
     } else if (pickerTarget === "spotlightPortrait") {
       setSpotlightImage(media.id);
+    } else if (pickerTarget === "ctaBandImage") {
+      setCtaBandImage(media.id);
     } else if (pickerTarget === "pillarPrograms") {
       setPillarImagePrograms(media.id);
     } else if (pickerTarget === "pillarProjects") {
@@ -654,6 +661,57 @@ export function HomeSettingsForm({
           <input name="ctaBandEyebrow" defaultValue={initialDraft?.ctaBandEyebrow ?? home.homeCtaBand.eyebrow} className="rounded-lg border border-border px-4 py-2" placeholder="Eyebrow" />
           <input name="ctaBandTitle" defaultValue={initialDraft?.ctaBandTitle ?? home.homeCtaBand.title} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Headline" />
           <textarea name="ctaBandBody" defaultValue={initialDraft?.ctaBandBody ?? home.homeCtaBand.body} rows={4} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Body" />
+          <div className="sm:col-span-2">
+            <label htmlFor="ctaBandImage" className="mb-1 block text-sm font-medium text-slate-700">
+              Background image (media-id/url/path)
+            </label>
+            <div className="flex items-center gap-2">
+              <input
+                id="ctaBandImage"
+                name="ctaBandImage"
+                value={ctaBandImage}
+                onChange={(e) => setCtaBandImage(e.target.value)}
+                className="w-full rounded-lg border border-border px-4 py-2"
+                placeholder="media-... or /uploads/... or https://..."
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  setPickerTarget("ctaBandImage");
+                  setPickerOpen(true);
+                }}
+                className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border text-slate-700 hover:bg-slate-50"
+                aria-label="Pick CTA background image"
+                title="Pick from Media Library"
+              >
+                <ImagePlus className="h-4 w-4" />
+              </button>
+            </div>
+            {ctaBandPreviewLoading ? (
+              <p className="mt-2 text-xs text-slate-500">Loading preview…</p>
+            ) : ctaBandPreviewUrl ? (
+              <div className="mt-3">
+                <p className="text-xs font-medium text-slate-600">Preview</p>
+                <div className="relative mt-1 h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
+                  <Image
+                    src={ctaBandPreviewUrl}
+                    alt=""
+                    fill
+                    className="object-cover"
+                    unoptimized={preferUnoptimizedImage(ctaBandPreviewUrl)}
+                  />
+                </div>
+              </div>
+            ) : ctaBandImage.trim() ? (
+              <p className="mt-2 text-xs text-amber-800">
+                No preview — for <code className="rounded bg-amber-100 px-1">media-…</code> IDs the file must exist in{" "}
+                <Link href="/admin/media" className="font-medium underline">
+                  Media Library
+                </Link>
+                .
+              </p>
+            ) : null}
+          </div>
           <input name="ctaBandPrimaryCta" defaultValue={initialDraft?.ctaBandPrimaryCta ?? home.homeCtaBand.primaryCta} className="rounded-lg border border-border px-4 py-2" placeholder="Primary button label" />
           <input name="ctaBandPrimaryHref" defaultValue={initialDraft?.ctaBandPrimaryHref ?? home.homeCtaBand.primaryHref} className="rounded-lg border border-border px-4 py-2" placeholder="Primary href" />
           <input name="ctaBandSecondaryCta" defaultValue={initialDraft?.ctaBandSecondaryCta ?? home.homeCtaBand.secondaryCta} className="rounded-lg border border-border px-4 py-2" placeholder="Secondary button label" />
