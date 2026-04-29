@@ -70,10 +70,10 @@ export default async function PartnershipWorkPage() {
             </div>
 
             <div className="mt-16 flex flex-wrap gap-4">
-              <Button asChild href="/our-work" variant="outline">
+              <Button asChild href="/our-work" variant="outline" className="rounded-none">
                 Back to Our Work
               </Button>
-              <Button asChild href="/get-involved/partnership" variant="primary">
+              <Button asChild href="/get-involved/partnership" variant="primary" className="rounded-none">
                 Partner with us
               </Button>
             </div>

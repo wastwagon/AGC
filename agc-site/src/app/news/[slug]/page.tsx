@@ -268,7 +268,7 @@ export default async function NewsDetailPage({ params }: Props) {
                   </div>
                 ) : null}
 
-                <NewsArticleShareLinks url={canonicalUrl} title={item.title} />
+                <NewsArticleShareLinks url={canonicalUrl} title={item.title} links={item.socialLinks} />
                 </div>
             </aside>
           </div>

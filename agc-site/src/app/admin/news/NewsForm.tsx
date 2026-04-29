@@ -32,6 +32,35 @@ type NewsFormProps = {
   };
 };
 
+function socialLinksFromDownloadResources(input: unknown): {
+  facebook: string;
+  x: string;
+  linkedin: string;
+  instagram: string;
+  email: string;
+} {
+  if (!input || typeof input !== "object" || Array.isArray(input)) {
+    return { facebook: "", x: "", linkedin: "", instagram: "", email: "" };
+  }
+  const socialRaw = (input as Record<string, unknown>).socialLinks;
+  if (!socialRaw || typeof socialRaw !== "object" || Array.isArray(socialRaw)) {
+    return { facebook: "", x: "", linkedin: "", instagram: "", email: "" };
+  }
+  const s = socialRaw as Record<string, unknown>;
+  return {
+    facebook: typeof s.facebook === "string" ? s.facebook : "",
+    x: typeof s.x === "string" ? s.x : "",
+    linkedin: typeof s.linkedin === "string" ? s.linkedin : "",
+    instagram:
+      typeof s.instagram === "string"
+        ? s.instagram
+        : typeof s.whatsapp === "string"
+          ? s.whatsapp
+          : "",
+    email: typeof s.email === "string" ? s.email : "",
+  };
+}
+
 function SubmitButton({ isEdit }: { isEdit: boolean }) {
   const { pending } = useFormStatus();
   return (
@@ -57,6 +86,7 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
   const selectedCategories = new Set((item?.categories as string[] | null) || []);
 
   const tags = (item?.tags as string[] | null) || [];
+  const socialLinks = socialLinksFromDownloadResources(item?.downloadResources);
 
   return (
     <form action={action} className="space-y-6">
@@ -250,13 +280,76 @@ export function NewsForm({ categoryOptions, tagOptions, item }: NewsFormProps) {
             const d = item?.downloadResources;
             if (d == null) return "[]";
             if (Array.isArray(d)) return JSON.stringify(d, null, 2);
-            if (typeof d === "object") return JSON.stringify([d], null, 2);
+            if (typeof d === "object") {
+              const obj = d as Record<string, unknown>;
+              if (Array.isArray(obj.downloads)) return JSON.stringify(obj.downloads, null, 2);
+              return JSON.stringify([d], null, 2);
+            }
             return "[]";
           })()}
           className="mt-2 w-full rounded-lg border border-border bg-white px-3 py-2 font-mono text-sm text-slate-900"
           placeholder={`[\n  {\n    "label": "Download report (PDF)",\n    "description": "Short line shown under the title.",\n    "href": "/uploads/documents/example.pdf"\n  }\n]`}
         />
       </div>
+
+      <fieldset className="rounded-lg border border-border p-4">
+        <legend className="px-1 text-sm font-medium text-slate-700">Sidebar social links (per article)</legend>
+        <p className="mb-3 text-xs text-slate-500">
+          Optional override for this article’s social icons. Leave blank to use default share links.
+        </p>
+        <div className="grid gap-3 sm:grid-cols-2">
+          <div>
+            <label htmlFor="socialFacebook" className="block text-sm font-medium text-slate-700">Facebook URL</label>
+            <input
+              id="socialFacebook"
+              name="socialFacebook"
+              defaultValue={socialLinks.facebook}
+              placeholder="https://facebook.com/..."
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
+          <div>
+            <label htmlFor="socialX" className="block text-sm font-medium text-slate-700">X URL</label>
+            <input
+              id="socialX"
+              name="socialX"
+              defaultValue={socialLinks.x}
+              placeholder="https://x.com/..."
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
+          <div>
+            <label htmlFor="socialLinkedin" className="block text-sm font-medium text-slate-700">LinkedIn URL</label>
+            <input
+              id="socialLinkedin"
+              name="socialLinkedin"
+              defaultValue={socialLinks.linkedin}
+              placeholder="https://linkedin.com/..."
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
+          <div>
+            <label htmlFor="socialInstagram" className="block text-sm font-medium text-slate-700">Instagram URL</label>
+            <input
+              id="socialInstagram"
+              name="socialInstagram"
+              defaultValue={socialLinks.instagram}
+              placeholder="https://instagram.com/..."
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
+          <div className="sm:col-span-2">
+            <label htmlFor="socialEmail" className="block text-sm font-medium text-slate-700">Email link</label>
+            <input
+              id="socialEmail"
+              name="socialEmail"
+              defaultValue={socialLinks.email}
+              placeholder="mailto:info@example.com"
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+            />
+          </div>
+        </div>
+      </fieldset>
 
       <div>
         <label htmlFor="datePublished" className="block text-sm font-medium text-slate-700">

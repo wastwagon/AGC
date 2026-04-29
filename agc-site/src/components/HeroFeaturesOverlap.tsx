@@ -87,11 +87,11 @@ export function HeroFeaturesOverlap({
               >
                 {titleForRow(rowIndex) ? (
                   <header className="text-center">
-                    <h2 className="text-balance font-serif text-xl font-semibold tracking-tight text-black sm:text-2xl lg:text-[1.65rem] lg:leading-snug">
+                    <h2 className="text-balance font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
                       {titleForRow(rowIndex)}
                     </h2>
                     {descriptionForRow(rowIndex) ? (
-                      <p className="mx-auto mt-2 max-w-4xl text-[1.02rem] leading-relaxed text-black">
+                      <p className="mx-auto mt-3 max-w-4xl text-[0.98rem] font-semibold leading-relaxed text-black sm:text-[1.08rem]">
                         {descriptionForRow(rowIndex)}
                       </p>
                     ) : null}
