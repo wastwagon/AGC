@@ -103,8 +103,6 @@ export async function createAdvisory(formData: FormData) {
       },
     ]);
     const nextJson = next as Prisma.InputJsonValue;
-    const nextJson = next as Prisma.InputJsonValue;
-    const nextJson = next as Prisma.InputJsonValue;
     await prisma.pageContent.upsert({
       where: { slug: "our-work" },
       create: {
@@ -163,6 +161,7 @@ export async function updateAdvisory(id: string, formData: FormData) {
           : card
       )
     );
+    const nextJson = next as Prisma.InputJsonValue;
     await prisma.pageContent.upsert({
       where: { slug: "our-work" },
       create: {
@@ -192,6 +191,7 @@ export async function deleteAdvisory(id: string, _formData?: FormData) {
   try {
     const current = await getOurWorkJsonForEdit();
     const next = upsertAdvisoryCardsIntoJson(current, (cards) => cards.filter((card) => card.id !== id));
+    const nextJson = next as Prisma.InputJsonValue;
     await prisma.pageContent.upsert({
       where: { slug: "our-work" },
       create: {
