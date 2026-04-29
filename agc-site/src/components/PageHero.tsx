@@ -32,6 +32,8 @@ export type PageHeroVariant = "immersive" | "compact" | "minimal";
 
 type PageHeroProps = {
   title: string;
+  /** Optional override for the title typography class (page-specific consistency tuning). */
+  titleClassName?: string;
   subtitle?: string;
   /** Required for immersive & compact */
   image?: string;
@@ -60,6 +62,7 @@ type PageHeroProps = {
  */
 export function PageHero({
   title,
+  titleClassName,
   subtitle,
   image,
   imageAlt,
@@ -166,7 +169,7 @@ export function PageHero({
               ))}
             </ol>
           </nav>
-          <h1 className="page-heading mt-4 text-3xl sm:text-4xl">
+          <h1 className={titleClassName || "page-heading mt-4 text-3xl sm:text-4xl"}>
             {title}
           </h1>
           {subtitle && <p className="mt-3 text-black">{subtitle}</p>}
@@ -223,7 +226,10 @@ export function PageHero({
           </nav>
           <h1
             ref={compactTitleRef}
-            className="mt-3 font-serif text-3xl font-semibold text-white sm:text-4xl lg:text-[2.75rem] lg:leading-tight"
+            className={
+              titleClassName ||
+              "mt-3 font-serif text-3xl font-semibold text-white sm:text-4xl lg:text-[2.75rem] lg:leading-tight"
+            }
           >
             {title}
           </h1>
@@ -278,7 +284,10 @@ export function PageHero({
         <div className="mx-auto max-w-3xl [text-shadow:0_1px_2px_rgba(0,0,0,0.2),0_2px_16px_rgba(0,0,0,0.28)]">
           <h1
             ref={immersiveTitleRef}
-            className="font-serif text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[3.75rem] xl:leading-tight"
+            className={
+              titleClassName ||
+              "font-serif text-4xl font-semibold leading-tight text-white sm:text-5xl lg:text-6xl xl:text-[3.75rem] xl:leading-tight"
+            }
           >
             {title}
           </h1>
