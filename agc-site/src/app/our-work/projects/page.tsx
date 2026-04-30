@@ -17,6 +17,7 @@ export const metadata = {
 type ProjectItem = {
   title: string;
   description: string;
+  backgroundImage?: string;
 };
 
 type ProjectsWorkMerged = typeof workContent.projects & { heroImage?: string; cards?: ProjectItem[] };
@@ -24,7 +25,7 @@ type ProjectsWorkMerged = typeof workContent.projects & { heroImage?: string; ca
 export default async function ProjectsPage() {
   const [merged, bc] = await Promise.all([
     getMergedPageContent<ProjectsWorkMerged>(
-      "our-work-projects",
+      "projects",
       cmsStaticOrEmpty(workContent.projects as ProjectsWorkMerged)
     ),
     getBreadcrumbLabels(),
@@ -32,10 +33,17 @@ export default async function ProjectsPage() {
   const content = merged;
   const heroSrc =
     cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
-  const projects =
+  const rawProjects =
     Array.isArray(content.cards) && content.cards.length > 0
       ? content.cards
       : (workContent.projects.cards ?? []) as ProjectItem[];
+  const projects = await Promise.all(
+    rawProjects.map(async (project) => ({
+      ...project,
+      backgroundImage:
+        cardImageUrlOrNull((await resolveImageUrl(project.backgroundImage)) ?? null) ?? undefined,
+    }))
+  );
 
   return (
     <>
@@ -57,6 +65,9 @@ export default async function ProjectsPage() {
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 
             <div className="space-y-8">
+              <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+                Projects
+              </h2>
               <p className="page-prose max-w-none text-black">
                 Our projects are targeted initiatives developed in response to specific governance needs and
                 opportunities. Each project is designed with clear objectives, defined outputs, and measurable

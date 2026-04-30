@@ -8,6 +8,36 @@ import { Button } from "@/components/Button";
 import type { AypfCmsContent } from "@/data/aypf";
 import type { SiteSettings } from "@/lib/site-settings";
 
+function getNestedRegisterString(
+  map: Record<string, unknown>,
+  key: string,
+  fallback: string
+): string {
+  const section =
+    map.registerSection && typeof map.registerSection === "object" && !Array.isArray(map.registerSection)
+      ? (map.registerSection as Record<string, unknown>)
+      : null;
+  return section && typeof section[key] === "string" && String(section[key]).trim().length > 0
+    ? String(section[key])
+    : fallback;
+}
+
+function getNestedRegisterArray(
+  map: Record<string, unknown>,
+  key: string,
+  fallback: string[]
+): string[] {
+  const section =
+    map.registerSection && typeof map.registerSection === "object" && !Array.isArray(map.registerSection)
+      ? (map.registerSection as Record<string, unknown>)
+      : null;
+  if (!section || !Array.isArray(section[key])) return fallback;
+  const values = (section[key] as unknown[]).filter(
+    (item): item is string => typeof item === "string" && item.trim().length > 0
+  );
+  return values.length > 0 ? values : fallback;
+}
+
 export function AypfClient({
   content,
   heroImage,
@@ -20,6 +50,29 @@ export function AypfClient({
   const bc = content.breadcrumbLabel?.trim() || content.title;
   const regHref = content.registerSection.registrationHref?.trim() || "/contact";
   const contentMap = content as unknown as Record<string, unknown>;
+  const getString = (key: string, fallback: string) =>
+    typeof contentMap[key] === "string" && String(contentMap[key]).trim().length > 0
+      ? String(contentMap[key])
+      : fallback;
+  const getStringArray = (key: string, fallback: string[]) => {
+    const value = contentMap[key];
+    if (!Array.isArray(value)) return fallback;
+    const list = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+    return list.length > 0 ? list : fallback;
+  };
+  const getObjectArray = <T extends Record<string, string>>(
+    key: string,
+    fallback: T[],
+    shape: (item: Record<string, unknown>) => T
+  ) => {
+    const value = contentMap[key];
+    if (!Array.isArray(value)) return fallback;
+    const list = value
+      .filter((item): item is Record<string, unknown> => !!item && typeof item === "object" && !Array.isArray(item))
+      .map(shape)
+      .filter((item) => Object.values(item).every((v) => typeof v === "string" && v.trim().length > 0));
+    return list.length > 0 ? list : fallback;
+  };
   const focusSectionBgImage =
     typeof contentMap.focusSectionBgImage === "string" && contentMap.focusSectionBgImage.trim()
       ? contentMap.focusSectionBgImage.trim()
@@ -29,7 +82,7 @@ export function AypfClient({
       ? contentMap.strategicPrioritiesBgImage.trim()
       : "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=2200&q=80";
 
-  const focusAreas = [
+  const focusAreasFallback = [
     "Building youth leadership pipelines within political parties",
     "Advancing institutional reforms that lower barriers to political entry",
     "Promoting issue-based political engagement, particularly on economic transformation",
@@ -37,14 +90,14 @@ export function AypfClient({
     "Embedding youth influence in party systems through policy and structural change",
   ];
 
-  const objectives = [
+  const objectivesFallback = [
     "Institutionalise youth leadership as a transformative force in continental politics and economic governance.",
     "Reposition youth as co-architects of democratic renewal in party leadership, elections, and policymaking structures.",
     "Catalyze internal party reforms that promote intergenerational inclusion, transparency, and youth leadership pipelines.",
     "Promote alignment with the African Youth Charter, Agenda 2063, and SDG 16.",
   ];
 
-  const strategicPriorities = [
+  const strategicPrioritiesFallback = [
     {
       title: "Strengthening youth representation in political decision-making",
       body: "Advance practical pathways for increasing youth participation in party structures, public institutions, and policy spaces.",
@@ -62,6 +115,116 @@ export function AypfClient({
       body: "Connect economic inclusion with political stability by integrating youth entrepreneurship, employment, and economic agency into governance priorities.",
     },
   ];
+  const aboutEyebrow = getString("aboutEyebrow", "AYPF");
+  const aboutHeading = getString(
+    "aboutHeading",
+    "Youth at the center of Africa’s political and economic transformation"
+  );
+  const fallbackAboutParagraphs = [
+    typeof contentMap.leadParagraph === "string" ? String(contentMap.leadParagraph).trim() : "",
+    typeof contentMap.launchParagraph === "string" ? String(contentMap.launchParagraph).trim() : "",
+  ].filter(Boolean);
+  const aboutParagraphs = getStringArray(
+    "aboutParagraphs",
+    fallbackAboutParagraphs.length > 0
+      ? fallbackAboutParagraphs
+      : [
+          "The AYPF is a continental convening grounded in the conviction that Africa's transformation requires inclusive leadership with youth at its centre. It convenes young politicians, activists, reformers, and emerging leaders who are already shaping governance outcomes or aspire to do so.",
+          "At its core is a simple belief: leadership gains legitimacy, creativity, and relevance when it reflects the full diversity, intelligence, and lived experiences of young people. The inaugural edition, held on International Youth Day in partnership with the Government of Ghana, brought together over 1,000 young people and youth political leaders from across the continent.",
+        ]
+  );
+  const focusHeading = getString(
+    "focusHeading",
+    typeof contentMap.purposeSection === "object" &&
+      contentMap.purposeSection &&
+      !Array.isArray(contentMap.purposeSection) &&
+      typeof (contentMap.purposeSection as Record<string, unknown>).heading === "string"
+      ? String((contentMap.purposeSection as Record<string, unknown>).heading)
+      : "From symbolic inclusion to structured participation"
+  );
+  const focusIntro = getString(
+    "focusIntro",
+    typeof contentMap.purposeSection === "object" &&
+      contentMap.purposeSection &&
+      !Array.isArray(contentMap.purposeSection) &&
+      typeof (contentMap.purposeSection as Record<string, unknown>).intro === "string"
+      ? String((contentMap.purposeSection as Record<string, unknown>).intro)
+      : "The AYPF is designed as a reform-oriented and capacity-building platform within Africa's political ecosystem. It works to shift youth engagement from symbolic representation to structured political participation where young people can exercise their full agency."
+  );
+  const focusAreasFallbackLegacy =
+    typeof contentMap.purposeSection === "object" &&
+    contentMap.purposeSection &&
+    !Array.isArray(contentMap.purposeSection) &&
+    Array.isArray((contentMap.purposeSection as Record<string, unknown>).focusAreas)
+      ? ((contentMap.purposeSection as Record<string, unknown>).focusAreas as unknown[])
+          .filter((item): item is string => typeof item === "string" && item.trim().length > 0)
+      : [];
+  const focusAreas = getStringArray(
+    "focusAreas",
+    focusAreasFallbackLegacy.length > 0 ? focusAreasFallbackLegacy : focusAreasFallback
+  );
+  const summit2026Heading = getString(
+    "summit2026Heading",
+    typeof contentMap.lookingAheadSection === "object" &&
+      contentMap.lookingAheadSection &&
+      !Array.isArray(contentMap.lookingAheadSection) &&
+      typeof (contentMap.lookingAheadSection as Record<string, unknown>).heading === "string"
+      ? String((contentMap.lookingAheadSection as Record<string, unknown>).heading)
+      : "AYPF 2026"
+  );
+  const legacy2026Intro =
+    typeof contentMap.lookingAheadSection === "object" &&
+    contentMap.lookingAheadSection &&
+    !Array.isArray(contentMap.lookingAheadSection) &&
+    typeof (contentMap.lookingAheadSection as Record<string, unknown>).intro === "string"
+      ? String((contentMap.lookingAheadSection as Record<string, unknown>).intro).trim()
+      : "";
+  const legacy2026Invitation =
+    typeof contentMap.lookingAheadSection === "object" &&
+    contentMap.lookingAheadSection &&
+    !Array.isArray(contentMap.lookingAheadSection) &&
+    typeof (contentMap.lookingAheadSection as Record<string, unknown>).invitationNote === "string"
+      ? String((contentMap.lookingAheadSection as Record<string, unknown>).invitationNote).trim()
+      : "";
+  const summit2026Paragraphs = getStringArray("summit2026Paragraphs", [
+    ...(legacy2026Intro ? [legacy2026Intro] : []),
+    ...(legacy2026Invitation ? [legacy2026Invitation] : []),
+    ...(!legacy2026Intro && !legacy2026Invitation
+      ? [
+    "The 2026 edition, themed \"Leveraging the Youth Dividend: Driving Africa's Economic and Political Transformation,\" underscores the central role of young Africans in shaping the continent's political and economic trajectory.",
+    "The Forum aligns with Aspiration 6 of Agenda 2063 and draws inspiration from the African Youth Charter and youth economic inclusion initiatives such as WYFEI 2030.",
+      ]
+      : []),
+  ]);
+  const objectivesHeading = getString("objectivesHeading", "Objectives of AYPF 2026");
+  const objectives = getStringArray("objectives", objectivesFallback);
+  const strategicPrioritiesHeading = getString("strategicPrioritiesHeading", "AYPF 2026 Strategic Priorities");
+  const strategicPriorities = getObjectArray(
+    "strategicPriorities",
+    strategicPrioritiesFallback,
+    (item) => ({
+      title: typeof item.title === "string" ? item.title : "",
+      body: typeof item.body === "string" ? item.body : "",
+    })
+  );
+  const registerHeading = getString(
+    "registerHeading",
+    getNestedRegisterString(contentMap, "heading", "Register Your Interest")
+  );
+  const registerIntro = getString(
+    "registerIntro",
+    getNestedRegisterString(contentMap, "intro", "Participation in AYPF is by invitation. Register your interest to:")
+  );
+  const registerBenefits = getStringArray(
+    "registerBenefits",
+    getNestedRegisterArray(contentMap, "benefits", [
+      "Receive official invitations",
+      "Access early updates on the Forum",
+      "Engage with preparatory dialogues and programming",
+    ])
+  );
+  const registerCtaLabel = getString("registerCtaLabel", getNestedRegisterString(contentMap, "ctaLabel", "Register Now"));
+
   const [priorityIndex, setPriorityIndex] = useState(0);
   const activePriority = strategicPriorities[priorityIndex];
 
@@ -91,21 +254,18 @@ export function AypfClient({
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <div className="grid gap-10 lg:grid-cols-3">
               <div className="lg:col-span-2">
-                <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent-800">AYPF</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent-800">{aboutEyebrow}</p>
                 <h2 className="mt-3 font-serif text-[2rem] font-semibold leading-tight text-black sm:text-[2.5rem]">
-                  Youth at the center of Africa’s political and economic transformation
+                  {aboutHeading}
                 </h2>
-                <p className="mt-6 page-prose text-[1.08rem] font-medium leading-relaxed text-stone-800">
-                  The AYPF is a continental convening grounded in the conviction that Africa&apos;s transformation requires
-                  inclusive leadership with youth at its centre. It convenes young politicians, activists, reformers,
-                  and emerging leaders who are already shaping governance outcomes or aspire to do so.
-                </p>
-                <p className="mt-4 page-prose text-[1.08rem] font-medium leading-relaxed text-stone-800">
-                  At its core is a simple belief: leadership gains legitimacy, creativity, and relevance when it
-                  reflects the full diversity, intelligence, and lived experiences of young people. The inaugural
-                  edition, held on International Youth Day in partnership with the Government of Ghana, brought
-                  together over 1,000 young people and youth political leaders from across the continent.
-                </p>
+                {aboutParagraphs.map((paragraph, idx) => (
+                  <p
+                    key={`${paragraph}-${idx}`}
+                    className={`page-prose text-[1.08rem] font-medium leading-relaxed text-stone-800 ${idx === 0 ? "mt-6" : "mt-4"}`}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
               </div>
               <div className="self-start rounded-none border border-border/90 bg-white p-6 shadow-sm">
                 <h3 className="font-serif text-xl font-semibold text-black">Secure your spot at AYPF 2026</h3>
@@ -131,15 +291,11 @@ export function AypfClient({
           }}
         >
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-            <h2 className="max-w-5xl font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">
-              From symbolic inclusion to structured participation
-            </h2>
+              <h2 className="max-w-5xl font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">{focusHeading}</h2>
             <p className="mt-5 max-w-4xl text-base font-medium leading-relaxed text-white/95 sm:text-[1.03rem]">
-              The AYPF is designed as a reform-oriented and capacity-building platform within Africa&apos;s political
-              ecosystem. It works to shift youth engagement from symbolic representation to structured political
-              participation where young people can exercise their full agency.
+                {focusIntro}
             </p>
-            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
+            <ul className="mt-9 grid gap-x-8 gap-y-5 sm:grid-cols-2">
               {focusAreas.map((item) => (
                 <li key={item} className="rounded-none border border-white/30 bg-white/5 px-4 py-4 text-sm font-medium leading-relaxed sm:px-5">
                   {item}
@@ -153,15 +309,15 @@ export function AypfClient({
       <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-            <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">AYPF 2026</h2>
-            <p className="mt-5 page-prose text-[1.08rem] font-medium leading-relaxed text-stone-800">
-              The 2026 edition, themed <strong>&ldquo;Leveraging the Youth Dividend: Driving Africa&apos;s Economic and Political Transformation,&rdquo;</strong>{" "}
-              underscores the central role of young Africans in shaping the continent&apos;s political and economic trajectory.
-            </p>
-            <p className="mt-4 page-prose text-[1.08rem] font-medium leading-relaxed text-stone-800">
-              The Forum aligns with Aspiration 6 of Agenda 2063 and draws inspiration from the African Youth Charter and
-              youth economic inclusion initiatives such as WYFEI 2030.
-            </p>
+            <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{summit2026Heading}</h2>
+            {summit2026Paragraphs.map((paragraph, idx) => (
+              <p
+                key={`${paragraph}-${idx}`}
+                className={`page-prose text-[1.08rem] font-medium leading-relaxed text-stone-800 ${idx === 0 ? "mt-5" : "mt-4"}`}
+              >
+                {paragraph}
+              </p>
+            ))}
           </div>
         </section>
       </HomeScrollReveal>
@@ -169,10 +325,10 @@ export function AypfClient({
       <HomeScrollReveal variant="fadeIn" start="top 88%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-            <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">Objectives of AYPF 2026</h2>
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+            <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{objectivesHeading}</h2>
+            <ul className="mt-6 grid gap-x-7 gap-y-5 sm:grid-cols-2">
               {objectives.map((item) => (
-                <li key={item} className="rounded-none border border-border/80 bg-white p-5 text-sm font-medium leading-relaxed text-black">
+              <li key={item} className="rounded-none border border-border/80 bg-white p-6 text-sm font-medium leading-relaxed text-black">
                   {item}
                 </li>
               ))}
@@ -185,7 +341,7 @@ export function AypfClient({
         <section className="w-full border-t border-border/80 bg-white py-12 sm:py-16 lg:py-20">
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">
-              AYPF 2026 Strategic Priorities
+              {strategicPrioritiesHeading}
             </h2>
             <div
               className="mt-8 overflow-hidden rounded-none border border-white/30 bg-cover bg-center bg-no-repeat"
@@ -234,14 +390,14 @@ export function AypfClient({
         <section className="w-full border-t border-border/80 bg-white py-12 sm:py-16">
           <div className="mx-auto w-full max-w-4xl px-6 sm:px-8 lg:px-11">
             <div className="rounded-none border border-border/80 bg-accent-600 p-10 sm:p-12 text-white">
-              <h2 className="font-serif text-3xl font-semibold text-white">Register Your Interest</h2>
+              <h2 className="font-serif text-3xl font-semibold text-white">{registerHeading}</h2>
               <p className="mt-3 text-sm font-medium leading-relaxed text-white/95">
-                Participation in AYPF is by invitation. Register your interest to:
+                {registerIntro}
               </p>
-              <ul className="mt-4 list-disc space-y-2 pl-6 text-white marker:text-white">
-                <li>Receive official invitations</li>
-                <li>Access early updates on the Forum</li>
-                <li>Engage with preparatory dialogues and programming</li>
+              <ul className="mt-5 list-disc space-y-3 pl-6 text-white marker:text-white">
+                {registerBenefits.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
               </ul>
               <Button
                 asChild
@@ -249,7 +405,7 @@ export function AypfClient({
                 variant="primary"
                 className="mt-8 !rounded-none !bg-white font-semibold !text-accent-900 shadow-none hover:!bg-stone-100"
               >
-                Register Now
+                {registerCtaLabel}
               </Button>
             </div>
           </div>

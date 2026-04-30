@@ -17,14 +17,38 @@ export const metadata = {
 type TrainingItem = {
   title: string;
   description: string;
+  backgroundImage?: string;
 };
 
 type TrainingWorkMerged = typeof workContent.training & { heroImage?: string; cards?: TrainingItem[] };
 
+const TRAINING_FALLBACK_CARDS: TrainingItem[] = [
+  {
+    title: "Leadership and governance development",
+    description:
+      "We deliver training programmes designed to strengthen leadership capacity and deepen understanding of governance systems, public policy, and institutional processes. These programmes are tailored to both emerging and experienced leaders across sectors.",
+  },
+  {
+    title: "Policy and research skills training",
+    description:
+      "AGC equips participants with practical skills in policy analysis, research methodologies, and evidence-based decision-making. Our training emphasises applied learning, enabling participants to engage effectively with real-world governance challenges.",
+  },
+  {
+    title: "Workshops and executive short courses",
+    description:
+      "We organise targeted workshops and short courses focused on specific governance and policy issues. These sessions provide intensive learning opportunities for professionals, practitioners, and public sector actors seeking to deepen their expertise.",
+  },
+  {
+    title: "Mentorship and professional development",
+    description:
+      "Through structured mentorship and coaching programmes, we support the growth of young leaders and practitioners in governance and public policy. Participants benefit from guided learning, practical exposure, and opportunities to contribute to research and policy work.",
+  },
+];
+
 export default async function TrainingWorkPage() {
   const [merged, bc] = await Promise.all([
     getMergedPageContent<TrainingWorkMerged>(
-      "our-work-training",
+      "training",
       cmsStaticOrEmpty(workContent.training as TrainingWorkMerged)
     ),
     getBreadcrumbLabels(),
@@ -33,10 +57,17 @@ export default async function TrainingWorkPage() {
   const displayTitle = (content.title || "").trim().toLowerCase() === "training" ? "Capacity Building" : content.title;
   const heroSrc =
     cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
-  const training =
+  const rawTraining =
     Array.isArray(content.cards) && content.cards.length > 0
       ? content.cards
-      : ([] as TrainingItem[]);
+      : TRAINING_FALLBACK_CARDS;
+  const training = await Promise.all(
+    rawTraining.map(async (item) => ({
+      ...item,
+      backgroundImage:
+        cardImageUrlOrNull((await resolveImageUrl(item.backgroundImage)) ?? null) ?? undefined,
+    }))
+  );
 
   return (
     <>
@@ -57,6 +88,9 @@ export default async function TrainingWorkPage() {
         <Section className="bg-white">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="space-y-8">
+              <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+                {displayTitle}
+              </h2>
               <p className="page-prose max-w-none text-black">
                 AGC delivers training and capacity-building initiatives designed to equip leaders, practitioners,
                 and emerging actors with the skills and knowledge required to navigate governance challenges. Our

@@ -38,6 +38,9 @@ export default async function JoinUsPage() {
   const getString = (key: string, fallback: string) =>
     typeof cMap[key] === "string" && String(cMap[key]).trim().length > 0 ? String(cMap[key]) : fallback;
   const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.applications;
+  const sidePanelImage =
+    (await resolveImageUrl((cMap.panelImage as string | undefined) ?? (cMap.sidePanelImage as string | undefined))) ||
+    heroImage;
   return (
     <>
       <PageHero
@@ -85,7 +88,7 @@ export default async function JoinUsPage() {
                 <div
                   className="relative min-h-[340px] overflow-hidden border border-border/80 bg-black"
                   style={{
-                    backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.28), rgba(15,23,42,0.62)), url('${heroImage}')`,
+                    backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.28), rgba(15,23,42,0.62)), url('${sidePanelImage}')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}

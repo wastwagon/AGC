@@ -1,6 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { aypfContent } from "@/data/aypf";
-import { getInvolvedContent } from "@/data/content";
+import { getInvolvedContent, workContent } from "@/data/content";
 import { prisma } from "@/lib/db";
 import { shouldSkipPrismaCalls } from "@/lib/skip-db";
 
@@ -10,46 +10,29 @@ import { shouldSkipPrismaCalls } from "@/lib/skip-db";
  */
 const BASELINE_PAGES: { slug: string; title: string; contentJson: Record<string, unknown> }[] = [
   {
-    slug: "our-work-programs",
+    slug: "programs",
     title: "Programs",
-    contentJson: {
-      title: "Programs",
-      subtitle: "Our core focus areas",
-      description:
-        "Through forums and expert roundtables, the Africa Governance Centre promotes a culture of collaboration, knowledge sharing, and collective action to advance good governance practices and support economic transformation in Africa.",
-      programs: [
-        {
-          title: "African Political Parties Initiative",
-          description:
-            "The African Political Parties Initiative (APPI) is a project developed by the Africa Governance Centre dedicated to supporting the role of political parties in Africa's development.",
-          backgroundImage: "",
-        },
-        {
-          title: "Africa Governance Review",
-          description:
-            "The Africa Governance Review Project is a comprehensive initiative dedicated to conducting detailed assessments, offering policy recommendations, and facilitating discussions on governance challenges and opportunities across African nations.",
-          backgroundImage: "",
-        },
-        {
-          title: "Africa Resource Governance Initiative",
-          description:
-            "The Africa Resource Governance Initiative (ARGI), a project of the Africa Governance Centre, is dedicated to promoting transparency, accountability, and sustainable management of natural resources across Africa.",
-          backgroundImage: "",
-        },
-        {
-          title: "Public Sector Efficiency and Innovation Project",
-          description:
-            "The Public Sector Efficiency and Innovation Project is dedicated to addressing the critical need for streamlined operations, improved public service delivery, and the integration of innovative solutions to support Africa's development.",
-          backgroundImage: "",
-        },
-        {
-          title: "Media and Democracy Initiative",
-          description:
-            "The Media and Democracy Initiative of the Africa Governance Centre seek to empower media professionals, support independent journalism, and strengthen the media's ability to facilitate informed citizen participation in governance processes.",
-          backgroundImage: "",
-        },
-      ],
-    },
+    contentJson: workContent.programs as unknown as Record<string, unknown>,
+  },
+  {
+    slug: "projects",
+    title: "Projects",
+    contentJson: workContent.projects as unknown as Record<string, unknown>,
+  },
+  {
+    slug: "advisory",
+    title: "Advisory",
+    contentJson: workContent.advisory as unknown as Record<string, unknown>,
+  },
+  {
+    slug: "research",
+    title: "Research",
+    contentJson: workContent.research as unknown as Record<string, unknown>,
+  },
+  {
+    slug: "training",
+    title: "Capacity Building",
+    contentJson: workContent.training as unknown as Record<string, unknown>,
   },
   {
     slug: "aypf",
@@ -125,6 +108,29 @@ const BASELINE_PAGES: { slug: string; title: string; contentJson: Record<string,
 
 export async function ensureMissingBaselinePageRows(): Promise<void> {
   if (shouldSkipPrismaCalls()) return;
+
+  const workSlugRenames: { from: string; to: string; title: string }[] = [
+    { from: "our-work-programs", to: "programs", title: "Programs" },
+    { from: "our-work-projects", to: "projects", title: "Projects" },
+    { from: "our-work-advisory", to: "advisory", title: "Advisory" },
+    { from: "our-work-research", to: "research", title: "Research" },
+    { from: "our-work-training", to: "training", title: "Capacity Building" },
+  ];
+
+  for (const rename of workSlugRenames) {
+    try {
+      const existingTo = await prisma.pageContent.findUnique({ where: { slug: rename.to } });
+      if (existingTo) continue;
+      const legacy = await prisma.pageContent.findUnique({ where: { slug: rename.from } });
+      if (!legacy) continue;
+      await prisma.pageContent.update({
+        where: { slug: rename.from },
+        data: { slug: rename.to, title: rename.title },
+      });
+    } catch {
+      // Ignore uniqueness/schema issues; baseline creation below still runs.
+    }
+  }
 
   for (const p of BASELINE_PAGES) {
     try {

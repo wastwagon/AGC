@@ -26,6 +26,13 @@ function parseTeamTabsConfig(input: string | undefined): { key: string; label: s
   return out;
 }
 
+function splitLines(input: string | undefined): string[] {
+  return (input ?? "")
+    .split("\n")
+    .map((x) => x.trim())
+    .filter(Boolean);
+}
+
 export async function updateAboutSettings(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
@@ -45,20 +52,60 @@ export async function updateAboutSettings(formData: FormData) {
 
   const teamHero = d.teamHeroImage?.trim();
   const teamTabsList = parseTeamTabsConfig(d.teamTabsConfig);
+  const previousDeliveryPoints = Array.isArray(prevJson.deliveryPoints)
+    ? (prevJson.deliveryPoints as Array<Record<string, unknown>>)
+    : [];
+  const deliveryPoints = [1, 2, 3, 4].map((n, idx) => {
+    const prev = previousDeliveryPoints[idx] ?? {};
+    const title =
+      (d[`deliveryTitle${n}` as keyof typeof d] as string | undefined)?.trim() ||
+      (typeof prev.title === "string" ? prev.title : "");
+    const body =
+      (d[`deliveryBody${n}` as keyof typeof d] as string | undefined)?.trim() ||
+      (typeof prev.body === "string" ? prev.body : "");
+    const image =
+      (d[`deliveryImage${n}` as keyof typeof d] as string | undefined)?.trim() ||
+      (typeof prev.image === "string" ? prev.image : "");
+    return { title, body, ...(image ? { image } : {}) };
+  });
   const payload = {
     ...prevJson,
     title: d.title,
     hero: { subtitle: d.heroSubtitle },
-    intro: d.intro,
-    description: d.description,
-    mission: d.mission,
+    intro: d.intro ?? (typeof prevJson.intro === "string" ? prevJson.intro : ""),
+    description:
+      d.description ?? (typeof prevJson.description === "string" ? prevJson.description : ""),
+    mission: d.mission ?? (typeof prevJson.mission === "string" ? prevJson.mission : ""),
     strategicObjectives: {
-      title: d.strategicTitle,
-      content: d.strategicContent,
-      principles: d.strategicPrinciples,
-      agenda2063: d.strategicAgenda2063,
+      title:
+        d.strategicTitle ??
+        (typeof (prevJson.strategicObjectives as Record<string, unknown> | undefined)?.title === "string"
+          ? ((prevJson.strategicObjectives as Record<string, unknown>).title as string)
+          : ""),
+      content:
+        d.strategicContent ??
+        (typeof (prevJson.strategicObjectives as Record<string, unknown> | undefined)?.content === "string"
+          ? ((prevJson.strategicObjectives as Record<string, unknown>).content as string)
+          : ""),
+      principles:
+        d.strategicPrinciples ??
+        (typeof (prevJson.strategicObjectives as Record<string, unknown> | undefined)?.principles === "string"
+          ? ((prevJson.strategicObjectives as Record<string, unknown>).principles as string)
+          : ""),
+      agenda2063:
+        d.strategicAgenda2063 ??
+        (typeof (prevJson.strategicObjectives as Record<string, unknown> | undefined)?.agenda2063 === "string"
+          ? ((prevJson.strategicObjectives as Record<string, unknown>).agenda2063 as string)
+          : ""),
     },
     heroImage: d.heroImage || undefined,
+    aboutSectionEyebrow: d.aboutSectionEyebrow?.trim() || undefined,
+    aboutSectionHeading: d.aboutSectionHeading?.trim() || undefined,
+    leadParagraphs: splitLines(d.leadParagraphs),
+    deliverySectionHeading: d.deliverySectionHeading?.trim() || undefined,
+    partnershipsHeading: d.partnershipsHeading?.trim() || undefined,
+    partnershipsText: d.partnershipsText?.trim() || "",
+    deliveryPoints,
     teamPage: {
       title: d.teamPageTitle,
       subtitle: d.teamPageSubtitle,
@@ -75,25 +122,25 @@ export async function updateAboutSettings(formData: FormData) {
         title: d.title,
         status: "published",
         heroSubtitle: d.heroSubtitle,
-        intro: d.intro,
-        description: d.description,
-        mission: d.mission,
-        objectivesTitle: d.strategicTitle,
-        objectivesContent: d.strategicContent,
-        objectivesPrinciples: d.strategicPrinciples,
-        objectivesAgenda2063: d.strategicAgenda2063,
+        intro: d.intro ?? "",
+        description: d.description ?? "",
+        mission: d.mission ?? "",
+        objectivesTitle: d.strategicTitle ?? "",
+        objectivesContent: d.strategicContent ?? "",
+        objectivesPrinciples: d.strategicPrinciples ?? "",
+        objectivesAgenda2063: d.strategicAgenda2063 ?? "",
         contentJson: payload as Prisma.InputJsonValue,
       },
       update: {
         title: d.title,
         heroSubtitle: d.heroSubtitle,
-        intro: d.intro,
-        description: d.description,
-        mission: d.mission,
-        objectivesTitle: d.strategicTitle,
-        objectivesContent: d.strategicContent,
-        objectivesPrinciples: d.strategicPrinciples,
-        objectivesAgenda2063: d.strategicAgenda2063,
+        intro: d.intro ?? "",
+        description: d.description ?? "",
+        mission: d.mission ?? "",
+        objectivesTitle: d.strategicTitle ?? "",
+        objectivesContent: d.strategicContent ?? "",
+        objectivesPrinciples: d.strategicPrinciples ?? "",
+        objectivesAgenda2063: d.strategicAgenda2063 ?? "",
         contentJson: payload as Prisma.InputJsonValue,
       },
     });

@@ -26,6 +26,10 @@ export default async function AdminPagesEditPage({ params }: Props) {
     redirect("/admin/home-settings");
   }
 
+  if (decodedSlug === "about") {
+    redirect("/admin/about-settings");
+  }
+
   try {
     await ensureMissingBaselinePageRows();
     const item = await prisma.pageContent.findUnique({ where: { slug: decodedSlug } });

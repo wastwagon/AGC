@@ -99,6 +99,55 @@ export function AppSummitClient({
     "Exhibition space for products and services",
     "Access to closed-door VIP sessions and publicity acknowledgements",
   ]);
+  const aboutParagraphs = getStringArray("aboutParagraphs", [
+    "The African Political Parties Summit (APPS) is a high-level continental platform that convenes political leaders, governance institutions, and policy influencers from across Africa. The concept for the Summit was inspired by growing concerns about the continent's changing governance landscape.",
+    "Over the past decade, Africa has experienced a concerning decline in democratic development, evidenced by political unrest, electoral irregularities, and increasing public skepticism toward democratic institutions. Given that political parties serve as the primary vehicles for leadership selection and policy formulation, strengthening these institutions is crucial for safeguarding democracy and effectively addressing Africa's evolving political landscape.",
+    "APPS offers a neutral, inclusive, and policy-oriented platform to advance reforms aimed at restoring public trust and strengthening democratic resilience. The inaugural edition, held in Accra from August 10-12, 2025, brought together over 700 participants from more than 50 countries for strategic dialogue and collaboration.",
+  ]);
+  const summit2026Paragraphs = getStringArray("summit2026Paragraphs", [
+    "The second edition of APPS moves the conversation from broad democratic commitments to a focused and practical inquiry: how can political parties become credible, institutional drivers of economic transformation in Africa?",
+    "APPS seeks to convene heads of state, political leaders, policymakers, economists, private sector actors, academia, civil society organisations and development partners to explore how party systems can contribute meaningfully to Africa's economic renewal.",
+  ]);
+  const sponsorshipIntro = getString(
+    "sponsorshipIntro",
+    "APPS 2026 provides strategic opportunities for corporate and institutional sponsorship through high-visibility brand exposure, partnership recognition, and direct engagement with policy influencers from across Africa."
+  );
+  const finalCtaHeading = getString("finalCtaHeading", "Secure your spot at APP Summit 2026");
+  const finalCtaBody = getString(
+    "finalCtaBody",
+    "A sponsorship prospectus is available for download. Organizations interested in partnering with APPS 2026 are encouraged to contact the Secretariat directly."
+  );
+  const finalAddress = getString("finalAddress", "No 5 Teinor Street, Dzorwulu – Accra Ghana");
+  const finalParticipantsNote = getString(
+    "finalParticipantsNote",
+    "Participants include heads of state and government affiliated with political parties, party chairpersons and secretaries-general, members of parliament, economic advisors, private sector leaders, academia, and civil society actors."
+  );
+  const structureCards = [
+    {
+      label: getString("dayOneLabel", "Day One"),
+      title: getString("dayOneTitle", "Inclusive leadership platforms"),
+      body: getString(
+        "dayOneBody",
+        "Africa Women Political Leadership Summit and African Youth in Politics Forum as foundational pillars."
+      ),
+    },
+    {
+      label: getString("dayTwoLabel", "Day Two"),
+      title: getString("dayTwoTitle", "Plenary and strategic dialogues"),
+      body: getString(
+        "dayTwoBody",
+        "Full summit programme with thematic roundtables and moderated high-level discussions."
+      ),
+    },
+    {
+      label: getString("dayThreeLabel", "Day Three"),
+      title: getString("dayThreeTitle", "Consultations and commitments"),
+      body: getString(
+        "dayThreeBody",
+        "Closed-door consultations among party leaders, with outputs informed by youth and women platforms."
+      ),
+    },
+  ];
 
   return (
     <>
@@ -122,25 +171,14 @@ export function AppSummitClient({
                 <h2 className="mt-3 font-serif text-[2rem] font-semibold leading-tight text-black sm:text-[2.5rem]">
                   {aboutSectionHeading}
                 </h2>
-                <p className="page-prose mt-6 text-lg leading-relaxed">
-                  The African Political Parties Summit (APPS) is a high-level continental platform that convenes
-                  political leaders, governance institutions, and policy influencers from across Africa. The concept
-                  for the Summit was inspired by growing concerns about the continent&apos;s changing governance
-                  landscape.
-                </p>
-                <p className="page-prose mt-4 text-lg leading-relaxed">
-                  Over the past decade, Africa has experienced a concerning decline in democratic development,
-                  evidenced by political unrest, electoral irregularities, and increasing public skepticism toward
-                  democratic institutions. Given that political parties serve as the primary vehicles for leadership
-                  selection and policy formulation, strengthening these institutions is crucial for safeguarding
-                  democracy and effectively addressing Africa&apos;s evolving political landscape.
-                </p>
-                <p className="page-prose mt-4 text-lg leading-relaxed">
-                  APPS offers a neutral, inclusive, and policy-oriented platform to advance reforms aimed at restoring
-                  public trust and strengthening democratic resilience. The inaugural edition, held in Accra from
-                  August 10-12, 2025, brought together over 700 participants from more than 50 countries for strategic
-                  dialogue and collaboration.
-                </p>
+                {aboutParagraphs.map((paragraph, index) => (
+                  <p
+                    key={`${paragraph}-${index}`}
+                    className={`page-prose text-lg leading-relaxed ${index === 0 ? "mt-6" : "mt-4"}`}
+                  >
+                    {paragraph}
+                  </p>
+                ))}
                 <ul className="mt-8 grid gap-4 sm:grid-cols-3">
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <CalendarDays className="h-5 w-5 text-accent-700" />
@@ -210,9 +248,9 @@ export function AppSummitClient({
             </div>
             <div className="relative">
               <p className="text-sm font-semibold uppercase tracking-[0.08em] text-white/90">{focusHeading}</p>
-              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+              <ul className="mt-6 grid gap-x-10 gap-y-5 sm:grid-cols-2">
                 {keyFocusAreas.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm sm:text-base">
+                  <li key={item} className="flex items-start gap-3 text-sm leading-relaxed sm:text-base">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white" />
                     <span>{item}</span>
                   </li>
@@ -226,16 +264,14 @@ export function AppSummitClient({
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{summit2026Heading}</h2>
-          <p className="page-prose mt-5 text-lg leading-relaxed">
-            The second edition of APPS moves the conversation from broad democratic commitments to a focused and
-            practical inquiry: how can political parties become credible, institutional drivers of economic
-            transformation in Africa?
-          </p>
-          <p className="page-prose mt-4 text-lg leading-relaxed">
-            APPS seeks to convene heads of state, political leaders, policymakers, economists, private sector actors,
-            academia, civil society organisations and development partners to explore how party systems can contribute
-            meaningfully to Africa&apos;s economic renewal.
-          </p>
+          {summit2026Paragraphs.map((paragraph, index) => (
+            <p
+              key={`${paragraph}-${index}`}
+              className={`page-prose text-lg leading-relaxed ${index === 0 ? "mt-5" : "mt-4"}`}
+            >
+              {paragraph}
+            </p>
+          ))}
         </div>
       </section>
 
@@ -256,27 +292,13 @@ export function AppSummitClient({
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{structureHeading}</h2>
           <div className="mt-7 grid gap-5 lg:grid-cols-3">
-            <div className="rounded-none border border-border/80 bg-white p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">Day One</p>
-              <h3 className="mt-2 font-sans text-xl font-semibold text-black">Inclusive leadership platforms</h3>
-              <p className="mt-3 text-sm leading-relaxed text-black">
-                Africa Women Political Leadership Summit and African Youth in Politics Forum as foundational pillars.
-              </p>
-            </div>
-            <div className="rounded-none border border-border/80 bg-white p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">Day Two</p>
-              <h3 className="mt-2 font-sans text-xl font-semibold text-black">Plenary and strategic dialogues</h3>
-              <p className="mt-3 text-sm leading-relaxed text-black">
-                Full summit programme with thematic roundtables and moderated high-level discussions.
-              </p>
-            </div>
-            <div className="rounded-none border border-border/80 bg-white p-6">
-              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">Day Three</p>
-              <h3 className="mt-2 font-sans text-xl font-semibold text-black">Consultations and commitments</h3>
-              <p className="mt-3 text-sm leading-relaxed text-black">
-                Closed-door consultations among party leaders, with outputs informed by youth and women platforms.
-              </p>
-            </div>
+            {structureCards.map((card) => (
+              <div key={card.label} className="rounded-none border border-border/80 bg-white p-6">
+                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">{card.label}</p>
+                <h3 className="mt-2 font-sans text-xl font-semibold text-black">{card.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-black">{card.body}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -289,14 +311,10 @@ export function AppSummitClient({
             </div>
             <div className="relative">
               <h2 className="font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">{sponsorshipHeading}</h2>
-              <p className="mt-4 max-w-4xl text-sm leading-relaxed text-white/90 sm:text-base">
-                APPS 2026 provides strategic opportunities for corporate and institutional sponsorship through
-                high-visibility brand exposure, partnership recognition, and direct engagement with policy
-                influencers from across Africa.
-              </p>
-              <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+              <p className="mt-4 max-w-4xl text-sm leading-relaxed text-white/90 sm:text-base">{sponsorshipIntro}</p>
+              <ul className="mt-6 grid gap-x-10 gap-y-4 sm:grid-cols-2">
                 {sponsorshipPoints.map((point) => (
-                  <li key={point} className="text-sm text-white/90">{point}</li>
+                  <li key={point} className="text-sm leading-relaxed text-white/90">{point}</li>
                 ))}
               </ul>
             </div>
@@ -308,11 +326,8 @@ export function AppSummitClient({
         <div className="mx-auto w-full max-w-4xl bg-white px-4 sm:px-6 lg:px-8">
           <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full bg-white">
             <div className="rounded-none border border-border/80 bg-white p-8 sm:p-10">
-              <h2 className="font-serif text-3xl font-semibold text-black">Secure your spot at APP Summit 2026</h2>
-              <p className="page-prose mt-3 text-black">
-                A sponsorship prospectus is available for download. Organizations interested in partnering with APPS
-                2026 are encouraged to contact the Secretariat directly.
-              </p>
+              <h2 className="font-serif text-3xl font-semibold text-black">{finalCtaHeading}</h2>
+              <p className="page-prose mt-3 text-black">{finalCtaBody}</p>
               <div className="mt-6 flex flex-wrap gap-4">
                 <Button asChild href={registration.href || "/contact"} variant="primary" className="rounded-none bg-accent-700 hover:bg-accent-800">
                   {registration.cta || "Register Now"}
@@ -329,15 +344,11 @@ export function AppSummitClient({
               </div>
               <div className="mt-6 flex items-start gap-3 rounded-none border border-border/80 bg-stone-50 p-4">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent-700" />
-                <p className="text-sm text-black">No 5 Teinor Street, Dzorwulu – Accra Ghana</p>
+                <p className="text-sm text-black">{finalAddress}</p>
               </div>
               <div className="mt-4 flex items-start gap-3 rounded-none border border-border/80 bg-stone-50 p-4">
                 <Handshake className="mt-0.5 h-5 w-5 shrink-0 text-accent-700" />
-                <p className="text-sm text-black">
-                  Participants include heads of state and government affiliated with political parties, party
-                  chairpersons and secretaries-general, members of parliament, economic advisors, private sector
-                  leaders, academia, and civil society actors.
-                </p>
+                <p className="text-sm text-black">{finalParticipantsNote}</p>
               </div>
             </div>
           </HomeScrollReveal>

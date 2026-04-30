@@ -579,7 +579,7 @@ export function HomeSettingsForm({
           <input name="testimonialName" defaultValue={initialDraft?.testimonialName ?? home.homeTestimonial.name} className="rounded-lg border border-border px-4 py-2" placeholder="Name" />
           <input name="testimonialInitials" defaultValue={initialDraft?.testimonialInitials ?? home.homeTestimonial.initials} className="rounded-lg border border-border px-4 py-2" placeholder="Initials" />
           <input name="testimonialTitle" defaultValue={initialDraft?.testimonialTitle ?? home.homeTestimonial.title} className="rounded-lg border border-border px-4 py-2" placeholder="Title" />
-          <input name="testimonialOrganization" defaultValue={initialDraft?.testimonialOrganization ?? home.homeTestimonial.organization} className="rounded-lg border border-border px-4 py-2" placeholder="Organization" />
+          <input name="testimonialOrganization" defaultValue={initialDraft?.testimonialOrganization ?? home.homeTestimonial.organization} className="rounded-lg border border-border px-4 py-2" placeholder="Organization (optional)" />
         </div>
       </section>
 
