@@ -64,8 +64,8 @@ export default async function TermsOfServicePage() {
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
-            <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
-              By using this site you agree to these terms. They govern access to our content, events registration, and
+          <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
+            By using this site you agree to these terms. They govern access to our content, events registration, and
               acceptable use of our services. {introSectionText}
             </p>
             <div
@@ -183,11 +183,11 @@ export default async function TermsOfServicePage() {
                                   key={item}
                                   className="relative before:absolute before:-left-3 before:top-2.5 before:h-1 before:w-1 before:rounded-full before:bg-accent-600"
                                 >
-                                  {item}
-                                </li>
-                              ))}
-                            </ul>
-                          )}
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                )}
                         </div>
                       ))}
                     </div>
@@ -211,7 +211,7 @@ export default async function TermsOfServicePage() {
                       ))}
                     </ul>
                   ) : null}
-                </article>
+              </article>
               );
             })}
           </div>

@@ -7,6 +7,16 @@ import { auth } from "@/auth";
 import { teamFormSchema } from "@/lib/validations";
 import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
+function canRetryWithoutSection(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return (
+    msg.includes("Unknown argument `section`") ||
+    msg.includes('Unknown field `section`') ||
+    msg.includes('column "section" does not exist') ||
+    msg.includes("The column `section` does not exist")
+  );
+}
+
 export async function createTeam(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
@@ -30,17 +40,25 @@ export async function createTeam(formData: FormData) {
 
   let created;
   try {
-    created = await prisma.team.create({
-      data: {
-        name,
-        role: role || null,
-        bio: bio || null,
-        image: image || null,
-        ...(section ? ({ section } as Record<string, unknown>) : {}),
-        order,
-        status,
-      },
-    });
+    const baseData = {
+      name,
+      role: role || null,
+      bio: bio || null,
+      image: image || null,
+      order,
+      status,
+    };
+    try {
+      created = await prisma.team.create({
+        data: {
+          ...baseData,
+          ...(section ? ({ section } as Record<string, unknown>) : {}),
+        },
+      });
+    } catch (err) {
+      if (!canRetryWithoutSection(err)) throw err;
+      created = await prisma.team.create({ data: baseData });
+    }
   } catch (err) {
     console.error("createTeam:", err);
     redirect(`/admin/team/new?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);
@@ -73,18 +91,29 @@ export async function updateTeam(id: number, formData: FormData) {
   const { name, role, bio, image, section, order, status } = parsed.data;
 
   try {
-    await prisma.team.update({
-      where: { id },
-      data: {
-        name,
-        role: role || null,
-        bio: bio || null,
-        image: image || null,
-        ...(section ? ({ section } as Record<string, unknown>) : {}),
-        order,
-        status,
-      },
-    });
+    const baseData = {
+      name,
+      role: role || null,
+      bio: bio || null,
+      image: image || null,
+      order,
+      status,
+    };
+    try {
+      await prisma.team.update({
+        where: { id },
+        data: {
+          ...baseData,
+          ...(section ? ({ section } as Record<string, unknown>) : {}),
+        },
+      });
+    } catch (err) {
+      if (!canRetryWithoutSection(err)) throw err;
+      await prisma.team.update({
+        where: { id },
+        data: baseData,
+      });
+    }
   } catch (err) {
     console.error("updateTeam:", err);
     redirect(`/admin/team/${id}/edit?error=${encodeURIComponent(ADMIN_DB_ERROR_MESSAGE)}`);

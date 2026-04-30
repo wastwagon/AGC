@@ -306,7 +306,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
   }
 
   function addAdvisoryItem() {
-    updateNestedArray(["cards"], (arr) => [...arr, { title: "", description: "" }]);
+    updateNestedArray(["cards"], (arr) => [...arr, { title: "", description: "", backgroundImage: "" }]);
   }
 
   function removeAdvisoryItem(index: number) {
@@ -1442,6 +1442,26 @@ export function PageContentForm({ item }: PageContentFormProps) {
                           className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                         />
                       </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Background image</label>
+                        <div className="mt-1 flex gap-2">
+                          <input
+                            type="text"
+                            value={typeof item.backgroundImage === "string" ? item.backgroundImage : ""}
+                            onChange={(e) => updateAdvisoryItem(index, "backgroundImage", e.target.value)}
+                            className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                            placeholder="media id, image URL, or /uploads/..."
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setPickerTarget({ nested: ["cards", String(index), "backgroundImage"] })}
+                            className="inline-flex items-center rounded-md border border-border bg-white px-2 py-1 text-sm text-slate-700 hover:bg-slate-100"
+                            title="Pick from Media Library"
+                          >
+                            <ImagePlus className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 ))
@@ -2064,13 +2084,16 @@ export function PageContentForm({ item }: PageContentFormProps) {
         )}
         {item.slug === "get-involved-partnership" && (
           <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
-            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Partnership page helper</p>
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Partnerships page helper</p>
+            <p className="text-[11px] text-slate-500">
+              Standalone page editor for <code className="rounded bg-slate-100 px-0.5">/get-involved/partnership</code>.
+            </p>
             <div className="grid gap-2 sm:grid-cols-2">
               {(
                 [
                   ["sectionEyebrow", "Section eyebrow"],
                   ["sectionHeading", "Section heading"],
-                  ["areasHeading", "Areas heading"],
+                  ["areasHeading", "Pillars heading"],
                   ["footerEyebrow", "Footer eyebrow"],
                   ["footerHeading", "Footer heading"],
                   ["backLabel", "Back button label"],
@@ -2095,8 +2118,8 @@ export function PageContentForm({ item }: PageContentFormProps) {
             <div className="grid gap-2 sm:grid-cols-2">
               {(
                 [
-                  ["intro", "Intro"],
-                  ["description", "Description"],
+                  ["intro", "Intro paragraph"],
+                  ["description", "Supporting paragraph"],
                   ["footerBody", "Footer body"],
                 ] as const
               ).map(([key, label]) => (
@@ -2113,7 +2136,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
             </div>
             <div className="rounded-md border border-border bg-white p-3">
               <div className="mb-2 flex items-center justify-between">
-                <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Partnership areas carousel cards</p>
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Partnership pillars carousel cards</p>
                 <button
                   type="button"
                   onClick={() =>
@@ -2131,7 +2154,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       <input
                         value={typeof card.title === "string" ? card.title : ""}
                         onChange={(e) => updateNestedArray(["cards"], (arr) => arr.map((x, i) => (i === idx ? { ...x, title: e.target.value } : x)))}
-                        placeholder="Card title"
+                        placeholder="Pillar title (e.g., Strategic institutional partnerships)"
                         className="rounded-md border border-border px-2 py-1.5 text-xs"
                       />
                       <div className="flex gap-2">
@@ -2159,7 +2182,7 @@ export function PageContentForm({ item }: PageContentFormProps) {
                         updateNestedArray(["cards"], (arr) => arr.map((x, i) => (i === idx ? { ...x, description: e.target.value } : x)))
                       }
                       rows={3}
-                      placeholder="Card description"
+                      placeholder="Pillar description"
                       className="mt-2 w-full rounded-md border border-border px-2 py-1.5 text-xs"
                     />
                   </div>

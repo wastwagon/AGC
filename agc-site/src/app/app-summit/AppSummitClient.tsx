@@ -166,7 +166,7 @@ export function AppSummitClient({
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="grid gap-12 lg:grid-cols-3 lg:gap-14">
             <HomeScrollReveal variant="slideLeft" start="top 87%" className="block w-full lg:col-span-2">
-              <div>
+                  <div>
                 <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent-800">{aboutSectionEyebrow}</p>
                 <h2 className="mt-3 font-serif text-[2rem] font-semibold leading-tight text-black sm:text-[2.5rem]">
                   {aboutSectionHeading}
@@ -184,19 +184,19 @@ export function AppSummitClient({
                     <CalendarDays className="h-5 w-5 text-accent-700" />
                     <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelDate}</p>
                     <p className="mt-1 text-sm font-medium text-black">{detailDate}</p>
-                  </li>
+                </li>
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <MapPin className="h-5 w-5 text-accent-700" />
                     <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelLocation}</p>
                     <p className="mt-1 text-sm font-medium text-black">{detailLocation}</p>
-                  </li>
+                </li>
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <Users className="h-5 w-5 text-accent-700" />
                     <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelParticipants}</p>
                     <p className="mt-1 text-sm font-medium text-black">{detailParticipants}</p>
-                  </li>
-                </ul>
-              </div>
+                </li>
+              </ul>
+            </div>
             </HomeScrollReveal>
             <HomeScrollReveal variant="slideRight" start="top 86%" className="block w-full self-start">
               <div className="rounded-none border border-border/90 bg-white p-6 shadow-sm sm:p-8">
@@ -206,7 +206,7 @@ export function AppSummitClient({
                 </p>
                 <Button asChild href={registration.href} variant="primary" className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700">
                   {registration.cta || "Register Now"}
-                </Button>
+              </Button>
                 <p className="mt-5 text-xs leading-relaxed text-black">
                   Sponsorship prospectus available. To partner with APPS 2026, contact the Secretariat via{" "}
                   <a href={`mailto:${siteSettings.email.programs}`} className="font-medium underline">
@@ -315,8 +315,8 @@ export function AppSummitClient({
               <ul className="mt-6 grid gap-x-10 gap-y-4 sm:grid-cols-2">
                 {sponsorshipPoints.map((point) => (
                   <li key={point} className="text-sm leading-relaxed text-white/90">{point}</li>
-                ))}
-              </ul>
+                        ))}
+                      </ul>
             </div>
           </div>
         </div>
@@ -328,20 +328,20 @@ export function AppSummitClient({
             <div className="rounded-none border border-border/80 bg-white p-8 sm:p-10">
               <h2 className="font-serif text-3xl font-semibold text-black">{finalCtaHeading}</h2>
               <p className="page-prose mt-3 text-black">{finalCtaBody}</p>
-              <div className="mt-6 flex flex-wrap gap-4">
+            <div className="mt-6 flex flex-wrap gap-4">
                 <Button asChild href={registration.href || "/contact"} variant="primary" className="rounded-none bg-accent-700 hover:bg-accent-800">
                   {registration.cta || "Register Now"}
                 </Button>
                 <Button asChild href="/contact" variant="outline" className="rounded-none">
                   Contact Secretariat
                 </Button>
-                <a
-                  href={`mailto:${siteSettings.email.programs}`}
+              <a
+                href={`mailto:${siteSettings.email.programs}`}
                   className="inline-flex items-center justify-center rounded-none border border-border/90 bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:border-accent-300"
-                >
-                  {siteSettings.email.programs}
-                </a>
-              </div>
+              >
+                {siteSettings.email.programs}
+              </a>
+            </div>
               <div className="mt-6 flex items-start gap-3 rounded-none border border-border/80 bg-stone-50 p-4">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent-700" />
                 <p className="text-sm text-black">{finalAddress}</p>
@@ -350,7 +350,7 @@ export function AppSummitClient({
                 <Handshake className="mt-0.5 h-5 w-5 shrink-0 text-accent-700" />
                 <p className="text-sm text-black">{finalParticipantsNote}</p>
               </div>
-            </div>
+          </div>
           </HomeScrollReveal>
         </div>
       </section>

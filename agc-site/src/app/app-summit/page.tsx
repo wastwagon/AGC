@@ -27,6 +27,23 @@ async function resolveAppSummitHeroImage(content: AppSummitMerged): Promise<stri
   return undefined;
 }
 
+async function resolveAppSummitInlineImages(content: AppSummitMerged): Promise<AppSummitMerged> {
+  const next = { ...content } as AppSummitMerged & Record<string, unknown>;
+  const imageKeys = [
+    "keyFocusBgImage",
+    "sponsorshipBgImage",
+    ...Array.from({ length: 10 }, (_, i) => `highlightsImage${i + 1}`),
+  ];
+
+  for (const key of imageKeys) {
+    const raw = next[key];
+    if (typeof raw !== "string" || raw.trim() === "") continue;
+    const resolved = await resolveImageUrl(raw);
+    if (resolved) next[key] = resolved;
+  }
+  return next;
+}
+
 export default async function AppSummitPage() {
   /** Full base so new fields (e.g. inaugural copy) merge in even when CMS row predates them. */
   const [merged, siteSettings] = await Promise.all([
@@ -42,7 +59,10 @@ export default async function AppSummitPage() {
       ? merged.inauguralParagraph
       : appSummitContent.inauguralParagraph,
   };
-  const heroImage = await resolveAppSummitHeroImage(content);
+  const [heroImage, resolvedContent] = await Promise.all([
+    resolveAppSummitHeroImage(content),
+    resolveAppSummitInlineImages(content),
+  ]);
 
-  return <AppSummitClient content={content} heroImage={heroImage} siteSettings={siteSettings} />;
+  return <AppSummitClient content={resolvedContent} heroImage={heroImage} siteSettings={siteSettings} />;
 }

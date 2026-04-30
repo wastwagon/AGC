@@ -162,6 +162,12 @@ export default async function AboutPage() {
           }))
           .filter((item) => item.title.trim().length > 0)
       : ABOUT_DELIVERY_POINTS.map((item) => ({ ...item, image: "" }));
+  const resolvedDeliveryPoints = await Promise.all(
+    deliveryPoints.map(async (point) => ({
+      ...point,
+      image: point.image ? (await resolveImageUrl(point.image)) || "" : "",
+    })),
+  );
 
   return (
     <>
@@ -227,7 +233,7 @@ export default async function AboutPage() {
             </header>
 
             <div className="mt-8 grid gap-6 sm:grid-cols-2">
-              {deliveryPoints.map((point, idx) => (
+              {resolvedDeliveryPoints.map((point, idx) => (
                 <article
                   key={point.title}
                   className="page-card overflow-hidden p-0"

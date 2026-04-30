@@ -115,7 +115,9 @@ export function AdminShell({ children, siteSettings }: { children: React.ReactNo
             {navItems.map((item) => {
               const Icon = item.icon;
               let active = false;
-              if (item.href === "/admin") active = pathname === "/admin";
+              if (pathname.startsWith("/admin/pages")) {
+                active = item.href === "/admin/pages";
+              } else if (item.href === "/admin") active = pathname === "/admin";
               else if (item.href === "/admin/events/scan")
                 active = pathname.startsWith("/admin/events/scan");
               else if (item.href === "/admin/events")
