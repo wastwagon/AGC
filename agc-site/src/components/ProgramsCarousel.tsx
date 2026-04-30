@@ -5,7 +5,7 @@ import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { placeholderImages } from '@/data/images';
 
 type Program = {
-  id: number;
+  id?: number;
   title: string;
   description: string;
   backgroundImage?: string;
