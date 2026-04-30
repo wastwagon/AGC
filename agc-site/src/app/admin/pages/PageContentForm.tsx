@@ -369,6 +369,13 @@ export function PageContentForm({ item }: PageContentFormProps) {
 
   function onSelectMedia(media: MediaItem) {
     if (!pickerTarget) return;
+    const value =
+      pickerTarget !== "heroImage" &&
+      pickerTarget !== "sectionImage" &&
+      pickerTarget.nested.length === 1 &&
+      (pickerTarget.nested[0] === "focusSectionBgImage" || pickerTarget.nested[0] === "strategicPrioritiesBgImage")
+        ? media.url
+        : media.id;
     if (pickerTarget === "heroImage" || pickerTarget === "sectionImage") {
       updateJsonField(pickerTarget, media.id);
     } else {
@@ -379,10 +386,10 @@ export function PageContentForm({ item }: PageContentFormProps) {
         const idx = Number(path[1]);
         const leaf = path.slice(2).join(".");
         updateNestedArray([arrayKey], (arr) =>
-          arr.map((item, i) => (i === idx ? { ...(item as Record<string, unknown>), [leaf]: media.id } : item))
+          arr.map((item, i) => (i === idx ? { ...(item as Record<string, unknown>), [leaf]: value } : item))
         );
       } else {
-        updateNestedString(path, media.id);
+        updateNestedString(path, value);
       }
     }
     setPickerTarget(null);
