@@ -86,7 +86,6 @@ export async function createEvent(formData: FormData) {
       data: {
         title: data.title,
         slug: finalSlug,
-        shortDescription: data.shortDescription || null,
         description: data.description || null,
         location: data.location || null,
         startDate: new Date(data.startDate),
@@ -103,6 +102,7 @@ export async function createEvent(formData: FormData) {
         status: data.status,
         agenda: agendaValue === null ? Prisma.DbNull : (agendaValue as unknown as Prisma.InputJsonValue),
         speakerIds: speakerIds.length > 0 ? (speakerIds as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
+        ...(data.shortDescription !== undefined ? ({ shortDescription: data.shortDescription || null } as Record<string, unknown>) : {}),
       },
     });
   } catch (err) {
@@ -171,7 +171,6 @@ export async function updateEvent(id: number, formData: FormData) {
       data: {
         title: data.title,
         slug: finalSlug,
-        shortDescription: data.shortDescription || null,
         description: data.description || null,
         location: data.location || null,
         startDate: new Date(data.startDate),
@@ -188,6 +187,7 @@ export async function updateEvent(id: number, formData: FormData) {
         status: data.status,
         agenda: agendaValue === null ? Prisma.DbNull : (agendaValue as unknown as Prisma.InputJsonValue),
         speakerIds: speakerIds.length > 0 ? (speakerIds as unknown as Prisma.InputJsonValue) : Prisma.DbNull,
+        ...(data.shortDescription !== undefined ? ({ shortDescription: data.shortDescription || null } as Record<string, unknown>) : {}),
       },
     });
   } catch (err) {
