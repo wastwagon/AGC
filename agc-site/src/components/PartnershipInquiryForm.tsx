@@ -48,7 +48,7 @@ export function PartnershipInquiryForm({ programsEmail }: PartnershipInquiryForm
   const labelClass = "block text-sm font-medium text-black";
 
   return (
-    <div className="mx-auto w-full max-w-3xl page-card !rounded-none p-6 sm:p-8">
+    <div className="w-full page-card !rounded-none p-6 sm:p-8">
       <h2 className="page-heading text-xl text-black">Partnership inquiry form</h2>
       <p className="mt-2 text-sm text-black">
         Tell us about your organisation and how you&apos;d like to collaborate. We store submissions securely and reply from{" "}

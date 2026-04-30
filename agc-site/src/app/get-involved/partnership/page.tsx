@@ -3,7 +3,7 @@ import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { Button } from "@/components/Button";
-import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 import { PartnershipInquiryForm } from "@/components/PartnershipInquiryForm";
@@ -31,7 +31,7 @@ export default async function PartnershipPage() {
     programsLabel: "Programs:",
   };
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent<typeof partnershipFallback>("get-involved-partnership", cmsStaticOrEmpty(partnershipFallback)),
+    getMergedPageContent<typeof partnershipFallback>("get-involved-partnership", partnershipFallback),
     getSiteSettings(),
   ]);
   const c = merged;
@@ -116,7 +116,7 @@ export default async function PartnershipPage() {
                 <PartnershipInquiryForm programsEmail={siteSettings.email.programs} />
               </div>
             </div>
-            <aside className="border border-border/80 bg-stone-50 p-5 lg:sticky lg:top-24">
+            <aside className="border border-border/80 bg-white p-5 lg:sticky lg:top-24">
               <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-800">
                 {getString("programsLabel", "Programs:")}
               </p>

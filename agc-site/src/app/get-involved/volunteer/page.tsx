@@ -3,7 +3,7 @@ import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { Button } from "@/components/Button";
-import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 
@@ -29,7 +29,7 @@ export default async function VolunteerPage() {
     questionsLabel: "Questions?",
   };
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent<typeof volunteerFallback>("get-involved-volunteer", cmsStaticOrEmpty(volunteerFallback)),
+    getMergedPageContent<typeof volunteerFallback>("get-involved-volunteer", volunteerFallback),
     getSiteSettings(),
   ]);
   const c = merged;
