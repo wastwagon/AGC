@@ -138,8 +138,9 @@ export const aboutContent = {
     principles: "Upholding principles of excellence, transparency, and intellectual rigor, we believe that open-minded inquiry and innovative ideas are essential for Africa's pursuit of a prosperous, peaceful, and influential future.",
     agenda2063: "Aligned with the vision of the African Union's Agenda 2063: The Africa We Want, there are significant opportunities for economic transformation as the continent seeks to leverage its vast resources. The Africa Governance Centre aims to lead evidence-based policy engagement to facilitate change in global governance structures and empower stakeholders across the continent to deliver effective governance in Africa.",
   },
-  teamSections: ["Advisory Board", "Management Team", "Fellows", "Associate Fellows"],
+  teamSections: ["Executive Council", "Advisory Board", "Management Team", "Fellows", "Associate Fellows"],
   teamTabs: {
+    executiveCouncil: "Executive Council",
     advisoryBoard: "Advisory Board",
     managementTeam: "Management Team",
     fellows: "Fellows",

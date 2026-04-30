@@ -21,6 +21,20 @@ function normalizeAboutFormContent(merged: unknown) {
     m.teamPage && typeof m.teamPage === "object" && !Array.isArray(m.teamPage)
       ? (m.teamPage as Record<string, unknown>)
       : null;
+  const leadParagraphs = Array.isArray(m.leadParagraphs)
+    ? m.leadParagraphs.filter((x) => typeof x === "string").map((x) => String(x))
+    : [];
+  const deliveryPointsRaw = Array.isArray(m.deliveryPoints)
+    ? m.deliveryPoints.filter((x) => x && typeof x === "object" && !Array.isArray(x))
+    : [];
+  const deliveryPoints = deliveryPointsRaw.map((point) => {
+    const p = point as Record<string, unknown>;
+    return {
+      title: typeof p.title === "string" ? p.title : "",
+      body: typeof p.body === "string" ? p.body : "",
+      image: typeof p.image === "string" ? p.image : "",
+    };
+  });
 
   return {
     title: typeof m.title === "string" ? m.title : aboutDefaults.title,
@@ -37,6 +51,13 @@ function normalizeAboutFormContent(merged: unknown) {
       agenda2063: typeof strat.agenda2063 === "string" ? strat.agenda2063 : aboutDefaults.strategicObjectives.agenda2063,
     },
     ...(typeof m.heroImage === "string" ? { heroImage: m.heroImage } : {}),
+    aboutSectionEyebrow: typeof m.aboutSectionEyebrow === "string" ? m.aboutSectionEyebrow : "",
+    aboutSectionHeading: typeof m.aboutSectionHeading === "string" ? m.aboutSectionHeading : "",
+    leadParagraphs,
+    deliverySectionHeading: typeof m.deliverySectionHeading === "string" ? m.deliverySectionHeading : "",
+    partnershipsHeading: typeof m.partnershipsHeading === "string" ? m.partnershipsHeading : "",
+    partnershipsText: typeof m.partnershipsText === "string" ? m.partnershipsText : "",
+    deliveryPoints,
     teamPage: teamRaw
       ? {
           title: typeof teamRaw.title === "string" ? teamRaw.title : aboutDefaults.teamPage.title,

@@ -83,6 +83,7 @@ function resolveTeamTabs(
     .filter((x) => x.key && x.label);
   if (cleaned.length > 0) return cleaned;
   return [
+    { key: "executive_council", label: aboutContent.teamTabs.executiveCouncil },
     { key: "advisory_board", label: aboutContent.teamTabs.advisoryBoard },
     { key: "management_team", label: aboutContent.teamTabs.managementTeam },
     { key: "fellows", label: aboutContent.teamTabs.fellows },
@@ -128,6 +129,22 @@ export default async function AboutPage() {
     typeof contentMap.partnershipsText === "string" && contentMap.partnershipsText.trim().length > 0
       ? contentMap.partnershipsText
       : ABOUT_PARTNERSHIPS_TEXT;
+  const aboutSectionEyebrow =
+    typeof contentMap.aboutSectionEyebrow === "string" && contentMap.aboutSectionEyebrow.trim().length > 0
+      ? contentMap.aboutSectionEyebrow
+      : "Who we are";
+  const aboutSectionHeading =
+    typeof contentMap.aboutSectionHeading === "string" && contentMap.aboutSectionHeading.trim().length > 0
+      ? contentMap.aboutSectionHeading
+      : content.title;
+  const deliverySectionHeading =
+    typeof contentMap.deliverySectionHeading === "string" && contentMap.deliverySectionHeading.trim().length > 0
+      ? contentMap.deliverySectionHeading
+      : "We deliver our work by:";
+  const partnershipsHeading =
+    typeof contentMap.partnershipsHeading === "string" && contentMap.partnershipsHeading.trim().length > 0
+      ? contentMap.partnershipsHeading
+      : "Partnerships and network";
   const deliveryPoints =
     Array.isArray(contentMap.deliveryPoints) &&
     contentMap.deliveryPoints.every((item) => item && typeof item === "object" && !Array.isArray(item))
@@ -166,10 +183,10 @@ export default async function AboutPage() {
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <header>
               <p className="text-sm font-medium uppercase tracking-[0.08em] text-black">
-                Who we are
+                {aboutSectionEyebrow}
               </p>
               <h2 className="mt-3 max-w-[16ch] font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
-                {content.title}
+                {aboutSectionHeading}
               </h2>
             </header>
             <div className="relative mt-8 aspect-[16/5] w-full overflow-hidden bg-stone-100">
@@ -205,7 +222,7 @@ export default async function AboutPage() {
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <header>
               <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
-                We deliver our work by:
+                {deliverySectionHeading}
               </h2>
             </header>
 
@@ -243,9 +260,9 @@ export default async function AboutPage() {
 
             <div className="mt-10 border-t border-border/70 pt-8">
               <h3 className="font-serif text-2xl font-semibold text-black sm:text-3xl">
-                Partnerships and network
+                {partnershipsHeading}
               </h3>
-              <p className="page-prose mt-4 max-w-none text-black text-semibold">
+              <p className="page-prose mt-4 max-w-none font-medium text-black">
                 {partnershipsText}
               </p>
             </div>

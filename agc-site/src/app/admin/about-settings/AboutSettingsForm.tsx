@@ -21,6 +21,13 @@ type AboutSettings = {
     agenda2063: string;
   };
   heroImage?: string;
+  aboutSectionEyebrow?: string;
+  aboutSectionHeading?: string;
+  leadParagraphs?: string[];
+  deliverySectionHeading?: string;
+  partnershipsHeading?: string;
+  partnershipsText?: string;
+  deliveryPoints?: { title?: string; body?: string; image?: string }[];
   teamPage?: { title: string; subtitle: string; heroImage?: string };
   teamTabsList?: { key: string; label: string }[];
 };
@@ -31,6 +38,7 @@ function defaultTeamTabsConfig(content: AboutSettings): string {
     return configured.map((x) => `${x.key}|${x.label}`).join("\n");
   }
   return [
+    `executive_council|${aboutDefaults.teamTabs.executiveCouncil}`,
     `advisory_board|${aboutDefaults.teamTabs.advisoryBoard}`,
     `management_team|${aboutDefaults.teamTabs.managementTeam}`,
     `fellows|${aboutDefaults.teamTabs.fellows}`,
@@ -58,7 +66,21 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
   const [teamHeroImage, setTeamHeroImage] = useState(
     initialDraft?.teamHeroImage ?? content.teamPage?.heroImage?.trim() ?? ""
   );
-  const [pickerTarget, setPickerTarget] = useState<"heroImage" | "teamHeroImage" | null>(null);
+  const [deliveryImage1, setDeliveryImage1] = useState(
+    initialDraft?.deliveryImage1 ?? content.deliveryPoints?.[0]?.image ?? ""
+  );
+  const [deliveryImage2, setDeliveryImage2] = useState(
+    initialDraft?.deliveryImage2 ?? content.deliveryPoints?.[1]?.image ?? ""
+  );
+  const [deliveryImage3, setDeliveryImage3] = useState(
+    initialDraft?.deliveryImage3 ?? content.deliveryPoints?.[2]?.image ?? ""
+  );
+  const [deliveryImage4, setDeliveryImage4] = useState(
+    initialDraft?.deliveryImage4 ?? content.deliveryPoints?.[3]?.image ?? ""
+  );
+  const [pickerTarget, setPickerTarget] = useState<
+    "heroImage" | "teamHeroImage" | "deliveryImage1" | "deliveryImage2" | "deliveryImage3" | "deliveryImage4" | null
+  >(null);
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({});
   const [draftRestored] = useState(!!initialDraft);
   const [lastSavedAt, setLastSavedAt] = useState<string | null>(null);
@@ -101,6 +123,11 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
   function onSelectMedia(media: MediaItem) {
     if (pickerTarget === "heroImage") setHeroImage(media.id);
     if (pickerTarget === "teamHeroImage") setTeamHeroImage(media.id);
+    if (pickerTarget === "deliveryImage1") setDeliveryImage1(media.id);
+    if (pickerTarget === "deliveryImage2") setDeliveryImage2(media.id);
+    if (pickerTarget === "deliveryImage3") setDeliveryImage3(media.id);
+    if (pickerTarget === "deliveryImage4") setDeliveryImage4(media.id);
+    setPickerTarget(null);
   }
 
   function saveDraft() {
@@ -186,21 +213,96 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
       </section>
 
       <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-        <h2 className="font-serif text-lg font-semibold text-slate-900">Core copy</h2>
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Who we are section</h2>
+        <p className="mt-1 text-sm text-slate-600">Controls the heading and lead paragraphs on the main About page.</p>
         <div className="mt-4 grid gap-4">
-          <textarea name="intro" defaultValue={initialDraft?.intro ?? content.intro} rows={3} className="rounded-lg border border-border px-4 py-2" placeholder="Intro" />
-          <textarea name="description" defaultValue={initialDraft?.description ?? content.description} rows={5} className="rounded-lg border border-border px-4 py-2" placeholder="Description" />
-          <textarea name="mission" defaultValue={initialDraft?.mission ?? content.mission} rows={4} className="rounded-lg border border-border px-4 py-2" placeholder="Mission" />
+          <input
+            name="aboutSectionEyebrow"
+            defaultValue={initialDraft?.aboutSectionEyebrow ?? content.aboutSectionEyebrow ?? ""}
+            className="rounded-lg border border-border px-4 py-2"
+            placeholder="Eyebrow (e.g. Who we are)"
+          />
+          <input
+            name="aboutSectionHeading"
+            defaultValue={initialDraft?.aboutSectionHeading ?? content.aboutSectionHeading ?? content.title}
+            className="rounded-lg border border-border px-4 py-2"
+            placeholder="Section heading"
+          />
+          <textarea
+            name="leadParagraphs"
+            defaultValue={initialDraft?.leadParagraphs ?? (content.leadParagraphs ?? []).join("\n")}
+            rows={6}
+            className="rounded-lg border border-border px-4 py-2"
+            placeholder="Lead paragraphs (one per line)"
+          />
         </div>
       </section>
 
       <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
-        <h2 className="font-serif text-lg font-semibold text-slate-900">Strategic objectives</h2>
+        <h2 className="font-serif text-lg font-semibold text-slate-900">Delivery cards and partnerships</h2>
+        <p className="mt-1 text-sm text-slate-600">Controls the “We deliver our work by” cards and partnerships copy.</p>
         <div className="mt-4 grid gap-4">
-          <input name="strategicTitle" defaultValue={initialDraft?.strategicTitle ?? content.strategicObjectives.title} className="rounded-lg border border-border px-4 py-2" placeholder="Section title" />
-          <textarea name="strategicContent" defaultValue={initialDraft?.strategicContent ?? content.strategicObjectives.content} rows={5} className="rounded-lg border border-border px-4 py-2" placeholder="Strategic content" />
-          <textarea name="strategicPrinciples" defaultValue={initialDraft?.strategicPrinciples ?? content.strategicObjectives.principles} rows={4} className="rounded-lg border border-border px-4 py-2" placeholder="Principles" />
-          <textarea name="strategicAgenda2063" defaultValue={initialDraft?.strategicAgenda2063 ?? content.strategicObjectives.agenda2063} rows={4} className="rounded-lg border border-border px-4 py-2" placeholder="Agenda 2063 alignment" />
+          <input
+            name="deliverySectionHeading"
+            defaultValue={initialDraft?.deliverySectionHeading ?? content.deliverySectionHeading ?? ""}
+            className="rounded-lg border border-border px-4 py-2"
+            placeholder="Delivery section heading"
+          />
+          {[
+            { n: 1, title: content.deliveryPoints?.[0]?.title ?? "", body: content.deliveryPoints?.[0]?.body ?? "", image: deliveryImage1, setImage: setDeliveryImage1, target: "deliveryImage1" as const },
+            { n: 2, title: content.deliveryPoints?.[1]?.title ?? "", body: content.deliveryPoints?.[1]?.body ?? "", image: deliveryImage2, setImage: setDeliveryImage2, target: "deliveryImage2" as const },
+            { n: 3, title: content.deliveryPoints?.[2]?.title ?? "", body: content.deliveryPoints?.[2]?.body ?? "", image: deliveryImage3, setImage: setDeliveryImage3, target: "deliveryImage3" as const },
+            { n: 4, title: content.deliveryPoints?.[3]?.title ?? "", body: content.deliveryPoints?.[3]?.body ?? "", image: deliveryImage4, setImage: setDeliveryImage4, target: "deliveryImage4" as const },
+          ].map((card) => (
+            <div key={card.n} className="rounded-lg border border-border p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Card {card.n}</p>
+              <div className="mt-2 grid gap-3">
+                <input
+                  name={`deliveryTitle${card.n}`}
+                  defaultValue={(initialDraft?.[`deliveryTitle${card.n}`] ?? card.title) as string}
+                  className="rounded-lg border border-border px-4 py-2"
+                  placeholder="Card title"
+                />
+                <textarea
+                  name={`deliveryBody${card.n}`}
+                  defaultValue={(initialDraft?.[`deliveryBody${card.n}`] ?? card.body) as string}
+                  rows={3}
+                  className="rounded-lg border border-border px-4 py-2"
+                  placeholder="Card description"
+                />
+                <div className="flex gap-2">
+                  <input
+                    name={`deliveryImage${card.n}`}
+                    value={card.image}
+                    onChange={(e) => card.setImage(e.target.value)}
+                    className="w-full rounded-lg border border-border px-4 py-2"
+                    placeholder="Card image media-id/url/path"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setPickerTarget(card.target)}
+                    className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50"
+                    title="Pick from Media Library"
+                  >
+                    <ImagePlus className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+          <input
+            name="partnershipsHeading"
+            defaultValue={initialDraft?.partnershipsHeading ?? content.partnershipsHeading ?? ""}
+            className="rounded-lg border border-border px-4 py-2"
+            placeholder="Partnerships heading"
+          />
+          <textarea
+            name="partnershipsText"
+            defaultValue={initialDraft?.partnershipsText ?? content.partnershipsText ?? ""}
+            rows={5}
+            className="rounded-lg border border-border px-4 py-2"
+            placeholder="Partnerships and network text"
+          />
         </div>
       </section>
 

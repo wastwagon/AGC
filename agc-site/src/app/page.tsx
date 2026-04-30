@@ -85,23 +85,23 @@ export default async function HomePage() {
     getHomePageCms(),
     getMergedPageContent<OurWorkCms>("our-work", workFallback),
     getMergedPageContent<typeof workContent.programs & WorkSectionPageMerged>(
-      "our-work-programs",
+      "programs",
       cmsStaticOrEmpty(workContent.programs as typeof workContent.programs & WorkSectionPageMerged)
     ),
     getMergedPageContent<typeof workContent.projects & WorkSectionPageMerged>(
-      "our-work-projects",
+      "projects",
       cmsStaticOrEmpty(workContent.projects as typeof workContent.projects & WorkSectionPageMerged)
     ),
     getMergedPageContent<typeof workContent.advisory & WorkSectionPageMerged>(
-      "our-work-advisory",
+      "advisory",
       cmsStaticOrEmpty(workContent.advisory as typeof workContent.advisory & WorkSectionPageMerged)
     ),
     getMergedPageContent<typeof workContent.research & WorkSectionPageMerged>(
-      "our-work-research",
+      "research",
       cmsStaticOrEmpty(workContent.research as typeof workContent.research & WorkSectionPageMerged)
     ),
     getMergedPageContent<typeof workContent.training & WorkSectionPageMerged>(
-      "our-work-training",
+      "training",
       cmsStaticOrEmpty(workContent.training as typeof workContent.training & WorkSectionPageMerged)
     ),
     getMergedPageContent<typeof workContent.partnership & WorkSectionPageMerged>(
@@ -357,9 +357,17 @@ export default async function HomePage() {
                 <footer className="mt-8 border-t border-border/60 pt-6">
                   <cite className="not-italic">
                     <span className="text-lg font-medium text-black">{home.homeTestimonial.name}</span>
-                    <span className="mt-1 block text-sm font-medium text-black">
-                      {home.homeTestimonial.title}, {home.homeTestimonial.organization}
-                    </span>
+                    {([home.homeTestimonial.title, home.homeTestimonial.organization]
+                      .map((x) => x?.trim())
+                      .filter(Boolean)
+                      .join(", ")) ? (
+                      <span className="mt-1 block text-sm font-medium text-black">
+                        {[home.homeTestimonial.title, home.homeTestimonial.organization]
+                          .map((x) => x?.trim())
+                          .filter(Boolean)
+                          .join(", ")}
+                      </span>
+                    ) : null}
                   </cite>
                 </footer>
               </blockquote>

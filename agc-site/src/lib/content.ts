@@ -48,6 +48,7 @@ export interface CmsTeamMember {
   role?: string;
   bio?: string;
   image?: string;
+  section?: string;
   order?: number;
 }
 
@@ -284,6 +285,7 @@ export async function getTeam(): Promise<CmsTeamMember[]> {
     role: t.role ?? undefined,
     bio: t.bio ?? undefined,
     image: t.image ?? undefined,
+    section: (t as Record<string, unknown>).section as string | undefined,
     order: t.order,
   }));
   });

@@ -37,6 +37,9 @@ export default async function VolunteerPage() {
   const getString = (key: string, fallback: string) =>
     typeof cMap[key] === "string" && String(cMap[key]).trim().length > 0 ? String(cMap[key]) : fallback;
   const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.getInvolved;
+  const impactPanelImage =
+    (await resolveImageUrl((cMap.impactPanelImage as string | undefined) ?? (cMap.panelImage as string | undefined))) ||
+    heroImage;
   const sectionEyebrow = getString("sectionEyebrow", "Volunteering");
   const sectionHeading = getString("sectionHeading", "Volunteer with us");
   const impactEyebrow = getString("impactEyebrow", "Impact roles");
@@ -81,7 +84,7 @@ export default async function VolunteerPage() {
                 <div
                   className="relative min-h-[340px] overflow-hidden border border-border/80 bg-black"
                   style={{
-                    backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.25), rgba(15,23,42,0.62)), url('${heroImage}')`,
+                    backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.25), rgba(15,23,42,0.62)), url('${impactPanelImage}')`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}

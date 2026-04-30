@@ -17,14 +17,38 @@ export const metadata = {
 type ResearchItem = {
   title: string;
   description: string;
+  backgroundImage?: string;
 };
 
 type ResearchWorkMerged = typeof workContent.research & { heroImage?: string; cards?: ResearchItem[] };
 
+const RESEARCH_FALLBACK_CARDS: ResearchItem[] = [
+  {
+    title: "Policy research and analysis",
+    description:
+      "AGC conducts rigorous research on governance, political economy, and institutional development across Africa. Our work is grounded in local realities and designed to generate insights that directly inform policy decisions and governance reforms.",
+  },
+  {
+    title: "Publications and policy briefs",
+    description:
+      "We produce a range of knowledge products, including reports, policy briefs, and analytical papers that translate complex research into clear, accessible, and actionable recommendations for policymakers and practitioners.",
+  },
+  {
+    title: "Governance assessments",
+    description:
+      "We undertake data-driven assessments of governance systems, institutions, and policy environments to identify gaps, challenges, and opportunities. These diagnostics provide a foundation for targeted interventions and evidence-based reform strategies.",
+  },
+  {
+    title: "Thematic and comparative research initiatives",
+    description:
+      "We lead and contribute to research initiatives focused on key governance themes such as democratic processes, regional integration, political participation, and institutional accountability. Our work often includes comparative analysis that draws lessons across countries and regions.",
+  },
+];
+
 export default async function ResearchWorkPage() {
   const [merged, bc] = await Promise.all([
     getMergedPageContent<ResearchWorkMerged>(
-      "our-work-research",
+      "research",
       cmsStaticOrEmpty(workContent.research as ResearchWorkMerged)
     ),
     getBreadcrumbLabels(),
@@ -32,10 +56,17 @@ export default async function ResearchWorkPage() {
   const content = merged;
   const heroSrc =
     cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
-  const research =
+  const rawResearch =
     Array.isArray(content.cards) && content.cards.length > 0
       ? content.cards
-      : ([] as ResearchItem[]);
+      : RESEARCH_FALLBACK_CARDS;
+  const research = await Promise.all(
+    rawResearch.map(async (item) => ({
+      ...item,
+      backgroundImage:
+        cardImageUrlOrNull((await resolveImageUrl(item.backgroundImage)) ?? null) ?? undefined,
+    }))
+  );
 
   return (
     <>
@@ -56,6 +87,9 @@ export default async function ResearchWorkPage() {
         <Section className="bg-white">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="space-y-8">
+              <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+                Research
+              </h2>
               <p className="page-prose max-w-none text-black">
                 Our research generates rigorous, evidence-based analysis on governance, political economy, and
                 institutional development across Africa. We prioritise work that is policy-relevant and grounded

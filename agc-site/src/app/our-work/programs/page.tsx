@@ -25,7 +25,7 @@ type ProgramsWorkMerged = typeof workContent.programs & { heroImage?: string; pr
 export default async function ProgramsPage() {
   const [merged, bc] = await Promise.all([
     getMergedPageContent<ProgramsWorkMerged>(
-      "our-work-programs",
+      "programs",
       cmsStaticOrEmpty(workContent.programs as ProgramsWorkMerged)
     ),
     getBreadcrumbLabels(),
@@ -33,10 +33,17 @@ export default async function ProgramsPage() {
   const content = merged;
   const heroSrc =
     cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
-  const programs =
+  const rawPrograms =
     Array.isArray(content.programs) && content.programs.length > 0
       ? content.programs
       : (workContent.programs.programs as ProgramItem[]);
+  const programs = await Promise.all(
+    rawPrograms.map(async (program) => ({
+      ...program,
+      backgroundImage:
+        cardImageUrlOrNull((await resolveImageUrl(program.backgroundImage)) ?? null) ?? undefined,
+    }))
+  );
 
   return (
     <>
@@ -58,6 +65,9 @@ export default async function ProgramsPage() {
         <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
 
           <div className="space-y-8">
+            <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+              Programs
+            </h2>
             <p className="page-prose max-w-none text-black">
               AGC designs and manages programmes that bring together multiple initiatives to address evolving
               governance challenge. These programmes provide structured frameworks for sustained engagement,

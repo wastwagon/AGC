@@ -92,6 +92,11 @@ export async function updatePageContent(slug: string, formData: FormData) {
 function revalidatePublicRouteForPageSlug(slug: string) {
   if (slug === "home") return;
   const pathBySlug: Record<string, string> = {
+    programs: "/our-work/programs",
+    projects: "/our-work/projects",
+    advisory: "/our-work/advisory",
+    research: "/our-work/research",
+    training: "/our-work/training",
     "our-work-programs": "/our-work/programs",
     "our-work-projects": "/our-work",
     "our-work-advisory": "/our-work",

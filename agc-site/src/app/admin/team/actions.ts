@@ -16,6 +16,7 @@ export async function createTeam(formData: FormData) {
     role: formData.get("role") || undefined,
     bio: formData.get("bio") || undefined,
     image: formData.get("image") || undefined,
+    section: formData.get("section") || undefined,
     order: formData.get("order") || undefined,
     status: formData.get("status") || "draft",
   };
@@ -25,7 +26,7 @@ export async function createTeam(formData: FormData) {
     redirect(`/admin/team/new?error=${encodeURIComponent(parsed.error.issues[0]?.message ?? "Invalid input")}`);
   }
 
-  const { name, role, bio, image, order, status } = parsed.data;
+  const { name, role, bio, image, section, order, status } = parsed.data;
 
   let created;
   try {
@@ -35,6 +36,7 @@ export async function createTeam(formData: FormData) {
         role: role || null,
         bio: bio || null,
         image: image || null,
+        ...(section ? ({ section } as Record<string, unknown>) : {}),
         order,
         status,
       },
@@ -58,6 +60,7 @@ export async function updateTeam(id: number, formData: FormData) {
     role: formData.get("role") || undefined,
     bio: formData.get("bio") || undefined,
     image: formData.get("image") || undefined,
+    section: formData.get("section") || undefined,
     order: formData.get("order") || undefined,
     status: formData.get("status") || "draft",
   };
@@ -67,7 +70,7 @@ export async function updateTeam(id: number, formData: FormData) {
     redirect(`/admin/team/${id}/edit?error=${encodeURIComponent(parsed.error.issues[0]?.message ?? "Invalid input")}`);
   }
 
-  const { name, role, bio, image, order, status } = parsed.data;
+  const { name, role, bio, image, section, order, status } = parsed.data;
 
   try {
     await prisma.team.update({
@@ -77,6 +80,7 @@ export async function updateTeam(id: number, formData: FormData) {
         role: role || null,
         bio: bio || null,
         image: image || null,
+        ...(section ? ({ section } as Record<string, unknown>) : {}),
         order,
         status,
       },

@@ -15,6 +15,7 @@ type TeamFormProps = {
     role: string | null;
     bio: string | null;
     image: string | null;
+    section?: string | null;
     order: number;
     status: string;
   };
@@ -94,6 +95,22 @@ export function TeamForm({ item }: TeamFormProps) {
             <ImagePlus className="h-4 w-4" />
           </button>
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="section" className="block text-sm font-medium text-slate-700">Team section</label>
+        <select
+          id="section"
+          name="section"
+          defaultValue={item?.section ?? "advisory_board"}
+          className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
+        >
+          <option value="executive_council">Executive Council</option>
+          <option value="advisory_board">Advisory Board</option>
+          <option value="management_team">Management Team</option>
+          <option value="fellows">Fellows</option>
+          <option value="associate_fellows">Associate Fellows</option>
+        </select>
       </div>
 
       <div>
