@@ -76,7 +76,9 @@ export function ContactPageClient({ contactContent, heroImage, siteSettings }: C
           <div className="grid gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
             <div>
               <p className="text-sm font-medium text-accent-800">Direct lines</p>
-              <h2 className="page-heading mt-2 text-2xl sm:text-3xl">Get in touch</h2>
+              <h2 className="mt-2 font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+                Get in touch
+              </h2>
               <p className="page-prose mt-4 max-w-none text-black">{contactContent.intro}</p>
               <ul className="mt-10 space-y-6">
                 {divisions.map((div) => (

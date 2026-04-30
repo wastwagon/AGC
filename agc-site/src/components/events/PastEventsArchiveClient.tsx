@@ -1,10 +1,14 @@
 "use client";
 
 import { useMemo, useState, useEffect, type ReactNode } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Globe, List, Plus, Search } from "lucide-react";
+import { placeholderImages } from "@/data/images";
 import type { CmsEvent } from "@/lib/content";
 import { eventsContent } from "@/data/content";
+import { preferUnoptimizedImage } from "@/lib/image-delivery";
+import { resolveImageUrlSync } from "@/lib/content";
 import {
   EVENT_CATEGORY_TAB_IDS,
   type EventCategoryTabId,
@@ -202,6 +206,7 @@ function PastEventRow({ event }: { event: CmsEvent }) {
   const { month, day, year } = dateParts(event.start_date);
   const schedule = formatScheduleLine(event.start_date, event.end_date);
   const location = [event.venue_name, event.venue_address, event.location].filter(Boolean).join(", ") || event.location || "";
+  const imageUrl = resolveImageUrlSync(event.image) || placeholderImages.events;
 
   return (
     <div className="flex flex-col gap-6 border-b border-border py-10 sm:flex-row sm:items-stretch sm:gap-8">
@@ -211,6 +216,16 @@ function PastEventRow({ event }: { event: CmsEvent }) {
         <p className="font-sans text-4xl font-bold tabular-nums leading-none text-white sm:text-5xl">{day}</p>
         <p className="mt-1 text-xs font-medium text-white/90">{year}</p>
       </div>
+      <Link href={eventLink} className="relative block aspect-[4/3] w-full shrink-0 overflow-hidden bg-stone-100 sm:w-56">
+        <Image
+          src={imageUrl}
+          alt={event.title}
+          fill
+          unoptimized={preferUnoptimizedImage(imageUrl)}
+          className="object-cover transition-transform duration-500 hover:scale-[1.03]"
+          sizes="(max-width: 640px) 100vw, 224px"
+        />
+      </Link>
       <div className="min-w-0 flex-1">
         <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-accent-600">
           {categoryLabel(event).toUpperCase()}
@@ -218,7 +233,7 @@ function PastEventRow({ event }: { event: CmsEvent }) {
         <h3 className="mt-2">
           <Link
             href={eventLink}
-            className="font-sans text-xl font-bold leading-snug text-black underline decoration-transparent transition-colors hover:text-accent-800 hover:decoration-accent-600/40 sm:text-2xl"
+            className="font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black underline decoration-transparent transition-colors hover:text-accent-800 hover:decoration-accent-600/40"
           >
             {event.title}
           </Link>

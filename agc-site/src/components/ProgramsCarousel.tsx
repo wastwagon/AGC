@@ -18,6 +18,14 @@ type ProgramsCarouselProps = {
 export function ProgramsCarousel({ programs }: ProgramsCarouselProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  if (!programs || programs.length === 0) {
+    return (
+      <div className="relative w-full overflow-hidden rounded-none bg-slate-100 p-8 text-center">
+        <p className="text-slate-600">No items to display.</p>
+      </div>
+    );
+  }
+
   const goToPrevious = () => {
     setCurrentIndex((prev) => (prev === 0 ? programs.length - 1 : prev - 1));
   };

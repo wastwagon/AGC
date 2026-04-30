@@ -69,7 +69,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
       </div>
 
       {/* —— Tier 2: Light panel — brand | quick links | contact & legal | donate & socials — */}
-      <div className="border-t border-white/15 bg-white text-slate-800">
+      <div className="border-t border-white/15 bg-white text-black">
         <div className="mx-auto w-full max-w-none px-4 py-10 sm:px-6 sm:py-11 lg:px-8 lg:py-12 xl:px-12 2xl:px-16">
           <div className="grid gap-9 lg:grid-cols-12 lg:gap-6 xl:gap-8">
             {/* Column 1 — brand: logo + tagline */}
@@ -84,7 +84,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                   unoptimized={preferUnoptimizedImage(brandLogoSrc)}
                 />
               </Link>
-              <p className="mt-6 max-w-xl text-[15px] leading-[1.85] text-slate-600">{siteSettings.tagline}</p>
+              <p className="mt-6 max-w-xl text-[15px] leading-[1.85] text-black">{siteSettings.tagline}</p>
             </div>
 
             {/* Column 2 — quick links */}
@@ -95,14 +95,14 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                   <li key={link.href}>
                     <Link
                       href={link.href}
-                      className="text-[15px] text-slate-700 transition-colors hover:text-accent-600"
+                      className="text-[15px] text-black transition-colors hover:text-accent-600"
                     >
                       {link.label}
                     </Link>
                   </li>
                 ))}
                 <li>
-                  <Link href="/get-involved" className="text-[15px] text-slate-700 transition-colors hover:text-accent-600">
+                  <Link href="/get-involved" className="text-[15px] text-black transition-colors hover:text-accent-600">
                     {footerChrome.getInvolvedLabel}
                   </Link>
                 </li>
@@ -111,9 +111,9 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
 
             {/* Column 3 — contact + legal */}
             <div className="lg:col-span-3 lg:border-l lg:border-border/80 lg:pl-6 xl:pl-7">
-              <h3 className="mb-5 font-sans text-base font-bold text-slate-900">{footerChrome.contactHeading}</h3>
+              <h3 className="mb-5 font-sans text-base font-bold text-black">{footerChrome.contactHeading}</h3>
               <ul className="space-y-4">
-                <li className="flex items-start gap-3 text-[15px] text-slate-700">
+                <li className="flex items-start gap-3 text-[15px] text-black">
                   <span className={iconBoxLightClass}>
                     <MapPin className="h-4 w-4" />
                   </span>
@@ -122,7 +122,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                 <li>
                   <a
                     href={`tel:${phoneClean}`}
-                    className="flex items-center gap-3 text-[15px] text-slate-700 transition-colors hover:text-accent-600"
+                    className="flex items-center gap-3 text-[15px] text-black transition-colors hover:text-accent-600"
                   >
                     <span className={iconBoxLightClass}>
                       <Phone className="h-4 w-4" />
@@ -133,7 +133,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                 <li>
                   <a
                     href={`mailto:${siteSettings.email.programs}`}
-                    className="flex items-start gap-3 text-[15px] text-slate-700 transition-colors hover:text-accent-600"
+                    className="flex items-start gap-3 text-[15px] text-black transition-colors hover:text-accent-600"
                   >
                     <span className={iconBoxLightClass}>
                       <Mail className="h-4 w-4" />
@@ -147,7 +147,7 @@ export function Footer({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
               <ul className="space-y-3">
                 {footerChrome.legal.map((link) => (
                   <li key={link.href}>
-                    <Link href={link.href} className="text-[15px] text-slate-700 transition-colors hover:text-accent-600">
+                    <Link href={link.href} className="text-[15px] text-black transition-colors hover:text-accent-600">
                       {link.label}
                     </Link>
                   </li>

@@ -1,7 +1,7 @@
 "use client";
 
-import { useState, type ReactNode } from "react";
-import { Calendar, Handshake, Lightbulb, MapPin, Scale, Users } from "lucide-react";
+import type { ReactNode } from "react";
+import { CalendarDays, Handshake, MapPin, Users } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
@@ -40,25 +40,29 @@ export function AppSummitClient({
   heroImage?: string;
   siteSettings: SiteSettings;
 }) {
-  const [activeDay, setActiveDay] = useState(0);
-  const { details, registration, agenda } = content;
-  const activeAgenda = agenda.days[activeDay];
-  const registrationSubtitle = registration.subtitle ?? "";
-  const d = details ?? { date: "", location: "", participants: "" };
-  const showDate = Boolean(d.date?.trim());
-  const showLocation = Boolean(d.location?.trim());
-  const showParticipants = Boolean(d.participants?.trim());
-  const hasDetailRows = showDate || showLocation || showParticipants;
-  const hasAboutHeader =
-    Boolean(content.aboutSectionEyebrow?.trim()) || Boolean(content.aboutSectionHeading?.trim());
-  const pi = content.purposeImpact;
-  const pillarIcons = [Scale, Lightbulb, Handshake] as const;
-  const showPurposeImpact =
-    Boolean(pi) &&
-    (Boolean(pi?.heading?.trim()) ||
-      Boolean(pi?.intro?.trim()) ||
-      Boolean(pi?.pillars?.some((p) => p.title?.trim() || p.description?.trim())));
-  const showProgrammeAgenda = content.programmeAgendaVisible !== false;
+  const registration = content.registration;
+  const detailDate = "August 10-12, 2025";
+  const detailLocation = "Accra International Conference Centre, Ghana";
+  const detailParticipants = "Over 700 participants and 50+ political parties";
+
+  const keyFocusAreas = [
+    "Political Cooperation and Party Dialogue",
+    "Democratic Governance and Institutional Reform",
+    "Political Party Financing and Campaign Transparency",
+    "Youth and Women’s Political Leadership",
+    "Conflict Prevention and Peacebuilding",
+    "Digital Innovation and Political Communication",
+    "Continental Integration and Development Planning",
+  ];
+
+  const expectedOutcomes = [
+    "Adoption of a high-level declaration articulating shared continental principles on economic transformation and political responsibility.",
+    "Establishment of a structured inter-party economic policy dialogue platform under the African Political Parties Initiative.",
+    "Agreement on technical working groups focused on fiscal governance, youth employment, and industrial development.",
+    "Strengthened partnerships between political actors and regional economic institutions.",
+    "Enhanced continental visibility of political parties as constructive contributors to Africa’s development agenda.",
+    "A dedicated set of recommendations from the Africa Women Political Leadership Summit and the Africa Youth in Politics Forum informing continental party reform agendas.",
+  ];
 
   return (
     <>
@@ -73,238 +77,232 @@ export function AppSummitClient({
         imageAlt={content.heroImageAlt || "APP Summit"}
       />
 
-      <section className="w-full border-b border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+      <section className="w-full border-b border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <div className="grid gap-12 lg:grid-cols-3 lg:gap-16">
+          <div className="grid gap-12 lg:grid-cols-3 lg:gap-14">
             <HomeScrollReveal variant="slideLeft" start="top 87%" className="block w-full lg:col-span-2">
               <div>
-                {content.aboutSectionEyebrow?.trim() ? (
-                  <p className="text-sm font-medium text-black">{content.aboutSectionEyebrow}</p>
-                ) : null}
-                {content.aboutSectionHeading?.trim() ? (
-                  <h2
-                    className={`page-heading text-2xl sm:text-3xl ${content.aboutSectionEyebrow?.trim() ? "mt-2" : ""}`}
-                  >
-                    {content.aboutSectionHeading}
-                  </h2>
-                ) : null}
-                <p className={`page-prose text-lg leading-relaxed ${hasAboutHeader ? "mt-4" : ""}`}>{content.intro}</p>
-                {content.inauguralParagraph?.trim() ? (
-                  <p className="page-prose mt-6 text-lg leading-relaxed">{content.inauguralParagraph}</p>
-                ) : null}
-                {hasDetailRows ? (
-                  <HomeScrollReveal
-                    variant="scaleUp"
-                    staggerSelector="li"
-                    stagger={0.1}
-                    start="top 90%"
-                    className="mt-10 block w-full"
-                  >
-                    <ul className="flex flex-wrap gap-6 sm:gap-10">
-                      {showDate ? (
-                        <li className="flex items-center gap-3">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
-                            <Calendar className="h-6 w-6" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-black">{content.detailLabelDate}</p>
-                            <p className="font-semibold text-black">{d.date}</p>
-                          </div>
-                        </li>
-                      ) : null}
-                      {showLocation ? (
-                        <li className="flex items-center gap-3">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
-                            <MapPin className="h-6 w-6" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-black">{content.detailLabelLocation}</p>
-                            <p className="font-semibold text-black">{d.location}</p>
-                          </div>
-                        </li>
-                      ) : null}
-                      {showParticipants ? (
-                        <li className="flex items-center gap-3">
-                          <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-100 text-accent-700">
-                            <Users className="h-6 w-6" />
-                          </div>
-                          <div>
-                            <p className="text-sm font-medium text-black">{content.detailLabelParticipants}</p>
-                            <p className="font-semibold text-black">{d.participants}</p>
-                          </div>
-                        </li>
-                      ) : null}
-                    </ul>
-                  </HomeScrollReveal>
-                ) : null}
+                <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent-800">APP Summit</p>
+                <h2 className="mt-3 font-serif text-[2rem] font-semibold leading-tight text-black sm:text-[2.5rem]">
+                  A continental platform for democratic resilience and political transformation
+                </h2>
+                <p className="page-prose mt-6 text-lg leading-relaxed">
+                  The African Political Parties Summit (APPS) is a high-level continental platform that convenes
+                  political leaders, governance institutions, and policy influencers from across Africa. The concept
+                  for the Summit was inspired by growing concerns about the continent&apos;s changing governance
+                  landscape.
+                </p>
+                <p className="page-prose mt-4 text-lg leading-relaxed">
+                  Over the past decade, Africa has experienced a concerning decline in democratic development,
+                  evidenced by political unrest, electoral irregularities, and increasing public skepticism toward
+                  democratic institutions. Given that political parties serve as the primary vehicles for leadership
+                  selection and policy formulation, strengthening these institutions is crucial for safeguarding
+                  democracy and effectively addressing Africa&apos;s evolving political landscape.
+                </p>
+                <p className="page-prose mt-4 text-lg leading-relaxed">
+                  APPS offers a neutral, inclusive, and policy-oriented platform to advance reforms aimed at restoring
+                  public trust and strengthening democratic resilience. The inaugural edition, held in Accra from
+                  August 10-12, 2025, brought together over 700 participants from more than 50 countries for strategic
+                  dialogue and collaboration.
+                </p>
+                <ul className="mt-8 grid gap-4 sm:grid-cols-3">
+                  <li className="rounded-none border border-border/80 bg-white p-4">
+                    <CalendarDays className="h-5 w-5 text-accent-700" />
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">Date</p>
+                    <p className="mt-1 text-sm font-medium text-black">{detailDate}</p>
+                  </li>
+                  <li className="rounded-none border border-border/80 bg-white p-4">
+                    <MapPin className="h-5 w-5 text-accent-700" />
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">Location</p>
+                    <p className="mt-1 text-sm font-medium text-black">{detailLocation}</p>
+                  </li>
+                  <li className="rounded-none border border-border/80 bg-white p-4">
+                    <Users className="h-5 w-5 text-accent-700" />
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">Participants</p>
+                    <p className="mt-1 text-sm font-medium text-black">{detailParticipants}</p>
+                  </li>
+                </ul>
               </div>
             </HomeScrollReveal>
             <HomeScrollReveal variant="slideRight" start="top 86%" className="block w-full self-start">
               <div className="rounded-none border border-border/90 bg-white p-6 shadow-sm sm:p-8">
-                <h3 className="page-heading text-xl">{registration.title}</h3>
+                <h3 className="page-heading text-xl">Secure your spot</h3>
                 <p className="page-prose mt-2 text-sm text-black">
-                  <RegistrationCardSubtitle text={registrationSubtitle} />
+                  <RegistrationCardSubtitle text={registration.subtitle ?? "Secure your spot at APP Summit 2026"} />
                 </p>
                 <Button asChild href={registration.href} variant="primary" className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700">
-                  {registration.cta}
+                  {registration.cta || "Register Now"}
                 </Button>
+                <p className="mt-5 text-xs leading-relaxed text-black">
+                  Sponsorship prospectus available. To partner with APPS 2026, contact the Secretariat via{" "}
+                  <a href={`mailto:${siteSettings.email.programs}`} className="font-medium underline">
+                    {siteSettings.email.programs}
+                  </a>
+                  .
+                </p>
               </div>
             </HomeScrollReveal>
           </div>
         </div>
       </section>
 
-      {showPurposeImpact && pi ? (
-        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-          <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-            <HomeScrollReveal variant="clipOpen" start="top 88%" className="block w-full">
-              <div>
-                {pi.eyebrow?.trim() ? (
-                  <p className="text-sm font-medium text-accent-800">{pi.eyebrow}</p>
-                ) : null}
-                {pi.heading?.trim() ? (
-                  <h2 className={`page-heading text-2xl sm:text-3xl ${pi.eyebrow?.trim() ? "mt-2" : ""}`}>
-                    {pi.heading}
-                  </h2>
-                ) : null}
-                {pi.intro?.trim() ? (
-                  <p
-                    className={`page-prose max-w-none text-lg leading-relaxed ${pi.heading?.trim() || pi.eyebrow?.trim() ? "mt-4" : ""}`}
-                  >
-                    {pi.intro}
-                  </p>
-                ) : null}
+      <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
+          <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+            <div className="mb-6 flex items-end justify-between gap-4">
+              <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">
+                APPS 2025 Highlights
+              </h2>
+              <p className="text-xs uppercase tracking-[0.08em] text-black">Image placeholders</p>
+            </div>
+          </HomeScrollReveal>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div key={i} className="relative aspect-[4/3] overflow-hidden rounded-none border border-border/80 bg-stone-100">
+                <img src="/uploads/placeholder.svg" alt={`APPS 2025 placeholder ${i + 1}`} className="h-full w-full object-cover" />
               </div>
-            </HomeScrollReveal>
-            {pi.pillars && pi.pillars.length > 0 ? (
-              <HomeScrollReveal
-                variant="fadeUp"
-                staggerSelector="li"
-                stagger={0.14}
-                start="top 86%"
-                className="mt-12 block w-full"
-              >
-                <ul className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 lg:gap-8">
-                  {pi.pillars.map((pillar, idx) => {
-                    const Icon = pillarIcons[idx] ?? Scale;
-                    const hasText = pillar.title?.trim() || pillar.description?.trim();
-                    if (!hasText) return null;
-                    return (
-                      <li
-                        key={`${pillar.title}-${idx}`}
-                        className="rounded-none border border-border/80 bg-white p-7 shadow-sm transition-all hover:border-accent-200/50 hover:shadow-md sm:p-8"
-                      >
-                        <div className="flex h-12 w-12 items-center justify-center rounded-none bg-accent-100 text-accent-700">
-                          <Icon className="h-6 w-6" strokeWidth={1.75} aria-hidden />
-                        </div>
-                        {pillar.title?.trim() ? (
-                          <h3 className="mt-5 font-sans text-lg font-semibold text-black">{pillar.title}</h3>
-                        ) : null}
-                        {pillar.description?.trim() ? (
-                          <p className="page-prose-tight mt-2 text-sm leading-relaxed">{pillar.description}</p>
-                        ) : null}
-                      </li>
-                    );
-                  })}
-                </ul>
-              </HomeScrollReveal>
-            ) : null}
+            ))}
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
 
-      {showProgrammeAgenda && agenda?.days?.length ? (
-        <section className="border-t border-border/80 bg-white py-16 sm:py-20 lg:py-24">
-          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-            <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-              <div className="max-w-2xl">
-                {content.programmeEyebrow?.trim() ? (
-                  <p className="text-sm font-medium text-accent-800">{content.programmeEyebrow}</p>
-                ) : null}
-                <h2 className="page-heading mt-1 text-2xl sm:text-3xl">{agenda.title}</h2>
-                <p className="page-prose mt-2">{agenda.subtitle}</p>
-              </div>
-            </HomeScrollReveal>
-
-            <HomeScrollReveal variant="slideRight" start="top 90%" className="mt-10 block w-full">
-              <div className="flex flex-wrap gap-0 border-b border-border/80">
-                {agenda.days.map((d, i) => (
-                  <button
-                    key={d.day}
-                    type="button"
-                    onClick={() => setActiveDay(i)}
-                    className={`relative px-5 py-3 text-sm font-medium transition-colors ${
-                      activeDay === i
-                        ? "text-accent-900 after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:bg-accent-600"
-                        : "text-black hover:text-black"
-                    }`}
-                  >
-                    {[content.dayTabPrefix?.trim(), String(d.day)].filter(Boolean).join(" ") || String(d.day)}
-                  </button>
+      <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
+          <div className="relative overflow-hidden rounded-none border border-border/80 bg-accent-900 px-6 py-10 text-white sm:px-10">
+            <div className="pointer-events-none absolute inset-0 opacity-20">
+              <img src="/uploads/placeholder.svg" alt="" className="h-full w-full object-cover" />
+            </div>
+            <div className="relative">
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-white/90">Key Focus Areas</p>
+              <ul className="mt-5 grid gap-3 sm:grid-cols-2">
+                {keyFocusAreas.map((item) => (
+                  <li key={item} className="flex items-start gap-2 text-sm sm:text-base">
+                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white" />
+                    <span>{item}</span>
+                  </li>
                 ))}
-              </div>
-            </HomeScrollReveal>
-
-            <div className="mt-12">
-              <HomeScrollReveal variant="fadeIn" start="top 92%" className="mb-8 block w-full">
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-black">{activeAgenda.date}</h3>
-              </HomeScrollReveal>
-              <HomeScrollReveal
-                key={activeDay}
-                variant="tiltUp"
-                staggerSelector="article"
-                stagger={0.09}
-                start="top 88%"
-                className="space-y-4"
-              >
-                {activeAgenda.sessions.map((session, i) => (
-                  <article
-                    key={i}
-                    className="flex gap-4 rounded-none border border-border/80 bg-white p-6 transition-all hover:border-accent-200/50 hover:shadow-sm sm:gap-6"
-                  >
-                    <span className="mt-1.5 flex h-2 w-2 shrink-0 rounded-full bg-accent-600" />
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-semibold text-accent-800">{session.time}</p>
-                      <h4 className="mt-1 font-sans text-lg font-semibold text-black">{session.title}</h4>
-                      {session.topic && (
-                        <p className="page-prose-tight mt-2 text-sm">{session.topic}</p>
-                      )}
-                      {session.topics && (
-                        <ul className="page-prose-tight mt-2 space-y-1 text-sm">
-                          {session.topics.map((t, j) => (
-                            <li key={j} className="flex gap-2">
-                              <span className="text-accent-600">•</span>
-                              {t}
-                            </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  </article>
-                ))}
-              </HomeScrollReveal>
+              </ul>
             </div>
           </div>
-        </section>
-      ) : null}
+        </div>
+      </section>
+
+      <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">APPS 2026</h2>
+          <p className="page-prose mt-5 text-lg leading-relaxed">
+            The second edition of APPS moves the conversation from broad democratic commitments to a focused and
+            practical inquiry: how can political parties become credible, institutional drivers of economic
+            transformation in Africa?
+          </p>
+          <p className="page-prose mt-4 text-lg leading-relaxed">
+            APPS seeks to convene heads of state, political leaders, policymakers, economists, private sector actors,
+            academia, civil society organisations and development partners to explore how party systems can contribute
+            meaningfully to Africa&apos;s economic renewal.
+          </p>
+        </div>
+      </section>
+
+      <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">Expected Outcomes</h2>
+          <ul className="mt-6 grid gap-4 sm:grid-cols-2">
+            {expectedOutcomes.map((item) => (
+              <li key={item} className="rounded-none border border-border/80 bg-white p-5 text-sm leading-relaxed text-black">
+                {item}
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">Summit Structure and Format</h2>
+          <div className="mt-7 grid gap-5 lg:grid-cols-3">
+            <div className="rounded-none border border-border/80 bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">Day One</p>
+              <h3 className="mt-2 font-sans text-xl font-semibold text-black">Inclusive leadership platforms</h3>
+              <p className="mt-3 text-sm leading-relaxed text-black">
+                Africa Women Political Leadership Summit and African Youth in Politics Forum as foundational pillars.
+              </p>
+            </div>
+            <div className="rounded-none border border-border/80 bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">Day Two</p>
+              <h3 className="mt-2 font-sans text-xl font-semibold text-black">Plenary and strategic dialogues</h3>
+              <p className="mt-3 text-sm leading-relaxed text-black">
+                Full summit programme with thematic roundtables and moderated high-level discussions.
+              </p>
+            </div>
+            <div className="rounded-none border border-border/80 bg-white p-6">
+              <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">Day Three</p>
+              <h3 className="mt-2 font-sans text-xl font-semibold text-black">Consultations and commitments</h3>
+              <p className="mt-3 text-sm leading-relaxed text-black">
+                Closed-door consultations among party leaders, with outputs informed by youth and women platforms.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
+        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
+          <div className="relative overflow-hidden rounded-none border border-border/80 bg-black px-6 py-10 text-white sm:px-10">
+            <div className="pointer-events-none absolute inset-0 opacity-30">
+              <img src="/uploads/placeholder.svg" alt="" className="h-full w-full object-cover" />
+            </div>
+            <div className="relative">
+              <h2 className="font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">Sponsorship & Partnership</h2>
+              <p className="mt-4 max-w-4xl text-sm leading-relaxed text-white/90 sm:text-base">
+                APPS 2026 provides strategic opportunities for corporate and institutional sponsorship through
+                high-visibility brand exposure, partnership recognition, and direct engagement with policy
+                influencers from across Africa.
+              </p>
+              <ul className="mt-5 grid gap-2 sm:grid-cols-2">
+                <li className="text-sm text-white/90">Brand visibility across venues, digital platforms, and summit materials</li>
+                <li className="text-sm text-white/90">Speaking opportunities and session branding</li>
+                <li className="text-sm text-white/90">Exhibition space for products and services</li>
+                <li className="text-sm text-white/90">Access to closed-door VIP sessions and publicity acknowledgements</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="isolate w-full border-t border-border/80 bg-white py-16 sm:py-20">
         <div className="mx-auto w-full max-w-4xl bg-white px-4 sm:px-6 lg:px-8">
           <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full bg-white">
             <div className="rounded-none border border-border/80 bg-white p-8 sm:p-10">
-              <p className="page-prose text-black">{content.contactNote}</p>
+              <h2 className="font-serif text-3xl font-semibold text-black">Secure your spot at APP Summit 2026</h2>
+              <p className="page-prose mt-3 text-black">
+                A sponsorship prospectus is available for download. Organizations interested in partnering with APPS
+                2026 are encouraged to contact the Secretariat directly.
+              </p>
               <div className="mt-6 flex flex-wrap gap-4">
-                {content.contactSectionCtaLabel?.trim() ? (
-                  <Button asChild href="/contact" variant="primary" className="rounded-none bg-accent-700 hover:bg-accent-800">
-                    {content.contactSectionCtaLabel}
-                  </Button>
-                ) : null}
+                <Button asChild href={registration.href || "/contact"} variant="primary" className="rounded-none bg-accent-700 hover:bg-accent-800">
+                  {registration.cta || "Register Now"}
+                </Button>
+                <Button asChild href="/contact" variant="outline" className="rounded-none">
+                  Contact Secretariat
+                </Button>
                 <a
                   href={`mailto:${siteSettings.email.programs}`}
                   className="inline-flex items-center justify-center rounded-none border border-border/90 bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:border-accent-300"
                 >
                   {siteSettings.email.programs}
                 </a>
+              </div>
+              <div className="mt-6 flex items-start gap-3 rounded-none border border-border/80 bg-stone-50 p-4">
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent-700" />
+                <p className="text-sm text-black">No 5 Teinor Street, Dzorwulu – Accra Ghana</p>
+              </div>
+              <div className="mt-4 flex items-start gap-3 rounded-none border border-border/80 bg-stone-50 p-4">
+                <Handshake className="mt-0.5 h-5 w-5 shrink-0 text-accent-700" />
+                <p className="text-sm text-black">
+                  Participants include heads of state and government affiliated with political parties, party
+                  chairpersons and secretaries-general, members of parliament, economic advisors, private sector
+                  leaders, academia, and civil society actors.
+                </p>
               </div>
             </div>
           </HomeScrollReveal>

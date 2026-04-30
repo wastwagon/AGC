@@ -7,6 +7,8 @@ import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 import { PartnershipInquiryForm } from "@/components/PartnershipInquiryForm";
+import { ProgramsCarousel } from "@/components/ProgramsCarousel";
+import { Section } from "@/components/Section";
 
 export const metadata = {
   title: "Partnership",
@@ -20,6 +22,12 @@ export default async function PartnershipPage() {
   ]);
   const c = (merged as unknown as typeof getInvolvedContent).partnership;
   const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.getInvolved;
+  
+  type PartnershipCard = { title: string; description: string };
+  const partnershipCards: PartnershipCard[] = Array.isArray((c as Record<string, unknown>).cards) && ((c as Record<string, unknown>).cards as PartnershipCard[]).length > 0
+    ? ((c as Record<string, unknown>).cards as PartnershipCard[])
+    : (getInvolvedContent.opportunities.find(opp => opp.id === "partnership")?.cards as PartnershipCard[] | undefined) ?? [];
+  
   return (
     <>
       <PageHero
@@ -36,27 +44,24 @@ export default async function PartnershipPage() {
       />
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-        <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Collaboration</p>
-          <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
-          <p className="mt-6 page-prose">{c.description}</p>
+        <Section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
+          <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Collaboration</p>
+            <h2 className="mt-3 font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+              Partnership
+            </h2>
+            <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
+            <p className="mt-6 page-prose">{c.description}</p>
 
-          <div className="mt-14">
-            <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Partnership areas</h2>
-            <ul className="mt-6 space-y-4">
-              {c.items.map((item, i) => (
-                <li key={item} className="flex gap-4 border-b border-border/60 pb-4 last:border-0">
-                  <span className="font-sans text-2xl font-semibold tabular-nums text-accent-800">
-                    {String(i + 1).padStart(2, "0")}
-                  </span>
-                  <span className="page-prose flex-1 pt-1">{item}</span>
-                </li>
-              ))}
-            </ul>
+            <div className="mt-14">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Partnership areas</h2>
+              <div className="mt-6">
+                <ProgramsCarousel programs={partnershipCards} />
+              </div>
+            </div>
           </div>
-        </div>
-      </section>
+        </Section>
+      </HomeScrollReveal>
 
       <section
         id="partnership-inquiry"
@@ -99,7 +104,6 @@ export default async function PartnershipPage() {
           </p>
         </div>
       </section>
-      </HomeScrollReveal>
     </>
   );
 }

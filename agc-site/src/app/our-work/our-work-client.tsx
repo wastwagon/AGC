@@ -44,6 +44,11 @@ export function OurWorkClient({
   heroImage,
   breadcrumbLabels,
 }: OurWorkClientProps) {
+  const contentAny = content as unknown as Record<string, unknown>;
+  const approachObjectivesBgImage =
+    typeof contentAny.approachObjectivesBgImage === "string" && contentAny.approachObjectivesBgImage.trim()
+      ? contentAny.approachObjectivesBgImage.trim()
+      : "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=2200&q=80";
   const [activeTab, setActiveTab] = useState<TabKey>(() => tabFromHash() ?? "programs");
 
   useEffect(() => {
@@ -132,21 +137,36 @@ export function OurWorkClient({
         <section className="w-full border-b border-border/80 bg-white py-8 sm:py-12 lg:py-14">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <p className="text-base font-semibold text-accent-800">How we work</p>
-          <h2 className="page-heading mt-2 text-3xl font-extrabold sm:text-4xl lg:text-5xl">{content.approach.title}</h2>
-          <p className="page-prose mt-6 text-lg font-semibold text-black sm:text-xl">{content.approach.intro}</p>
-          <p className="mt-8 text-sm font-semibold uppercase tracking-wide text-black">
-            {content.approach.objectivesLead}
+          <h2 className="mt-2 font-serif text-[1.85rem] font-medium tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+            {content.approach.title}
+          </h2>
+          <p className="mt-6 max-w-none text-lg font-medium leading-relaxed text-black sm:text-xl">
+            {content.approach.intro}
           </p>
-          <ul className="mt-6 space-y-5">
-            {content.approach.objectives.map((obj, i) => (
-              <li key={i} className="page-card flex gap-4 !rounded-none p-5 sm:gap-5">
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-accent-600 font-sans text-sm font-bold tabular-nums text-white">
-                  {i + 1}
-                </span>
-                <span className="page-prose-tight pt-0.5">{obj}</span>
-              </li>
-            ))}
-          </ul>
+          <div
+            className="mt-8 bg-cover bg-center bg-no-repeat p-4 sm:p-5"
+            style={{
+              backgroundImage:
+                `linear-gradient(to bottom, rgba(2,6,23,0.62), rgba(2,6,23,0.76)), url('${approachObjectivesBgImage}')`,
+            }}
+          >
+            <p className="text-sm font-semibold uppercase tracking-wide text-white/90">
+              {content.approach.objectivesLead}
+            </p>
+            <ul className="mt-6 space-y-5">
+              {content.approach.objectives.map((obj, i) => (
+                <li
+                  key={i}
+                  className="flex gap-4 border border-white/20 bg-white/10 p-5 backdrop-blur-[1px] sm:gap-5"
+                >
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-white/90 font-sans text-sm font-bold tabular-nums text-slate-900">
+                    {i + 1}
+                  </span>
+                  <span className="pt-0.5 text-sm leading-relaxed text-white sm:text-base">{obj}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
       </HomeScrollReveal>
@@ -159,7 +179,7 @@ export function OurWorkClient({
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-xl lg:text-left">
             <p className="text-sm font-medium text-accent-800">Programmes & projects</p>
-            <p className="page-prose mt-2 text-black">{activeContent.description}</p>
+            <p className="page-prose mt-2 font-medium text-black">{activeContent.description}</p>
           </div>
           <div
             className="mt-10 flex flex-wrap gap-2 sm:mt-12"
