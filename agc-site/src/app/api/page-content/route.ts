@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
+import { resolveImageUrl } from "@/lib/media";
 
 export async function GET(req: Request) {
   try {
@@ -23,9 +24,20 @@ export async function GET(req: Request) {
       description: p.description,
     };
 
-    // keep media ids from content_json if present
-    if (typeof fromDb.heroImage === "string" && fromDb.heroImage.trim()) contentJson.heroImage = fromDb.heroImage.trim();
-    if (typeof fromDb.sectionImage === "string" && fromDb.sectionImage.trim()) contentJson.sectionImage = fromDb.sectionImage.trim();
+    const imageKeys = [
+      "heroImage",
+      "sectionImage",
+      "keyFocusBgImage",
+      "sponsorshipBgImage",
+      ...Array.from({ length: 10 }, (_, i) => `highlightsImage${i + 1}`),
+    ];
+
+    for (const key of imageKeys) {
+      const raw = fromDb[key];
+      if (typeof raw !== "string" || !raw.trim()) continue;
+      const resolved = await resolveImageUrl(raw.trim());
+      if (resolved) contentJson[key] = resolved;
+    }
 
     return NextResponse.json({ id: p.id, slug: p.slug, title: p.title, content_json: contentJson });
   } catch (e) {
