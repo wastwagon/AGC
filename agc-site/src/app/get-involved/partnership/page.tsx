@@ -54,6 +54,12 @@ export default async function PartnershipPage() {
   const cMap = c as unknown as Record<string, unknown>;
   const getString = (key: string, fallback: string) =>
     typeof cMap[key] === "string" && String(cMap[key]).trim().length > 0 ? String(cMap[key]) : fallback;
+  const getStringArray = (key: string, fallback: string[]) => {
+    const value = cMap[key];
+    if (!Array.isArray(value)) return fallback;
+    const list = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+    return list.length > 0 ? list : fallback;
+  };
   const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.getInvolved;
   
   type PartnershipCard = { id: number; title: string; description: string; backgroundImage?: string };
@@ -70,6 +76,8 @@ export default async function PartnershipPage() {
     backgroundImage: card.backgroundImage,
   }));
   const resolvedPartnershipCards = await resolvePartnershipCardImages(partnershipCards);
+  const partnershipItems = getStringArray("items", getInvolvedContent.partnership.items ?? []);
+  const contactHref = getString("contactHref", "/contact");
   
   return (
     <>
@@ -97,6 +105,19 @@ export default async function PartnershipPage() {
             </h2>
             <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
             <p className="mt-6 page-prose">{c.description}</p>
+
+            {partnershipItems.length > 0 && (
+              <ul className="mt-10 grid gap-4 sm:grid-cols-2">
+                {partnershipItems.map((item, index) => (
+                  <li key={`${item}-${index}`} className="border border-border/70 bg-white p-4">
+                    <span className="font-sans text-2xl font-semibold tabular-nums text-accent-800">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="page-prose mt-2 block">{item}</span>
+                  </li>
+                ))}
+              </ul>
+            )}
 
             <div className="mt-14">
               <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">
@@ -144,7 +165,7 @@ export default async function PartnershipPage() {
                 {siteSettings.email.programs}
               </a>
               <div className="mt-6 flex flex-col gap-3">
-                <Button asChild href="#partnership-inquiry" variant="primary" className="rounded-none! justify-center">
+                <Button asChild href={contactHref} variant="primary" className="rounded-none! justify-center">
                   {c.cta}
                 </Button>
                 <Button
