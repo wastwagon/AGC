@@ -11,7 +11,7 @@ export default function EventsLoading() {
         <div className="mt-10 border-t border-border/90 pt-2">
           <div className="h-10 max-w-xs rounded-none bg-stone-200" />
         </div>
-        <div className="mt-8 grid grid-cols-1 gap-px bg-[#f1f4f9] sm:grid-cols-2 lg:grid-cols-4">
+        <div className="mt-8 grid grid-cols-1 gap-px bg-[#f1f4f9] sm:grid-cols-2 lg:grid-cols-3">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="min-h-[280px] bg-white p-8">
               <div className="h-3 w-24 rounded-none bg-stone-200" />

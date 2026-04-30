@@ -118,6 +118,33 @@ export default async function AboutPage() {
       teamTabsList?: { key: string; label: string }[];
     },
   );
+  const contentMap = content as Record<string, unknown>;
+  const leadParagraphs =
+    Array.isArray(contentMap.leadParagraphs) &&
+    contentMap.leadParagraphs.every((item) => typeof item === "string")
+      ? (contentMap.leadParagraphs as string[]).filter((item) => item.trim().length > 0)
+      : ABOUT_LEAD_PARAGRAPHS;
+  const partnershipsText =
+    typeof contentMap.partnershipsText === "string" && contentMap.partnershipsText.trim().length > 0
+      ? contentMap.partnershipsText
+      : ABOUT_PARTNERSHIPS_TEXT;
+  const deliveryPoints =
+    Array.isArray(contentMap.deliveryPoints) &&
+    contentMap.deliveryPoints.every((item) => item && typeof item === "object" && !Array.isArray(item))
+      ? (contentMap.deliveryPoints as Array<{ title?: unknown; body?: unknown; image?: unknown }>)
+          .map((item, index) => ({
+            title:
+              typeof item.title === "string" && item.title.trim().length > 0
+                ? item.title
+                : ABOUT_DELIVERY_POINTS[index]?.title || `Point ${index + 1}`,
+            body:
+              typeof item.body === "string" && item.body.trim().length > 0
+                ? item.body
+                : ABOUT_DELIVERY_POINTS[index]?.body || "",
+            image: typeof item.image === "string" ? item.image : "",
+          }))
+          .filter((item) => item.title.trim().length > 0)
+      : ABOUT_DELIVERY_POINTS.map((item) => ({ ...item, image: "" }));
 
   return (
     <>
@@ -156,7 +183,7 @@ export default async function AboutPage() {
               />
             </div>
             <div className="mt-8 max-w-5xl space-y-6">
-              {ABOUT_LEAD_PARAGRAPHS.map((paragraph) => (
+              {leadParagraphs.map((paragraph) => (
                 <p
                   key={paragraph}
                   className="max-w-none text-black font-medium page-prose"
@@ -183,19 +210,19 @@ export default async function AboutPage() {
             </header>
 
             <div className="mt-8 grid gap-6 sm:grid-cols-2">
-              {ABOUT_DELIVERY_POINTS.map((point, idx) => (
+              {deliveryPoints.map((point, idx) => (
                 <article
                   key={point.title}
                   className="page-card overflow-hidden p-0"
                 >
                   <div className="relative aspect-[16/9] w-full bg-stone-100">
                     <Image
-                      src={heroImage}
+                      src={point.image || heroImage}
                       alt={`${point.title} visual`}
                       fill
                       className="object-cover object-center"
                       sizes="(max-width: 640px) 100vw, 50vw"
-                      unoptimized={preferUnoptimizedImage(heroImage)}
+                      unoptimized={preferUnoptimizedImage(point.image || heroImage)}
                     />
                     <div className="absolute inset-0 bg-black/25" aria-hidden />
                     <div className="absolute bottom-3 left-3 rounded-sm bg-white/90 px-2 py-1 text-xs font-semibold text-black">
@@ -219,7 +246,7 @@ export default async function AboutPage() {
                 Partnerships and network
               </h3>
               <p className="page-prose mt-4 max-w-none text-black text-semibold">
-                {ABOUT_PARTNERSHIPS_TEXT}
+                {partnershipsText}
               </p>
             </div>
           </div>

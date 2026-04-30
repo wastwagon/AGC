@@ -14,11 +14,29 @@ export const metadata = {
 };
 
 export default async function JoinUsPage() {
+  const joinUsFallback = {
+    ...getInvolvedContent.joinUs,
+    sectionEyebrow: "Careers",
+    sectionHeading: "Work with us",
+    opportunitiesHeading: "Opportunities",
+    panelEyebrow: "Work with us",
+    panelText: "Join research, policy, programme, and capacity-building teams.",
+    inquiryEyebrow: "Enquiry",
+    inquiryHeading: "Tell us you're interested",
+    inquiryBody: "Use the form for a structured inquiry or use the contact options on the right.",
+    quickContactEyebrow: "Quick contact",
+    quickContactBody:
+      "We're always interested in people passionate about governance, policy, and Africa's economic transformation.",
+    backLabel: "Back to Get Involved",
+  };
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent<typeof getInvolvedContent>("get-involved", cmsStaticOrEmpty(getInvolvedContent)),
+    getMergedPageContent<typeof joinUsFallback>("get-involved-join-us", cmsStaticOrEmpty(joinUsFallback)),
     getSiteSettings(),
   ]);
-  const c = (merged as unknown as typeof getInvolvedContent).joinUs;
+  const c = merged;
+  const cMap = c as unknown as Record<string, unknown>;
+  const getString = (key: string, fallback: string) =>
+    typeof cMap[key] === "string" && String(cMap[key]).trim().length > 0 ? String(cMap[key]) : fallback;
   const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.applications;
   return (
     <>
@@ -40,15 +58,17 @@ export default async function JoinUsPage() {
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <div className="grid gap-10 lg:grid-cols-3 lg:gap-12">
               <div className="lg:col-span-2">
-                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Careers</p>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">{getString("sectionEyebrow", "Careers")}</p>
                 <h2 className="mt-3 font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
-                  Work with us
+                  {getString("sectionHeading", "Work with us")}
                 </h2>
                 <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
                 <p className="mt-6 page-prose">{c.description}</p>
 
                 <div className="mt-12">
-                  <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Opportunities</h2>
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">
+                    {getString("opportunitiesHeading", "Opportunities")}
+                  </h2>
                   <ul className="mt-6 grid gap-4 sm:grid-cols-2">
                     {c.items.map((item, i) => (
                       <li key={item} className="flex gap-4 border border-border/70 bg-white p-4">
@@ -72,8 +92,12 @@ export default async function JoinUsPage() {
                 >
                   <div className="absolute inset-0 flex items-end p-6">
                     <div className="bg-white/90 p-4 backdrop-blur-sm">
-                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-800">Work with us</p>
-                      <p className="mt-2 text-sm text-black">Join research, policy, programme, and capacity-building teams.</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-800">
+                        {getString("panelEyebrow", "Work with us")}
+                      </p>
+                      <p className="mt-2 text-sm text-black">
+                        {getString("panelText", "Join research, policy, programme, and capacity-building teams.")}
+                      </p>
                     </div>
                   </div>
                 </div>
@@ -88,20 +112,28 @@ export default async function JoinUsPage() {
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:items-start">
               <div className="max-w-3xl">
-                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Enquiry</p>
-                <h2 className="page-heading mt-3 text-2xl text-black">Tell us you&apos;re interested</h2>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">
+                  {getString("inquiryEyebrow", "Enquiry")}
+                </p>
+                <h2 className="page-heading mt-3 text-2xl text-black">
+                  {getString("inquiryHeading", "Tell us you're interested")}
+                </h2>
                 <p className="mt-2 text-black">
-                  Use the form for a structured inquiry or use the contact options on the right.
+                  {getString("inquiryBody", "Use the form for a structured inquiry or use the contact options on the right.")}
                 </p>
                 <div className="mt-8">
                   <JoinUsInquiryForm programsEmail={siteSettings.email.programs} />
                 </div>
               </div>
               <aside className="border border-border/80 bg-stone-50 p-5 lg:sticky lg:top-24">
-                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-800">Quick contact</p>
+                <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-800">
+                  {getString("quickContactEyebrow", "Quick contact")}
+                </p>
                 <p className="mt-3 text-sm leading-relaxed text-black">
-                  We&apos;re always interested in people passionate about governance, policy, and Africa&apos;s economic
-                  transformation.
+                  {getString(
+                    "quickContactBody",
+                    "We're always interested in people passionate about governance, policy, and Africa's economic transformation."
+                  )}
                 </p>
                 <div className="mt-5 flex flex-col gap-3">
                   <Button asChild href={c.contactHref} variant="primary" className="!rounded-none justify-center">
@@ -113,7 +145,7 @@ export default async function JoinUsPage() {
                     variant="outline"
                     className="!rounded-none border-border text-black hover:bg-white"
                   >
-                    Back to Get Involved
+                    {getString("backLabel", "Back to Get Involved")}
                   </Button>
                 </div>
                 <p className="mt-6 text-sm text-black">

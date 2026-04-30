@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import { aypfContent } from "@/data/aypf";
+import { getInvolvedContent } from "@/data/content";
 import { prisma } from "@/lib/db";
 import { shouldSkipPrismaCalls } from "@/lib/skip-db";
 
@@ -64,6 +65,60 @@ const BASELINE_PAGES: { slug: string; title: string; contentJson: Record<string,
       description:
         "The African Women Political Leadership Summit (AWPLS) brings together women in and around political life to share evidence, build skills, and strengthen how parties and institutions govern. Programme details, dates, and registration will be announced here.",
       heroImage: "/uploads/placeholder.svg",
+    },
+  },
+  {
+    slug: "get-involved-join-us",
+    title: "Work with us",
+    contentJson: {
+      ...getInvolvedContent.joinUs,
+      sectionEyebrow: "Careers",
+      sectionHeading: "Work with us",
+      opportunitiesHeading: "Opportunities",
+      panelEyebrow: "Work with us",
+      panelText: "Join research, policy, programme, and capacity-building teams.",
+      inquiryEyebrow: "Enquiry",
+      inquiryHeading: "Tell us you're interested",
+      inquiryBody: "Use the form for a structured inquiry or use the contact options on the right.",
+      quickContactEyebrow: "Quick contact",
+      quickContactBody:
+        "We're always interested in people passionate about governance, policy, and Africa's economic transformation.",
+      backLabel: "Back to Get Involved",
+    },
+  },
+  {
+    slug: "get-involved-partnership",
+    title: "Partnership",
+    contentJson: {
+      ...getInvolvedContent.partnership,
+      cards: getInvolvedContent.opportunities.find((opp) => opp.id === "partnership")?.cards ?? [],
+      sectionEyebrow: "Collaboration",
+      sectionHeading: "Partnership",
+      areasHeading: "Partnership areas",
+      footerEyebrow: "Partners",
+      footerHeading: "Start a conversation",
+      footerBody:
+        "Governments, institutions, civil society, and funders committed to good governance — we'd like to hear from you.",
+      backLabel: "Back to Get Involved",
+      programsLabel: "Programs:",
+    },
+  },
+  {
+    slug: "get-involved-volunteer",
+    title: "Volunteer",
+    contentJson: {
+      ...getInvolvedContent.volunteer,
+      sectionEyebrow: "Volunteering",
+      sectionHeading: "Volunteer with us",
+      impactEyebrow: "Impact roles",
+      impactText: "Research, events, communications, and administration support.",
+      waysHeading: "Ways to contribute",
+      readyEyebrow: "Ready?",
+      readyHeading: "Apply",
+      readyBody:
+        "Complete the volunteer application — we welcome people who want to strengthen governance dialogue and research.",
+      backLabel: "Back to Get Involved",
+      questionsLabel: "Questions?",
     },
   },
 ];
