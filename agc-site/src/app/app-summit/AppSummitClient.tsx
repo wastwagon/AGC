@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useEffect, useState } from "react";
 import { CalendarDays, Handshake, MapPin, Users } from "lucide-react";
 import { PageHero } from "@/components/PageHero";
 import { Button } from "@/components/Button";
@@ -40,7 +41,29 @@ export function AppSummitClient({
   heroImage?: string;
   siteSettings: SiteSettings;
 }) {
-  const contentMap = content as unknown as Record<string, unknown>;
+  const [liveContent, setLiveContent] = useState<AppSummitCmsContent>(content);
+
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/page-content?slug=${encodeURIComponent("app-summit")}`);
+        if (!res.ok) return;
+        const json = await res.json();
+        if (cancelled) return;
+        if (json?.content_json && typeof json.content_json === "object") {
+          setLiveContent((prev) => ({ ...(prev as Record<string, unknown>), ...(json.content_json as Record<string, unknown>) }) as AppSummitCmsContent);
+        }
+      } catch (e) {
+        // ignore
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const contentMap = liveContent as unknown as Record<string, unknown>;
   const getString = (key: string, fallback: string) =>
     typeof contentMap[key] === "string" && String(contentMap[key]).trim().length > 0
       ? String(contentMap[key])
@@ -51,10 +74,10 @@ export function AppSummitClient({
     const list = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
     return list.length > 0 ? list : fallback;
   };
-  const registration = content.registration;
-  const detailDate = content.details?.date?.trim() || "August 10-12, 2025";
-  const detailLocation = content.details?.location?.trim() || "Accra International Conference Centre, Ghana";
-  const detailParticipants = content.details?.participants?.trim() || "Over 700 participants and 50+ political parties";
+  const registration = (liveContent.registration ?? content.registration) as AppSummitCmsContent["registration"];
+  const detailDate = (liveContent.details?.date?.trim() || content.details?.date?.trim()) || "August 10-12, 2025";
+  const detailLocation = (liveContent.details?.location?.trim() || content.details?.location?.trim()) || "Accra International Conference Centre, Ghana";
+  const detailParticipants = (liveContent.details?.participants?.trim() || content.details?.participants?.trim()) || "Over 700 participants and 50+ political parties";
   const detailLabelDate = getString("detailLabelDate", "Date");
   const detailLabelLocation = getString("detailLabelLocation", "Location");
   const detailLabelParticipants = getString("detailLabelParticipants", "Participants");
@@ -156,10 +179,10 @@ export function AppSummitClient({
           { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
           { label: siteSettings.chrome.breadcrumbs.appSummit },
         ]}
-        title={content.title}
-        subtitle={content.subtitle}
+        title={liveContent.title || content.title}
+        subtitle={liveContent.subtitle || content.subtitle}
         image={heroImage}
-        imageAlt={content.heroImageAlt || "APP Summit"}
+        imageAlt={liveContent.heroImageAlt || content.heroImageAlt || "APP Summit"}
       />
 
       <section className="w-full border-b border-border/80 bg-white py-10 sm:py-14 lg:py-16">
@@ -232,7 +255,7 @@ export function AppSummitClient({
           </HomeScrollReveal>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {highlightsImages.map((image, i) => (
-              <div key={i} className="relative aspect-[4/3] overflow-hidden rounded-none border border-border/80 bg-stone-100">
+              <div key={i} className="relative aspect-4/3 overflow-hidden rounded-none border border-border/80 bg-stone-100">
                 <img src={image} alt={`APPS 2025 placeholder ${i + 1}`} className="h-full w-full object-cover" />
               </div>
             ))}
@@ -242,8 +265,12 @@ export function AppSummitClient({
 
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <div className="relative overflow-hidden rounded-none border border-border/80 bg-accent-900 px-6 py-10 text-white sm:px-10">
-            <div className="pointer-events-none absolute inset-0 opacity-20">
+          <div className="relative overflow-hidden rounded-none border border-slate-800/70 bg-slate-950 px-6 py-10 text-white sm:px-10">
+            <div className="pointer-events-none absolute inset-0">
+              <div className="absolute inset-0 bg-slate-950/78" />
+              <div className="absolute inset-0 bg-linear-to-br from-slate-950/92 via-slate-900/70 to-slate-800/45" />
+            </div>
+            <div className="pointer-events-none absolute inset-0 opacity-55">
               <img src={keyFocusBgImage} alt="" className="h-full w-full object-cover" />
             </div>
             <div className="relative">

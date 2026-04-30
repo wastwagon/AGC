@@ -62,11 +62,13 @@ export default async function AwplsPage() {
   const heroSrc =
     cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? placeholderImages.about;
   const sectionDescription = content.description?.trim() || awplsFallback.description;
-  const [introImage, sectionImageA, sectionImageB, sectionImageC] = await Promise.all([
+  const [introImage, sectionImageA, sectionImageB, sectionImageC, targetsBgImageResolved, deliverBgImageResolved] = await Promise.all([
     resolveImageUrl(getImageRef("introImage")),
     resolveImageUrl(getImageRef("sectionImageA")),
     resolveImageUrl(getImageRef("sectionImageB")),
     resolveImageUrl(getImageRef("sectionImageC")),
+    resolveImageUrl(getImageRef("targetsBgImage")),
+    resolveImageUrl(getImageRef("deliverBgImage")),
   ]);
   const introVisual = introImage || placeholderImages.about;
   const galleryVisuals = [
@@ -74,8 +76,8 @@ export default async function AwplsPage() {
     sectionImageB || placeholderImages.events,
     sectionImageC || placeholderImages.events,
   ];
-  const targetsBgImage = getImageRef("targetsBgImage") || "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=2200&q=80";
-  const deliverBgImage = getImageRef("deliverBgImage") || "https://images.unsplash.com/photo-1551818255-e6e10975bc17?auto=format&fit=crop&w=2200&q=80";
+  const targetsBgImage = targetsBgImageResolved || "https://images.unsplash.com/photo-1529107386315-e1a2ed48a620?auto=format&fit=crop&w=2200&q=80";
+  const deliverBgImage = deliverBgImageResolved || "https://images.unsplash.com/photo-1551818255-e6e10975bc17?auto=format&fit=crop&w=2200&q=80";
   const aboutEyebrow = getString("aboutEyebrow", "AWPLS");
   const aboutHeading = getString(
     "aboutHeading",

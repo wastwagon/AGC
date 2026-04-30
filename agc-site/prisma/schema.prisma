@@ -70,6 +70,7 @@ model Team {
   role      String? @db.VarChar(255)
   bio       String? @db.Text
   image     String? @db.VarChar(500)
+  section   String? @db.VarChar(50)
   order     Int     @default(0)
   status    String  @default("draft") @db.VarChar(50)
   createdAt DateTime @default(now()) @map("created_at")
