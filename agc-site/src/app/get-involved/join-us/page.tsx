@@ -3,7 +3,7 @@ import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { Button } from "@/components/Button";
-import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { getMergedPageContent } from "@/lib/page-content";
 import { resolveImageUrl } from "@/lib/media";
 import { getSiteSettings } from "@/lib/site-settings";
 import { JoinUsInquiryForm } from "@/components/JoinUsInquiryForm";
@@ -30,7 +30,7 @@ export default async function JoinUsPage() {
     backLabel: "Back to Get Involved",
   };
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent<typeof joinUsFallback>("get-involved-join-us", cmsStaticOrEmpty(joinUsFallback)),
+    getMergedPageContent<typeof joinUsFallback>("get-involved-join-us", joinUsFallback),
     getSiteSettings(),
   ]);
   const c = merged;
