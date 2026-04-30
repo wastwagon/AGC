@@ -206,12 +206,6 @@ async function main() {
       contentJson: { ...workContent.training, heroImage: "/uploads/placeholder.svg" },
     },
     {
-      slug: "our-work-partnership",
-      title: "Our Work — Partnership",
-      status: "published",
-      contentJson: { ...workContent.partnership, heroImage: "/uploads/placeholder.svg" },
-    },
-    {
       slug: "our-work-projects",
       title: "Our Work — Projects",
       status: "published",
