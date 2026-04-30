@@ -27,6 +27,8 @@ export async function GET(req: Request) {
     const imageKeys = [
       "heroImage",
       "sectionImage",
+      "focusSectionBgImage",
+      "strategicPrioritiesBgImage",
       "keyFocusBgImage",
       "sponsorshipBgImage",
       ...Array.from({ length: 10 }, (_, i) => `highlightsImage${i + 1}`),

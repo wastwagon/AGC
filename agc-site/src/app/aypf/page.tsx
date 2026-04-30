@@ -26,13 +26,30 @@ async function resolveAypfHeroImage(content: AypfMerged): Promise<string | undef
   return undefined;
 }
 
+async function resolveAypfInlineImages(content: AypfMerged): Promise<AypfMerged> {
+  const next = { ...content } as AypfMerged & Record<string, unknown>;
+  const imageKeys = ["focusSectionBgImage", "strategicPrioritiesBgImage"];
+
+  for (const key of imageKeys) {
+    const raw = next[key];
+    if (typeof raw !== "string" || raw.trim() === "") continue;
+    const resolved = await resolveImageUrl(raw.trim());
+    if (resolved) next[key] = resolved;
+  }
+
+  return next;
+}
+
 export default async function AypfPage() {
   /** Full static base so the page renders when no CMS row exists; CMS JSON still deep-merges over this. */
   const [merged, siteSettings] = await Promise.all([
     getMergedPageContent<AypfMerged>("aypf", aypfBuildFallback),
     getSiteSettings(),
   ]);
-  const heroImage = await resolveAypfHeroImage(merged);
+  const [heroImage, resolvedContent] = await Promise.all([
+    resolveAypfHeroImage(merged),
+    resolveAypfInlineImages(merged),
+  ]);
 
-  return <AypfClient content={merged} heroImage={heroImage} siteSettings={siteSettings} />;
+  return <AypfClient content={resolvedContent} heroImage={heroImage} siteSettings={siteSettings} />;
 }
