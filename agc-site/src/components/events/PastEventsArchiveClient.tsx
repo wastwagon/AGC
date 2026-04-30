@@ -22,7 +22,11 @@ export type PastEventsArchiveCopy = (typeof eventsContent)["pastArchive"];
 type PickerRow = { id: string; label: string; count: number };
 
 function categoryKey(event: CmsEvent): string {
-  return String((event as CmsEvent & { event_type?: string }).event_type || event.category || "").trim();
+  return String(
+    (event as CmsEvent & { event_type?: string }).event_type ||
+      event.category ||
+      "",
+  ).trim();
 }
 
 function categoryLabel(event: CmsEvent): string {
@@ -42,7 +46,11 @@ function formatScheduleLine(start: string, end?: string): string {
   const s = new Date(start);
   if (Number.isNaN(s.getTime())) return "";
   const weekday = s.toLocaleDateString("en-GB", { weekday: "long" });
-  const timeOpts: Intl.DateTimeFormatOptions = { hour: "numeric", minute: "2-digit", hour12: true };
+  const timeOpts: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true,
+  };
   const startT = s.toLocaleTimeString("en-GB", timeOpts);
   if (end && end !== start) {
     const e = new Date(end);
@@ -128,7 +136,10 @@ function FilterDropdown({
 }) {
   const q = listFilter.trim().toLowerCase();
   const visibleRows = q
-    ? rows.filter((r) => r.label.toLowerCase().includes(q) || r.id.toLowerCase().includes(q))
+    ? rows.filter(
+        (r) =>
+          r.label.toLowerCase().includes(q) || r.id.toLowerCase().includes(q),
+      )
     : rows;
 
   const selectedSuffix = selected.size > 0 ? ` (${selected.size})` : "";
@@ -164,18 +175,28 @@ function FilterDropdown({
                 className="w-full rounded-none border border-border bg-white py-2 pl-2 pr-8 text-xs text-black placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500"
                 onClick={(e) => e.stopPropagation()}
               />
-              <Search className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-black" aria-hidden />
+              <Search
+                className="pointer-events-none absolute right-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-black"
+                aria-hidden
+              />
             </div>
             {visibleRows.length === 0 ? (
-              <p className="px-2 py-3 text-center text-xs text-black">No matches.</p>
+              <p className="px-2 py-3 text-center text-xs text-black">
+                No matches.
+              </p>
             ) : (
               <ul className="max-h-56 space-y-0 overflow-y-auto overscroll-contain border-t border-border">
                 {visibleRows.map((row) => (
-                  <li key={row.id} className="border-b border-border last:border-b-0">
+                  <li
+                    key={row.id}
+                    className="border-b border-border last:border-b-0"
+                  >
                     <label className="flex cursor-pointer items-center gap-2 px-2 py-2.5 text-sm text-black hover:bg-stone-50">
                       <input
                         type="checkbox"
-                        checked={rowChecked ? rowChecked(row) : selected.has(row.id)}
+                        checked={
+                          rowChecked ? rowChecked(row) : selected.has(row.id)
+                        }
                         onChange={() => onToggle(row.id)}
                         className="h-4 w-4 shrink-0 rounded border-border text-accent-600 focus:ring-accent-500"
                         onClick={(e) => e.stopPropagation()}
@@ -185,7 +206,9 @@ function FilterDropdown({
                       >
                         {row.label}
                       </span>
-                      <span className="shrink-0 tabular-nums text-xs text-black">({row.count})</span>
+                      <span className="shrink-0 tabular-nums text-xs text-black">
+                        ({row.count})
+                      </span>
                     </label>
                   </li>
                 ))}
@@ -193,7 +216,9 @@ function FilterDropdown({
             )}
           </>
         ) : (
-          <p className="px-2 py-4 text-center text-sm text-black">{emptyMessage}</p>
+          <p className="px-2 py-4 text-center text-sm text-black">
+            {emptyMessage}
+          </p>
         )}
       </div>
     </details>
@@ -202,21 +227,37 @@ function FilterDropdown({
 
 function PastEventRow({ event }: { event: CmsEvent }) {
   const eventSlug = event.slug;
-  const eventLink = eventSlug ? `/events/register/${eventSlug}` : event.link || "#";
+  const eventLink = eventSlug
+    ? `/events/register/${eventSlug}`
+    : event.link || "#";
   const { month, day, year } = dateParts(event.start_date);
   const schedule = formatScheduleLine(event.start_date, event.end_date);
-  const location = [event.venue_name, event.venue_address, event.location].filter(Boolean).join(", ") || event.location || "";
+  const location =
+    [event.venue_name, event.venue_address, event.location]
+      .filter(Boolean)
+      .join(", ") ||
+    event.location ||
+    "";
   const imageUrl = resolveImageUrlSync(event.image) || placeholderImages.events;
 
   return (
     <div className="flex flex-col gap-6 border-b border-border py-10 sm:flex-row sm:items-stretch sm:gap-8">
-      <div className="flex w-full shrink-0 flex-col items-center justify-center rounded-none bg-accent-600 px-4 py-5 text-center text-white sm:w-36">
-        <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-white/85">{eventsContent.gridBadges.past}</p>
-        <p className="mt-2 text-sm font-semibold capitalize text-white">{month}</p>
-        <p className="font-sans text-4xl font-bold tabular-nums leading-none text-white sm:text-5xl">{day}</p>
+      {/* <div className="flex w-full shrink-0 flex-col items-center justify-center rounded-none bg-accent-600 px-4 py-5 text-center text-white sm:w-36">
+        <p className="text-[0.6rem] font-semibold uppercase tracking-[0.2em] text-white/85">
+          {eventsContent.gridBadges.past}
+        </p>
+        <p className="mt-2 text-sm font-semibold capitalize text-white">
+          {month}
+        </p>
+        <p className="font-sans text-4xl font-bold tabular-nums leading-none text-white sm:text-5xl">
+          {day}
+        </p>
         <p className="mt-1 text-xs font-medium text-white/90">{year}</p>
-      </div>
-      <Link href={eventLink} className="relative block aspect-[4/3] w-full shrink-0 overflow-hidden bg-stone-100 sm:w-56">
+      </div> */}
+      <Link
+        href={eventLink}
+        className="relative block aspect-[4/3] w-full shrink-0 overflow-hidden bg-stone-100 sm:w-56"
+      >
         <Image
           src={imageUrl}
           alt={event.title}
@@ -233,13 +274,17 @@ function PastEventRow({ event }: { event: CmsEvent }) {
         <h3 className="mt-2">
           <Link
             href={eventLink}
-            className="font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black underline decoration-transparent transition-colors hover:text-accent-800 hover:decoration-accent-600/40"
+            className="font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black underline decoration-transparent transition-colors hover:text-black hover:decoration-black"
           >
             {event.title}
           </Link>
         </h3>
-        {location ? <p className="mt-3 text-sm text-black">{location}</p> : null}
-        {schedule ? <p className="mt-1 text-sm text-black">{schedule}</p> : null}
+        {location ? (
+          <p className="mt-3 text-sm text-black">{location}</p>
+        ) : null}
+        {schedule ? (
+          <p className="mt-1 text-sm text-black">{schedule}</p>
+        ) : null}
       </div>
     </div>
   );
@@ -266,7 +311,9 @@ export function PastEventsArchiveClient({
   const [search, setSearch] = useState("");
   const [dateFilter, setDateFilter] = useState<DateFilter>("all");
   const [selectedTopics, setSelectedTopics] = useState<Set<string>>(new Set());
-  const [selectedRegions, setSelectedRegions] = useState<Set<string>>(new Set());
+  const [selectedRegions, setSelectedRegions] = useState<Set<string>>(
+    new Set(),
+  );
   const [pageSize, setPageSize] = useState(10);
   const [visibleCount, setVisibleCount] = useState(10);
   const [topicListFilter, setTopicListFilter] = useState("");
@@ -275,7 +322,7 @@ export function PastEventsArchiveClient({
   const topicRows: PickerRow[] = useMemo(() => {
     const labelById = new Map(categoryFilters.map((t) => [t.id, t.label]));
     const tabIds = EVENT_CATEGORY_TAB_IDS.filter(
-      (id): id is Exclude<EventCategoryTabId, "all"> => id !== "all"
+      (id): id is Exclude<EventCategoryTabId, "all"> => id !== "all",
     );
     const rows = tabIds.map((id) => ({
       id,
@@ -302,7 +349,9 @@ export function PastEventsArchiveClient({
       if (!eventMatchesSearch(e, search)) return false;
       if (!eventMatchesDateFilter(e, dateFilter)) return false;
       if (selectedTopics.size > 0) {
-        const matchesAnyTopic = [...selectedTopics].some((tid) => eventMatchesCategoryTab(tid, e));
+        const matchesAnyTopic = [...selectedTopics].some((tid) =>
+          eventMatchesCategoryTab(tid, e),
+        );
         if (!matchesAnyTopic) return false;
       }
       if (selectedRegions.size > 0) {
@@ -313,8 +362,14 @@ export function PastEventsArchiveClient({
     });
   }, [events, search, dateFilter, selectedTopics, selectedRegions]);
 
-  const topicsSig = useMemo(() => [...selectedTopics].sort().join("|"), [selectedTopics]);
-  const regionsSig = useMemo(() => [...selectedRegions].sort().join("|"), [selectedRegions]);
+  const topicsSig = useMemo(
+    () => [...selectedTopics].sort().join("|"),
+    [selectedTopics],
+  );
+  const regionsSig = useMemo(
+    () => [...selectedRegions].sort().join("|"),
+    [selectedRegions],
+  );
 
   useEffect(() => {
     setVisibleCount(Math.min(pageSize, filtered.length));
@@ -349,8 +404,12 @@ export function PastEventsArchiveClient({
     <div className="bg-white">
       <header className="border-b border-border pb-8">
         <div className="h-1 w-16 rounded-none bg-accent-600" aria-hidden />
-        <h1 className="page-heading mt-5 text-4xl font-bold tracking-tight text-black sm:text-5xl">{copy.title}</h1>
-        <p className="mt-4 max-w-none text-lg leading-relaxed text-black">{copy.subtitle}</p>
+        <h1 className="page-heading mt-5 text-4xl font-bold tracking-tight text-black sm:text-5xl">
+          {copy.title}
+        </h1>
+        <p className="mt-4 max-w-none text-lg leading-relaxed text-black">
+          {copy.subtitle}
+        </p>
       </header>
 
       <div className="mt-12 grid gap-12 lg:grid-cols-12 lg:gap-14">
@@ -368,12 +427,20 @@ export function PastEventsArchiveClient({
                 placeholder={copy.searchPlaceholder}
                 className="w-full rounded-none border border-border/90 bg-white py-2.5 pl-3 pr-10 text-sm text-black shadow-none placeholder:text-black focus:border-accent-600 focus:outline-none focus:ring-1 focus:ring-accent-500"
               />
-              <Search className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black" aria-hidden />
+              <Search
+                className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-black"
+                aria-hidden
+              />
             </div>
 
             <p className="mt-8 text-sm font-bold text-black">{copy.filterBy}</p>
             <label className="mt-4 flex cursor-default items-center gap-2 border-b border-border py-3 text-sm text-black">
-              <input type="checkbox" checked readOnly className="h-4 w-4 rounded border-border text-accent-600" />
+              <input
+                type="checkbox"
+                checked
+                readOnly
+                className="h-4 w-4 rounded border-border text-accent-600"
+              />
               <span>
                 {copy.eventCheckboxLabel}{" "}
                 <span className="text-black">({events.length})</span>
@@ -390,9 +457,13 @@ export function PastEventsArchiveClient({
               onListFilterChange={setTopicListFilter}
               emptyMessage={copy.topicEmpty}
               filterInputId="past-archive-topic-filter"
-              listPlaceholder={copy.listFilterPlaceholder?.trim() || "Filter list…"}
+              listPlaceholder={
+                copy.listFilterPlaceholder?.trim() || "Filter list…"
+              }
               rowChecked={(row) =>
-                row.id === "__all__" ? selectedTopics.size === 0 : selectedTopics.has(row.id)
+                row.id === "__all__"
+                  ? selectedTopics.size === 0
+                  : selectedTopics.has(row.id)
               }
               preserveLabelCase
             />
@@ -407,10 +478,14 @@ export function PastEventsArchiveClient({
               onListFilterChange={setRegionListFilter}
               emptyMessage={copy.filterComingSoon}
               filterInputId="past-archive-region-filter"
-              listPlaceholder={copy.listFilterPlaceholder?.trim() || "Filter list…"}
+              listPlaceholder={
+                copy.listFilterPlaceholder?.trim() || "Filter list…"
+              }
             />
 
-            <p className="mt-6 border-t border-border pt-4 text-sm font-bold text-black">{copy.dateHeading}</p>
+            <p className="mt-6 border-t border-border pt-4 text-sm font-bold text-black">
+              {copy.dateHeading}
+            </p>
             <ul className="mt-3 space-y-0 divide-y divide-border border-t border-border">
               {(
                 [
@@ -439,7 +514,8 @@ export function PastEventsArchiveClient({
 
         <div className="min-w-0 lg:col-span-8">
           <p className="text-sm text-black">
-            <span className="font-semibold text-black">{filtered.length}</span> {copy.resultsFoundSuffix}
+            <span className="font-semibold text-black">{filtered.length}</span>{" "}
+            {copy.resultsFoundSuffix}
           </p>
 
           <div className="mt-6">
@@ -448,7 +524,9 @@ export function PastEventsArchiveClient({
                 {emptyPastMessage}
               </p>
             ) : (
-              visible.map((event) => <PastEventRow key={event.id} event={event} />)
+              visible.map((event) => (
+                <PastEventRow key={event.id} event={event} />
+              ))
             )}
           </div>
 
@@ -456,7 +534,11 @@ export function PastEventsArchiveClient({
             <div className="mt-10 flex justify-center">
               <button
                 type="button"
-                onClick={() => setVisibleCount((c) => Math.min(c + pageSize, filtered.length))}
+                onClick={() =>
+                  setVisibleCount((c) =>
+                    Math.min(c + pageSize, filtered.length),
+                  )
+                }
                 className="flex w-full max-w-xl items-center justify-center gap-2 rounded-none border-2 border-border bg-white px-6 py-4 text-sm font-bold text-black transition-colors hover:bg-stone-50"
               >
                 <span className="flex h-6 w-6 items-center justify-center rounded-full border-2 border-border">
