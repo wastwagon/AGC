@@ -86,7 +86,7 @@ export default async function JoinUsPage() {
               </div>
               <div className="self-start">
                 <div
-                  className="relative min-h-[340px] overflow-hidden border border-border/80 bg-black"
+                  className="relative min-h-85 overflow-hidden border border-border/80 bg-black"
                   style={{
                     backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.28), rgba(15,23,42,0.62)), url('${sidePanelImage}')`,
                     backgroundSize: "cover",
@@ -128,7 +128,7 @@ export default async function JoinUsPage() {
                   <JoinUsInquiryForm programsEmail={siteSettings.email.programs} />
                 </div>
               </div>
-              <aside className="border border-border/80 bg-stone-50 p-5 lg:sticky lg:top-24">
+              <aside className="border border-border/80 bg-white p-5 lg:sticky lg:top-24">
                 <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-800">
                   {getString("quickContactEyebrow", "Quick contact")}
                 </p>
@@ -139,14 +139,14 @@ export default async function JoinUsPage() {
                   )}
                 </p>
                 <div className="mt-5 flex flex-col gap-3">
-                  <Button asChild href={c.contactHref} variant="primary" className="!rounded-none justify-center">
+                  <Button asChild href={c.contactHref} variant="primary" className="rounded-none! justify-center">
                     {c.cta}
                   </Button>
                   <Button
                     asChild
                     href="/get-involved"
                     variant="outline"
-                    className="!rounded-none border-border text-black hover:bg-white"
+                    className="rounded-none! border-border text-black hover:bg-white"
                   >
                     {getString("backLabel", "Back to Get Involved")}
                   </Button>

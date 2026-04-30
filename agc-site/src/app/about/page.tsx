@@ -123,32 +123,47 @@ export default async function AboutPage() {
   const leadParagraphs =
     Array.isArray(contentMap.leadParagraphs) &&
     contentMap.leadParagraphs.every((item) => typeof item === "string")
-      ? (contentMap.leadParagraphs as string[]).filter((item) => item.trim().length > 0)
+      ? (contentMap.leadParagraphs as string[]).filter(
+          (item) => item.trim().length > 0,
+        )
       : ABOUT_LEAD_PARAGRAPHS;
   const partnershipsText =
-    typeof contentMap.partnershipsText === "string" && contentMap.partnershipsText.trim().length > 0
+    typeof contentMap.partnershipsText === "string" &&
+    contentMap.partnershipsText.trim().length > 0
       ? contentMap.partnershipsText
       : ABOUT_PARTNERSHIPS_TEXT;
   const aboutSectionEyebrow =
-    typeof contentMap.aboutSectionEyebrow === "string" && contentMap.aboutSectionEyebrow.trim().length > 0
+    typeof contentMap.aboutSectionEyebrow === "string" &&
+    contentMap.aboutSectionEyebrow.trim().length > 0
       ? contentMap.aboutSectionEyebrow
       : "Who we are";
   const aboutSectionHeading =
-    typeof contentMap.aboutSectionHeading === "string" && contentMap.aboutSectionHeading.trim().length > 0
+    typeof contentMap.aboutSectionHeading === "string" &&
+    contentMap.aboutSectionHeading.trim().length > 0
       ? contentMap.aboutSectionHeading
       : content.title;
   const deliverySectionHeading =
-    typeof contentMap.deliverySectionHeading === "string" && contentMap.deliverySectionHeading.trim().length > 0
+    typeof contentMap.deliverySectionHeading === "string" &&
+    contentMap.deliverySectionHeading.trim().length > 0
       ? contentMap.deliverySectionHeading
       : "We deliver our work by:";
   const partnershipsHeading =
-    typeof contentMap.partnershipsHeading === "string" && contentMap.partnershipsHeading.trim().length > 0
+    typeof contentMap.partnershipsHeading === "string" &&
+    contentMap.partnershipsHeading.trim().length > 0
       ? contentMap.partnershipsHeading
       : "Partnerships and network";
   const deliveryPoints =
     Array.isArray(contentMap.deliveryPoints) &&
-    contentMap.deliveryPoints.every((item) => item && typeof item === "object" && !Array.isArray(item))
-      ? (contentMap.deliveryPoints as Array<{ title?: unknown; body?: unknown; image?: unknown }>)
+    contentMap.deliveryPoints.every(
+      (item) => item && typeof item === "object" && !Array.isArray(item),
+    )
+      ? (
+          contentMap.deliveryPoints as Array<{
+            title?: unknown;
+            body?: unknown;
+            image?: unknown;
+          }>
+        )
           .map((item, index) => ({
             title:
               typeof item.title === "string" && item.title.trim().length > 0
@@ -206,14 +221,17 @@ export default async function AboutPage() {
               />
             </div>
             <div className="mt-8 max-w-5xl space-y-6">
-              {leadParagraphs.map((paragraph) => (
+              {/* {leadParagraphs.map((paragraph) => (
                 <p
                   key={paragraph}
                   className="max-w-none text-black font-medium page-prose"
                 >
                   {paragraph}
                 </p>
-              ))}
+              ))} */}
+              <p className="max-w-none text-black font-medium page-prose">
+                {leadParagraphs}
+              </p>
             </div>
           </div>
         </section>
@@ -245,7 +263,9 @@ export default async function AboutPage() {
                       fill
                       className="object-cover object-center"
                       sizes="(max-width: 640px) 100vw, 50vw"
-                      unoptimized={preferUnoptimizedImage(point.image || heroImage)}
+                      unoptimized={preferUnoptimizedImage(
+                        point.image || heroImage,
+                      )}
                     />
                     <div className="absolute inset-0 bg-black/25" aria-hidden />
                     <div className="absolute bottom-3 left-3 rounded-sm bg-white/90 px-2 py-1 text-xs font-semibold text-black">

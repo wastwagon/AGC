@@ -17,6 +17,15 @@ export const metadata = {
 
 export const revalidate = 60;
 
+async function resolveOurWorkInlineImages(content: OurWorkPageContent & { heroImage?: string; approachObjectivesBgImage?: string }) {
+  const next = { ...content } as Record<string, unknown>;
+  if (typeof content.approachObjectivesBgImage === "string" && content.approachObjectivesBgImage.trim()) {
+    const resolved = await resolveImageUrl(content.approachObjectivesBgImage.trim());
+    if (resolved) next.approachObjectivesBgImage = resolved;
+  }
+  return next as typeof content;
+}
+
 export default async function OurWorkPage() {
   const [programsResolved, projectsResolved, merged, siteSettings] = await Promise.all([
     resolveProgramsForOurWork(),
@@ -33,13 +42,17 @@ export default async function OurWorkPage() {
   const workMerged = merged as unknown as OurWorkPageContent & { heroImage?: string };
   const heroImage =
     (await resolveImageUrl(workMerged.heroImage)) || placeholderImages.programs;
+  const resolvedContent = await resolveOurWorkInlineImages(workMerged as OurWorkPageContent & {
+    heroImage?: string;
+    approachObjectivesBgImage?: string;
+  });
 
   return (
     <OurWorkClient
       programsResolved={programsResolved}
       projectsResolved={projectsResolved}
       advisoryResolved={advisoryResolved}
-      content={workMerged}
+      content={resolvedContent}
       heroImage={heroImage}
       breadcrumbLabels={siteSettings.chrome.breadcrumbs}
     />

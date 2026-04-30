@@ -15,6 +15,23 @@ export const metadata = {
   description: "Collaborate with Africa Governance Centre on research, events, and policy initiatives.",
 };
 
+async function resolvePartnershipCardImages(
+  cards: Array<{ id: number; title: string; description: string; backgroundImage?: string }>
+) {
+  return Promise.all(
+    cards.map(async (card) => {
+      const resolved =
+        typeof card.backgroundImage === "string" && card.backgroundImage.trim().length > 0
+          ? await resolveImageUrl(card.backgroundImage.trim())
+          : undefined;
+      return {
+        ...card,
+        backgroundImage: resolved || card.backgroundImage,
+      };
+    })
+  );
+}
+
 export default async function PartnershipPage() {
   const partnershipFallback = {
     ...getInvolvedContent.partnership,
@@ -52,6 +69,7 @@ export default async function PartnershipPage() {
     description: card.description,
     backgroundImage: card.backgroundImage,
   }));
+  const resolvedPartnershipCards = await resolvePartnershipCardImages(partnershipCards);
   
   return (
     <>
@@ -85,7 +103,7 @@ export default async function PartnershipPage() {
                 {getString("areasHeading", "Partnership areas")}
               </h2>
               <div className="mt-6">
-                <ProgramsCarousel programs={partnershipCards} />
+                <ProgramsCarousel programs={resolvedPartnershipCards} />
               </div>
             </div>
           </div>
@@ -126,14 +144,14 @@ export default async function PartnershipPage() {
                 {siteSettings.email.programs}
               </a>
               <div className="mt-6 flex flex-col gap-3">
-                <Button asChild href="#partnership-inquiry" variant="primary" className="!rounded-none justify-center">
+                <Button asChild href="#partnership-inquiry" variant="primary" className="rounded-none! justify-center">
                   {c.cta}
                 </Button>
                 <Button
                   asChild
                   href="/get-involved"
                   variant="outline"
-                  className="!rounded-none border-border text-black hover:bg-white"
+                  className="rounded-none! border-border text-black hover:bg-white"
                 >
                   {getString("backLabel", "Back to Get Involved")}
                 </Button>

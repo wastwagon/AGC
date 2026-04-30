@@ -186,16 +186,10 @@ export function AypfClient({
     typeof (contentMap.lookingAheadSection as Record<string, unknown>).invitationNote === "string"
       ? String((contentMap.lookingAheadSection as Record<string, unknown>).invitationNote).trim()
       : "";
-  const summit2026Paragraphs = getStringArray("summit2026Paragraphs", [
-    ...(legacy2026Intro ? [legacy2026Intro] : []),
-    ...(legacy2026Invitation ? [legacy2026Invitation] : []),
-    ...(!legacy2026Intro && !legacy2026Invitation
-      ? [
-    "The 2026 edition, themed \"Leveraging the Youth Dividend: Driving Africa's Economic and Political Transformation,\" underscores the central role of young Africans in shaping the continent's political and economic trajectory.",
-    "The Forum aligns with Aspiration 6 of Agenda 2063 and draws inspiration from the African Youth Charter and youth economic inclusion initiatives such as WYFEI 2030.",
-      ]
-      : []),
-  ]);
+  const summit2026Paragraphs = getString("summit2026Paragraphs", 
+    legacy2026Intro || legacy2026Invitation || 
+    "The 2026 edition, themed \"Leveraging the Youth Dividend: Driving Africa's Economic and Political Transformation,\" underscores the central role of young Africans in shaping the continent's political and economic trajectory. The Forum aligns with Aspiration 6 of Agenda 2063 and draws inspiration from the African Youth Charter and youth economic inclusion initiatives such as WYFEI 2030."
+  );
   const objectivesHeading = getString("objectivesHeading", "Objectives of AYPF 2026");
   const objectives = getStringArray("objectives", objectivesFallback);
   const strategicPrioritiesHeading = getString("strategicPrioritiesHeading", "AYPF 2026 Strategic Priorities");
@@ -310,14 +304,9 @@ export function AypfClient({
         <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{summit2026Heading}</h2>
-            {summit2026Paragraphs.map((paragraph, idx) => (
-              <p
-                key={`${paragraph}-${idx}`}
-                className={`page-prose text-[1.08rem] font-medium leading-relaxed text-stone-800 ${idx === 0 ? "mt-5" : "mt-4"}`}
-              >
-                {paragraph}
-              </p>
-            ))}
+            <p className="mt-5 page-prose text-[1.08rem] font-medium leading-relaxed text-stone-800">
+              {summit2026Paragraphs}
+            </p>
           </div>
         </section>
       </HomeScrollReveal>
