@@ -124,24 +124,24 @@ export function AypfClient({
 
       <HomeScrollReveal variant="slideLeft" start="top 88%" className="block w-full">
         <section
-          className="w-full border-t border-white/20 bg-cover bg-center bg-no-repeat py-10 sm:py-14 lg:py-16 text-white"
+          className="w-full border-t border-white/20 bg-cover bg-center bg-no-repeat py-12 sm:py-16 lg:py-20 text-white"
           style={{
             backgroundImage:
-              `linear-gradient(to bottom, rgba(12,74,110,0.86), rgba(8,47,73,0.9)), url('${focusSectionBgImage}')`,
+              `linear-gradient(180deg, rgba(32,20,13,0.22) 0%, rgba(12,10,9,0.64) 56%, rgba(5,5,6,0.88) 100%), radial-gradient(circle at 72% 30%, rgba(190,120,70,0.22), transparent 46%), url('${focusSectionBgImage}')`,
           }}
         >
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-            <h2 className="font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">
+            <h2 className="max-w-5xl font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">
               From symbolic inclusion to structured participation
             </h2>
-            <p className="mt-4 max-w-4xl text-base font-medium leading-relaxed text-white/95">
+            <p className="mt-5 max-w-4xl text-base font-medium leading-relaxed text-white/95 sm:text-[1.03rem]">
               The AYPF is designed as a reform-oriented and capacity-building platform within Africa&apos;s political
               ecosystem. It works to shift youth engagement from symbolic representation to structured political
               participation where young people can exercise their full agency.
             </p>
-            <ul className="mt-6 grid gap-3 sm:grid-cols-2">
+            <ul className="mt-8 grid gap-4 sm:grid-cols-2">
               {focusAreas.map((item) => (
-                <li key={item} className="rounded-none border border-white/20 bg-white/5 p-4 text-sm font-medium leading-relaxed">
+                <li key={item} className="rounded-none border border-white/30 bg-white/5 px-4 py-4 text-sm font-medium leading-relaxed sm:px-5">
                   {item}
                 </li>
               ))}
@@ -182,23 +182,27 @@ export function AypfClient({
       </HomeScrollReveal>
 
       <HomeScrollReveal variant="tiltUp" start="top 86%" className="block w-full">
-        <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
+        <section className="w-full border-t border-border/80 bg-white py-12 sm:py-16 lg:py-20">
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">
               AYPF 2026 Strategic Priorities
             </h2>
             <div
-              className="mt-7 overflow-hidden rounded-none border border-border/80 bg-cover bg-center bg-no-repeat"
+              className="mt-8 overflow-hidden rounded-none border border-white/30 bg-cover bg-center bg-no-repeat"
               style={{
                 backgroundImage:
-                  `linear-gradient(to bottom, rgba(2,6,23,0.72), rgba(2,6,23,0.8)), url('${strategicPrioritiesBgImage}')`,
+                  `linear-gradient(180deg, rgba(32,20,13,0.2) 0%, rgba(10,8,8,0.66) 54%, rgba(5,5,6,0.9) 100%), radial-gradient(circle at 72% 28%, rgba(190,120,70,0.2), transparent 45%), url('${strategicPrioritiesBgImage}')`,
               }}
             >
-              <article className="min-h-[220px] p-6 sm:min-h-[240px] sm:p-8">
-                <h3 className="font-sans text-2xl font-semibold text-white">{activePriority.title}</h3>
-                <p className="mt-4 max-w-3xl text-base font-medium leading-relaxed text-white/95">{activePriority.body}</p>
+              <article className="min-h-[250px] px-6 py-7 sm:min-h-[280px] sm:px-8 sm:py-9 lg:px-10">
+                <h3 className="max-w-4xl font-sans text-[1.85rem] font-semibold leading-tight text-white sm:text-[2.05rem]">
+                  {activePriority.title}
+                </h3>
+                <p className="mt-5 max-w-3xl text-base font-medium leading-relaxed text-white/95 sm:text-[1.03rem]">
+                  {activePriority.body}
+                </p>
               </article>
-              <div className="flex items-center justify-between border-t border-white/30 bg-black/20 px-4 py-3 sm:px-6">
+              <div className="flex items-center justify-between border-t border-white/30 bg-black/30 px-5 py-3.5 sm:px-7">
                 <div className="text-sm font-medium text-white">
                   {priorityIndex + 1}/{strategicPriorities.length}
                 </div>

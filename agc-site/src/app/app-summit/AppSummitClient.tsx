@@ -40,12 +40,42 @@ export function AppSummitClient({
   heroImage?: string;
   siteSettings: SiteSettings;
 }) {
+  const contentMap = content as unknown as Record<string, unknown>;
+  const getString = (key: string, fallback: string) =>
+    typeof contentMap[key] === "string" && String(contentMap[key]).trim().length > 0
+      ? String(contentMap[key])
+      : fallback;
+  const getStringArray = (key: string, fallback: string[]) => {
+    const value = contentMap[key];
+    if (!Array.isArray(value)) return fallback;
+    const list = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+    return list.length > 0 ? list : fallback;
+  };
   const registration = content.registration;
-  const detailDate = "August 10-12, 2025";
-  const detailLocation = "Accra International Conference Centre, Ghana";
-  const detailParticipants = "Over 700 participants and 50+ political parties";
+  const detailDate = content.details?.date?.trim() || "August 10-12, 2025";
+  const detailLocation = content.details?.location?.trim() || "Accra International Conference Centre, Ghana";
+  const detailParticipants = content.details?.participants?.trim() || "Over 700 participants and 50+ political parties";
+  const detailLabelDate = getString("detailLabelDate", "Date");
+  const detailLabelLocation = getString("detailLabelLocation", "Location");
+  const detailLabelParticipants = getString("detailLabelParticipants", "Participants");
+  const aboutSectionEyebrow = getString("aboutSectionEyebrow", "APP Summit");
+  const aboutSectionHeading = getString(
+    "aboutSectionHeading",
+    "A continental platform for democratic resilience and political transformation"
+  );
+  const highlightsHeading = getString("highlightsHeading", "APPS 2025 Highlights");
+  const focusHeading = getString("focusSectionHeading", "Key Focus Areas");
+  const summit2026Heading = getString("summit2026Heading", "APPS 2026");
+  const outcomesHeading = getString("outcomesHeading", "Expected Outcomes");
+  const structureHeading = getString("structureHeading", "Summit Structure and Format");
+  const sponsorshipHeading = getString("sponsorshipHeading", "Sponsorship & Partnership");
+  const keyFocusBgImage = getString("keyFocusBgImage", "/uploads/placeholder.svg");
+  const sponsorshipBgImage = getString("sponsorshipBgImage", "/uploads/placeholder.svg");
+  const highlightsImages = Array.from({ length: 10 }).map((_, i) =>
+    getString(`highlightsImage${i + 1}`, "/uploads/placeholder.svg")
+  );
 
-  const keyFocusAreas = [
+  const keyFocusAreas = getStringArray("keyFocusAreas", [
     "Political Cooperation and Party Dialogue",
     "Democratic Governance and Institutional Reform",
     "Political Party Financing and Campaign Transparency",
@@ -53,16 +83,22 @@ export function AppSummitClient({
     "Conflict Prevention and Peacebuilding",
     "Digital Innovation and Political Communication",
     "Continental Integration and Development Planning",
-  ];
+  ]);
 
-  const expectedOutcomes = [
+  const expectedOutcomes = getStringArray("expectedOutcomes", [
     "Adoption of a high-level declaration articulating shared continental principles on economic transformation and political responsibility.",
     "Establishment of a structured inter-party economic policy dialogue platform under the African Political Parties Initiative.",
     "Agreement on technical working groups focused on fiscal governance, youth employment, and industrial development.",
     "Strengthened partnerships between political actors and regional economic institutions.",
     "Enhanced continental visibility of political parties as constructive contributors to Africa’s development agenda.",
     "A dedicated set of recommendations from the Africa Women Political Leadership Summit and the Africa Youth in Politics Forum informing continental party reform agendas.",
-  ];
+  ]);
+  const sponsorshipPoints = getStringArray("sponsorshipPoints", [
+    "Brand visibility across venues, digital platforms, and summit materials",
+    "Speaking opportunities and session branding",
+    "Exhibition space for products and services",
+    "Access to closed-door VIP sessions and publicity acknowledgements",
+  ]);
 
   return (
     <>
@@ -82,9 +118,9 @@ export function AppSummitClient({
           <div className="grid gap-12 lg:grid-cols-3 lg:gap-14">
             <HomeScrollReveal variant="slideLeft" start="top 87%" className="block w-full lg:col-span-2">
               <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent-800">APP Summit</p>
+                <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent-800">{aboutSectionEyebrow}</p>
                 <h2 className="mt-3 font-serif text-[2rem] font-semibold leading-tight text-black sm:text-[2.5rem]">
-                  A continental platform for democratic resilience and political transformation
+                  {aboutSectionHeading}
                 </h2>
                 <p className="page-prose mt-6 text-lg leading-relaxed">
                   The African Political Parties Summit (APPS) is a high-level continental platform that convenes
@@ -108,17 +144,17 @@ export function AppSummitClient({
                 <ul className="mt-8 grid gap-4 sm:grid-cols-3">
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <CalendarDays className="h-5 w-5 text-accent-700" />
-                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">Date</p>
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelDate}</p>
                     <p className="mt-1 text-sm font-medium text-black">{detailDate}</p>
                   </li>
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <MapPin className="h-5 w-5 text-accent-700" />
-                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">Location</p>
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelLocation}</p>
                     <p className="mt-1 text-sm font-medium text-black">{detailLocation}</p>
                   </li>
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <Users className="h-5 w-5 text-accent-700" />
-                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">Participants</p>
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelParticipants}</p>
                     <p className="mt-1 text-sm font-medium text-black">{detailParticipants}</p>
                   </li>
                 </ul>
@@ -151,15 +187,15 @@ export function AppSummitClient({
           <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
             <div className="mb-6 flex items-end justify-between gap-4">
               <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">
-                APPS 2025 Highlights
+                {highlightsHeading}
               </h2>
               <p className="text-xs uppercase tracking-[0.08em] text-black">Image placeholders</p>
             </div>
           </HomeScrollReveal>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {Array.from({ length: 10 }).map((_, i) => (
+            {highlightsImages.map((image, i) => (
               <div key={i} className="relative aspect-[4/3] overflow-hidden rounded-none border border-border/80 bg-stone-100">
-                <img src="/uploads/placeholder.svg" alt={`APPS 2025 placeholder ${i + 1}`} className="h-full w-full object-cover" />
+                <img src={image} alt={`APPS 2025 placeholder ${i + 1}`} className="h-full w-full object-cover" />
               </div>
             ))}
           </div>
@@ -170,10 +206,10 @@ export function AppSummitClient({
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="relative overflow-hidden rounded-none border border-border/80 bg-accent-900 px-6 py-10 text-white sm:px-10">
             <div className="pointer-events-none absolute inset-0 opacity-20">
-              <img src="/uploads/placeholder.svg" alt="" className="h-full w-full object-cover" />
+              <img src={keyFocusBgImage} alt="" className="h-full w-full object-cover" />
             </div>
             <div className="relative">
-              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-white/90">Key Focus Areas</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-white/90">{focusHeading}</p>
               <ul className="mt-5 grid gap-3 sm:grid-cols-2">
                 {keyFocusAreas.map((item) => (
                   <li key={item} className="flex items-start gap-2 text-sm sm:text-base">
@@ -189,7 +225,7 @@ export function AppSummitClient({
 
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">APPS 2026</h2>
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{summit2026Heading}</h2>
           <p className="page-prose mt-5 text-lg leading-relaxed">
             The second edition of APPS moves the conversation from broad democratic commitments to a focused and
             practical inquiry: how can political parties become credible, institutional drivers of economic
@@ -205,7 +241,7 @@ export function AppSummitClient({
 
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">Expected Outcomes</h2>
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{outcomesHeading}</h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
             {expectedOutcomes.map((item) => (
               <li key={item} className="rounded-none border border-border/80 bg-white p-5 text-sm leading-relaxed text-black">
@@ -218,7 +254,7 @@ export function AppSummitClient({
 
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">Summit Structure and Format</h2>
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{structureHeading}</h2>
           <div className="mt-7 grid gap-5 lg:grid-cols-3">
             <div className="rounded-none border border-border/80 bg-white p-6">
               <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">Day One</p>
@@ -249,20 +285,19 @@ export function AppSummitClient({
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="relative overflow-hidden rounded-none border border-border/80 bg-black px-6 py-10 text-white sm:px-10">
             <div className="pointer-events-none absolute inset-0 opacity-30">
-              <img src="/uploads/placeholder.svg" alt="" className="h-full w-full object-cover" />
+              <img src={sponsorshipBgImage} alt="" className="h-full w-full object-cover" />
             </div>
             <div className="relative">
-              <h2 className="font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">Sponsorship & Partnership</h2>
+              <h2 className="font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">{sponsorshipHeading}</h2>
               <p className="mt-4 max-w-4xl text-sm leading-relaxed text-white/90 sm:text-base">
                 APPS 2026 provides strategic opportunities for corporate and institutional sponsorship through
                 high-visibility brand exposure, partnership recognition, and direct engagement with policy
                 influencers from across Africa.
               </p>
               <ul className="mt-5 grid gap-2 sm:grid-cols-2">
-                <li className="text-sm text-white/90">Brand visibility across venues, digital platforms, and summit materials</li>
-                <li className="text-sm text-white/90">Speaking opportunities and session branding</li>
-                <li className="text-sm text-white/90">Exhibition space for products and services</li>
-                <li className="text-sm text-white/90">Access to closed-door VIP sessions and publicity acknowledgements</li>
+                {sponsorshipPoints.map((point) => (
+                  <li key={point} className="text-sm text-white/90">{point}</li>
+                ))}
               </ul>
             </div>
           </div>

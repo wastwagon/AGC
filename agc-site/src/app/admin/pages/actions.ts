@@ -98,6 +98,9 @@ function revalidatePublicRouteForPageSlug(slug: string) {
     "our-work-research": "/our-work/research",
     "our-work-training": "/our-work/training",
     "our-work-partnership": "/our-work/partnership",
+    "get-involved-join-us": "/get-involved/join-us",
+    "get-involved-partnership": "/get-involved/partnership",
+    "get-involved-volunteer": "/get-involved/volunteer",
   };
   const primary = pathBySlug[slug] ?? `/${slug}`;
   revalidatePath(primary);

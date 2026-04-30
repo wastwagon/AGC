@@ -14,12 +14,42 @@ export const metadata = {
 };
 
 export default async function VolunteerPage() {
+  const volunteerFallback = {
+    ...getInvolvedContent.volunteer,
+    sectionEyebrow: "Volunteering",
+    sectionHeading: "Volunteer with us",
+    impactEyebrow: "Impact roles",
+    impactText: "Research, events, communications, and administration support.",
+    waysHeading: "Ways to contribute",
+    readyEyebrow: "Ready?",
+    readyHeading: "Apply",
+    readyBody:
+      "Complete the volunteer application — we welcome people who want to strengthen governance dialogue and research.",
+    backLabel: "Back to Get Involved",
+    questionsLabel: "Questions?",
+  };
   const [merged, siteSettings] = await Promise.all([
-    getMergedPageContent<typeof getInvolvedContent>("get-involved", cmsStaticOrEmpty(getInvolvedContent)),
+    getMergedPageContent<typeof volunteerFallback>("get-involved-volunteer", cmsStaticOrEmpty(volunteerFallback)),
     getSiteSettings(),
   ]);
-  const c = (merged as unknown as typeof getInvolvedContent).volunteer;
+  const c = merged;
+  const cMap = c as unknown as Record<string, unknown>;
+  const getString = (key: string, fallback: string) =>
+    typeof cMap[key] === "string" && String(cMap[key]).trim().length > 0 ? String(cMap[key]) : fallback;
   const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.getInvolved;
+  const sectionEyebrow = getString("sectionEyebrow", "Volunteering");
+  const sectionHeading = getString("sectionHeading", "Volunteer with us");
+  const impactEyebrow = getString("impactEyebrow", "Impact roles");
+  const impactText = getString("impactText", "Research, events, communications, and administration support.");
+  const waysHeading = getString("waysHeading", "Ways to contribute");
+  const readyEyebrow = getString("readyEyebrow", "Ready?");
+  const readyHeading = getString("readyHeading", "Apply");
+  const readyBody = getString(
+    "readyBody",
+    "Complete the volunteer application — we welcome people who want to strengthen governance dialogue and research."
+  );
+  const backLabel = getString("backLabel", "Back to Get Involved");
+  const questionsLabel = getString("questionsLabel", "Questions?");
   return (
     <>
       <PageHero
@@ -40,9 +70,9 @@ export default async function VolunteerPage() {
           <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
             <div className="grid gap-10 lg:grid-cols-3 lg:gap-12">
               <div className="lg:col-span-2">
-                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">Volunteering</p>
+                <p className="text-[0.7rem] font-semibold uppercase tracking-[0.2em] text-black">{sectionEyebrow}</p>
                 <h2 className="mt-3 font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
-                  Volunteer with us
+                  {sectionHeading}
                 </h2>
                 <p className="mt-4 page-prose text-[1.08rem] leading-relaxed">{c.intro}</p>
                 <p className="mt-6 page-prose">{c.description}</p>
@@ -58,8 +88,8 @@ export default async function VolunteerPage() {
                 >
                   <div className="absolute inset-0 flex items-end p-6">
                     <div className="bg-white/90 p-4 backdrop-blur-sm">
-                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-800">Impact roles</p>
-                      <p className="mt-2 text-sm text-black">Research, events, communications, and administration support.</p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-accent-800">{impactEyebrow}</p>
+                      <p className="mt-2 text-sm text-black">{impactText}</p>
                     </div>
                   </div>
                 </div>
@@ -67,7 +97,7 @@ export default async function VolunteerPage() {
             </div>
 
             <div className="mt-12">
-              <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">Ways to contribute</h2>
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-accent-800">{waysHeading}</h2>
               <ul className="mt-6 grid gap-4 sm:grid-cols-2">
                 {c.items.map((item, i) => (
                   <li key={item} className="flex gap-4 border border-border/70 bg-white p-4">
@@ -87,22 +117,21 @@ export default async function VolunteerPage() {
         <section className="w-full border-y border-border/80 bg-white py-8 sm:py-12 lg:py-14">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="page-card border-l-[4px] border-l-accent-600 p-8 sm:p-10">
-            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-black">Ready?</p>
-            <h2 className="page-heading mt-2 text-xl text-black">Apply</h2>
+            <p className="text-[0.65rem] font-semibold uppercase tracking-[0.18em] text-black">{readyEyebrow}</p>
+            <h2 className="page-heading mt-2 text-xl text-black">{readyHeading}</h2>
             <p className="mt-3 page-prose">
-              Complete the volunteer application — we welcome people who want to strengthen governance dialogue and
-              research.
+              {readyBody}
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Button asChild href={c.applicationHref} variant="primary" className="!rounded-none">
                 {c.cta}
               </Button>
               <Button asChild href="/get-involved" variant="outline" className="!rounded-none">
-                Back to Get Involved
+                {backLabel}
               </Button>
             </div>
             <p className="mt-8 text-sm text-black">
-              Questions?{" "}
+              {questionsLabel}{" "}
               <a href={`mailto:${siteSettings.email.programs}`} className="font-medium text-accent-800 hover:underline">
                 {siteSettings.email.programs}
               </a>

@@ -170,7 +170,7 @@ export default async function AwplsPage() {
             className="rounded-none border border-border/80 bg-cover bg-center bg-no-repeat px-6 py-10 text-white sm:px-10"
             style={{
               backgroundImage:
-                `linear-gradient(to bottom, rgba(12,74,110,0.86), rgba(8,47,73,0.9)), url('${targetsBgImage}')`,
+                `linear-gradient(180deg, rgba(28,18,12,0.2) 0%, rgba(10,9,10,0.66) 55%, rgba(4,5,6,0.9) 100%), radial-gradient(circle at 72% 28%, rgba(195,122,73,0.24), transparent 44%), url('${targetsBgImage}')`,
             }}
           >
             <h2 className="font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">Targets</h2>
@@ -204,11 +204,11 @@ export default async function AwplsPage() {
         className="w-full border-t border-border/80 bg-cover bg-center bg-no-repeat py-10 sm:py-14 lg:py-16"
         style={{
           backgroundImage:
-            `linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0.93)), url('${deliverBgImage}')`,
+            `linear-gradient(180deg, rgba(24,16,12,0.24) 0%, rgba(10,9,10,0.68) 54%, rgba(5,5,6,0.9) 100%), radial-gradient(circle at 70% 24%, rgba(195,122,73,0.22), transparent 46%), url('${deliverBgImage}')`,
         }}
       >
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">What AWPLS 2026 Will Deliver</h2>
+          <h2 className="font-serif text-[1.9rem] font-semibold text-white sm:text-[2.3rem]">What AWPLS 2026 Will Deliver</h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
             {[
               "Establish a High-Level Advisory Council to strengthen women's leadership capacity in governance, economic policy, fiscal strategy, and industrial development.",
@@ -227,7 +227,7 @@ export default async function AwplsPage() {
               </li>
             ))}
           </ul>
-          <p className="mt-6 page-prose text-[1.02rem] font-medium leading-relaxed text-stone-800">
+          <p className="mt-6 page-prose text-[1.02rem] font-medium leading-relaxed text-white/90">
             Together, these initiatives ensure the Summit evolves into an institution that works with governments,
             continental bodies, political parties, research centres, the private sector, and development partners.
           </p>

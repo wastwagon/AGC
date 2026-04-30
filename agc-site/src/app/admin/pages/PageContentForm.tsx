@@ -604,6 +604,84 @@ export function PageContentForm({ item }: PageContentFormProps) {
             </div>
           </div>
         )}
+        {item.slug === "about" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">About page helper</p>
+            <p className="text-xs text-slate-500">
+              For hero, mission and team tabs use <strong>Admin → About settings</strong>. Use fields here for lead
+              paragraphs, delivery cards, and partnerships copy/images.
+            </p>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Lead paragraphs (one per line)</label>
+              <textarea
+                value={Array.isArray(parsedJson.leadParagraphs) ? parsedJson.leadParagraphs.filter((x) => typeof x === "string").join("\n") : ""}
+                onChange={(e) =>
+                  updateJsonObject({
+                    ...parsedJson,
+                    leadParagraphs: e.target.value
+                      .split("\n")
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  })
+                }
+                rows={4}
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
+              />
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Partnerships and network text</label>
+              <textarea
+                value={typeof parsedJson.partnershipsText === "string" ? parsedJson.partnershipsText : ""}
+                onChange={(e) => updateJsonField("partnershipsText", e.target.value)}
+                rows={4}
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+              />
+            </div>
+            <div className="rounded-md border border-border bg-white p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Delivery cards (4)</p>
+              <div className="space-y-3">
+                {Array.from({ length: 4 }).map((_, index) => (
+                  <div key={index} className="rounded-md border border-border p-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-wide text-slate-500">Card {index + 1}</p>
+                    <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                      <input
+                        type="text"
+                        value={getNestedString(["deliveryPoints", String(index), "title"])}
+                        onChange={(e) => updateNestedString(["deliveryPoints", String(index), "title"], e.target.value)}
+                        placeholder="Title"
+                        className="rounded-md border border-border bg-white px-3 py-2 text-sm"
+                      />
+                      <div className="flex gap-2">
+                        <input
+                          type="text"
+                          value={getNestedString(["deliveryPoints", String(index), "image"])}
+                          onChange={(e) => updateNestedString(["deliveryPoints", String(index), "image"], e.target.value)}
+                          placeholder="Card image (media-id/url/path)"
+                          className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setPickerTarget({ nested: ["deliveryPoints", String(index), "image"] })}
+                          className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                          title="Pick from Media Library"
+                        >
+                          <ImagePlus className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </div>
+                    <textarea
+                      value={getNestedString(["deliveryPoints", String(index), "body"])}
+                      onChange={(e) => updateNestedString(["deliveryPoints", String(index), "body"], e.target.value)}
+                      rows={3}
+                      placeholder="Card description"
+                      className="mt-2 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
         {item.slug === "our-work" && (
           <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
             <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Our Work main page helper</p>
@@ -1217,151 +1295,11 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
-            <div className="rounded-md border border-border bg-white p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Sub-page hero images</p>
-              <p className="mt-1 text-xs text-slate-500">
-                Backgrounds for <code className="text-[0.7rem]">/get-involved/join-us</code>,{" "}
-                <code className="text-[0.7rem]">/get-involved/partnership</code>, and{" "}
-                <code className="text-[0.7rem]">/get-involved/volunteer</code>. Use a media id (e.g.{" "}
-                <code className="text-[0.7rem]">media-…</code>) or <code className="text-[0.7rem]">/uploads/…</code>.
-              </p>
-              <div className="mt-3 grid gap-3 sm:grid-cols-3">
-                {(
-                  [
-                    { label: "Work with us (join-us)", path: ["joinUs", "heroImage"] as const },
-                    { label: "Partnership", path: ["partnership", "heroImage"] as const },
-                    { label: "Volunteer", path: ["volunteer", "heroImage"] as const },
-                  ] as const
-                ).map(({ label, path }) => (
-                  <div key={path.join(".")}>
-                    <label className="block text-xs font-medium text-slate-600">{label}</label>
-                    <div className="mt-1 flex gap-2">
-                      <input
-                        type="text"
-                        value={getNestedString([...path])}
-                        onChange={(e) => updateNestedString([...path], e.target.value)}
-                        placeholder="media-… or /uploads/…"
-                        className="w-full min-w-0 rounded-md border border-border bg-white px-2 py-1.5 text-xs text-slate-900"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setPickerTarget({ nested: [...path] })}
-                        className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-white px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100"
-                        title="Pick from Media Library"
-                      >
-                        <ImagePlus className="h-3.5 w-3.5" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="rounded-md border border-border bg-white p-3">
-              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Sub-page text</p>
-              <p className="mt-1 text-xs text-slate-500">
-                Copy for the three detail routes below. The main hub cards are edited in <strong>Opportunities</strong>{" "}
-                further down.
-              </p>
-              <div className="mt-3 space-y-2">
-                {(
-                  [
-                    { key: "joinUs", label: "Work with us (/get-involved/join-us)", ctaHrefKey: "contactHref" as const },
-                    { key: "partnership", label: "Partnership (/get-involved/partnership)", ctaHrefKey: "contactHref" as const },
-                    { key: "volunteer", label: "Volunteer (/get-involved/volunteer)", ctaHrefKey: "applicationHref" as const },
-                  ] as const
-                ).map(({ key, label, ctaHrefKey }) => (
-                  <details key={key} className="group rounded-md border border-border bg-slate-50/80 open:bg-white">
-                    <summary className="cursor-pointer list-none px-3 py-2 text-sm font-medium text-slate-800 [&::-webkit-details-marker]:hidden">
-                      <span className="inline-flex items-center gap-2">
-                        <ChevronRight className="h-4 w-4 shrink-0 text-slate-500 transition group-open:rotate-90" />
-                        {label}
-                      </span>
-                    </summary>
-                    <div className="space-y-2 border-t border-border px-3 pb-3 pt-2">
-                      <div className="grid gap-2 sm:grid-cols-2">
-                        <div>
-                          <label className="block text-xs font-medium text-slate-600">Hero title</label>
-                          <input
-                            type="text"
-                            value={getNestedString([key, "title"])}
-                            onChange={(e) => updateNestedString([key, "title"], e.target.value)}
-                            className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-slate-600">Hero subtitle</label>
-                          <input
-                            type="text"
-                            value={getNestedString([key, "subtitle"])}
-                            onChange={(e) => updateNestedString([key, "subtitle"], e.target.value)}
-                            className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
-                          />
-                        </div>
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-slate-600">Intro</label>
-                        <textarea
-                          value={getNestedString([key, "intro"])}
-                          onChange={(e) => updateNestedString([key, "intro"], e.target.value)}
-                          rows={3}
-                          className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-slate-600">Description</label>
-                        <textarea
-                          value={getNestedString([key, "description"])}
-                          onChange={(e) => updateNestedString([key, "description"], e.target.value)}
-                          rows={4}
-                          className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-xs font-medium text-slate-600">Bullet list (one line per item)</label>
-                        <textarea
-                          value={getNestedStringArray([key, "items"]).join("\n")}
-                          onChange={(e) =>
-                            updateNestedStringArray(
-                              [key, "items"],
-                              e.target.value
-                                .split("\n")
-                                .map((line) => line.trim())
-                                .filter(Boolean)
-                            )
-                          }
-                          rows={5}
-                          placeholder="One bullet per line"
-                          className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
-                        />
-                      </div>
-                      <div className="grid gap-2 sm:grid-cols-2">
-                        <div>
-                          <label className="block text-xs font-medium text-slate-600">Primary button label (CTA)</label>
-                          <input
-                            type="text"
-                            value={getNestedString([key, "cta"])}
-                            onChange={(e) => updateNestedString([key, "cta"], e.target.value)}
-                            className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
-                          />
-                        </div>
-                        <div>
-                          <label className="block text-xs font-medium text-slate-600">
-                            {ctaHrefKey === "applicationHref" ? "Apply / primary link (href)" : "Contact / primary link (href)"}
-                          </label>
-                          <input
-                            type="text"
-                            value={getNestedString([key, ctaHrefKey])}
-                            onChange={(e) => updateNestedString([key, ctaHrefKey], e.target.value)}
-                            placeholder="/contact or /applications"
-                            className="mt-1 w-full rounded-md border border-border bg-white px-2 py-1.5 text-xs"
-                          />
-                        </div>
-                      </div>
-                    </div>
-                  </details>
-                ))}
-              </div>
-            </div>
+            <p className="text-xs text-slate-500">
+              Detail pages (<code>/get-involved/join-us</code>, <code>/get-involved/partnership</code>,{" "}
+              <code>/get-involved/volunteer</code>) are now edited in their own entries under{" "}
+              <strong>Admin → Page Content</strong>.
+            </p>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="block text-xs font-medium text-slate-600">Get In Touch title</label>
@@ -1550,6 +1488,253 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   </div>
                 ))}
               </div>
+            </div>
+          </div>
+        )}
+        {item.slug === "get-involved-join-us" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Work with us page helper</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(
+                [
+                  ["sectionEyebrow", "Section eyebrow"],
+                  ["sectionHeading", "Section heading"],
+                  ["opportunitiesHeading", "Opportunities heading"],
+                  ["panelEyebrow", "Side panel eyebrow"],
+                  ["inquiryEyebrow", "Inquiry eyebrow"],
+                  ["inquiryHeading", "Inquiry heading"],
+                  ["quickContactEyebrow", "Quick contact eyebrow"],
+                  ["backLabel", "Back button label"],
+                  ["title", "Hero title"],
+                  ["subtitle", "Hero subtitle"],
+                  ["cta", "Primary CTA label"],
+                  ["contactHref", "Primary CTA href"],
+                ] as const
+              ).map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-slate-600">{label}</label>
+                  <input
+                    type="text"
+                    value={typeof parsedJson[key] === "string" ? String(parsedJson[key]) : ""}
+                    onChange={(e) => updateJsonField(key, e.target.value)}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(
+                [
+                  ["intro", "Intro"],
+                  ["description", "Description"],
+                  ["panelText", "Side panel text"],
+                  ["inquiryBody", "Inquiry body"],
+                  ["quickContactBody", "Quick contact body"],
+                ] as const
+              ).map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-slate-600">{label}</label>
+                  <textarea
+                    value={typeof parsedJson[key] === "string" ? String(parsedJson[key]) : ""}
+                    onChange={(e) => updateJsonField(key, e.target.value)}
+                    rows={3}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Opportunities list (one per line)</label>
+              <textarea
+                value={getNestedStringArray(["items"]).join("\n")}
+                onChange={(e) =>
+                  updateNestedStringArray(
+                    ["items"],
+                    e.target.value
+                      .split("\n")
+                      .map((line) => line.trim())
+                      .filter(Boolean)
+                  )
+                }
+                rows={5}
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
+              />
+            </div>
+          </div>
+        )}
+        {item.slug === "get-involved-partnership" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Partnership page helper</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(
+                [
+                  ["sectionEyebrow", "Section eyebrow"],
+                  ["sectionHeading", "Section heading"],
+                  ["areasHeading", "Areas heading"],
+                  ["footerEyebrow", "Footer eyebrow"],
+                  ["footerHeading", "Footer heading"],
+                  ["backLabel", "Back button label"],
+                  ["programsLabel", "Programs label"],
+                  ["title", "Hero title"],
+                  ["subtitle", "Hero subtitle"],
+                  ["cta", "Primary CTA label"],
+                  ["contactHref", "Primary CTA href"],
+                ] as const
+              ).map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-slate-600">{label}</label>
+                  <input
+                    type="text"
+                    value={typeof parsedJson[key] === "string" ? String(parsedJson[key]) : ""}
+                    onChange={(e) => updateJsonField(key, e.target.value)}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(
+                [
+                  ["intro", "Intro"],
+                  ["description", "Description"],
+                  ["footerBody", "Footer body"],
+                ] as const
+              ).map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-slate-600">{label}</label>
+                  <textarea
+                    value={typeof parsedJson[key] === "string" ? String(parsedJson[key]) : ""}
+                    onChange={(e) => updateJsonField(key, e.target.value)}
+                    rows={3}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="rounded-md border border-border bg-white p-3">
+              <div className="mb-2 flex items-center justify-between">
+                <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Partnership areas carousel cards</p>
+                <button
+                  type="button"
+                  onClick={() =>
+                    updateNestedArray(["cards"], (arr) => [...arr, { id: arr.length + 1, title: "", description: "", backgroundImage: "" }])
+                  }
+                  className="rounded-md border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                >
+                  + Add card
+                </button>
+              </div>
+              <div className="space-y-2">
+                {getNestedArray(["cards"]).map((card, idx) => (
+                  <div key={idx} className="rounded-md border border-border p-3">
+                    <div className="grid gap-2 sm:grid-cols-2">
+                      <input
+                        value={typeof card.title === "string" ? card.title : ""}
+                        onChange={(e) => updateNestedArray(["cards"], (arr) => arr.map((x, i) => (i === idx ? { ...x, title: e.target.value } : x)))}
+                        placeholder="Card title"
+                        className="rounded-md border border-border px-2 py-1.5 text-xs"
+                      />
+                      <div className="flex gap-2">
+                        <input
+                          value={typeof card.backgroundImage === "string" ? card.backgroundImage : ""}
+                          onChange={(e) =>
+                            updateNestedArray(["cards"], (arr) => arr.map((x, i) => (i === idx ? { ...x, backgroundImage: e.target.value } : x)))
+                          }
+                          placeholder="Background image"
+                          className="w-full rounded-md border border-border px-2 py-1.5 text-xs"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setPickerTarget({ nested: ["cards", String(idx), "backgroundImage"] })}
+                          className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-2 py-1.5 text-xs text-slate-700 hover:bg-slate-100"
+                          title="Pick from Media Library"
+                        >
+                          <ImagePlus className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                    <textarea
+                      value={typeof card.description === "string" ? card.description : ""}
+                      onChange={(e) =>
+                        updateNestedArray(["cards"], (arr) => arr.map((x, i) => (i === idx ? { ...x, description: e.target.value } : x)))
+                      }
+                      rows={3}
+                      placeholder="Card description"
+                      className="mt-2 w-full rounded-md border border-border px-2 py-1.5 text-xs"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        )}
+        {item.slug === "get-involved-volunteer" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Volunteer page helper</p>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(
+                [
+                  ["title", "Hero title"],
+                  ["subtitle", "Hero subtitle"],
+                  ["sectionEyebrow", "Section eyebrow"],
+                  ["sectionHeading", "Section heading"],
+                  ["impactEyebrow", "Impact card eyebrow"],
+                  ["impactText", "Impact card text"],
+                  ["waysHeading", "Ways heading"],
+                  ["readyEyebrow", "Ready eyebrow"],
+                  ["readyHeading", "Ready heading"],
+                  ["backLabel", "Back button label"],
+                  ["questionsLabel", "Questions label"],
+                  ["cta", "Primary CTA label"],
+                  ["applicationHref", "Primary CTA href"],
+                ] as const
+              ).map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-slate-600">{label}</label>
+                  <input
+                    type="text"
+                    value={typeof parsedJson[key] === "string" ? String(parsedJson[key]) : ""}
+                    onChange={(e) => updateJsonField(key, e.target.value)}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+            <div className="grid gap-2 sm:grid-cols-2">
+              {(
+                [
+                  ["intro", "Intro"],
+                  ["description", "Description"],
+                  ["readyBody", "Ready body"],
+                ] as const
+              ).map(([key, label]) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium text-slate-600">{label}</label>
+                  <textarea
+                    value={typeof parsedJson[key] === "string" ? String(parsedJson[key]) : ""}
+                    onChange={(e) => updateJsonField(key, e.target.value)}
+                    rows={3}
+                    className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                  />
+                </div>
+              ))}
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Ways to contribute list (one per line)</label>
+              <textarea
+                value={getNestedStringArray(["items"]).join("\n")}
+                onChange={(e) =>
+                  updateNestedStringArray(
+                    ["items"],
+                    e.target.value
+                      .split("\n")
+                      .map((line) => line.trim())
+                      .filter(Boolean)
+                  )
+                }
+                rows={5}
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
+              />
             </div>
           </div>
         )}
@@ -1746,6 +1931,147 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
               </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Highlights heading</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.highlightsHeading === "string" ? parsedJson.highlightsHeading : ""}
+                  onChange={(e) => updateJsonField("highlightsHeading", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Key focus heading</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.focusSectionHeading === "string" ? parsedJson.focusSectionHeading : ""}
+                  onChange={(e) => updateJsonField("focusSectionHeading", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">APPS 2026 heading</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.summit2026Heading === "string" ? parsedJson.summit2026Heading : ""}
+                  onChange={(e) => updateJsonField("summit2026Heading", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Expected outcomes heading</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.outcomesHeading === "string" ? parsedJson.outcomesHeading : ""}
+                  onChange={(e) => updateJsonField("outcomesHeading", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Structure heading</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.structureHeading === "string" ? parsedJson.structureHeading : ""}
+                  onChange={(e) => updateJsonField("structureHeading", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Sponsorship heading</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.sponsorshipHeading === "string" ? parsedJson.sponsorshipHeading : ""}
+                  onChange={(e) => updateJsonField("sponsorshipHeading", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+            <div className="rounded-md border border-border bg-white p-3">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">APP Summit Images</p>
+              <div className="grid gap-2 sm:grid-cols-2">
+                {[
+                  { label: "Key focus background image", key: "keyFocusBgImage" },
+                  { label: "Sponsorship background image", key: "sponsorshipBgImage" },
+                  ...Array.from({ length: 10 }).map((_, i) => ({
+                    label: `Highlights image ${i + 1}`,
+                    key: `highlightsImage${i + 1}`,
+                  })),
+                ].map((field) => (
+                  <div key={field.key}>
+                    <label className="block text-xs font-medium text-slate-600">{field.label}</label>
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        type="text"
+                        value={typeof parsedJson[field.key] === "string" ? String(parsedJson[field.key]) : ""}
+                        onChange={(e) => updateJsonField(field.key, e.target.value)}
+                        placeholder="media-... or /uploads/..."
+                        className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPickerTarget({ nested: [field.key] })}
+                        className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                        title="Pick from Media Library"
+                      >
+                        <ImagePlus className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div className="grid gap-3 sm:grid-cols-2">
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Key focus areas (one per line)</label>
+                <textarea
+                  value={Array.isArray(parsedJson.keyFocusAreas) ? parsedJson.keyFocusAreas.filter((x) => typeof x === "string").join("\n") : ""}
+                  onChange={(e) =>
+                    updateJsonObject({
+                      ...parsedJson,
+                      keyFocusAreas: e.target.value
+                        .split("\n")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                    })
+                  }
+                  rows={6}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-medium text-slate-600">Expected outcomes (one per line)</label>
+                <textarea
+                  value={Array.isArray(parsedJson.expectedOutcomes) ? parsedJson.expectedOutcomes.filter((x) => typeof x === "string").join("\n") : ""}
+                  onChange={(e) =>
+                    updateJsonObject({
+                      ...parsedJson,
+                      expectedOutcomes: e.target.value
+                        .split("\n")
+                        .map((s) => s.trim())
+                        .filter(Boolean),
+                    })
+                  }
+                  rows={6}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
+                />
+              </div>
+            </div>
+            <div>
+              <label className="block text-xs font-medium text-slate-600">Sponsorship points (one per line)</label>
+              <textarea
+                value={Array.isArray(parsedJson.sponsorshipPoints) ? parsedJson.sponsorshipPoints.filter((x) => typeof x === "string").join("\n") : ""}
+                onChange={(e) =>
+                  updateJsonObject({
+                    ...parsedJson,
+                    sponsorshipPoints: e.target.value
+                      .split("\n")
+                      .map((s) => s.trim())
+                      .filter(Boolean),
+                  })
+                }
+                rows={4}
+                className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-xs"
+              />
             </div>
             <div>
               <label className="block text-xs font-medium text-slate-600">About intro (APPS vision & aims)</label>

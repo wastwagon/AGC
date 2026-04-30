@@ -13,7 +13,7 @@ function EventGrid({ events, isPast }: { events: CmsEvent[]; isPast: boolean }) 
   }
 
   return (
-    <div className="grid grid-cols-1 gap-px bg-[#f1f4f9] sm:grid-cols-2 lg:grid-cols-4">
+    <div className="grid grid-cols-1 gap-px bg-[#f1f4f9] sm:grid-cols-2 lg:grid-cols-3">
       {events.map((event) => (
         <div key={event.id} className="min-w-0 bg-white p-6 sm:p-8 lg:p-10">
           <EventGridCell
