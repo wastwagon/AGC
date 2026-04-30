@@ -23,10 +23,19 @@ export default async function PartnershipPage() {
   const c = (merged as unknown as typeof getInvolvedContent).partnership;
   const heroImage = (await resolveImageUrl((c as Record<string, unknown>).heroImage as string | undefined)) || placeholderImages.getInvolved;
   
-  type PartnershipCard = { title: string; description: string };
-  const partnershipCards: PartnershipCard[] = Array.isArray((c as Record<string, unknown>).cards) && ((c as Record<string, unknown>).cards as PartnershipCard[]).length > 0
-    ? ((c as Record<string, unknown>).cards as PartnershipCard[])
-    : (getInvolvedContent.opportunities.find(opp => opp.id === "partnership")?.cards as PartnershipCard[] | undefined) ?? [];
+  type PartnershipCard = { id: number; title: string; description: string; backgroundImage?: string };
+  const rawCards =
+    Array.isArray((c as Record<string, unknown>).cards) && ((c as Record<string, unknown>).cards as PartnershipCard[]).length > 0
+      ? ((c as Record<string, unknown>).cards as PartnershipCard[])
+      : (getInvolvedContent.opportunities.find((opp) => opp.id === "partnership")?.cards as
+          | Array<{ title: string; description: string; backgroundImage?: string }>
+          | undefined) ?? [];
+  const partnershipCards: PartnershipCard[] = rawCards.map((card, index) => ({
+    id: typeof (card as { id?: unknown }).id === "number" ? Number((card as { id?: unknown }).id) : index + 1,
+    title: card.title,
+    description: card.description,
+    backgroundImage: card.backgroundImage,
+  }));
   
   return (
     <>

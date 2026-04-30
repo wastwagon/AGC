@@ -32,6 +32,17 @@ export default async function TermsOfServicePage() {
     .filter(Boolean)
     .join(" · ");
   const introVisual = heroSrc ?? placeholderImages.about;
+  const contentMap = content as Record<string, unknown>;
+  const getImageRef = (key: string) =>
+    typeof contentMap[key] === "string" ? String(contentMap[key]).trim() : "";
+  const [sectionVisualAResolved, sectionVisualBResolved, sectionVisualCResolved] = await Promise.all([
+    resolveImageUrl(getImageRef("sectionVisualA") || getImageRef("sectionImageA") || content.sectionImage?.trim() || undefined),
+    resolveImageUrl(getImageRef("sectionVisualB") || getImageRef("sectionImageB") || undefined),
+    resolveImageUrl(getImageRef("sectionVisualC") || getImageRef("sectionImageC") || undefined),
+  ]);
+  const sectionVisualA = cardImageUrlOrNull(sectionVisualAResolved) ?? placeholderImages.events;
+  const sectionVisualB = cardImageUrlOrNull(sectionVisualBResolved) ?? placeholderImages.news;
+  const sectionVisualC = cardImageUrlOrNull(sectionVisualCResolved) ?? placeholderImages.about;
   const introSection = content.sections.find((section) => section.title.trim().toLowerCase() === "introduction");
   const introSectionText = "content" in (introSection ?? {}) ? introSection?.content?.trim() : "";
 
@@ -74,10 +85,44 @@ export default async function TermsOfServicePage() {
             </div>
           </div>
 
+          <div className="mt-8 grid gap-4 md:grid-cols-3">
+            {[
+              {
+                title: "Fair use",
+                body: "Clear expectations for using our website content, resources, and services responsibly.",
+                image: sectionVisualA,
+              },
+              {
+                title: "User responsibilities",
+                body: "Guidelines to help maintain safe, respectful, and lawful participation on the site.",
+                image: sectionVisualB,
+              },
+              {
+                title: "Legal clarity",
+                body: "Transparent terms that define rights, limitations, and important legal boundaries.",
+                image: sectionVisualC,
+              },
+            ].map((item) => (
+              <article key={item.title} className="relative min-h-[210px] overflow-hidden border border-border/80 bg-slate-900">
+                <div
+                  className="absolute inset-0 bg-cover bg-center"
+                  style={{
+                    backgroundImage: `linear-gradient(to bottom, rgba(2,6,23,0.35), rgba(2,6,23,0.78)), url('${item.image}')`,
+                  }}
+                />
+                <div className="relative z-10 flex h-full flex-col justify-end p-5 text-white">
+                  <p className="text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-white/75">Terms of service</p>
+                  <h3 className="mt-2 font-serif text-xl font-semibold">{item.title}</h3>
+                  <p className="mt-2 text-sm font-medium leading-relaxed text-white/95">{item.body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
           <div className="mt-14 grid gap-8 lg:grid-cols-2">
             {content.sections
               .filter((section) => section.title.trim().toLowerCase() !== "introduction")
-              .map((section) => {
+              .map((section, index) => {
               const subs =
                 "subsections" in section && Array.isArray(section.subsections) ? section.subsections : [];
               const lead = "content" in section ? section.content?.trim() ?? "" : "";
@@ -92,12 +137,23 @@ export default async function TermsOfServicePage() {
                   key={section.title}
                   className={
                     spanFull
-                      ? "page-card p-6 sm:p-8 lg:col-span-2"
+                      ? "page-card relative overflow-hidden border-border/90 p-6 sm:p-8 lg:col-span-2"
                       : isCompact
-                        ? "page-card p-6 sm:p-7"
-                        : "page-card p-6 sm:p-8"
+                        ? "page-card relative overflow-hidden border-border/90 p-6 sm:p-7"
+                        : "page-card relative overflow-hidden border-border/90 p-6 sm:p-8"
                   }
                 >
+                  <div
+                    className="pointer-events-none absolute inset-x-0 top-0 h-1.5"
+                    style={{
+                      background:
+                        index % 3 === 0
+                          ? "linear-gradient(to right, rgb(14 116 144), rgb(59 130 246))"
+                          : index % 3 === 1
+                            ? "linear-gradient(to right, rgb(22 163 74), rgb(14 116 144))"
+                            : "linear-gradient(to right, rgb(180 83 9), rgb(217 119 6))",
+                    }}
+                  />
                   <h2 className="page-heading text-xl text-black sm:text-2xl">{section.title}</h2>
                   {lead ? <p className="mt-4 page-prose text-[0.98rem]">{section.content}</p> : null}
 
