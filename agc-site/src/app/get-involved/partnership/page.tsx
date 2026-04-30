@@ -18,10 +18,9 @@ export const metadata = {
 export default async function PartnershipPage() {
   const partnershipFallback = {
     ...getInvolvedContent.partnership,
-    cards:
-      getInvolvedContent.opportunities.find((opp) => opp.id === "partnership")?.cards ?? [],
+    cards: getInvolvedContent.partnership.cards ?? [],
     sectionEyebrow: "Collaboration",
-    sectionHeading: "Partnership",
+    sectionHeading: "Partnerships",
     areasHeading: "Partnership areas",
     footerEyebrow: "Partners",
     footerHeading: "Start a conversation",

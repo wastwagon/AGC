@@ -23,11 +23,27 @@ export default async function GetInvolvedPage() {
   const content = merged as unknown as typeof getInvolvedContent & { heroImage?: string };
   const heroImage = (await resolveImageUrl(content.heroImage)) || placeholderImages.getInvolved;
   const { bottomSection } = content;
+  const opportunities = content.opportunities.filter((opp) => opp.id !== "partnership");
 
-  const firstOpportunity = content.opportunities[0];
+  const firstOpportunity = opportunities[0];
+  if (!firstOpportunity) {
+    return (
+      <>
+        <PageHero
+          title={(content.title as string) ?? getInvolvedContent.title}
+          subtitle={(content.subtitle as string) ?? getInvolvedContent.subtitle}
+          image={heroImage}
+          imageAlt="Get Involved"
+          breadcrumbs={[
+            { label: siteSettings.chrome.breadcrumbs.home, href: "/" },
+            { label: siteSettings.chrome.breadcrumbs.getInvolved },
+          ]}
+        />
+      </>
+    );
+  }
   const firstHrefTrim = typeof firstOpportunity?.href === "string" ? firstOpportunity.href.trim() : "";
-  const firstContactDefault =
-    firstOpportunity?.id === "partnership" || firstOpportunity?.id === "join-us";
+  const firstContactDefault = firstOpportunity?.id === "join-us";
   const volunteerCardHref =
     firstHrefTrim !== ""
       ? firstHrefTrim
@@ -87,10 +103,10 @@ export default async function GetInvolvedPage() {
             </Link>
 
             <div className="flex flex-col gap-6 lg:gap-8">
-              {content.opportunities.slice(1).map((opp, i) => {
+              {opportunities.slice(1).map((opp, i) => {
                 const Icon = icons[i + 1] ?? Briefcase;
                 const hrefTrim = typeof opp.href === "string" ? opp.href.trim() : "";
-                const contactDefault = opp.id === "partnership" || opp.id === "join-us";
+                const contactDefault = opp.id === "join-us";
                 const cardHref =
                   hrefTrim !== ""
                     ? hrefTrim
