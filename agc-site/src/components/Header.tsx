@@ -71,7 +71,7 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                 <ul className="inline-flex max-w-[min(100%,52rem)] flex-nowrap items-center justify-end gap-x-0.5 overflow-visible xl:max-w-[min(100%,60rem)] xl:gap-x-1">
                   {mainNav.map((item) => {
                     const linkClass =
-                      "relative flex items-center gap-0.5 whitespace-nowrap px-1.5 py-2.5 text-[0.8125rem] font-medium uppercase tracking-wide text-[#1a365d] transition-colors hover:text-accent-600 xl:px-2 xl:text-sm [&:focus-visible]:outline [&:focus-visible]:outline-2 [&:focus-visible]:outline-offset-2 [&:focus-visible]:outline-accent-500";
+                      "relative flex items-center gap-0.5 whitespace-nowrap px-1.5 py-2.5 text-[0.8125rem] font-medium uppercase tracking-wide text-black transition-colors hover:text-black xl:px-2 xl:text-sm [&:focus-visible]:outline [&:focus-visible]:outline-2 [&:focus-visible]:outline-offset-2 [&:focus-visible]:outline-accent-500";
                     const itemActive =
                       isActiveRoute(pathname, item.href) ||
                       Boolean(item.subLinks?.some((sub) => isActiveRoute(pathname, sub.href)));
@@ -88,7 +88,7 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                         >
                           <Link
                             href={item.href}
-                            className={`${linkClass} ${itemActive ? "text-accent-700" : ""}`}
+                            className={`${linkClass} ${itemActive ? "text-black" : ""}`}
                             aria-haspopup="true"
                             aria-expanded="false"
                           >
@@ -122,7 +122,7 @@ export function Header({ siteSettings, brandLogoSrc }: { siteSettings: SiteSetti
                     }
                     return (
                       <li key={`${item.href}-${item.label}`} className="group shrink-0">
-                        <Link href={item.href} className={`${linkClass} ${itemActive ? "text-accent-700" : ""}`}>
+                        <Link href={item.href} className={`${linkClass} ${itemActive ? "text-black" : ""}`}>
                           {bar}
                           {item.label}
                         </Link>

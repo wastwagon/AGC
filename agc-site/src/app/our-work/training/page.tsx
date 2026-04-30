@@ -6,13 +6,20 @@ import { cardImageUrlOrNull } from "@/lib/image-delivery";
 import { resolveImageUrl } from "@/lib/media";
 import { Button } from "@/components/Button";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
+import { ProgramsCarousel } from "@/components/ProgramsCarousel";
+import { Section } from "@/components/Section";
 
 export const metadata = {
   title: "Capacity Building",
   description: "Capacity building and learning programmes from the Africa Governance Centre.",
 };
 
-type TrainingWorkMerged = typeof workContent.training & { heroImage?: string };
+type TrainingItem = {
+  title: string;
+  description: string;
+};
+
+type TrainingWorkMerged = typeof workContent.training & { heroImage?: string; cards?: TrainingItem[] };
 
 export default async function TrainingWorkPage() {
   const [merged, bc] = await Promise.all([
@@ -26,6 +33,10 @@ export default async function TrainingWorkPage() {
   const displayTitle = (content.title || "").trim().toLowerCase() === "training" ? "Capacity Building" : content.title;
   const heroSrc =
     cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
+  const training =
+    Array.isArray(content.cards) && content.cards.length > 0
+      ? content.cards
+      : ([] as TrainingItem[]);
 
   return (
     <>
@@ -43,8 +54,8 @@ export default async function TrainingWorkPage() {
       />
 
       <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
-        <section className="bg-white py-16 sm:py-20 lg:py-[80px] xl:py-[120px]">
-          <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 lg:px-8">
+        <Section className="bg-white">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="space-y-8">
               <p className="page-prose max-w-none text-black">
                 AGC delivers training and capacity-building initiatives designed to equip leaders, practitioners,
@@ -54,30 +65,19 @@ export default async function TrainingWorkPage() {
                 strengthen their contributions to governance processes.
               </p>
 
-              <ol className="space-y-6">
-                <li className="page-card p-5"><h3 className="font-serif text-xl font-semibold text-black">1. Leadership and governance development</h3><p className="page-prose mt-2 text-black">We deliver training programmes designed to strengthen leadership capacity and deepen understanding of governance systems, public policy, and institutional processes. These programmes are tailored to both emerging and experienced leaders across sectors.</p></li>
-                <li className="page-card p-5"><h3 className="font-serif text-xl font-semibold text-black">2. Policy and research skills training</h3><p className="page-prose mt-2 text-black">AGC equips participants with practical skills in policy analysis, research methodologies, and evidence-based decision-making. Our training emphasises applied learning, enabling participants to engage effectively with real-world governance challenges.</p></li>
-                <li className="page-card p-5"><h3 className="font-serif text-xl font-semibold text-black">3. Workshops and executive short courses</h3><p className="page-prose mt-2 text-black">We organise targeted workshops and short courses focused on specific governance and policy issues. These sessions provide intensive learning opportunities for professionals, practitioners, and public sector actors seeking to deepen their expertise.</p></li>
-                <li className="page-card p-5"><h3 className="font-serif text-xl font-semibold text-black">4. Mentorship and professional development</h3><p className="page-prose mt-2 text-black">Through structured mentorship and coaching programmes, we support the growth of young leaders and practitioners in governance and public policy. Participants benefit from guided learning, practical exposure, and opportunities to contribute to research and policy work.</p></li>
-              </ol>
-
-              <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-                <div className="flex min-h-[180px] items-center justify-center border border-border bg-white text-sm text-black">Image placeholder</div>
-                <div className="flex min-h-[180px] items-center justify-center border border-border bg-white text-sm text-black">Image placeholder</div>
-                <div className="flex min-h-[180px] items-center justify-center border border-border bg-white text-sm text-black">Image placeholder</div>
-              </div>
+              <ProgramsCarousel programs={training} />
             </div>
 
             <div className="mt-16 flex flex-wrap gap-4">
-              <Button asChild href="/our-work" variant="outline" className="rounded-none">
+              <Button asChild href="/our-work" variant="outline">
                 Back to Our Work
               </Button>
-              <Button asChild href="/events" variant="primary" className="rounded-none">
+              <Button asChild href="/events" variant="primary">
                 View Events
               </Button>
             </div>
           </div>
-        </section>
+        </Section>
       </HomeScrollReveal>
     </>
   );

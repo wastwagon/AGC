@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { privacyPolicy } from "@/data/legal";
+import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { getMergedPageContent } from "@/lib/page-content";
@@ -31,6 +32,7 @@ export default async function PrivacyPolicyPage() {
   const heroSubtitle = [content.subtitle?.trim(), `Last updated · ${content.lastUpdated}`]
     .filter(Boolean)
     .join(" · ");
+  const introVisual = heroSrc ?? placeholderImages.about;
   const introSection = content.sections.find((section) => section.title.trim().toLowerCase() === "introduction");
   const introSectionText = "content" in (introSection ?? {}) ? introSection?.content?.trim() : "";
 
@@ -51,11 +53,28 @@ export default async function PrivacyPolicyPage() {
       <HomeScrollReveal variant="fadeUp" start="top 90%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
-            This policy describes how we handle personal data when you use our website, register for events, or contact
-            us. For questions, use the details at the end of this page.{" "}
-            {introSectionText}
-          </p>
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+            <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
+              This policy describes how we handle personal data when you use our website, register for events, or contact
+              us. For questions, use the details at the end of this page.{" "}
+              {introSectionText}
+            </p>
+            <div
+              className="relative min-h-[220px] overflow-hidden border border-border/80 bg-black"
+              style={{
+                backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.28), rgba(15,23,42,0.62)), url('${introVisual}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <div className="absolute inset-0 flex items-end p-5">
+                <div className="bg-white/90 p-3 backdrop-blur-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent-800">Privacy</p>
+                  <p className="mt-1 text-sm text-black">How we collect, use, and protect your information.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="mt-14 grid gap-8 lg:grid-cols-2">
             {content.sections

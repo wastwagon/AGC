@@ -345,6 +345,12 @@ export const getInvolvedContent = {
       title: "Partnership",
       description: "Collaborate with us on research projects, events, or policy initiatives.",
       items: ["Research collaboration", "Joint events", "Policy advocacy", "Capacity building"],
+      cards: [
+        { id: 1, title: "Strategic institutional partnerships", description: "AGC collaborates with regional and continental bodies such as ECOWAS and the African Union, as well as international partners including the European Union and UNDP. These partnerships enable us to contribute to high-level policy processes, support regional governance initiatives, and align our work with broader development priorities across Africa." },
+        { id: 2, title: "Multi-stakeholder collaboration platforms", description: "We create and sustain platforms that bring together governments, political actors, civil society, academia, and the private sector to engage on governance and development challenges. These platforms foster dialogue, shared learning, and coordinated responses to complex issues." },
+        { id: 3, title: "Academic and research collaborations", description: "AGC works with universities, research institutions, and scholars to strengthen knowledge production and promote evidence-based policy engagement. These collaborations support joint research, publications, and the exchange of ideas across disciplines and regions." },
+        { id: 4, title: "Diplomatic and development engagement", description: "We engage with the diplomatic community and development partners to facilitate policy dialogue, provide insights on governance trends, and support collaborative initiatives. This engagement helps bridge national, regional, and global perspectives on governance and development." },
+      ],
       cta: "Partner With Us",
       href: "/contact",
       pageHref: "/get-involved/partnership",

@@ -120,28 +120,41 @@ export function NewsCard({
   }
 
   if (variant === "listing") {
+    const category =
+      getNewsCategorySlugs(item)[0]?.replace(/-/g, " ").toUpperCase() || "NEWS";
     const dateListing = formatNewsDateListing(date);
     return (
-      <article className="group flex flex-col">
+      <article className="group flex flex-col bg-white">
         <Link href={linkHref} className="flex flex-col">
-          <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none bg-stone-100 ring-1 ring-border/80">
+          <div className="relative aspect-[4/3] w-full overflow-hidden rounded-none bg-stone-100">
             <Image
               src={imageUrl}
               alt={item.title}
               fill
               unoptimized={preferUnoptimizedImage(imageUrl)}
-              className="object-cover transition-opacity duration-200 group-hover:opacity-95"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
             />
           </div>
+          <div className="pt-5">
+            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">
+              {category}
+            </p>
+            <h2 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black hover:underline">
+              {item.title}
+            </h2>
+          </div>
           {dateListing ? (
-            <p className="mt-3 font-sans text-[11px] font-semibold uppercase tracking-[0.12em] text-accent-600">
+            <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-black">
               {dateListing}
             </p>
           ) : null}
-          <h2 className="mt-2 font-sans text-lg font-semibold leading-snug text-accent-800 transition-colors hover:text-black sm:text-xl group-hover:underline group-hover:decoration-black group-hover:underline-offset-2">
-            {item.title}
-          </h2>
+          {excerpt ? (
+            <p className="mt-3 text-base font-medium leading-relaxed text-black hover:underline">
+              {excerpt}
+              {excerpt.length >= 150 ? "..." : ""}
+            </p>
+          ) : null}
         </Link>
       </article>
     );

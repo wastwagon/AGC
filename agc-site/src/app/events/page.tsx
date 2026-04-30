@@ -77,6 +77,9 @@ export default async function EventsPage() {
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="max-w-none space-y-4">
             <p className="text-sm font-medium text-accent-800">Convenings</p>
+            <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+              Events
+            </h2>
             <EventsPageIntro intro={introBody} />
             {eventsDraftsOnly && <CmsDraftNotice entityLabel="events" adminHref="/admin/events" />}
           </div>

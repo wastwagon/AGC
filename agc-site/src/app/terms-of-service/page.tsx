@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { termsOfService } from "@/data/legal";
+import { placeholderImages } from "@/data/images";
 import { PageHero } from "@/components/PageHero";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { getMergedPageContent } from "@/lib/page-content";
@@ -30,6 +31,7 @@ export default async function TermsOfServicePage() {
   const heroSubtitle = [content.subtitle?.trim(), `Last updated · ${content.lastUpdated}`]
     .filter(Boolean)
     .join(" · ");
+  const introVisual = heroSrc ?? placeholderImages.about;
   const introSection = content.sections.find((section) => section.title.trim().toLowerCase() === "introduction");
   const introSectionText = "content" in (introSection ?? {}) ? introSection?.content?.trim() : "";
 
@@ -50,10 +52,27 @@ export default async function TermsOfServicePage() {
       <HomeScrollReveal variant="fadeUp" start="top 90%" className="block w-full">
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
-            By using this site you agree to these terms. They govern access to our content, events registration, and
-            acceptable use of our services. {introSectionText}
-          </p>
+          <div className="grid gap-8 lg:grid-cols-[minmax(0,1fr)_340px]">
+            <p className="border-l-[3px] border-accent-600 py-2 pl-5 text-sm page-prose leading-relaxed">
+              By using this site you agree to these terms. They govern access to our content, events registration, and
+              acceptable use of our services. {introSectionText}
+            </p>
+            <div
+              className="relative min-h-[220px] overflow-hidden border border-border/80 bg-black"
+              style={{
+                backgroundImage: `linear-gradient(to bottom, rgba(15,23,42,0.28), rgba(15,23,42,0.62)), url('${introVisual}')`,
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+              }}
+            >
+              <div className="absolute inset-0 flex items-end p-5">
+                <div className="bg-white/90 p-3 backdrop-blur-sm">
+                  <p className="text-xs font-semibold uppercase tracking-[0.12em] text-accent-800">Terms</p>
+                  <p className="mt-1 text-sm text-black">Clear rules for using our website, events, and services.</p>
+                </div>
+              </div>
+            </div>
+          </div>
 
           <div className="mt-14 grid gap-8 lg:grid-cols-2">
             {content.sections

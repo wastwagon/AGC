@@ -60,7 +60,8 @@ export const appSummitContent = {
     cta: "Register Now",
     href: "/contact",
   },
-  contactNote: "For summit inquiries, partnerships, or registration, please contact our Programs Division.",
+  contactNote:
+    "For summit inquiries, partnerships, or registration, please contact our Programs Division.",
   agenda: {
     title: "APPS 2025 AGENDA",
     subtitle: "Schedule",
@@ -70,26 +71,84 @@ export const appSummitContent = {
         date: "Tuesday, August 12, 2025",
         sessions: [
           { time: "9:00am – 10:30am", title: "Official Opening Ceremony" },
-          { time: "10:45am – 12:00pm", title: "Presidential Panel", topic: "The Role of Political Parties in Shaping Development and Economic Transformation in Africa." },
-          { time: "12:00pm – 1:15pm", title: "Main Plenary", topic: "Political Parties and National Development Planning." },
+          {
+            time: "10:45am – 12:00pm",
+            title: "Presidential Panel",
+            topic:
+              "The Role of Political Parties in Shaping Development and Economic Transformation in Africa.",
+          },
+          {
+            time: "12:00pm – 1:15pm",
+            title: "Main Plenary",
+            topic: "Political Parties and National Development Planning.",
+          },
           { time: "1:15pm – 2:15pm", title: "Lunch Break" },
-          { time: "2:15pm – 3:30pm", title: "Main Plenary", topic: "Political Party Development and Policy Making: Building Partnerships with Think Tanks and Academia." },
-          { time: "3:30pm – 5:00pm", title: "Parallel Sessions", topics: ["Session 5A: Inaugural African Youth in Politics Forum.", "Session 5B: High-Level Forum – Electoral Systems, Inclusion, and Institutional Legitimacy.", "Session 5C: AGC and Political Parties Leadership Roundtable."] },
-          { time: "5:00pm – 5:30pm", title: "Reflective & Summative Remarks", topic: "By H.E. Bola Tinubu, Chaired by H.E. Azali Assoumani." },
-          { time: "7:00pm – 9:00pm", title: "Evening State Reception", topic: "By Invitation Only." },
+          {
+            time: "2:15pm – 3:30pm",
+            title: "Main Plenary",
+            topic:
+              "Political Party Development and Policy Making: Building Partnerships with Think Tanks and Academia.",
+          },
+          {
+            time: "3:30pm – 5:00pm",
+            title: "Parallel Sessions",
+            topics: [
+              "Session 5A: Inaugural African Youth in Politics Forum.",
+              "Session 5B: High-Level Forum – Electoral Systems, Inclusion, and Institutional Legitimacy.",
+              "Session 5C: AGC and Political Parties Leadership Roundtable.",
+            ],
+          },
+          {
+            time: "5:00pm – 5:30pm",
+            title: "Reflective & Summative Remarks",
+            topic: "By H.E. Bola Tinubu, Chaired by H.E. Azali Assoumani.",
+          },
+          {
+            time: "7:00pm – 9:00pm",
+            title: "Evening State Reception",
+            topic: "By Invitation Only.",
+          },
         ],
       },
       {
         day: 2,
         date: "Wednesday, August 13, 2025",
         sessions: [
-          { time: "9:00am – 10:30am", title: "Keynote Plenary", topic: "Political Parties as Catalysts of AfCFTA Implementation: Advancing Industrialization and Infrastructure for Economic Transformation." },
-          { time: "10:30am – 12:15pm", title: "Reform Co-Creation Labs", topic: "Structuring the Political Reform Agenda for Political Renewal." },
-          { time: "12:30pm – 1:15pm", title: "The Compact Session", topic: "Consolidating Reform Commitments for the APPS Implementation Framework." },
+          {
+            time: "9:00am – 10:30am",
+            title: "Keynote Plenary",
+            topic:
+              "Political Parties as Catalysts of AfCFTA Implementation: Advancing Industrialization and Infrastructure for Economic Transformation.",
+          },
+          {
+            time: "10:30am – 12:15pm",
+            title: "Reform Co-Creation Labs",
+            topic:
+              "Structuring the Political Reform Agenda for Political Renewal.",
+          },
+          {
+            time: "12:30pm – 1:15pm",
+            title: "The Compact Session",
+            topic:
+              "Consolidating Reform Commitments for the APPS Implementation Framework.",
+          },
           { time: "1:15pm – 2:15pm", title: "Lunch Break" },
-          { time: "2:15pm – 3:15pm", title: "Main Plenary: Global Lessons", topic: "Global Lessons in Political Reform." },
-          { time: "3:15pm – 5:15pm", title: "Political Innovation Showcase", topic: "Models That Move Politics." },
-          { time: "5:15pm – 6:00pm", title: "Reflective & Summative Remarks", topic: "By H.E. Felix-Antoine T. Tshisekedi, Chaired by H.E. Évariste Ndayishimiye." },
+          {
+            time: "2:15pm – 3:15pm",
+            title: "Main Plenary: Global Lessons",
+            topic: "Global Lessons in Political Reform.",
+          },
+          {
+            time: "3:15pm – 5:15pm",
+            title: "Political Innovation Showcase",
+            topic: "Models That Move Politics.",
+          },
+          {
+            time: "5:15pm – 6:00pm",
+            title: "Reflective & Summative Remarks",
+            topic:
+              "By H.E. Felix-Antoine T. Tshisekedi, Chaired by H.E. Évariste Ndayishimiye.",
+          },
           { time: "7:00pm – 10:00pm", title: "Official Networking Dinner" },
         ],
       },
@@ -97,13 +156,43 @@ export const appSummitContent = {
         day: 3,
         date: "Thursday, August 14, 2025",
         sessions: [
-          { time: "9:00am – 9:15am", title: "Opening Segment", topic: "Day Three Framing Brief by Rt. Hon. Alban K. S. Bagbin (Speaker of Parliament, Ghana)." },
-          { time: "9:15am – 10:45am", title: "Futures Forum", topic: "Reimagining the Political Party of Tomorrow." },
-          { time: "10:45am – 12:00pm", title: "High-Level Governance Forum", topic: "Democracy Under Pressure – Safeguarding Constitutional Order and Political Stability." },
-          { time: "12:00pm – 1:00pm", title: "Presentation and Adoption", topic: "Presentation and Adoption of the APPS Framework." },
-          { time: "1:00pm – 2:00pm", title: "Closing Ceremony", topic: "Summit Declaration and Closing Remarks." },
-          { time: "2:00pm – 3:00pm", title: "Summit Closing Lunch Reception", topic: "Networking." },
-          { time: "3:00pm – 6:30pm", title: "Guided Visit", topic: "Kwame Nkrumah Memorial Park." },
+          {
+            time: "9:00am – 9:15am",
+            title: "Opening Segment",
+            topic:
+              "Day Three Framing Brief by Rt. Hon. Alban K. S. Bagbin (Speaker of Parliament, Ghana).",
+          },
+          {
+            time: "9:15am – 10:45am",
+            title: "Futures Forum",
+            topic: "Reimagining the Political Party of Tomorrow.",
+          },
+          {
+            time: "10:45am – 12:00pm",
+            title: "High-Level Governance Forum",
+            topic:
+              "Democracy Under Pressure – Safeguarding Constitutional Order and Political Stability.",
+          },
+          {
+            time: "12:00pm – 1:00pm",
+            title: "Presentation and Adoption",
+            topic: "Presentation and Adoption of the APPS Framework.",
+          },
+          {
+            time: "1:00pm – 2:00pm",
+            title: "Closing Ceremony",
+            topic: "Summit Declaration and Closing Remarks.",
+          },
+          {
+            time: "2:00pm – 3:00pm",
+            title: "Summit Closing Lunch Reception",
+            topic: "Networking.",
+          },
+          {
+            time: "3:00pm – 6:30pm",
+            title: "Guided Visit",
+            topic: "Kwame Nkrumah Memorial Park.",
+          },
         ],
       },
     ],

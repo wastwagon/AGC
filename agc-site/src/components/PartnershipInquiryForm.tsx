@@ -48,7 +48,7 @@ export function PartnershipInquiryForm({ programsEmail }: PartnershipInquiryForm
   const labelClass = "block text-sm font-medium text-black";
 
   return (
-    <div className="page-card !rounded-none p-8 sm:p-10">
+    <div className="mx-auto w-full max-w-3xl page-card !rounded-none p-6 sm:p-8">
       <h2 className="page-heading text-xl text-black">Partnership inquiry form</h2>
       <p className="mt-2 text-sm text-black">
         Tell us about your organisation and how you&apos;d like to collaborate. We store submissions securely and reply from{" "}
@@ -58,20 +58,20 @@ export function PartnershipInquiryForm({ programsEmail }: PartnershipInquiryForm
         .
       </p>
 
-      <form onSubmit={handleSubmit} className="relative mt-8 space-y-6">
+      <form onSubmit={handleSubmit} className="relative mt-6 space-y-5">
         <div className="absolute -left-[9999px] opacity-0" aria-hidden="true">
           <label htmlFor="website">Website</label>
           <input type="text" id="website" name="website" tabIndex={-1} autoComplete="off" />
         </div>
 
-        <div className="grid gap-6 sm:grid-cols-2">
-          <div className="sm:col-span-2">
+        <div className="grid gap-5 sm:grid-cols-2">
+          <div>
             <label htmlFor="pi-name" className={labelClass}>
               Name <span className="text-accent-800">*</span>
             </label>
             <input id="pi-name" name="name" required className={inputClass} autoComplete="name" />
           </div>
-          <div className="sm:col-span-2">
+          <div>
             <label htmlFor="pi-email" className={labelClass}>
               Email <span className="text-accent-800">*</span>
             </label>

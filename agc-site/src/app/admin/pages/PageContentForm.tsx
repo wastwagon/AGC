@@ -246,6 +246,8 @@ export function PageContentForm({ item }: PageContentFormProps) {
   const summitDays = getNestedArray(["agenda", "days"]);
   const ourWorkAdvisoryCards = getNestedArray(["advisory", "cards"]);
   const ourWorkPrograms = getNestedArray(["programs"]);
+  const ourWorkProjects = item.slug === "our-work-projects" ? getNestedArray(["cards"]) : [];
+  const advisoryItems = item.slug === "our-work-advisory" ? getNestedArray(["cards"]) : [];
   const getInvolvedOpportunities = getNestedArray(["opportunities"]);
   const getInvolvedEvents = getNestedArray(["bottomSection", "upcomingEvents", "events"]);
 
@@ -273,12 +275,69 @@ export function PageContentForm({ item }: PageContentFormProps) {
     });
   }
 
+  /* Projects list (our-work-projects) — stored as top-level `cards` */
+  function updateProject(index: number, key: string, value: string) {
+    updateNestedArray(["cards"], (arr) => arr.map((project, i) => (i === index ? { ...project, [key]: value } : project)));
+  }
+
+  function addProject() {
+    updateNestedArray(["cards"], (arr) => [...arr, { title: "", description: "" }]);
+  }
+
+  function removeProject(index: number) {
+    updateNestedArray(["cards"], (arr) => arr.filter((_, i) => i !== index));
+  }
+
+  function moveProject(index: number, direction: -1 | 1) {
+    updateNestedArray(["cards"], (arr) => {
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= arr.length) return arr;
+      const copy = [...arr];
+      [copy[index], copy[nextIndex]] = [copy[nextIndex], copy[index]];
+      return copy;
+    });
+  }
+
+  /* Advisory page items (our-work-advisory) — stored as top-level `cards` on that slug */
+  function updateAdvisoryItem(index: number, key: string, value: string) {
+    updateNestedArray(["cards"], (arr) => arr.map((c, i) => (i === index ? { ...c, [key]: value } : c)));
+  }
+
+  function addAdvisoryItem() {
+    updateNestedArray(["cards"], (arr) => [...arr, { title: "", description: "" }]);
+  }
+
+  function removeAdvisoryItem(index: number) {
+    updateNestedArray(["cards"], (arr) => arr.filter((_, i) => i !== index));
+  }
+
+  function moveAdvisoryItem(index: number, direction: -1 | 1) {
+    updateNestedArray(["cards"], (arr) => {
+      const nextIndex = index + direction;
+      if (nextIndex < 0 || nextIndex >= arr.length) return arr;
+      const copy = [...arr];
+      [copy[index], copy[nextIndex]] = [copy[nextIndex], copy[index]];
+      return copy;
+    });
+  }
+
   function onSelectMedia(media: MediaItem) {
     if (!pickerTarget) return;
     if (pickerTarget === "heroImage" || pickerTarget === "sectionImage") {
       updateJsonField(pickerTarget, media.id);
     } else {
-      updateNestedString(pickerTarget.nested, media.id);
+      const path = pickerTarget.nested;
+      // Support selecting into array items like ["programs", "0", "backgroundImage"]
+      if (path.length >= 3 && /^[0-9]+$/.test(path[1])) {
+        const arrayKey = path[0];
+        const idx = Number(path[1]);
+        const leaf = path.slice(2).join(".");
+        updateNestedArray([arrayKey], (arr) =>
+          arr.map((item, i) => (i === idx ? { ...(item as Record<string, unknown>), [leaf]: media.id } : item))
+        );
+      } else {
+        updateNestedString(path, media.id);
+      }
     }
     setPickerTarget(null);
   }
@@ -509,6 +568,40 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
             </div>
+            <div className="rounded-md border border-border bg-white p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">AWPLS Images</p>
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                {[
+                  { label: "Intro card image", key: "introImage" },
+                  { label: "Gallery image A", key: "sectionImageA" },
+                  { label: "Gallery image B", key: "sectionImageB" },
+                  { label: "Gallery image C", key: "sectionImageC" },
+                  { label: "Targets background image", key: "targetsBgImage" },
+                  { label: "Deliver section background image", key: "deliverBgImage" },
+                ].map((field) => (
+                  <div key={field.key}>
+                    <label className="block text-xs font-medium text-slate-600">{field.label}</label>
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        type="text"
+                        value={typeof parsedJson[field.key] === "string" ? String(parsedJson[field.key]) : ""}
+                        onChange={(e) => updateJsonField(field.key, e.target.value)}
+                        placeholder="media-... or /uploads/..."
+                        className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPickerTarget({ nested: [field.key] })}
+                        className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                        title="Pick from Media Library"
+                      >
+                        <ImagePlus className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         )}
         {item.slug === "our-work" && (
@@ -564,6 +657,26 @@ export function PageContentForm({ item }: PageContentFormProps) {
                   onChange={(e) => updateNestedString(["tabs", "advisory"], e.target.value)}
                   className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                 />
+              </div>
+            </div>
+            <div className="rounded-md border border-border bg-white p-3">
+              <label className="block text-xs font-medium text-slate-600">Objectives block background image</label>
+              <div className="mt-1 flex gap-2">
+                <input
+                  type="text"
+                  value={getNestedString(["approachObjectivesBgImage"])}
+                  onChange={(e) => updateNestedString(["approachObjectivesBgImage"], e.target.value)}
+                  placeholder="media-... or /uploads/..."
+                  className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+                <button
+                  type="button"
+                  onClick={() => setPickerTarget({ nested: ["approachObjectivesBgImage"] })}
+                  className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                  title="Pick from Media Library"
+                >
+                  <ImagePlus className="h-4 w-4" />
+                </button>
               </div>
             </div>
             <div className="mt-4 rounded-md border border-border bg-white p-3">
@@ -796,12 +909,174 @@ export function PageContentForm({ item }: PageContentFormProps) {
                       </div>
                       <div>
                         <label className="block text-xs font-medium text-slate-600">Background image</label>
+                        <div className="mt-1 flex gap-2">
+                          <input
+                            type="text"
+                            value={typeof program.backgroundImage === "string" ? program.backgroundImage : ""}
+                            onChange={(e) => updateProgram(index, "backgroundImage", e.target.value)}
+                            className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                            placeholder="media id, image URL, or /uploads/..."
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setPickerTarget({ nested: ["programs", String(index), "backgroundImage"] })}
+                            className="inline-flex items-center rounded-md border border-border bg-white px-2 py-1 text-sm text-slate-700 hover:bg-slate-100"
+                            title="Pick from Media Library"
+                          >
+                            <ImagePlus className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+        {item.slug === "our-work-projects" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Projects page helper</p>
+            <p className="text-[11px] text-slate-500">
+              Edit the carousel items shown on <code className="rounded bg-slate-100 px-0.5">/our-work/projects</code>.
+            </p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[11px] text-slate-500">Use the arrows to reorder items. These values are saved into the page content JSON.</p>
+              <button
+                type="button"
+                onClick={addProject}
+                className="rounded-md border border-border bg-white px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-100"
+              >
+                + Add item
+              </button>
+            </div>
+            <div className="space-y-3">
+              {ourWorkProjects.length === 0 ? (
+                <p className="text-sm text-slate-500">No project items yet. Add the first one above.</p>
+              ) : (
+                ourWorkProjects.map((project, index) => (
+                  <div key={index} className="rounded-md border border-border bg-white p-3 shadow-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Item {index + 1}</p>
+                      <div className="ml-auto flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => moveProject(index, -1)}
+                          className="inline-flex items-center rounded border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          title="Move up"
+                        >
+                          <ArrowUp className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => moveProject(index, 1)}
+                          className="inline-flex items-center rounded border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          title="Move down"
+                        >
+                          <ArrowDown className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeProject(index)}
+                          className="inline-flex items-center rounded border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-3 grid gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Title</label>
                         <input
                           type="text"
-                          value={typeof program.backgroundImage === "string" ? program.backgroundImage : ""}
-                          onChange={(e) => updateProgram(index, "backgroundImage", e.target.value)}
+                          value={typeof project.title === "string" ? project.title : ""}
+                          onChange={(e) => updateProject(index, "title", e.target.value)}
                           className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
-                          placeholder="media id, image URL, or /uploads/..."
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Description</label>
+                        <textarea
+                          value={typeof project.description === "string" ? project.description : ""}
+                          onChange={(e) => updateProject(index, "description", e.target.value)}
+                          rows={4}
+                          className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        )}
+        {item.slug === "our-work-advisory" && (
+          <div className="mb-3 grid gap-3 rounded-lg border border-border bg-slate-50 p-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Advisory page helper</p>
+            <p className="text-[11px] text-slate-500">
+              Edit the carousel items shown on <code className="rounded bg-slate-100 px-0.5">/our-work/advisory</code>.
+            </p>
+            <div className="flex items-center justify-between gap-3">
+              <p className="text-[11px] text-slate-500">Use the arrows to reorder items. These values are saved into the page content JSON.</p>
+              <button
+                type="button"
+                onClick={addAdvisoryItem}
+                className="rounded-md border border-border bg-white px-3 py-1.5 text-xs text-slate-700 hover:bg-slate-100"
+              >
+                + Add item
+              </button>
+            </div>
+            <div className="space-y-3">
+              {advisoryItems.length === 0 ? (
+                <p className="text-sm text-slate-500">No advisory items yet. Add the first one above.</p>
+              ) : (
+                advisoryItems.map((item, index) => (
+                  <div key={index} className="rounded-md border border-border bg-white p-3 shadow-sm">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Item {index + 1}</p>
+                      <div className="ml-auto flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => moveAdvisoryItem(index, -1)}
+                          className="inline-flex items-center rounded border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          title="Move up"
+                        >
+                          <ArrowUp className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => moveAdvisoryItem(index, 1)}
+                          className="inline-flex items-center rounded border border-border px-2 py-1 text-xs text-slate-700 hover:bg-slate-50"
+                          title="Move down"
+                        >
+                          <ArrowDown className="h-3.5 w-3.5" />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => removeAdvisoryItem(index)}
+                          className="inline-flex items-center rounded border border-red-200 px-2 py-1 text-xs text-red-700 hover:bg-red-50"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                    <div className="mt-3 grid gap-3">
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Title</label>
+                        <input
+                          type="text"
+                          value={typeof item.title === "string" ? item.title : ""}
+                          onChange={(e) => updateAdvisoryItem(index, "title", e.target.value)}
+                          className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-medium text-slate-600">Description</label>
+                        <textarea
+                          value={typeof item.description === "string" ? item.description : ""}
+                          onChange={(e) => updateAdvisoryItem(index, "description", e.target.value)}
+                          rows={4}
+                          className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
                         />
                       </div>
                     </div>
@@ -1858,6 +2133,36 @@ export function PageContentForm({ item }: PageContentFormProps) {
                 rows={2}
                 className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
               />
+            </div>
+            <div className="rounded-md border border-border bg-white p-3">
+              <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">AYPF Images</p>
+              <div className="mt-2 grid gap-2 sm:grid-cols-2">
+                {[
+                  { label: "Focus section background image", key: "focusSectionBgImage" },
+                  { label: "Strategic priorities background image", key: "strategicPrioritiesBgImage" },
+                ].map((field) => (
+                  <div key={field.key}>
+                    <label className="block text-xs font-medium text-slate-600">{field.label}</label>
+                    <div className="mt-1 flex gap-2">
+                      <input
+                        type="text"
+                        value={typeof parsedJson[field.key] === "string" ? String(parsedJson[field.key]) : ""}
+                        onChange={(e) => updateJsonField(field.key, e.target.value)}
+                        placeholder="media-... or /uploads/..."
+                        className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => setPickerTarget({ nested: [field.key] })}
+                        className="inline-flex items-center gap-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                        title="Pick from Media Library"
+                      >
+                        <ImagePlus className="h-4 w-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="rounded-md border border-border bg-white p-3">
               <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-600">Purpose section</p>
