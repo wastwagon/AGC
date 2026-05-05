@@ -35,7 +35,10 @@ export function TeamSectionTabs({
   const sectionKeys = tabs.map((t) => t.key);
   const activeSection =
     sectionKeys[activeTab] ?? sectionKeys[0] ?? "advisory_board";
-  const members = activeSection === "all" ? team : team.filter((m) => (m.section || "advisory_board") === activeSection);
+  const members =
+    activeSection === "all"
+      ? team
+      : team.filter((m) => (m.section || "advisory_board") === activeSection);
 
   return (
     <div>
@@ -79,7 +82,7 @@ export function TeamSectionTabs({
                   key={member.id}
                   className="flex flex-col overflow-hidden rounded-none bg-[#ffffff] shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <div className="relative aspect-4/3 w-full shrink-0 bg-[#f1f4f9]">
+                  <div className="relative aspect-3/3 w-full shrink-0 bg-[#f1f4f9]">
                     {resolved ? (
                       <Image
                         src={resolved}

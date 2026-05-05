@@ -22,6 +22,12 @@ function eventHref(e: CmsEvent): string {
   return `/events/${e.slug}`;
 }
 
+function upcomingEventHref(e: CmsEvent): string {
+  const slug = e.slug?.trim();
+  if (slug) return `/events/${encodeURIComponent(slug)}`;
+  return eventHref(e);
+}
+
 function eventTypeLabel(e: CmsEvent): string {
   return (e.event_type || e.category || "Event")
     .replace(/_/g, " ")
@@ -108,7 +114,7 @@ export function HomeEventsSection({
                   </h3>
                   <div className="mt-4 grid gap-6 md:grid-cols-3">
                     {upcoming.map((event) => {
-                      const href = eventHref(event);
+                      const href = upcomingEventHref(event);
                       const imageUrl =
                         resolveImageUrlSync(event.image) ||
                         placeholderImages.events;
@@ -118,7 +124,7 @@ export function HomeEventsSection({
                           href={href}
                           className="group block bg-white"
                         >
-                          <div className="relative aspect-[4/2] w-full overflow-hidden bg-stone-100">
+                          <div className="relative aspect-2/1 w-full overflow-hidden bg-stone-100">
                             <Image
                               src={imageUrl}
                               alt={event.title}
@@ -129,7 +135,7 @@ export function HomeEventsSection({
                             />
                           </div>
                           <div className="pt-5">
-                            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">
+                            <p className="text-[11px] font-bold uppercase tracking-widest text-black">
                               {eventTypeLabel(event)}
                             </p>
                             <h3 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black hover:underline">
@@ -166,7 +172,7 @@ export function HomeEventsSection({
                           href={href}
                           className="group block bg-white"
                         >
-                          <div className="relative aspect-[4/2] w-full overflow-hidden bg-stone-100">
+                          <div className="relative aspect-2/1 w-full overflow-hidden bg-stone-100">
                             <Image
                               src={imageUrl}
                               alt={event.title}
@@ -177,7 +183,7 @@ export function HomeEventsSection({
                             />
                           </div>
                           <div className="pt-5">
-                            <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">
+                            <p className="text-[11px] font-bold uppercase tracking-widest text-black">
                               {eventTypeLabel(event)}
                             </p>
                             <h3 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black hover:underline">
