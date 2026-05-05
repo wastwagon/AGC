@@ -11,7 +11,8 @@ import { Section } from "@/components/Section";
 
 export const metadata = {
   title: "Advisory",
-  description: "Our expert services - the Africa Governance Review Project and policy recommendations.",
+  description:
+    "Our expert services - the Africa Governance Review Project and policy recommendations.",
 };
 
 type AdvisoryItem = {
@@ -20,29 +21,35 @@ type AdvisoryItem = {
   backgroundImage?: string;
 };
 
-type AdvisoryWorkMerged = typeof workContent.advisory & { heroImage?: string; cards?: AdvisoryItem[] };
+type AdvisoryWorkMerged = typeof workContent.advisory & {
+  heroImage?: string;
+  cards?: AdvisoryItem[];
+};
 
 export default async function AdvisoryPage() {
   const [merged, bc] = await Promise.all([
     getMergedPageContent<AdvisoryWorkMerged>(
       "advisory",
-      cmsStaticOrEmpty(workContent.advisory as AdvisoryWorkMerged)
+      cmsStaticOrEmpty(workContent.advisory as AdvisoryWorkMerged),
     ),
     getBreadcrumbLabels(),
   ]);
   const content = merged;
   const heroSrc =
-    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
+    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ??
+    undefined;
   const rawAdvisory =
     Array.isArray(content.cards) && content.cards.length > 0
       ? content.cards
-      : (workContent.advisory.cards ?? []) as AdvisoryItem[];
+      : ((workContent.advisory.cards ?? []) as AdvisoryItem[]);
   const advisory = await Promise.all(
     rawAdvisory.map(async (item) => ({
       ...item,
       backgroundImage:
-        cardImageUrlOrNull((await resolveImageUrl(item.backgroundImage)) ?? null) ?? undefined,
-    }))
+        cardImageUrlOrNull(
+          (await resolveImageUrl(item.backgroundImage)) ?? null,
+        ) ?? undefined,
+    })),
   );
 
   return (
@@ -60,30 +67,46 @@ export default async function AdvisoryPage() {
         ]}
       />
 
-      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+      <HomeScrollReveal
+        variant="fadeUp"
+        start="top 88%"
+        className="block w-full"
+      >
         <Section className="bg-white">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
-
             <div className="space-y-8">
               <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
                 Advisory
               </h2>
               <p className="page-prose max-w-none text-black">
-                AGC provides strategic advisory support to governments, public institutions, and development
-                partners on governance, policy, and institutional reform. Our advisory work is grounded in evidence
-                and practical experience, enabling us to support decision-making processes, policy design, and
-                implementation strategies. We work closely with partners to navigate complex governance
-                environments and strengthen institutional effectiveness.
+                AGC provides strategic advisory support to governments, public
+                institutions, and development partners on governance, policy,
+                and institutional reform. Our advisory work is grounded in
+                evidence and practical experience, enabling us to support
+                decision-making processes, policy design, and implementation
+                strategies. We work closely with partners to navigate complex
+                governance environments and strengthen institutional
+                effectiveness.
               </p>
 
               <ProgramsCarousel programs={advisory} />
             </div>
 
             <div className="mt-16 flex flex-wrap gap-4">
-              <Button asChild href="/our-work" variant="outline">
+              <Button
+                asChild
+                href="/our-work"
+                variant="outline"
+                className="rounded-none"
+              >
                 Back to Our Work
               </Button>
-              <Button asChild href="/contact" variant="primary">
+              <Button
+                asChild
+                href="/contact"
+                variant="primary"
+                className="rounded-none"
+              >
                 Contact Us
               </Button>
             </div>

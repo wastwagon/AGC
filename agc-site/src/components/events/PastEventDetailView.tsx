@@ -246,7 +246,7 @@ export function PastEventDetailView({
         className="block w-full"
       >
         <section className="w-full border-t border-border/80 bg-white py-8 sm:py-12 lg:py-14">
-          <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
+          <div className="mx-auto w-full max-w-none px-4 sm:px-6 lg:px-8 xl:px-10 2xl:px-12">
             {embedSrc ? (
               <div className="aspect-video w-full overflow-hidden bg-stone-950 shadow-lg shadow-stone-900/10">
                 <iframe
@@ -271,11 +271,10 @@ export function PastEventDetailView({
               </div>
             ) : null}
 
-            {event.description ? (
-              <div
-                className="prose prose-stone prose-lg mt-12 max-w-none text-black prose-headings:font-semibold prose-a:text-accent-700 hover:underline hover:decoration-accent-300 hover:underline-offset-2"
-                dangerouslySetInnerHTML={{ __html: event.description }}
-              />
+            {event.description?.trim() ? (
+              <div className="prose prose-stone prose-lg mt-12 max-w-none whitespace-pre-line text-black prose-headings:font-semibold prose-a:text-accent-700">
+                {event.description.trim()}
+              </div>
             ) : null}
 
             {(event.event_type || speakers.length > 0 || agenda.length > 0) && (

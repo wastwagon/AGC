@@ -10,6 +10,7 @@ import { resolveImageUrl } from "@/lib/media";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 import Image from "next/image";
 import { preferUnoptimizedImage } from "@/lib/image-delivery";
+import { normalizeTeamTabs } from "@/lib/team-tabs";
 
 export const metadata = {
   title: "About Us",
@@ -81,14 +82,13 @@ function resolveTeamTabs(
       label: String(x?.label ?? "").trim(),
     }))
     .filter((x) => x.key && x.label);
-  if (cleaned.length > 0) return cleaned;
-  return [
-    { key: "executive_council", label: aboutContent.teamTabs.executiveCouncil },
+  if (cleaned.length > 0) return normalizeTeamTabs(cleaned);
+  return normalizeTeamTabs([
     { key: "advisory_board", label: aboutContent.teamTabs.advisoryBoard },
+    { key: "executive_council", label: aboutContent.teamTabs.executiveCouncil },
     { key: "management_team", label: aboutContent.teamTabs.managementTeam },
     { key: "fellows", label: aboutContent.teamTabs.fellows },
-    { key: "associate_fellows", label: aboutContent.teamTabs.associateFellows },
-  ];
+  ]);
 }
 
 export default async function AboutPage() {
@@ -210,7 +210,7 @@ export default async function AboutPage() {
                 {aboutSectionHeading}
               </h2>
             </header>
-            <div className="relative mt-8 aspect-[16/5] w-full overflow-hidden bg-stone-100">
+            <div className="relative mt-8 aspect-16/5 w-full overflow-hidden bg-stone-100">
               <Image
                 src={heroImage}
                 alt="About section visual"
@@ -221,17 +221,14 @@ export default async function AboutPage() {
               />
             </div>
             <div className="mt-8 max-w-5xl space-y-6">
-              {/* {leadParagraphs.map((paragraph) => (
+              {leadParagraphs.map((paragraph) => (
                 <p
                   key={paragraph}
                   className="max-w-none text-black font-medium page-prose"
                 >
                   {paragraph}
                 </p>
-              ))} */}
-              <p className="max-w-none text-black font-medium page-prose">
-                {leadParagraphs}
-              </p>
+              ))}
             </div>
           </div>
         </section>
@@ -256,7 +253,7 @@ export default async function AboutPage() {
                   key={point.title}
                   className="page-card overflow-hidden p-0"
                 >
-                  <div className="relative aspect-[16/9] w-full bg-stone-100">
+                  <div className="relative aspect-video w-full bg-stone-100">
                     <Image
                       src={point.image || heroImage}
                       alt={`${point.title} visual`}

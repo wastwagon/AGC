@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-const DEFAULT_SUBSCRIBE_HREF = "/#newsletter";
+const DEFAULT_SUBSCRIBE_HREF = "/subscribe";
 const DEFAULT_SUBSCRIBE_LABEL = "Subscribe";
 
 type Props = {

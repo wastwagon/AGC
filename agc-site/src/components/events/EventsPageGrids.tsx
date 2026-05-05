@@ -3,11 +3,19 @@ import { eventsContent } from "@/data/content";
 import { EventGridCell } from "./EventGridCell";
 import { Button } from "@/components/Button";
 
-function EventGrid({ events, isPast }: { events: CmsEvent[]; isPast: boolean }) {
+function EventGrid({
+  events,
+  isPast,
+}: {
+  events: CmsEvent[];
+  isPast: boolean;
+}) {
   if (events.length === 0) {
     return (
       <p className="border border-border/90 bg-white px-6 py-12 text-center text-black">
-        {isPast ? eventsContent.gridEmpty.past : eventsContent.gridEmpty.upcoming}
+        {isPast
+          ? eventsContent.gridEmpty.past
+          : eventsContent.gridEmpty.upcoming}
       </p>
     );
   }
@@ -15,7 +23,7 @@ function EventGrid({ events, isPast }: { events: CmsEvent[]; isPast: boolean }) 
   return (
     <div className="grid grid-cols-1 gap-px bg-[#f1f4f9] sm:grid-cols-2 lg:grid-cols-3">
       {events.map((event) => (
-        <div key={event.id} className="min-w-0 bg-white p-6 sm:p-8 lg:p-10">
+        <div key={event.id} className="min-w-0 bg-white p-6 sm:p-8 lg:p-6">
           <EventGridCell
             event={event}
             isPast={isPast}
@@ -28,13 +36,21 @@ function EventGrid({ events, isPast }: { events: CmsEvent[]; isPast: boolean }) 
   );
 }
 
-export function EventsPageGrids({ upcoming, past }: { upcoming: CmsEvent[]; past: CmsEvent[] }) {
+export function EventsPageGrids({
+  upcoming,
+  past,
+}: {
+  upcoming: CmsEvent[];
+  past: CmsEvent[];
+}) {
   const orderedUpcoming = [...upcoming].sort(
-    (a, b) => new Date(a.start_date).getTime() - new Date(b.start_date).getTime()
+    (a, b) =>
+      new Date(a.start_date).getTime() - new Date(b.start_date).getTime(),
   );
   const orderedPast = [...past].sort(
     (a, b) =>
-      new Date(b.end_date || b.start_date).getTime() - new Date(a.end_date || a.start_date).getTime()
+      new Date(b.end_date || b.start_date).getTime() -
+      new Date(a.end_date || a.start_date).getTime(),
   );
 
   return (

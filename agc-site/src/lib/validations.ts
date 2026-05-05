@@ -11,6 +11,26 @@ export const newsletterSchema = z.object({
   email: z.string().email("Valid email is required"),
 });
 
+export const subscribeTopics = [
+  "AGC insights",
+  "Events and Convenings",
+  "Governance & Policy Research",
+  "Global Affairs Briefings",
+] as const;
+
+export const subscribeSchema = z.object({
+  firstName: z.string().min(1, "First name is required").max(100),
+  lastName: z.string().min(1, "Last name is required").max(100),
+  email: z.string().email("Valid email is required"),
+  jobTitle: z.string().min(1, "Job title is required").max(150),
+  company: z.string().min(1, "Company/Organisation is required").max(200),
+  sector: z.string().min(1, "Sector is required").max(120),
+  city: z.string().min(1, "City is required").max(100),
+  country: z.string().min(1, "Country is required").max(100),
+  topics: z.array(z.enum(subscribeTopics)).default([]),
+  website: z.string().max(0).optional(),
+});
+
 export const applicationSchema = z.object({
   applicationType: z.enum(["volunteer", "staff", "fellow"]).optional().default("volunteer"),
   fullName: z.string().min(1, "Full name is required").max(200),
@@ -269,9 +289,9 @@ export const siteSettingsFormSchema = z.object({
 });
 
 export const homeSettingsFormSchema = z.object({
-  heroEyebrow: z.string().min(1).max(255),
+  heroEyebrow: z.string().max(255),
   heroTitle: z.string().min(1).max(255),
-  heroSubtitle: z.string().min(1).max(3000),
+  heroSubtitle: z.string().max(3000),
   heroCta: z.string().min(1).max(120),
   heroCtaHref: z.string().min(1).max(255),
   heroCtaSecondary: z.string().min(1).max(120),
@@ -289,10 +309,16 @@ export const homeSettingsFormSchema = z.object({
   testimonialOrganization: z.string().max(255).optional(),
   testimonialInitials: z.string().min(1).max(10),
   spotlightLabel: z.string().min(1).max(120),
-  spotlightHeadline: z.string().min(1).max(255),
+  spotlightHeadline: z.preprocess(
+    (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+    z.string().max(255).optional()
+  ),
   spotlightParagraphs: z.string().min(1).max(8000),
   spotlightName: z.string().min(1).max(255),
-  spotlightRole: z.string().min(1).max(255),
+  spotlightRole: z.preprocess(
+    (value) => (typeof value === "string" && value.trim() === "" ? undefined : value),
+    z.string().max(255).optional()
+  ),
   spotlightInitials: z.string().max(10).optional(),
   spotlightImage: z.string().max(500).optional(),
   spotlightCtaLabel: z.string().min(1).max(120),

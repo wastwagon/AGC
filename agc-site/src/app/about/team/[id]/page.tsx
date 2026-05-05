@@ -11,6 +11,7 @@ import { getSiteSettings } from "@/lib/site-settings";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 import { Breadcrumbs } from "@/components/Breadcrumbs";
 import { cmsStaticOrEmpty, getMergedPageContent } from "@/lib/page-content";
+import { normalizeTeamTabs } from "@/lib/team-tabs";
 
 export const revalidate = 60;
 
@@ -66,14 +67,15 @@ export default async function TeamMemberProfilePage({ params }: Props) {
     ? (aboutMerged as { teamTabsList?: { key: string; label: string }[] }).teamTabsList!
     : [];
   const tabMap = new Map(
-    (configuredTabs.length > 0
-      ? configuredTabs
-      : [
-          { key: "advisory_board", label: aboutContent.teamTabs.advisoryBoard },
-          { key: "management_team", label: aboutContent.teamTabs.managementTeam },
-          { key: "fellows", label: aboutContent.teamTabs.fellows },
-          { key: "associate_fellows", label: aboutContent.teamTabs.associateFellows },
-        ]
+    normalizeTeamTabs(
+      configuredTabs.length > 0
+        ? configuredTabs
+        : [
+            { key: "advisory_board", label: aboutContent.teamTabs.advisoryBoard },
+            { key: "executive_council", label: aboutContent.teamTabs.executiveCouncil },
+            { key: "management_team", label: aboutContent.teamTabs.managementTeam },
+            { key: "fellows", label: aboutContent.teamTabs.fellows },
+          ]
     ).map((t) => [String(t.key).trim().toLowerCase(), String(t.label).trim()])
   );
   const programme = member.section ? tabMap.get(member.section) ?? null : null;

@@ -17,7 +17,11 @@ function eventDateLabel(start: string): string {
   const d = new Date(start);
   if (Number.isNaN(d.getTime())) return "";
   return d
-    .toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })
+    .toLocaleDateString("en-GB", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    })
     .toUpperCase();
 }
 
@@ -52,7 +56,7 @@ export function EventGridCell({
   return (
     <article className="group flex h-full flex-col bg-white">
       <Link href={eventLink} className="flex flex-col">
-        <div className="relative aspect-[4/3] w-full overflow-hidden rounded-none bg-stone-100">
+        <div className="relative aspect-[4/2] border w-full overflow-hidden rounded-none bg-stone-100">
           <Image
             src={imageUrl}
             alt={event.title}
@@ -63,15 +67,21 @@ export function EventGridCell({
           />
         </div>
         <div className="pt-5">
-          <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">{category}</p>
+          <p className="text-[11px] font-bold uppercase tracking-[0.1em] text-black">
+            {category}
+          </p>
           <h3 className="mt-2 font-serif text-[2rem] font-semibold leading-[1.08] tracking-tight text-black hover:underline">
             {event.title}
           </h3>
         </div>
         {date ? (
-          <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-black">{date}</p>
+          <p className="mt-3 text-[11px] font-medium uppercase tracking-[0.08em] text-black">
+            {date}
+          </p>
         ) : null}
-        <p className="mt-3 text-base font-medium leading-relaxed text-black hover:underline">{excerpt(event)}</p>
+        <p className="mt-3 text-base font-medium leading-relaxed text-black hover:underline">
+          {excerpt(event)}
+        </p>
       </Link>
     </article>
   );

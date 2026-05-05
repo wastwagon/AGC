@@ -118,7 +118,7 @@ export function HomeEventsSection({
                           href={href}
                           className="group block bg-white"
                         >
-                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100">
+                          <div className="relative aspect-[4/2] w-full overflow-hidden bg-stone-100">
                             <Image
                               src={imageUrl}
                               alt={event.title}
@@ -166,7 +166,7 @@ export function HomeEventsSection({
                           href={href}
                           className="group block bg-white"
                         >
-                          <div className="relative aspect-[4/3] w-full overflow-hidden bg-stone-100">
+                          <div className="relative aspect-[4/2] w-full overflow-hidden bg-stone-100">
                             <Image
                               src={imageUrl}
                               alt={event.title}

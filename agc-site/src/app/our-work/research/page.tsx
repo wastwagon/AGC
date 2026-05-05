@@ -11,7 +11,8 @@ import { Section } from "@/components/Section";
 
 export const metadata = {
   title: "Research",
-  description: "Evidence and inquiry driving governance excellence across Africa.",
+  description:
+    "Evidence and inquiry driving governance excellence across Africa.",
 };
 
 type ResearchItem = {
@@ -20,7 +21,10 @@ type ResearchItem = {
   backgroundImage?: string;
 };
 
-type ResearchWorkMerged = typeof workContent.research & { heroImage?: string; cards?: ResearchItem[] };
+type ResearchWorkMerged = typeof workContent.research & {
+  heroImage?: string;
+  cards?: ResearchItem[];
+};
 
 const RESEARCH_FALLBACK_CARDS: ResearchItem[] = [
   {
@@ -49,13 +53,14 @@ export default async function ResearchWorkPage() {
   const [merged, bc] = await Promise.all([
     getMergedPageContent<ResearchWorkMerged>(
       "research",
-      cmsStaticOrEmpty(workContent.research as ResearchWorkMerged)
+      cmsStaticOrEmpty(workContent.research as ResearchWorkMerged),
     ),
     getBreadcrumbLabels(),
   ]);
   const content = merged;
   const heroSrc =
-    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
+    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ??
+    undefined;
   const rawResearch =
     Array.isArray(content.cards) && content.cards.length > 0
       ? content.cards
@@ -64,8 +69,10 @@ export default async function ResearchWorkPage() {
     rawResearch.map(async (item) => ({
       ...item,
       backgroundImage:
-        cardImageUrlOrNull((await resolveImageUrl(item.backgroundImage)) ?? null) ?? undefined,
-    }))
+        cardImageUrlOrNull(
+          (await resolveImageUrl(item.backgroundImage)) ?? null,
+        ) ?? undefined,
+    })),
   );
 
   return (
@@ -83,7 +90,11 @@ export default async function ResearchWorkPage() {
         ]}
       />
 
-      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+      <HomeScrollReveal
+        variant="fadeUp"
+        start="top 88%"
+        className="block w-full"
+      >
         <Section className="bg-white">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="space-y-8">
@@ -91,21 +102,34 @@ export default async function ResearchWorkPage() {
                 Research
               </h2>
               <p className="page-prose max-w-none text-black">
-                Our research generates rigorous, evidence-based analysis on governance, political economy, and
-                institutional development across Africa. We prioritise work that is policy-relevant and grounded
-                in African contexts, ensuring that our outputs contribute meaningfully to decision-making processes
-                and public discourse. Through our research, we seek to bridge the gap between knowledge and
-                practice while elevating African perspectives in continental and global debates.
+                Our research generates rigorous, evidence-based analysis on
+                governance, political economy, and institutional development
+                across Africa. We prioritise work that is policy-relevant and
+                grounded in African contexts, ensuring that our outputs
+                contribute meaningfully to decision-making processes and public
+                discourse. Through our research, we seek to bridge the gap
+                between knowledge and practice while elevating African
+                perspectives in continental and global debates.
               </p>
 
               <ProgramsCarousel programs={research} />
             </div>
 
             <div className="mt-16 flex flex-wrap gap-4">
-              <Button asChild href="/our-work" variant="outline">
+              <Button
+                asChild
+                href="/our-work"
+                variant="outline"
+                className="rounded-none"
+              >
                 Back to Our Work
               </Button>
-              <Button asChild href="/publications" variant="primary">
+              <Button
+                asChild
+                href="/publications"
+                variant="primary"
+                className="rounded-none"
+              >
                 Publications
               </Button>
             </div>

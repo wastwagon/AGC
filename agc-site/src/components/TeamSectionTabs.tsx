@@ -5,7 +5,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { User } from "lucide-react";
 import { fallbackTeam } from "@/data/content";
-import { cardImageUrlOrNull, preferUnoptimizedImage } from "@/lib/image-delivery";
+import {
+  cardImageUrlOrNull,
+  preferUnoptimizedImage,
+} from "@/lib/image-delivery";
 
 type TeamMember = {
   id: number;
@@ -30,19 +33,20 @@ export function TeamSectionTabs({
   const [activeTab, setActiveTab] = useState(0);
   const team = cmsTeam.length > 0 ? cmsTeam : (fallbackTeam as TeamMember[]);
   const sectionKeys = tabs.map((t) => t.key);
-  const activeSection = sectionKeys[activeTab] ?? sectionKeys[0] ?? "advisory_board";
-  const members = team.filter((m) => (m.section || "advisory_board") === activeSection);
+  const activeSection =
+    sectionKeys[activeTab] ?? sectionKeys[0] ?? "advisory_board";
+  const members = activeSection === "all" ? team : team.filter((m) => (m.section || "advisory_board") === activeSection);
 
   return (
     <div>
-      <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-none lg:text-left">
+      {/* <div className="mx-auto max-w-2xl text-center lg:mx-0 lg:max-w-none lg:text-left">
         <h2 className="mt-1 font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
           Our team & advisors
         </h2>
         <p className="page-prose mt-3 text-black font-medium">
           Fellows, associates, and advisory voices who shape our research and convenings.
         </p>
-      </div>
+      </div> */}
       <div
         className="mt-8 flex flex-wrap gap-2"
         role="tablist"
@@ -75,7 +79,7 @@ export function TeamSectionTabs({
                   key={member.id}
                   className="flex flex-col overflow-hidden rounded-none bg-[#ffffff] shadow-sm transition-shadow hover:shadow-md"
                 >
-                  <div className="relative aspect-[4/3] w-full shrink-0 bg-[#f1f4f9]">
+                  <div className="relative aspect-4/3 w-full shrink-0 bg-[#f1f4f9]">
                     {resolved ? (
                       <Image
                         src={resolved}
@@ -87,7 +91,11 @@ export function TeamSectionTabs({
                       />
                     ) : (
                       <div className="flex h-full items-center justify-center">
-                        <User className="h-14 w-14 text-slate-300" strokeWidth={1.25} aria-hidden />
+                        <User
+                          className="h-14 w-14 text-slate-300"
+                          strokeWidth={1.25}
+                          aria-hidden
+                        />
                       </div>
                     )}
                   </div>
@@ -99,7 +107,9 @@ export function TeamSectionTabs({
                       {member.name}
                     </h3>
                     {member.role && (
-                      <p className="mt-3 text-sm font-bold leading-snug text-black">{member.role}</p>
+                      <p className="mt-3 text-sm font-bold leading-snug text-black">
+                        {member.role}
+                      </p>
                     )}
                     <Link
                       href={`/about/team/${member.id}`}

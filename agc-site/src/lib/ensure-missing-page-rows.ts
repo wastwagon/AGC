@@ -1,6 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { aypfContent } from "@/data/aypf";
 import { getInvolvedContent, workContent } from "@/data/content";
+import { subscribePageContent } from "@/data/subscribe-page";
 import { prisma } from "@/lib/db";
 import { shouldSkipPrismaCalls } from "@/lib/skip-db";
 
@@ -103,6 +104,11 @@ const BASELINE_PAGES: { slug: string; title: string; contentJson: Record<string,
       backLabel: "Back to Get Involved",
       questionsLabel: "Questions?",
     },
+  },
+  {
+    slug: "subscribe",
+    title: "Subscribe",
+    contentJson: subscribePageContent as unknown as Record<string, unknown>,
   },
 ];
 

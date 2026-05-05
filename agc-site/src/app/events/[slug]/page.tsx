@@ -5,6 +5,8 @@ import type { CmsEvent } from "@/lib/content";
 import { UpcomingEventDetailView } from "@/components/events/UpcomingEventDetailView";
 import { getBreadcrumbLabels } from "@/lib/breadcrumbs";
 import { DEFAULT_SITE_CHROME } from "@/data/site-chrome";
+import { placeholderImages } from "@/data/images";
+import { resolveImageUrl } from "@/lib/media";
 
 export const revalidate = 60;
 
@@ -34,12 +36,16 @@ export default async function PublicEventDetailPage({ params }: Props) {
   }
 
   const bc = await getBreadcrumbLabels().catch(() => DEFAULT_SITE_CHROME.breadcrumbs);
+  const heroImageRef = event.image?.trim() || placeholderImages.events;
+  const heroImage =
+    (await resolveImageUrl(heroImageRef)) ?? (heroImageRef.startsWith("/") ? heroImageRef : `/${heroImageRef}`);
 
   return (
     <UpcomingEventDetailView
       event={event}
       slug={slug}
-      breadcrumbs={{ home: bc.home, events: bc.events }}
+      breadcrumbs={{ home: bc.home, events: bc.events, current: "Upcoming event" }}
+      heroImage={heroImage}
     />
   );
 }

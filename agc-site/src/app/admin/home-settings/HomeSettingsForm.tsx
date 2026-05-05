@@ -21,6 +21,17 @@ function parseLines(text: string): string[] {
     .filter(Boolean);
 }
 
+function normalizeDraftValues(values: Record<string, string> | undefined | null) {
+  if (!values) return null as Record<string, string> | null;
+  const normalized: Record<string, string> = {};
+  for (const [key, value] of Object.entries(values)) {
+    if (typeof value !== "string") continue;
+    if (value.trim() === "") continue;
+    normalized[key] = value;
+  }
+  return Object.keys(normalized).length > 0 ? normalized : null;
+}
+
 type MediaPickerTarget =
   | "heroSlider"
   | "spotlightPortrait"
@@ -57,6 +68,7 @@ export function HomeSettingsForm({
   workPillars: WorkPillarSettings;
   saved?: boolean;
 }) {
+  const [mounted, setMounted] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
   const draftKey = "agc:admin:home-settings:draft:v1";
   const initialDraft = useMemo(() => {
@@ -65,10 +77,13 @@ export function HomeSettingsForm({
       const raw = window.localStorage.getItem(draftKey);
       if (!raw) return null;
       const parsed = JSON.parse(raw) as { values?: Record<string, string> };
-      return parsed.values || null;
+      return normalizeDraftValues(parsed.values);
     } catch {
       return null;
     }
+  }, []);
+  useEffect(() => {
+    setMounted(true);
   }, []);
   const [heroSliderImages, setHeroSliderImages] = useState(initialDraft?.heroSliderImages ?? textAreaLines(home.heroSliderImages));
   const [spotlightImage, setSpotlightImage] = useState(
@@ -194,7 +209,8 @@ export function HomeSettingsForm({
     const fd = new FormData(formRef.current);
     const values: Record<string, string> = {};
     for (const [k, v] of fd.entries()) values[k] = String(v ?? "");
-    const payload = { values, savedAt: new Date().toISOString() };
+    const normalizedValues = normalizeDraftValues(values) || {};
+    const payload = { values: normalizedValues, savedAt: new Date().toISOString() };
     window.localStorage.setItem(draftKey, JSON.stringify(payload));
     setLastSavedAt(payload.savedAt);
   }
@@ -208,6 +224,8 @@ export function HomeSettingsForm({
     if (!saved) return;
     window.localStorage.removeItem(draftKey);
   }, [saved, draftKey]);
+
+  if (!mounted) return null;
 
   return (
     <form ref={formRef} action={updateHomeSettings} onInput={saveDraft} className="space-y-6">
@@ -317,7 +335,7 @@ export function HomeSettingsForm({
                       dragOver === item.index ? "border-accent-400 ring-1 ring-accent-200" : "border-border"
                     }`}
                   >
-                    <div className="relative aspect-[16/10] overflow-hidden rounded-md border border-border bg-slate-100">
+                    <div className="relative aspect-16/10 overflow-hidden rounded-md border border-border bg-slate-100">
                       <Image
                         src={item.url}
                         alt={item.raw}
@@ -586,14 +604,13 @@ export function HomeSettingsForm({
       <section className="rounded-2xl border border-border bg-white p-6 shadow-sm">
         <h2 className="font-serif text-lg font-semibold text-slate-900">Fellow spotlight</h2>
         <p className="mt-1 text-sm text-slate-500">
-          Matches the spotlight component: label, headline, body, person info, portrait, and CTA.
+          Matches the spotlight component: label, body, person role/title, portrait, and CTA.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <input name="spotlightLabel" defaultValue={initialDraft?.spotlightLabel ?? home.homeSpotlightStory.label} className="rounded-lg border border-border px-4 py-2" placeholder="Section label (e.g. Fellow spotlight)" />
-          <input name="spotlightHeadline" defaultValue={initialDraft?.spotlightHeadline ?? home.homeSpotlightStory.headline} className="rounded-lg border border-border px-4 py-2" placeholder="Headline" />
           <textarea name="spotlightParagraphs" defaultValue={initialDraft?.spotlightParagraphs ?? textAreaLines(home.homeSpotlightStory.paragraphs)} rows={4} className="sm:col-span-2 rounded-lg border border-border px-4 py-2" placeholder="Body paragraphs (one per line)" />
           <input name="spotlightName" defaultValue={initialDraft?.spotlightName ?? home.homeSpotlightStory.name} className="rounded-lg border border-border px-4 py-2" placeholder="Person name" />
-          <input name="spotlightRole" defaultValue={initialDraft?.spotlightRole ?? home.homeSpotlightStory.role} className="rounded-lg border border-border px-4 py-2" placeholder="Person role/title" />
+          <input name="spotlightRole" defaultValue={initialDraft?.spotlightRole ?? home.homeSpotlightStory.role} className="rounded-lg border border-border px-4 py-2" placeholder="Person role/title (optional)" />
           <div className="sm:col-span-2">
             <label htmlFor="spotlightImage" className="mb-1 block text-sm font-medium text-slate-700">
               Spotlight portrait

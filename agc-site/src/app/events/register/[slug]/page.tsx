@@ -141,11 +141,10 @@ export default async function EventRegisterPage({ params }: Props) {
               </p>
             ) : null}
 
-            {event.description ? (
-              <div
-                className="prose prose-stone prose-lg mt-10 max-w-none text-black prose-headings:font-semibold prose-a:text-accent-700"
-                dangerouslySetInnerHTML={{ __html: event.description }}
-              />
+            {event.description?.trim() ? (
+              <div className="prose prose-stone prose-lg mt-10 max-w-none whitespace-pre-line text-black prose-headings:font-semibold prose-a:text-accent-700">
+                {event.description.trim()}
+              </div>
             ) : null}
 
             {event.event_type ? (
