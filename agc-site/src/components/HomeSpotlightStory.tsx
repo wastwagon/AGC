@@ -12,7 +12,12 @@ export function HomeSpotlightStory({
   portraitSrc: string;
 }) {
   const s = story;
-  if (!s.headline?.trim()) return null;
+  const headline = s.headline?.trim();
+  const role = s.role?.trim();
+  const name = s.name?.trim();
+  const label = s.label?.trim();
+  const paragraphs = s.paragraphs.filter((paragraph) => paragraph.trim());
+  const hasAuthorInfo = Boolean(name || role);
 
   return (
     <section className="border-y border-border/80 bg-white py-9 sm:py-12 lg:py-14">
@@ -22,7 +27,7 @@ export function HomeSpotlightStory({
             <div className="relative aspect-[5/6] w-full max-w-[320px] shrink-0 overflow-hidden shadow-md sm:max-w-[360px] lg:w-[400px] lg:max-w-none">
               <Image
                 src={portraitSrc}
-                alt={s.name?.trim() ? `Portrait: ${s.name}` : "Fellow spotlight portrait"}
+                alt={name ? `Portrait: ${name}` : "Fellow spotlight portrait"}
                 fill
                 sizes="(max-width: 1024px) 360px, 400px"
                 className="object-cover object-center"
@@ -31,25 +36,37 @@ export function HomeSpotlightStory({
             </div>
           </div>
           <div className="min-w-0 flex-1">
-            <p className="text-base font-bold uppercase tracking-wide text-black">{s.label}</p>
-            <h2 className="mt-2 font-serif text-[2rem] font-semibold leading-snug tracking-tight text-black sm:text-[2.45rem]">
-              {s.headline}
-            </h2>
+            {label ? (
+              <h2 className="mt-2 font-serif text-[2rem] font-semibold leading-snug tracking-tight text-black sm:text-[2.45rem]">
+                {label}
+              </h2>
+            ) : null}
+            {/* {headline ? (
+              <h2 className="mt-2 font-serif border-4 text-[2rem] font-semibold leading-snug tracking-tight text-black sm:text-[2.45rem]">
+                {headline}
+              </h2>
+            ) : null} */}
             <div className="mt-6 space-y-4 text-[17px] font-medium leading-relaxed text-black">
-              {s.paragraphs.map((p, i) => (
+              {paragraphs.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
             </div>
-            <div className="mt-8 border-t border-border pt-6">
-              <p className="text-lg font-medium text-black">{s.name}</p>
-              <p className="text-base font-medium text-black">{s.role}</p>
-            </div>
-            <Link
+            {hasAuthorInfo ? (
+              <div className="mt-8 border-t border-border pt-6">
+                {name ? (
+                  <p className="text-lg font-medium text-black">{name}</p>
+                ) : null}
+                {role ? (
+                  <p className="text-base font-medium text-black">{role}</p>
+                ) : null}
+              </div>
+            ) : null}
+            {/* <Link
               href={s.ctaHref}
               className="mt-6 inline-flex text-base font-medium text-black underline decoration-black/40 underline-offset-4 hover:text-black"
             >
               {s.ctaLabel}
-            </Link>
+            </Link> */}
           </div>
         </div>
       </div>

@@ -38,11 +38,11 @@ function defaultTeamTabsConfig(content: AboutSettings): string {
     return configured.map((x) => `${x.key}|${x.label}`).join("\n");
   }
   return [
-    `executive_council|${aboutDefaults.teamTabs.executiveCouncil}`,
+    `all|All`,
     `advisory_board|${aboutDefaults.teamTabs.advisoryBoard}`,
+    `executive_council|${aboutDefaults.teamTabs.executiveCouncil}`,
     `management_team|${aboutDefaults.teamTabs.managementTeam}`,
     `fellows|${aboutDefaults.teamTabs.fellows}`,
-    `associate_fellows|${aboutDefaults.teamTabs.associateFellows}`,
   ].join("\n");
 }
 

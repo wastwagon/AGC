@@ -88,7 +88,7 @@ function cloneLinks(links: readonly { href: string; label: string }[]): SiteNavL
 
 /**
  * Desktop header primary row — fixed order and labels (independent of full `chrome.nav` order).
- * `Get Involved` uses `subLinks` for the hover panel; newsletter opens the footer signup (`/#newsletter`).
+ * `Get Involved` uses `subLinks` for the hover panel; newsletter opens the subscribe page (`/subscribe`).
  */
 export const HEADER_PRIMARY_NAV_SLOTS: readonly SiteNavItem[] = [
   { href: "/", label: "Home" },
@@ -101,7 +101,7 @@ export const HEADER_PRIMARY_NAV_SLOTS: readonly SiteNavItem[] = [
     subLinks: [
       { href: "/get-involved/join-us", label: "CAREERS & OPPORTUNITIES" },
       { href: "/get-involved/partnership", label: "PARTNER / SPONSOR" },
-      { href: "/#newsletter", label: "SUBSCRIBE TO OUR NEWSLETTER" },
+      { href: "/subscribe", label: "SUBSCRIBE TO OUR NEWSLETTER" },
     ],
   },
   { href: "/events", label: "Events" },

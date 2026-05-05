@@ -11,7 +11,8 @@ import { Section } from "@/components/Section";
 
 export const metadata = {
   title: "Capacity Building",
-  description: "Capacity building and learning programmes from the Africa Governance Centre.",
+  description:
+    "Capacity building and learning programmes from the Africa Governance Centre.",
 };
 
 type TrainingItem = {
@@ -20,7 +21,10 @@ type TrainingItem = {
   backgroundImage?: string;
 };
 
-type TrainingWorkMerged = typeof workContent.training & { heroImage?: string; cards?: TrainingItem[] };
+type TrainingWorkMerged = typeof workContent.training & {
+  heroImage?: string;
+  cards?: TrainingItem[];
+};
 
 const TRAINING_FALLBACK_CARDS: TrainingItem[] = [
   {
@@ -49,14 +53,18 @@ export default async function TrainingWorkPage() {
   const [merged, bc] = await Promise.all([
     getMergedPageContent<TrainingWorkMerged>(
       "training",
-      cmsStaticOrEmpty(workContent.training as TrainingWorkMerged)
+      cmsStaticOrEmpty(workContent.training as TrainingWorkMerged),
     ),
     getBreadcrumbLabels(),
   ]);
   const content = merged;
-  const displayTitle = (content.title || "").trim().toLowerCase() === "training" ? "Capacity Building" : content.title;
+  const displayTitle =
+    (content.title || "").trim().toLowerCase() === "training"
+      ? "Capacity Building"
+      : content.title;
   const heroSrc =
-    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
+    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ??
+    undefined;
   const rawTraining =
     Array.isArray(content.cards) && content.cards.length > 0
       ? content.cards
@@ -65,8 +73,10 @@ export default async function TrainingWorkPage() {
     rawTraining.map(async (item) => ({
       ...item,
       backgroundImage:
-        cardImageUrlOrNull((await resolveImageUrl(item.backgroundImage)) ?? null) ?? undefined,
-    }))
+        cardImageUrlOrNull(
+          (await resolveImageUrl(item.backgroundImage)) ?? null,
+        ) ?? undefined,
+    })),
   );
 
   return (
@@ -84,7 +94,11 @@ export default async function TrainingWorkPage() {
         ]}
       />
 
-      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+      <HomeScrollReveal
+        variant="fadeUp"
+        start="top 88%"
+        className="block w-full"
+      >
         <Section className="bg-white">
           <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="space-y-8">
@@ -92,10 +106,12 @@ export default async function TrainingWorkPage() {
                 {displayTitle}
               </h2>
               <p className="page-prose max-w-none text-black">
-                AGC delivers training and capacity-building initiatives designed to equip leaders, practitioners,
-                and emerging actors with the skills and knowledge required to navigate governance challenges. Our
-                programmes combine theoretical grounding with practical application, offering participants
-                opportunities to engage with real-world policy issues, develop leadership capabilities, and
+                AGC delivers training and capacity-building initiatives designed
+                to equip leaders, practitioners, and emerging actors with the
+                skills and knowledge required to navigate governance challenges.
+                Our programmes combine theoretical grounding with practical
+                application, offering participants opportunities to engage with
+                real-world policy issues, develop leadership capabilities, and
                 strengthen their contributions to governance processes.
               </p>
 
@@ -103,10 +119,20 @@ export default async function TrainingWorkPage() {
             </div>
 
             <div className="mt-16 flex flex-wrap gap-4">
-              <Button asChild href="/our-work" variant="outline">
+              <Button
+                asChild
+                href="/our-work"
+                variant="outline"
+                className="rounded-none"
+              >
                 Back to Our Work
               </Button>
-              <Button asChild href="/events" variant="primary">
+              <Button
+                asChild
+                href="/events"
+                variant="primary"
+                className="rounded-none"
+              >
                 View Events
               </Button>
             </div>

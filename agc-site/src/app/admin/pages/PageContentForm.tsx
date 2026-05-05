@@ -45,6 +45,7 @@ function SubmitButton() {
 
 export function PageContentForm({ item }: PageContentFormProps) {
   const showAboutExtendedFields = item.slug === "about";
+  const showSubscribeFields = item.slug === "subscribe";
   const action = updatePageContent.bind(null, item.slug);
   const initialJson = useMemo(
     () => (item.contentJson ? JSON.stringify(item.contentJson, null, 2) : ""),
@@ -252,6 +253,11 @@ export function PageContentForm({ item }: PageContentFormProps) {
   const trainingItems = item.slug === "our-work-training" || item.slug === "training" ? getNestedArray(["cards"]) : [];
   const getInvolvedOpportunities = getNestedArray(["opportunities"]);
   const getInvolvedEvents = getNestedArray(["bottomSection", "upcomingEvents", "events"]);
+  const subscribeTopicItems = Array.isArray(parsedJson.topics)
+    ? (parsedJson.topics as Array<Record<string, unknown>>).filter(
+        (x): x is Record<string, unknown> => !!x && typeof x === "object" && !Array.isArray(x)
+      )
+    : [];
 
   function updateProgram(index: number, key: string, value: string) {
     updateNestedArray(["programs"], (arr) =>
@@ -517,6 +523,151 @@ export function PageContentForm({ item }: PageContentFormProps) {
               rows={4}
               className="mt-1 w-full rounded-lg border border-border px-4 py-2 text-slate-900"
             />
+          </div>
+        </>
+      ) : null}
+
+      {showSubscribeFields ? (
+        <>
+          <div className="rounded-xl border border-border bg-slate-50 p-4">
+            <p className="text-sm font-semibold uppercase tracking-wide text-slate-600">Subscribe page helper</p>
+            <p className="mt-1 text-xs text-slate-500">
+              Edit the hero copy and the four topic cards shown on <code className="rounded bg-slate-100 px-0.5">/subscribe</code>.
+            </p>
+            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                <div className="sm:col-span-2">
+                  <label className="block text-sm font-medium text-slate-700">Hero image</label>
+                  <div className="mt-1 flex gap-2">
+                    <input
+                      type="text"
+                      value={quickValues.heroImage}
+                      onChange={(e) => updateJsonField("heroImage", e.target.value)}
+                      className="w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                      placeholder="media-... or /uploads/..."
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setPickerTarget("heroImage")}
+                      className="inline-flex shrink-0 items-center gap-1 rounded-md border border-border bg-white px-3 py-2 text-sm text-slate-700 hover:bg-slate-100"
+                      title="Pick from Media Library"
+                    >
+                      <ImagePlus className="h-4 w-4" />
+                      Library
+                    </button>
+                  </div>
+                  <p className="mt-1 text-xs text-slate-500">
+                    This image is shown on the live <code className="rounded bg-slate-100 px-0.5">/subscribe</code> hero.
+                  </p>
+                </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-slate-700">Hero title</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.heroTitle === "string" ? parsedJson.heroTitle : ""}
+                  onChange={(e) => updateJsonField("heroTitle", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-slate-700">Hero subtitle</label>
+                <textarea
+                  value={typeof parsedJson.heroSubtitle === "string" ? parsedJson.heroSubtitle : ""}
+                  onChange={(e) => updateJsonField("heroSubtitle", e.target.value)}
+                  rows={3}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700">Section eyebrow</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.sectionEyebrow === "string" ? parsedJson.sectionEyebrow : ""}
+                  onChange={(e) => updateJsonField("sectionEyebrow", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700">Section heading</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.sectionHeading === "string" ? parsedJson.sectionHeading : ""}
+                  onChange={(e) => updateJsonField("sectionHeading", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-slate-700">Intro paragraph</label>
+                <textarea
+                  value={typeof parsedJson.intro === "string" ? parsedJson.intro : ""}
+                  onChange={(e) => updateJsonField("intro", e.target.value)}
+                  rows={3}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-slate-700">Required note</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.requiredNote === "string" ? parsedJson.requiredNote : ""}
+                  onChange={(e) => updateJsonField("requiredNote", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-slate-700">Support eyebrow</label>
+                <input
+                  type="text"
+                  value={typeof parsedJson.supportEyebrow === "string" ? parsedJson.supportEyebrow : ""}
+                  onChange={(e) => updateJsonField("supportEyebrow", e.target.value)}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+              <div className="sm:col-span-2">
+                <label className="block text-sm font-medium text-slate-700">Support body</label>
+                <textarea
+                  value={typeof parsedJson.supportBody === "string" ? parsedJson.supportBody : ""}
+                  onChange={(e) => updateJsonField("supportBody", e.target.value)}
+                  rows={3}
+                  className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="mt-6 space-y-4">
+              {Array.from({ length: 4 }).map((_, idx) => (
+                <div key={idx} className="rounded-lg border border-border bg-white p-3">
+                  <p className="text-xs font-semibold uppercase tracking-wide text-slate-600">Topic card {idx + 1}</p>
+                  <div className="mt-3 grid gap-3">
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600">Title</label>
+                      <input
+                        type="text"
+                        value={typeof subscribeTopicItems[idx]?.title === "string" ? String(subscribeTopicItems[idx].title) : ""}
+                        onChange={(e) => {
+                          const nextTopics = [...subscribeTopicItems];
+                          nextTopics[idx] = { ...(nextTopics[idx] ?? {}), title: e.target.value };
+                          updateJsonObject({ ...parsedJson, topics: nextTopics });
+                        }}
+                        className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-medium text-slate-600">Description</label>
+                      <textarea
+                        value={typeof subscribeTopicItems[idx]?.text === "string" ? String(subscribeTopicItems[idx].text) : ""}
+                        onChange={(e) => {
+                          const nextTopics = [...subscribeTopicItems];
+                          nextTopics[idx] = { ...(nextTopics[idx] ?? {}), text: e.target.value };
+                          updateJsonObject({ ...parsedJson, topics: nextTopics });
+                        }}
+                        rows={3}
+                        className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 text-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         </>
       ) : null}

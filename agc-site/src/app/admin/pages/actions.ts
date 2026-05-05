@@ -106,6 +106,7 @@ function revalidatePublicRouteForPageSlug(slug: string) {
     "get-involved-join-us": "/get-involved/join-us",
     "get-involved-partnership": "/get-involved/partnership",
     "get-involved-volunteer": "/get-involved/volunteer",
+    subscribe: "/subscribe",
   };
   const primary = pathBySlug[slug] ?? `/${slug}`;
   revalidatePath(primary);

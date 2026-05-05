@@ -5,6 +5,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/db";
+import { getHomePageCmsForEdit } from "@/lib/home-page-data";
+import { getBootstrapHomePageCms } from "@/lib/cms-bootstrap";
 import { homeSettingsFormSchema } from "@/lib/validations";
 import { ADMIN_DB_ERROR_MESSAGE } from "@/lib/admin-flash-messages";
 
@@ -20,10 +22,53 @@ export async function updateHomeSettings(formData: FormData) {
   const session = await auth();
   if (!session?.user) redirect("/admin/login");
 
-  const raw = Object.fromEntries(formData.entries());
+  const raw = Object.fromEntries(formData.entries()) as Record<string, FormDataEntryValue>;
+  const current = await getHomePageCmsForEdit();
+  const bootstrap = getBootstrapHomePageCms();
+  const preferNonEmpty = (currentValue: string, bootstrapValue: string): string => {
+    const c = currentValue?.trim() ?? "";
+    if (c.length > 0) return currentValue;
+    const b = bootstrapValue?.trim() ?? "";
+    return b.length > 0 ? bootstrapValue : "";
+  };
+
+  const requiredFallbacks: Record<string, string> = {
+    heroEyebrow: preferNonEmpty(current.heroContent.eyebrow, bootstrap.heroContent.eyebrow),
+    heroTitle: preferNonEmpty(current.heroContent.title, bootstrap.heroContent.title),
+    heroSubtitle: preferNonEmpty(current.heroContent.subtitle, bootstrap.heroContent.subtitle),
+    heroCta: preferNonEmpty(current.heroContent.cta, bootstrap.heroContent.cta),
+    heroCtaHref: preferNonEmpty(current.heroContent.ctaHref, bootstrap.heroContent.ctaHref),
+    heroCtaSecondary: preferNonEmpty(current.heroContent.ctaSecondary, bootstrap.heroContent.ctaSecondary),
+    heroCtaSecondaryHref: preferNonEmpty(current.heroContent.ctaSecondaryHref, bootstrap.heroContent.ctaSecondaryHref),
+    homeReachTitle: preferNonEmpty(current.homeReach.title, bootstrap.homeReach.title),
+    homePartnerBlurb: preferNonEmpty(current.homePartnerBlurb, bootstrap.homePartnerBlurb),
+    testimonialQuote: preferNonEmpty(current.homeTestimonial.quote, bootstrap.homeTestimonial.quote),
+    testimonialName: preferNonEmpty(current.homeTestimonial.name, bootstrap.homeTestimonial.name),
+    testimonialTitle: preferNonEmpty(current.homeTestimonial.title, bootstrap.homeTestimonial.title),
+    testimonialInitials: preferNonEmpty(current.homeTestimonial.initials, bootstrap.homeTestimonial.initials),
+    spotlightLabel: preferNonEmpty(current.homeSpotlightStory.label, bootstrap.homeSpotlightStory.label),
+    spotlightParagraphs: preferNonEmpty(
+      current.homeSpotlightStory.paragraphs.join("\n"),
+      bootstrap.homeSpotlightStory.paragraphs.join("\n")
+    ),
+    spotlightName: preferNonEmpty(current.homeSpotlightStory.name, bootstrap.homeSpotlightStory.name),
+    spotlightCtaLabel: preferNonEmpty(current.homeSpotlightStory.ctaLabel, bootstrap.homeSpotlightStory.ctaLabel),
+    spotlightCtaHref: preferNonEmpty(current.homeSpotlightStory.ctaHref, bootstrap.homeSpotlightStory.ctaHref),
+  };
+
+  for (const [key, fallback] of Object.entries(requiredFallbacks)) {
+    const value = raw[key];
+    if (typeof value === "string" && value.trim() === "") {
+      raw[key] = fallback;
+    }
+  }
+
   const parsed = homeSettingsFormSchema.safeParse(raw);
   if (!parsed.success) {
-    redirect(`/admin/home-settings?error=${encodeURIComponent(parsed.error.issues[0]?.message || "Invalid input")}`);
+    const issue = parsed.error.issues[0];
+    const field = issue?.path?.length ? String(issue.path[0]) : "field";
+    const message = issue?.message || "Invalid input";
+    redirect(`/admin/home-settings?error=${encodeURIComponent(`${field}: ${message}`)}`);
   }
   const d = parsed.data;
 

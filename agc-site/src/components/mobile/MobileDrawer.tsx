@@ -48,7 +48,7 @@ const drawerIconByHref: Record<string, LucideIcon> = {
   "/get-involved/volunteer": Heart,
   "/get-involved/partnership": Handshake,
   "/get-involved/join-us": Briefcase,
-  "/#newsletter": Mail,
+  "/subscribe": Mail,
   "/contact": MessageSquare,
 };
 

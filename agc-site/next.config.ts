@@ -13,6 +13,7 @@ function buildImageRemotePatterns(): NonNullable<NonNullable<NextConfig["images"
     { protocol: "https", hostname: "localhost", pathname: "/**" },
     { protocol: "http", hostname: "127.0.0.1", pathname: "/**" },
     { protocol: "https", hostname: "127.0.0.1", pathname: "/**" },
+    { protocol: "https", hostname: "images.unsplash.com", pathname: "/**" },
     // Common staging / preview hostnames (Coolify, raw IP via sslip, etc.)
     { protocol: "http", hostname: "**.sslip.io", pathname: "/**" },
     { protocol: "https", hostname: "**.sslip.io", pathname: "/**" },

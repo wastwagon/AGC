@@ -14,6 +14,7 @@ const PATH_BY_SLUG: Record<string, string> = {
   "get-involved-join-us": "/get-involved/join-us",
   "get-involved-partnership": "/get-involved/partnership",
   "get-involved-volunteer": "/get-involved/volunteer",
+  subscribe: "/subscribe",
 };
 
 export function publicPathForPageSlug(slug: string): string {

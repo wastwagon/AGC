@@ -11,7 +11,8 @@ import { Section } from "@/components/Section";
 
 export const metadata = {
   title: "Programs",
-  description: "Our core focus areas - forums and expert roundtables advancing governance excellence across Africa.",
+  description:
+    "Our core focus areas - forums and expert roundtables advancing governance excellence across Africa.",
 };
 
 type ProgramItem = {
@@ -20,19 +21,23 @@ type ProgramItem = {
   backgroundImage?: string;
 };
 
-type ProgramsWorkMerged = typeof workContent.programs & { heroImage?: string; programs?: ProgramItem[] };
+type ProgramsWorkMerged = typeof workContent.programs & {
+  heroImage?: string;
+  programs?: ProgramItem[];
+};
 
 export default async function ProgramsPage() {
   const [merged, bc] = await Promise.all([
     getMergedPageContent<ProgramsWorkMerged>(
       "programs",
-      cmsStaticOrEmpty(workContent.programs as ProgramsWorkMerged)
+      cmsStaticOrEmpty(workContent.programs as ProgramsWorkMerged),
     ),
     getBreadcrumbLabels(),
   ]);
   const content = merged;
   const heroSrc =
-    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ?? undefined;
+    cardImageUrlOrNull((await resolveImageUrl(content.heroImage)) ?? null) ??
+    undefined;
   const rawPrograms =
     Array.isArray(content.programs) && content.programs.length > 0
       ? content.programs
@@ -41,8 +46,10 @@ export default async function ProgramsPage() {
     rawPrograms.map(async (program) => ({
       ...program,
       backgroundImage:
-        cardImageUrlOrNull((await resolveImageUrl(program.backgroundImage)) ?? null) ?? undefined,
-    }))
+        cardImageUrlOrNull(
+          (await resolveImageUrl(program.backgroundImage)) ?? null,
+        ) ?? undefined,
+    })),
   );
 
   return (
@@ -60,35 +67,51 @@ export default async function ProgramsPage() {
         ]}
       />
 
-      <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+      <HomeScrollReveal
+        variant="fadeUp"
+        start="top 88%"
+        className="block w-full"
+      >
         <Section className="bg-white">
-        <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="space-y-8">
+              <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
+                Programs
+              </h2>
+              <p className="page-prose max-w-none text-black">
+                AGC designs and manages programmes that bring together multiple
+                initiatives to address evolving governance challenge. These
+                programmes provide structured frameworks for sustained
+                engagement, combining research, dialogue, capacity building, and
+                policy support within a coherent strategy. Through our
+                programmes, we work with diverse stakeholders across sectors to
+                drive long-term institutional strengthening and governance
+                outcomes.
+              </p>
 
-          <div className="space-y-8">
-            <h2 className="font-serif text-[1.85rem] font-semibold tracking-tight text-black sm:text-[2.2rem] lg:text-[2.55rem] lg:leading-tight">
-              Programs
-            </h2>
-            <p className="page-prose max-w-none text-black">
-              AGC designs and manages programmes that bring together multiple initiatives to address evolving
-              governance challenge. These programmes provide structured frameworks for sustained engagement,
-              combining research, dialogue, capacity building, and policy support within a coherent strategy.
-              Through our programmes, we work with diverse stakeholders across sectors to drive long-term
-              institutional strengthening and governance outcomes.
-            </p>
+              <ProgramsCarousel programs={programs} />
+            </div>
 
-            <ProgramsCarousel programs={programs} />
+            <div className="mt-16 flex flex-wrap gap-4">
+              <Button
+                asChild
+                href="/our-work"
+                variant="outline"
+                className="rounded-none"
+              >
+                Back to Our Work
+              </Button>
+              <Button
+                asChild
+                href="/events"
+                variant="primary"
+                className="rounded-none"
+              >
+                View Events
+              </Button>
+            </div>
           </div>
-
-          <div className="mt-16 flex flex-wrap gap-4">
-            <Button asChild href="/our-work" variant="outline">
-              Back to Our Work
-            </Button>
-            <Button asChild href="/events" variant="primary">
-              View Events
-            </Button>
-          </div>
-        </div>
-      </Section>
+        </Section>
       </HomeScrollReveal>
     </>
   );
