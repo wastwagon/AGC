@@ -101,6 +101,7 @@ export async function updateAboutSettings(formData: FormData) {
     heroImage: d.heroImage || undefined,
     aboutSectionEyebrow: d.aboutSectionEyebrow?.trim() || undefined,
     aboutSectionHeading: d.aboutSectionHeading?.trim() || undefined,
+    aboutSectionImage: d.aboutSectionImage?.trim() || undefined,
     leadParagraphs: splitLines(d.leadParagraphs),
     deliverySectionHeading: d.deliverySectionHeading?.trim() || undefined,
     partnershipsHeading: d.partnershipsHeading?.trim() || undefined,

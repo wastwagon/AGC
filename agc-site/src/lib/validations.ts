@@ -360,6 +360,7 @@ export const aboutSettingsFormSchema = z.object({
   heroImage: z.string().max(500).optional(),
   aboutSectionEyebrow: z.string().max(120).optional(),
   aboutSectionHeading: z.string().max(255).optional(),
+  aboutSectionImage: z.string().max(500).optional(),
   leadParagraphs: z.string().max(12000).optional(),
   deliverySectionHeading: z.string().max(255).optional(),
   partnershipsHeading: z.string().max(255).optional(),
