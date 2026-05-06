@@ -184,6 +184,13 @@ export default async function AboutPage() {
     })),
   );
 
+  const aboutSectionImage =
+    typeof contentMap.aboutSectionImage === "string" &&
+    contentMap.aboutSectionImage.trim().length > 0
+      ? (await resolveImageUrl(contentMap.aboutSectionImage)) ||
+        placeholderImages.about
+      : placeholderImages.about;
+
   return (
     <>
       <PageHero
@@ -212,12 +219,12 @@ export default async function AboutPage() {
             </header>
             <div className="relative mt-8 aspect-16/5 w-full overflow-hidden bg-stone-100">
               <Image
-                src={heroImage}
+                src={aboutSectionImage}
                 alt="About section visual"
                 fill
                 className="object-cover object-center"
                 sizes="100vw"
-                unoptimized={preferUnoptimizedImage(heroImage)}
+                unoptimized={preferUnoptimizedImage(aboutSectionImage)}
               />
             </div>
             <div className="mt-8 max-w-5xl space-y-6">

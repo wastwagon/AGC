@@ -23,6 +23,7 @@ type AboutSettings = {
   heroImage?: string;
   aboutSectionEyebrow?: string;
   aboutSectionHeading?: string;
+  aboutSectionImage?: string;
   leadParagraphs?: string[];
   deliverySectionHeading?: string;
   partnershipsHeading?: string;
@@ -78,8 +79,18 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
   const [deliveryImage4, setDeliveryImage4] = useState(
     initialDraft?.deliveryImage4 ?? content.deliveryPoints?.[3]?.image ?? ""
   );
+  const [aboutSectionImage, setAboutSectionImage] = useState(
+    initialDraft?.aboutSectionImage ?? content.aboutSectionImage ?? ""
+  );
   const [pickerTarget, setPickerTarget] = useState<
-    "heroImage" | "teamHeroImage" | "deliveryImage1" | "deliveryImage2" | "deliveryImage3" | "deliveryImage4" | null
+    | "heroImage"
+    | "teamHeroImage"
+    | "deliveryImage1"
+    | "deliveryImage2"
+    | "deliveryImage3"
+    | "deliveryImage4"
+    | "aboutSectionImage"
+    | null
   >(null);
   const [mediaMap, setMediaMap] = useState<Record<string, string>>({});
   const [draftRestored] = useState(!!initialDraft);
@@ -120,6 +131,13 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
     return raw;
   }, [teamHeroImage, mediaMap]);
 
+  const aboutSectionImagePreview = useMemo(() => {
+    const raw = aboutSectionImage.trim();
+    if (!raw) return "";
+    if (raw.startsWith("media-")) return mediaMap[raw] || "";
+    return raw;
+  }, [aboutSectionImage, mediaMap]);
+
   function onSelectMedia(media: MediaItem) {
     if (pickerTarget === "heroImage") setHeroImage(media.id);
     if (pickerTarget === "teamHeroImage") setTeamHeroImage(media.id);
@@ -127,6 +145,7 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
     if (pickerTarget === "deliveryImage2") setDeliveryImage2(media.id);
     if (pickerTarget === "deliveryImage3") setDeliveryImage3(media.id);
     if (pickerTarget === "deliveryImage4") setDeliveryImage4(media.id);
+    if (pickerTarget === "aboutSectionImage") setAboutSectionImage(media.id);
     setPickerTarget(null);
   }
 
@@ -235,6 +254,36 @@ export function AboutSettingsForm({ content, saved = false }: { content: AboutSe
             className="rounded-lg border border-border px-4 py-2"
             placeholder="Lead paragraphs (one per line)"
           />
+          <div>
+            <div className="flex gap-2">
+              <input
+                name="aboutSectionImage"
+                value={aboutSectionImage}
+                onChange={(e) => setAboutSectionImage(e.target.value)}
+                className="w-full rounded-lg border border-border px-4 py-2"
+                placeholder="About section image media-id/url/path"
+              />
+              <button
+                type="button"
+                onClick={() => setPickerTarget("aboutSectionImage")}
+                className="inline-flex items-center rounded-lg border border-border px-3 py-2 text-slate-700 hover:bg-slate-50"
+                title="Pick from Media Library"
+              >
+                <ImagePlus className="h-4 w-4" />
+              </button>
+            </div>
+            {aboutSectionImagePreview ? (
+              <div className="mt-2 relative h-28 w-full overflow-hidden rounded-lg border border-border bg-slate-100">
+                <Image
+                  src={aboutSectionImagePreview}
+                  alt="About section preview"
+                  fill
+                  className="object-cover"
+                  unoptimized={preferUnoptimizedImage(aboutSectionImagePreview)}
+                />
+              </div>
+            ) : null}
+          </div>
         </div>
       </section>
 
