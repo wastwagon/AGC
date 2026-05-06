@@ -47,12 +47,20 @@ export function AppSummitClient({
     let cancelled = false;
     (async () => {
       try {
-        const res = await fetch(`/api/page-content?slug=${encodeURIComponent("app-summit")}`);
+        const res = await fetch(
+          `/api/page-content?slug=${encodeURIComponent("app-summit")}`,
+        );
         if (!res.ok) return;
         const json = await res.json();
         if (cancelled) return;
         if (json?.content_json && typeof json.content_json === "object") {
-          setLiveContent((prev) => ({ ...(prev as Record<string, unknown>), ...(json.content_json as Record<string, unknown>) }) as AppSummitCmsContent);
+          setLiveContent(
+            (prev) =>
+              ({
+                ...(prev as Record<string, unknown>),
+                ...(json.content_json as Record<string, unknown>),
+              }) as AppSummitCmsContent,
+          );
         }
       } catch (e) {
         // ignore
@@ -65,37 +73,69 @@ export function AppSummitClient({
 
   const contentMap = liveContent as unknown as Record<string, unknown>;
   const getString = (key: string, fallback: string) =>
-    typeof contentMap[key] === "string" && String(contentMap[key]).trim().length > 0
+    typeof contentMap[key] === "string" &&
+    String(contentMap[key]).trim().length > 0
       ? String(contentMap[key])
       : fallback;
   const getStringArray = (key: string, fallback: string[]) => {
     const value = contentMap[key];
     if (!Array.isArray(value)) return fallback;
-    const list = value.filter((item): item is string => typeof item === "string" && item.trim().length > 0);
+    const list = value.filter(
+      (item): item is string =>
+        typeof item === "string" && item.trim().length > 0,
+    );
     return list.length > 0 ? list : fallback;
   };
-  const registration = (liveContent.registration ?? content.registration) as AppSummitCmsContent["registration"];
-  const detailDate = (liveContent.details?.date?.trim() || content.details?.date?.trim()) || "August 10-12, 2025";
-  const detailLocation = (liveContent.details?.location?.trim() || content.details?.location?.trim()) || "Accra International Conference Centre, Ghana";
-  const detailParticipants = (liveContent.details?.participants?.trim() || content.details?.participants?.trim()) || "Over 700 participants and 50+ political parties";
+  const registration = (liveContent.registration ??
+    content.registration) as AppSummitCmsContent["registration"];
+  const detailDate =
+    liveContent.details?.date?.trim() ||
+    content.details?.date?.trim() ||
+    "August 10-12, 2025";
+  const detailLocation =
+    liveContent.details?.location?.trim() ||
+    content.details?.location?.trim() ||
+    "Accra International Conference Centre, Ghana";
+  const detailParticipants =
+    liveContent.details?.participants?.trim() ||
+    content.details?.participants?.trim() ||
+    "Over 700 participants and 50+ political parties";
   const detailLabelDate = getString("detailLabelDate", "Date");
   const detailLabelLocation = getString("detailLabelLocation", "Location");
-  const detailLabelParticipants = getString("detailLabelParticipants", "Participants");
+  const detailLabelParticipants = getString(
+    "detailLabelParticipants",
+    "Participants",
+  );
   const aboutSectionEyebrow = getString("aboutSectionEyebrow", "APP Summit");
   const aboutSectionHeading = getString(
     "aboutSectionHeading",
-    "A continental platform for democratic resilience and political transformation"
+    "A continental platform for democratic resilience and political transformation",
   );
-  const highlightsHeading = getString("highlightsHeading", "APPS 2025 Highlights");
+  const highlightsHeading = getString(
+    "highlightsHeading",
+    "APPS 2025 Highlights",
+  );
   const focusHeading = getString("focusSectionHeading", "Key Focus Areas");
   const summit2026Heading = getString("summit2026Heading", "APPS 2026");
   const outcomesHeading = getString("outcomesHeading", "Expected Outcomes");
-  const structureHeading = getString("structureHeading", "Summit Structure and Format");
-  const sponsorshipHeading = getString("sponsorshipHeading", "Sponsorship & Partnership");
-  const keyFocusBgImage = getString("keyFocusBgImage", "/uploads/placeholder.svg");
-  const sponsorshipBgImage = getString("sponsorshipBgImage", "/uploads/placeholder.svg");
+  const structureHeading = getString(
+    "structureHeading",
+    "Summit Structure and Format",
+  );
+  const sponsorshipHeading = getString(
+    "sponsorshipHeading",
+    "Sponsorship & Partnership",
+  );
+  const keyFocusBgImage = getString(
+    "keyFocusBgImage",
+    "/uploads/placeholder.svg",
+  );
+  const sponsorshipBgImage = getString(
+    "sponsorshipBgImage",
+    "/uploads/placeholder.svg",
+  );
   const highlightsImages = Array.from({ length: 10 }).map((_, i) =>
-    getString(`highlightsImage${i + 1}`, "/uploads/placeholder.svg")
+    getString(`highlightsImage${i + 1}`, "/uploads/placeholder.svg"),
   );
 
   const keyFocusAreas = getStringArray("keyFocusAreas", [
@@ -133,17 +173,23 @@ export function AppSummitClient({
   ]);
   const sponsorshipIntro = getString(
     "sponsorshipIntro",
-    "APPS 2026 provides strategic opportunities for corporate and institutional sponsorship through high-visibility brand exposure, partnership recognition, and direct engagement with policy influencers from across Africa."
+    "APPS 2026 provides strategic opportunities for corporate and institutional sponsorship through high-visibility brand exposure, partnership recognition, and direct engagement with policy influencers from across Africa.",
   );
-  const finalCtaHeading = getString("finalCtaHeading", "Secure your spot at APP Summit 2026");
+  const finalCtaHeading = getString(
+    "finalCtaHeading",
+    "Secure your spot at APP Summit 2026",
+  );
   const finalCtaBody = getString(
     "finalCtaBody",
-    "A sponsorship prospectus is available for download. Organizations interested in partnering with APPS 2026 are encouraged to contact the Secretariat directly."
+    "A sponsorship prospectus is available for download. Organizations interested in partnering with APPS 2026 are encouraged to contact the Secretariat directly.",
   );
-  const finalAddress = getString("finalAddress", "No 5 Teinor Street, Dzorwulu – Accra Ghana");
+  const finalAddress = getString(
+    "finalAddress",
+    "No 5 Teinor Street, Dzorwulu – Accra Ghana",
+  );
   const finalParticipantsNote = getString(
     "finalParticipantsNote",
-    "Participants include heads of state and government affiliated with political parties, party chairpersons and secretaries-general, members of parliament, economic advisors, private sector leaders, academia, and civil society actors."
+    "Participants include heads of state and government affiliated with political parties, party chairpersons and secretaries-general, members of parliament, economic advisors, private sector leaders, academia, and civil society actors.",
   );
   const structureCards = [
     {
@@ -151,7 +197,7 @@ export function AppSummitClient({
       title: getString("dayOneTitle", "Inclusive leadership platforms"),
       body: getString(
         "dayOneBody",
-        "Africa Women Political Leadership Summit and African Youth in Politics Forum as foundational pillars."
+        "Africa Women Political Leadership Summit and African Youth in Politics Forum as foundational pillars.",
       ),
     },
     {
@@ -159,7 +205,7 @@ export function AppSummitClient({
       title: getString("dayTwoTitle", "Plenary and strategic dialogues"),
       body: getString(
         "dayTwoBody",
-        "Full summit programme with thematic roundtables and moderated high-level discussions."
+        "Full summit programme with thematic roundtables and moderated high-level discussions.",
       ),
     },
     {
@@ -167,7 +213,7 @@ export function AppSummitClient({
       title: getString("dayThreeTitle", "Consultations and commitments"),
       body: getString(
         "dayThreeBody",
-        "Closed-door consultations among party leaders, with outputs informed by youth and women platforms."
+        "Closed-door consultations among party leaders, with outputs informed by youth and women platforms.",
       ),
     },
   ];
@@ -182,15 +228,23 @@ export function AppSummitClient({
         title={liveContent.title || content.title}
         subtitle={liveContent.subtitle || content.subtitle}
         image={heroImage}
-        imageAlt={liveContent.heroImageAlt || content.heroImageAlt || "APP Summit"}
+        imageAlt={
+          liveContent.heroImageAlt || content.heroImageAlt || "APP Summit"
+        }
       />
 
       <section className="w-full border-b border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="grid gap-12 lg:grid-cols-3 lg:gap-14">
-            <HomeScrollReveal variant="slideLeft" start="top 87%" className="block w-full lg:col-span-2">
-                  <div>
-                <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent-800">{aboutSectionEyebrow}</p>
+            <HomeScrollReveal
+              variant="slideLeft"
+              start="top 87%"
+              className="block w-full lg:col-span-2"
+            >
+              <div>
+                <p className="text-sm font-semibold uppercase tracking-[0.08em] text-accent-800">
+                  {aboutSectionEyebrow}
+                </p>
                 <h2 className="mt-3 font-serif text-[2rem] font-semibold leading-tight text-black sm:text-[2.5rem]">
                   {aboutSectionHeading}
                 </h2>
@@ -205,34 +259,64 @@ export function AppSummitClient({
                 <ul className="mt-8 grid gap-4 sm:grid-cols-3">
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <CalendarDays className="h-5 w-5 text-accent-700" />
-                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelDate}</p>
-                    <p className="mt-1 text-sm font-medium text-black">{detailDate}</p>
-                </li>
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">
+                      {detailLabelDate}
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-black">
+                      {detailDate}
+                    </p>
+                  </li>
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <MapPin className="h-5 w-5 text-accent-700" />
-                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelLocation}</p>
-                    <p className="mt-1 text-sm font-medium text-black">{detailLocation}</p>
-                </li>
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">
+                      {detailLabelLocation}
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-black">
+                      {detailLocation}
+                    </p>
+                  </li>
                   <li className="rounded-none border border-border/80 bg-white p-4">
                     <Users className="h-5 w-5 text-accent-700" />
-                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">{detailLabelParticipants}</p>
-                    <p className="mt-1 text-sm font-medium text-black">{detailParticipants}</p>
-                </li>
-              </ul>
-            </div>
+                    <p className="mt-2 text-xs font-semibold uppercase tracking-wide text-black">
+                      {detailLabelParticipants}
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-black">
+                      {detailParticipants}
+                    </p>
+                  </li>
+                </ul>
+              </div>
             </HomeScrollReveal>
-            <HomeScrollReveal variant="slideRight" start="top 86%" className="block w-full self-start">
+            <HomeScrollReveal
+              variant="slideRight"
+              start="top 86%"
+              className="block w-full self-start"
+            >
               <div className="rounded-none border border-border/90 bg-white p-6 shadow-sm sm:p-8">
                 <h3 className="page-heading text-xl">Secure your spot</h3>
                 <p className="page-prose mt-2 text-sm text-black">
-                  <RegistrationCardSubtitle text={registration.subtitle ?? "Secure your spot at APP Summit 2026"} />
+                  <RegistrationCardSubtitle
+                    text={
+                      registration.subtitle ??
+                      "Secure your spot at APP Summit 2026"
+                    }
+                  />
                 </p>
-                <Button asChild href={registration.href} variant="primary" className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700">
+                <Button
+                  asChild
+                  href={registration.href}
+                  variant="primary"
+                  className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700"
+                >
                   {registration.cta || "Register Now"}
-              </Button>
+                </Button>
                 <p className="mt-5 text-xs leading-relaxed text-black">
-                  Sponsorship prospectus available. To partner with APPS 2026, contact the Secretariat via{" "}
-                  <a href={`mailto:${siteSettings.email.programs}`} className="font-medium underline">
+                  Sponsorship prospectus available. To partner with APPS 2026,
+                  contact the Secretariat via{" "}
+                  <a
+                    href={`mailto:${siteSettings.email.programs}`}
+                    className="font-medium underline"
+                  >
                     {siteSettings.email.programs}
                   </a>
                   .
@@ -245,18 +329,28 @@ export function AppSummitClient({
 
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <HomeScrollReveal variant="fadeUp" start="top 88%" className="block w-full">
+          <HomeScrollReveal
+            variant="fadeUp"
+            start="top 88%"
+            className="block w-full"
+          >
             <div className="mb-6 flex items-end justify-between gap-4">
               <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">
                 {highlightsHeading}
               </h2>
-              <p className="text-xs uppercase tracking-[0.08em] text-black">Image placeholders</p>
             </div>
           </HomeScrollReveal>
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
             {highlightsImages.map((image, i) => (
-              <div key={i} className="relative aspect-4/3 overflow-hidden rounded-none border border-border/80 bg-stone-100">
-                <img src={image} alt={`APPS 2025 placeholder ${i + 1}`} className="h-full w-full object-cover" />
+              <div
+                key={i}
+                className="relative aspect-4/3 overflow-hidden rounded-none border border-border/80 bg-stone-100"
+              >
+                <img
+                  src={image}
+                  alt={`APPS 2025 placeholder ${i + 1}`}
+                  className="h-full w-full object-cover"
+                />
               </div>
             ))}
           </div>
@@ -271,13 +365,22 @@ export function AppSummitClient({
               <div className="absolute inset-0 bg-linear-to-br from-slate-950/92 via-slate-900/70 to-slate-800/45" />
             </div>
             <div className="pointer-events-none absolute inset-0 opacity-55">
-              <img src={keyFocusBgImage} alt="" className="h-full w-full object-cover" />
+              <img
+                src={keyFocusBgImage}
+                alt=""
+                className="h-full w-full object-cover"
+              />
             </div>
             <div className="relative">
-              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-white/90">{focusHeading}</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.08em] text-white/90">
+                {focusHeading}
+              </p>
               <ul className="mt-6 grid gap-x-10 gap-y-5 sm:grid-cols-2">
                 {keyFocusAreas.map((item) => (
-                  <li key={item} className="flex items-start gap-3 text-sm leading-relaxed sm:text-base">
+                  <li
+                    key={item}
+                    className="flex items-start gap-3 text-sm leading-relaxed sm:text-base"
+                  >
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-white" />
                     <span>{item}</span>
                   </li>
@@ -290,7 +393,9 @@ export function AppSummitClient({
 
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{summit2026Heading}</h2>
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">
+            {summit2026Heading}
+          </h2>
           {summit2026Paragraphs.map((paragraph, index) => (
             <p
               key={`${paragraph}-${index}`}
@@ -304,10 +409,15 @@ export function AppSummitClient({
 
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{outcomesHeading}</h2>
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">
+            {outcomesHeading}
+          </h2>
           <ul className="mt-6 grid gap-4 sm:grid-cols-2">
             {expectedOutcomes.map((item) => (
-              <li key={item} className="rounded-none border border-border/80 bg-white p-5 text-sm leading-relaxed text-black">
+              <li
+                key={item}
+                className="rounded-none border border-border/80 bg-white p-5 text-sm leading-relaxed text-black"
+              >
                 {item}
               </li>
             ))}
@@ -317,13 +427,24 @@ export function AppSummitClient({
 
       <section className="w-full border-t border-border/80 bg-white py-10 sm:py-14 lg:py-16">
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
-          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">{structureHeading}</h2>
+          <h2 className="font-serif text-[1.9rem] font-semibold text-black sm:text-[2.3rem]">
+            {structureHeading}
+          </h2>
           <div className="mt-7 grid gap-5 lg:grid-cols-3">
             {structureCards.map((card) => (
-              <div key={card.label} className="rounded-none border border-border/80 bg-white p-6">
-                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">{card.label}</p>
-                <h3 className="mt-2 font-sans text-xl font-semibold text-black">{card.title}</h3>
-                <p className="mt-3 text-sm leading-relaxed text-black">{card.body}</p>
+              <div
+                key={card.label}
+                className="rounded-none border border-border/80 bg-white p-6"
+              >
+                <p className="text-xs font-semibold uppercase tracking-[0.08em] text-accent-700">
+                  {card.label}
+                </p>
+                <h3 className="mt-2 font-sans text-xl font-semibold text-black">
+                  {card.title}
+                </h3>
+                <p className="mt-3 text-sm leading-relaxed text-black">
+                  {card.body}
+                </p>
               </div>
             ))}
           </div>
@@ -334,16 +455,29 @@ export function AppSummitClient({
         <div className="mx-auto w-full max-w-none px-6 sm:px-8 lg:px-11 xl:px-16 2xl:px-24">
           <div className="relative overflow-hidden rounded-none border border-border/80 bg-black px-6 py-10 text-white sm:px-10">
             <div className="pointer-events-none absolute inset-0 opacity-30">
-              <img src={sponsorshipBgImage} alt="" className="h-full w-full object-cover" />
+              <img
+                src={sponsorshipBgImage}
+                alt=""
+                className="h-full w-full object-cover"
+              />
             </div>
             <div className="relative">
-              <h2 className="font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">{sponsorshipHeading}</h2>
-              <p className="mt-4 max-w-4xl text-sm leading-relaxed text-white/90 sm:text-base">{sponsorshipIntro}</p>
+              <h2 className="font-serif text-[1.9rem] font-semibold sm:text-[2.3rem]">
+                {sponsorshipHeading}
+              </h2>
+              <p className="mt-4 max-w-4xl text-sm leading-relaxed text-white/90 sm:text-base">
+                {sponsorshipIntro}
+              </p>
               <ul className="mt-6 grid gap-x-10 gap-y-4 sm:grid-cols-2">
                 {sponsorshipPoints.map((point) => (
-                  <li key={point} className="text-sm leading-relaxed text-white/90">{point}</li>
-                        ))}
-                      </ul>
+                  <li
+                    key={point}
+                    className="text-sm leading-relaxed text-white/90"
+                  >
+                    {point}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -351,24 +485,40 @@ export function AppSummitClient({
 
       <section className="isolate w-full border-t border-border/80 bg-white py-16 sm:py-20">
         <div className="mx-auto w-full max-w-4xl bg-white px-4 sm:px-6 lg:px-8">
-          <HomeScrollReveal variant="scaleUp" start="top 88%" className="block w-full bg-white">
+          <HomeScrollReveal
+            variant="scaleUp"
+            start="top 88%"
+            className="block w-full bg-white"
+          >
             <div className="rounded-none border border-border/80 bg-white p-8 sm:p-10">
-              <h2 className="font-serif text-3xl font-semibold text-black">{finalCtaHeading}</h2>
+              <h2 className="font-serif text-3xl font-semibold text-black">
+                {finalCtaHeading}
+              </h2>
               <p className="page-prose mt-3 text-black">{finalCtaBody}</p>
-            <div className="mt-6 flex flex-wrap gap-4">
-                <Button asChild href={registration.href || "/contact"} variant="primary" className="rounded-none bg-accent-700 hover:bg-accent-800">
+              <div className="mt-6 flex flex-wrap gap-4">
+                <Button
+                  asChild
+                  href={registration.href || "/contact"}
+                  variant="primary"
+                  className="rounded-none bg-accent-700 hover:bg-accent-800"
+                >
                   {registration.cta || "Register Now"}
                 </Button>
-                <Button asChild href="/contact" variant="outline" className="rounded-none">
+                <Button
+                  asChild
+                  href="/contact"
+                  variant="outline"
+                  className="rounded-none"
+                >
                   Contact Secretariat
                 </Button>
-              <a
-                href={`mailto:${siteSettings.email.programs}`}
+                <a
+                  href={`mailto:${siteSettings.email.programs}`}
                   className="inline-flex items-center justify-center rounded-none border border-border/90 bg-white px-5 py-2.5 text-sm font-medium text-black transition-colors hover:border-accent-300"
-              >
-                {siteSettings.email.programs}
-              </a>
-            </div>
+                >
+                  {siteSettings.email.programs}
+                </a>
+              </div>
               <div className="mt-6 flex items-start gap-3 rounded-none border border-border/80 bg-stone-50 p-4">
                 <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-accent-700" />
                 <p className="text-sm text-black">{finalAddress}</p>
@@ -377,7 +527,7 @@ export function AppSummitClient({
                 <Handshake className="mt-0.5 h-5 w-5 shrink-0 text-accent-700" />
                 <p className="text-sm text-black">{finalParticipantsNote}</p>
               </div>
-          </div>
+            </div>
           </HomeScrollReveal>
         </div>
       </section>
