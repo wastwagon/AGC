@@ -1,7 +1,6 @@
 export type TeamTabConfig = { key: string; label: string };
 
 export const TEAM_TAB_ORDER = [
-  { key: "all", label: "All" },
   { key: "advisory_board", label: "Advisory Board" },
   { key: "executive_council", label: "Executive Council" },
   { key: "management_team", label: "Management Team" },

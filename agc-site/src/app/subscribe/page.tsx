@@ -84,15 +84,6 @@ export default async function SubscribePage() {
                     </article>
                   ))}
                 </div>
-
-                <div className="mt-10 border-l-4 border-accent-700 bg-slate-50 p-5">
-                  <p className="text-sm font-semibold uppercase tracking-[0.14em] text-accent-800">
-                    {content.supportEyebrow}
-                  </p>
-                  <p className="mt-2 text-sm leading-relaxed text-black">
-                    {content.supportBody}
-                  </p>
-                </div>
               </div>
 
               <div className="self-start">
