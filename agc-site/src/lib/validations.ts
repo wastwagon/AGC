@@ -66,6 +66,34 @@ export const joinUsInquirySchema = z.object({
   message: z.string().min(1, "Message is required").max(5000),
 });
 
+export const registrationOfInterestSchema = z.object({
+  eventType: z.enum(["apps", "aypf", "awpls"]),
+  title: z.string().max(50).optional(),
+  fullName: z.string().min(1, "Full name is required").max(200),
+  jobTitle: z.string().min(1, "Job title is required").max(200),
+  organisation: z.string().min(1, "Organisation is required").max(200),
+  country: z.string().min(1, "Country / nationality is required").max(100),
+  email: z.string().email("Valid email is required"),
+  telephone: z.string().min(1, "Telephone number is required").max(50),
+  organisationType: z.string().min(1, "Organisation type is required").max(200),
+  participationType: z.string().min(1, "Participation type is required").max(100),
+  areasOfInterest: z
+    .array(z.string().min(1).max(200))
+    .min(1, "Select at least one area of interest")
+    .max(30),
+  previousParticipation: z.boolean(),
+  visaSupport: z.boolean(),
+  accessibilityReqs: z.string().max(2000).optional(),
+  dietaryReqs: z.string().max(1000).optional(),
+  howHeard: z.string().min(1, "Please tell us how you heard about the event").max(100),
+  declarationsAccepted: z.boolean().refine((v) => v === true, {
+    message: "You must accept all declarations to submit",
+  }),
+  website: z.string().max(0).optional(),
+});
+
+export const roiReviewStatusSchema = z.enum(["pending", "under_review", "approved", "declined"]);
+
 export const eventRegistrationSchema = z.object({
   eventSlug: z.string().min(1, "Event is required").max(200),
   eventId: z.number().optional(),

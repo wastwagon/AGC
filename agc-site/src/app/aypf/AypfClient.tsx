@@ -7,6 +7,7 @@ import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import { Button } from "@/components/Button";
 import type { AypfCmsContent } from "@/data/aypf";
 import type { SiteSettings } from "@/lib/site-settings";
+import { resolveRoiRegisterHref } from "@/data/roi-forms";
 import { RichTextContent } from "@/components/RichTextContent";
 import { RichTextListItems } from "@/components/RichTextListItems";
 import { resolveRichHtml } from "@/lib/rich-text";
@@ -58,8 +59,10 @@ export function AypfClient({
   siteSettings: SiteSettings;
 }) {
   const bc = content.breadcrumbLabel?.trim() || content.title;
-  const regHref =
-    content.registerSection.registrationHref?.trim() || "/contact";
+  const regHref = resolveRoiRegisterHref(
+    "aypf",
+    content.registerSection.registrationHref
+  );
   const contentMap = content as unknown as Record<string, unknown>;
   const getString = (key: string, fallback: string) =>
     typeof contentMap[key] === "string" &&

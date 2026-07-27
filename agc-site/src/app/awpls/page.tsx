@@ -125,7 +125,7 @@ export default async function AwplsPage() {
   );
   const registerCardCtaLabel = getString(
     "registerCardCtaLabel",
-    "Contact us to register",
+    "Register your interest",
   );
   const whatIsHeading = getString("whatIsHeading", "What AWPLS Is");
   const whatIsCards = getObjectArray("whatIsCards", [
@@ -189,7 +189,7 @@ export default async function AwplsPage() {
     "finalCtaBody",
     "Join leaders, policymakers, and partners shaping Africa’s future.",
   );
-  const finalCtaButtonLabel = getString("finalCtaButtonLabel", "Contact us to register");
+  const finalCtaButtonLabel = getString("finalCtaButtonLabel", "Register your interest");
   const aboutBodyHtml = resolveRichHtml({
     html: typeof contentMap.aboutBody === "string" ? contentMap.aboutBody : undefined,
     paragraphs: aboutParagraphs,
@@ -250,7 +250,7 @@ export default async function AwplsPage() {
                 <RichTextContent html={registerCardBody} className="mt-2 text-sm text-black" />
                 <Button
                   asChild
-                  href="/contact"
+                  href="/awpls/register"
                   variant="primary"
                   className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700"
                 >
@@ -368,7 +368,7 @@ export default async function AwplsPage() {
             <div className="mt-6">
               <Button
                 asChild
-                href="/contact"
+                href="/awpls/register"
                 variant="primary"
                 className="rounded-none bg-accent-700 hover:bg-accent-800"
               >

@@ -256,6 +256,38 @@ model ContactSubmission {
   @@map("contact_submissions")
 }
 
+// ============ Registration of Interest (APPS / AYPF / AWPLS) ============
+
+model RegistrationOfInterest {
+  id                     Int      @id @default(autoincrement())
+  eventType              String   @map("event_type") @db.VarChar(20)
+  title                  String?  @db.VarChar(50)
+  fullName               String   @map("full_name") @db.VarChar(255)
+  jobTitle               String   @map("job_title") @db.VarChar(255)
+  organisation           String   @db.VarChar(255)
+  country                String   @db.VarChar(100)
+  email                  String   @db.VarChar(255)
+  telephone              String   @db.VarChar(50)
+  organisationType       String   @map("organisation_type") @db.VarChar(255)
+  participationType      String   @map("participation_type") @db.VarChar(100)
+  areasOfInterest        String   @map("areas_of_interest") @db.Text
+  previousParticipation  Boolean  @map("previous_participation")
+  visaSupport            Boolean  @map("visa_support")
+  accessibilityReqs      String?  @map("accessibility_reqs") @db.Text
+  dietaryReqs            String?  @map("dietary_reqs") @db.Text
+  howHeard               String   @map("how_heard") @db.VarChar(100)
+  reviewStatus           String   @default("pending") @map("review_status") @db.VarChar(30)
+  reviewNotes            String?  @map("review_notes") @db.Text
+  reviewedAt             DateTime? @map("reviewed_at")
+  createdAt              DateTime @default(now()) @map("created_at")
+
+  @@index([eventType])
+  @@index([createdAt])
+  @@index([reviewStatus])
+  @@index([eventType, reviewStatus])
+  @@map("registrations_of_interest")
+}
+
 // ============ Donations (Paystack) ============
 
 model Donation {

@@ -8,6 +8,7 @@ import { Button } from "@/components/Button";
 import { HomeScrollReveal } from "@/components/home/HomeScrollReveal";
 import type { AppSummitCmsContent } from "@/data/app-summit";
 import type { SiteSettings } from "@/lib/site-settings";
+import { resolveRoiRegisterHref } from "@/data/roi-forms";
 import { RichTextContent } from "@/components/RichTextContent";
 import { RichTextListItems, RichTextBulletList } from "@/components/RichTextListItems";
 import { resolveRichHtml } from "@/lib/rich-text";
@@ -91,6 +92,7 @@ export function AppSummitClient({
   };
   const registration = (liveContent.registration ??
     content.registration) as AppSummitCmsContent["registration"];
+  const registrationHref = resolveRoiRegisterHref("apps", registration.href);
   const registrationTitle =
     registration.title?.trim() || "Secure your spot";
   const registrationSubtitle =
@@ -324,7 +326,7 @@ export function AppSummitClient({
                 )}
                 <Button
                   asChild
-                  href={registration.href}
+                  href={registrationHref}
                   variant="primary"
                   className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700"
                 >
@@ -494,7 +496,7 @@ export function AppSummitClient({
               <div className="mt-6 flex flex-wrap gap-4">
                 <Button
                   asChild
-                  href={registration.href || "/contact"}
+                  href={registrationHref}
                   variant="primary"
                   className="rounded-none bg-accent-700 hover:bg-accent-800"
                 >

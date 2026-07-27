@@ -60,7 +60,7 @@ export const appSummitContent = {
     footnote:
       "Sponsorship prospectus available. To partner with APPS 2026, contact the Secretariat via the Programs inbox.",
     cta: "Register Now",
-    href: "/contact",
+    href: "/app-summit/register",
   },
   contactNote:
     "For summit inquiries, partnerships, or registration, please contact our Programs Division.",

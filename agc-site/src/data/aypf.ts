@@ -69,7 +69,7 @@ export const aypfContent = {
     ],
     ctaLabel: "Register your interest",
     /** Set in Admin when the registration URL is available. */
-    registrationHref: "",
+    registrationHref: "/aypf/register",
   },
   /** Sidebar card beside the about section */
   registerCardHeading: "Secure your spot at AYPF 2026",

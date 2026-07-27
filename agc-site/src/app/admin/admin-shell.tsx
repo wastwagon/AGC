@@ -30,6 +30,7 @@ import {
   CreditCard,
   Heart,
   CircleUserRound,
+  ClipboardList,
 } from "lucide-react";
 import type { SiteSettings } from "@/lib/site-settings";
 import { getAdminBreadcrumbs } from "@/lib/admin-breadcrumbs";
@@ -54,6 +55,7 @@ const navItems = [
   { href: "/admin/site-settings", label: "Site Settings", icon: Settings },
   { href: "/admin/taxonomy", label: "Taxonomy", icon: Tags },
   { href: "/admin/submissions", label: "Submissions", icon: Inbox },
+  { href: "/admin/roi", label: "ROI Forms", icon: ClipboardList },
   { href: "/admin/settings", label: "Operations", icon: Settings },
 ];
 

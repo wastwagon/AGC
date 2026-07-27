@@ -14,6 +14,7 @@ const SECTION: Record<string, string> = {
   pages: "Page content",
   taxonomy: "Taxonomy",
   submissions: "Submissions",
+  roi: "ROI Forms",
   settings: "Operations",
   "site-settings": "Site settings",
   "home-settings": "Home settings",
@@ -42,6 +43,7 @@ const EXACT_TITLE: Record<string, string> = {
   "/admin/pages": "Page content",
   "/admin/taxonomy": "Taxonomy",
   "/admin/submissions": "Submissions",
+  "/admin/roi": "ROI Forms",
   "/admin/settings": "Operations",
   "/admin/site-settings": "Site settings",
   "/admin/home-settings": "Home settings",
@@ -129,6 +131,11 @@ export function getAdminBreadcrumbs(pathname: string): Crumb[] {
   }
   if (parts[0] === "events" && parts[1] === "scan") {
     crumbs.push({ label: "Events", href: "/admin/events" }, { label: "Check-in Scanner" });
+    return crumbs;
+  }
+
+  if (parts[0] === "roi" && parts[1]) {
+    crumbs.push({ label: "ROI Forms", href: "/admin/roi" }, { label: `Entry #${parts[1]}` });
     return crumbs;
   }
 
