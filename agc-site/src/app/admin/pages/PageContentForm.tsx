@@ -1172,7 +1172,10 @@ export function PageContentForm({ item, donationUnavailableMessage }: PageConten
                         };
                       })
                       .filter((d) => d.name && d.email);
-                    updateJsonField("divisions", divisions);
+                    const next = { ...parsedJson };
+                    if (divisions.length === 0) delete next.divisions;
+                    else next.divisions = divisions;
+                    updateJsonObject(next);
                   }}
                   placeholder={"Programs Division | programs@africagovernancecentre.org"}
                   className="mt-1 w-full rounded-md border border-border bg-white px-3 py-2 font-mono text-sm"
