@@ -326,7 +326,7 @@ export function AppSummitClient({
                 )}
                 <Button
                   asChild
-                  href={registrationHref}
+                  href="https://registration.africagovernancecentre.org"
                   variant="primary"
                   className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700"
                 >
