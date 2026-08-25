@@ -367,7 +367,7 @@ export function AypfClient({
                 />
                 <Button
                   asChild
-                  href={regHref}
+                  href="https://registration.africagovernancecentre.org/aypf-summit-2026-registration/"
                   variant="primary"
                   className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700"
                 >
