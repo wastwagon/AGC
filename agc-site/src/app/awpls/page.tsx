@@ -250,7 +250,7 @@ export default async function AwplsPage() {
                 <RichTextContent html={registerCardBody} className="mt-2 text-sm text-black" />
                 <Button
                   asChild
-                  href="/awpls/register"
+                  href="https://registration.africagovernancecentre.org/awpls-summit-2026-registration/"
                   variant="primary"
                   className="mt-5 w-full rounded-none bg-accent-600 hover:bg-accent-700"
                 >
